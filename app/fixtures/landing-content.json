@@ -1,0 +1,126 @@
+{
+  "hero": {
+    "headline": "Encuentra al profesional que necesitas, cerca de ti",
+    "subheadline": "Busca entre profesionales verificados de tu zona. Con reseñas reales, fotos de sus trabajos y contacto directo.",
+    "cta_primary": {
+      "text": "Buscar profesional",
+      "context": "Gratis. Sin necesidad de registrarte."
+    },
+    "cta_secondary": {
+      "text": "Soy profesional",
+      "context": "Crea tu perfil y recibe clientes"
+    },
+    "search_placeholder": "¿Qué necesitas? Ej: gasfiter, electricista, peluquera..."
+  },
+  "social_proof": {
+    "stats": [
+      { "number": "200+", "label": "Profesionales registrados" },
+      { "number": "50+", "label": "Categorías de servicios" },
+      { "number": "4.8", "label": "Valoración promedio" }
+    ],
+    "tagline": "Profesionales reales, reseñas reales, resultados reales"
+  },
+  "how_it_works": {
+    "title": "Así de fácil funciona",
+    "steps": [
+      {
+        "icon": "search",
+        "title": "Busca lo que necesitas",
+        "description": "Escribe el servicio que buscas. Datealo te muestra los profesionales más cercanos a ti."
+      },
+      {
+        "icon": "star",
+        "title": "Compara perfiles y reseñas",
+        "description": "Revisa fotos de trabajos reales, lee reseñas de otros clientes y elige con confianza."
+      },
+      {
+        "icon": "message-circle",
+        "title": "Contacta directo",
+        "description": "Escribe por WhatsApp o llama al profesional. Sin intermediarios, sin esperas."
+      }
+    ]
+  },
+  "categories": {
+    "title": "¿Qué estás buscando?",
+    "subtitle": "Encuentra profesionales en cualquiera de estas categorías",
+    "items": [
+      { "icon": "wrench", "name": "Gasfitería", "example_query": "Gasfiter en Providencia" },
+      { "icon": "zap", "name": "Electricidad", "example_query": "Electricista para mi depa" },
+      { "icon": "scissors", "name": "Peluquería", "example_query": "Peluquera a domicilio" },
+      { "icon": "sparkles", "name": "Limpieza", "example_query": "Aseo profundo departamento" },
+      { "icon": "truck", "name": "Mudanzas", "example_query": "Mudanza dentro de Santiago" },
+      { "icon": "paintbrush", "name": "Pintura", "example_query": "Pintar living y dormitorio" },
+      { "icon": "key-round", "name": "Cerrajería", "example_query": "Cerrajero urgente en Ñuñoa" },
+      { "icon": "flower-2", "name": "Jardinería", "example_query": "Mantención de jardín" }
+    ]
+  },
+  "value_props": {
+    "title": "Por qué buscar en Datealo",
+    "items": [
+      {
+        "icon": "map-pin",
+        "title": "Profesionales de tu zona",
+        "description": "Resultados ordenados por proximidad. El profesional que necesitas puede estar a cuadras de tu casa."
+      },
+      {
+        "icon": "shield-check",
+        "title": "Perfiles verificados",
+        "description": "Cada profesional tiene su experiencia, fotos de trabajos y datos de contacto reales."
+      },
+      {
+        "icon": "star",
+        "title": "Reseñas de clientes reales",
+        "description": "Lee lo que opinan otros clientes antes de decidir. Sin reseñas inventadas."
+      },
+      {
+        "icon": "message-circle",
+        "title": "Contacto directo por WhatsApp",
+        "description": "Escribe o llama al profesional directamente. Sin formularios, sin esperar que alguien te contacte."
+      }
+    ]
+  },
+  "for_professionals": {
+    "headline": "¿Eres profesional? Haz que te encuentren",
+    "subheadline": "Crea tu perfil en Datealo y empieza a recibir clientes de tu zona. Gratis.",
+    "benefits": [
+      "Aparece cuando alguien busca tu servicio cerca",
+      "Acumula reseñas y construye tu reputación online",
+      "Recibe contactos directos por WhatsApp y teléfono"
+    ],
+    "cta": {
+      "text": "Crear mi perfil gratis",
+      "context": "Toma menos de 5 minutos"
+    }
+  },
+  "testimonials": [
+    {
+      "quote": "Se me rompió una cañería un domingo y en 10 minutos ya tenía un gasfiter contactado. Llegó en menos de una hora.",
+      "name": "Carolina Muñoz",
+      "role": "buscador",
+      "context": "Gasfitería"
+    },
+    {
+      "quote": "Desde que estoy en Datealo me llegan clientes todas las semanas. Ya no dependo solo del boca a boca.",
+      "name": "Roberto Soto",
+      "role": "profesional",
+      "context": "Electricidad"
+    },
+    {
+      "quote": "Necesitaba una limpieza profunda antes de entregar mi depa. Encontré una profesional con excelentes reseñas y quedó impecable.",
+      "name": "Martín Reyes",
+      "role": "buscador",
+      "context": "Limpieza"
+    },
+    {
+      "quote": "Me encanta que los clientes vean fotos de mis trabajos. Genera confianza y me llegan personas que ya saben lo que hago.",
+      "name": "Valentina Pérez",
+      "role": "profesional",
+      "context": "Peluquería"
+    }
+  ],
+  "final_cta": {
+    "headline": "¿Necesitas resolver algo hoy?",
+    "subheadline": "Busca, compara y contacta al profesional indicado. Así de simple.",
+    "cta": { "text": "Buscar profesional ahora" }
+  }
+}

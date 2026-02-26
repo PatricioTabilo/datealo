@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nuxt Server Endpoints"
+  short_description: "Backend liviano en Nuxt con server/api."
+  default_prompt: "Implementa endpoints en Nuxt 3 con validación, manejo de errores y acceso a datos para backend ligero."

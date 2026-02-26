@@ -1,0 +1,4 @@
+interface:
+  display_name: "Supabase Functions Logic"
+  short_description: "Logica de negocio con Supabase Functions."
+  default_prompt: "Crea o actualiza Supabase Edge Functions para mover lógica de negocio fuera del cliente y endpoints Nuxt."

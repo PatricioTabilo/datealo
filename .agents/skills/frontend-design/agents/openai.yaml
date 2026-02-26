@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nuxt UI + Supabase"
+  short_description: "Nuxt 3 UI con Tailwind, DaisyUI y Supabase."
+  default_prompt: "Implementa una vista Nuxt 3 production-ready con Tailwind y DaisyUI, conectada a Supabase con buenas prácticas."
