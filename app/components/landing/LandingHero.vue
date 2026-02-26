@@ -84,7 +84,7 @@ const { email, loading, submitted, error, submit } = useWaitlist('buscador')
             />
           </div>
           <!-- Playful overlay badge -->
-          <div class="absolute bottom-6 left-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl flex items-center gap-4 transform -rotate-3 border border-white z-10">
+          <div class="absolute bottom-6 left-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl hidden md:flex items-center gap-4 transform -rotate-3 border border-white z-10">
             <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl shadow-inner">
               <Star class="w-6 h-6 fill-current" />
             </div>
