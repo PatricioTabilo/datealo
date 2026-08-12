@@ -35,36 +35,40 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section id="categorias" class="py-24 sm:py-32 bg-base-100">
+  <section id="categorias" class="py-24 sm:py-32 bg-datealo-bg">
     <div class="container mx-auto px-5 sm:px-8">
       <!-- Header with nav arrows -->
       <div class="flex items-end justify-between mb-12 sm:mb-16">
         <div class="max-w-xl">
-          <h2 class="text-4xl sm:text-5xl font-extrabold text-base-content tracking-tight leading-tight">
+          <h2 class="text-4xl sm:text-5xl font-extrabold text-datealo-text tracking-tight leading-tight">
             {{ LANDING_CATEGORIES.title }}
           </h2>
         </div>
 
         <!-- Navigation arrows (desktop only) -->
         <div class="hidden sm:flex items-center gap-3">
-          <button
-            class="h-12 w-12 rounded-full border-2 border-base-300 flex items-center justify-center transition-all duration-200 cursor-pointer"
-            :class="canScrollLeft ? 'hover:border-primary hover:bg-primary hover:text-white text-base-content' : 'opacity-30 cursor-not-allowed text-base-content/40'"
+          <UButton
+            variant="link"
+            color="neutral"
+            class="h-12 w-12 rounded-full border-2 border-gray-200 flex items-center justify-center transition-all duration-200 cursor-pointer"
+            :class="canScrollLeft ? 'hover:border-primary hover:bg-primary hover:text-white active:text-white text-datealo-text' : 'disabled:opacity-30 disabled:cursor-not-allowed disabled:text-datealo-text/40'"
             :disabled="!canScrollLeft"
             aria-label="Anterior"
             @click="scroll('left')"
           >
             <ChevronLeft class="w-5 h-5" />
-          </button>
-          <button
-            class="h-12 w-12 rounded-full border-2 border-base-300 flex items-center justify-center transition-all duration-200 cursor-pointer"
-            :class="canScrollRight ? 'hover:border-primary hover:bg-primary hover:text-white text-base-content' : 'opacity-30 cursor-not-allowed text-base-content/40'"
+          </UButton>
+          <UButton
+            variant="link"
+            color="neutral"
+            class="h-12 w-12 rounded-full border-2 border-gray-200 flex items-center justify-center transition-all duration-200 cursor-pointer"
+            :class="canScrollRight ? 'hover:border-primary hover:bg-primary hover:text-white active:text-white text-datealo-text' : 'disabled:opacity-30 disabled:cursor-not-allowed disabled:text-datealo-text/40'"
             :disabled="!canScrollRight"
             aria-label="Siguiente"
             @click="scroll('right')"
           >
             <ChevronRight class="w-5 h-5" />
-          </button>
+          </UButton>
         </div>
       </div>
     </div>
@@ -79,7 +83,7 @@ onUnmounted(() => {
           v-for="cat in LANDING_CATEGORIES.items"
           :key="cat.name"
           href="#hero-form"
-          class="carousel-card group relative shrink-0 w-[300px] sm:w-[410px] rounded-[2.2rem] overflow-hidden aspect-[3/4] snap-start shadow-sm shadow-base-content/[0.08] text-left"
+          class="carousel-card group relative shrink-0 w-[300px] sm:w-[410px] rounded-[2.2rem] overflow-hidden aspect-[3/4] snap-start shadow-sm shadow-datealo-text/[0.08] text-left"
           :aria-label="cat.query"
         >
           <img
@@ -99,7 +103,7 @@ onUnmounted(() => {
     </div>
 
     <div class="container mx-auto px-5 sm:px-8">
-      <p class="text-base-content/50 text-sm mt-10 font-medium">
+      <p class="text-datealo-text/50 text-sm mt-10 font-medium">
         {{ LANDING_CATEGORIES.subtitle }}
       </p>
     </div>
