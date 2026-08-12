@@ -93,7 +93,7 @@ const { email, loading, submitted, error, submit } = useWaitlist('buscador')
               <Star class="w-6 h-6 fill-current" />
             </div>
             <div>
-              <p class="text-sm font-extrabold text-base-content leading-tight">Profesionales<br>verificados</p>
+              <p class="text-sm font-extrabold text-datealo-text leading-tight">Profesionales<br>verificados</p>
             </div>
           </div>
         </div>
