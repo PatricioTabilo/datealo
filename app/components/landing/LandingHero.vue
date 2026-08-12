@@ -42,25 +42,29 @@ const { email, loading, submitted, error, submit } = useWaitlist('buscador')
               <form class="flex flex-col sm:flex-row gap-2" @submit.prevent="submit">
                 <div class="flex-1 relative">
                   <label for="hero-email" class="sr-only">Email</label>
-                  <input
+                  <UInput
                     id="hero-email"
                     v-model="email"
                     type="email"
                     autocomplete="email"
                     :placeholder="LANDING_HERO.emailPlaceholder"
-                    class="w-full h-14 rounded-xl bg-base-200/50 border-0 px-4 text-base text-base-content placeholder:text-base-content/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-base-200 transition-all"
                     :disabled="loading"
+                    variant="none"
+                    class="w-full"
+                    :ui="{ base: 'h-14 rounded-xl bg-datealo-surface/50 px-4 text-base text-datealo-text placeholder:text-datealo-text/40 focus:ring-2 focus:ring-primary/20 focus:bg-datealo-surface transition-all' }"
                   />
                   <p v-if="error" class="absolute -bottom-6 left-2 text-xs text-white bg-error/90 px-2 py-1 rounded">{{ error }}</p>
                 </div>
-                <button
+                <UButton
                   type="submit"
-                  class="btn h-14 rounded-xl px-7 text-sm font-bold bg-secondary text-white border-0 hover:bg-secondary/90 hover:scale-[1.02] shadow-lg shadow-secondary/20 transition-all"
+                  variant="link"
+                  color="neutral"
+                  class="h-14 rounded-xl px-7 text-sm font-bold bg-secondary text-white hover:bg-secondary/90 hover:text-white active:text-white hover:scale-[1.02] shadow-lg shadow-secondary/20 transition-all"
                   :disabled="loading"
                 >
                   <Loader2 v-if="loading" class="h-5 w-5 animate-spin" />
                   <template v-else>{{ LANDING_HERO.cta }}</template>
-                </button>
+                </UButton>
               </form>
             </div>
           </Transition>
