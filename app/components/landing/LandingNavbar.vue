@@ -31,33 +31,44 @@ const goToTop = () => {
   >
     <div class="container mx-auto px-5 sm:px-8 flex items-center justify-between">
       <!-- Logo -->
-      <button type="button" class="group flex items-baseline gap-0 text-3xl font-extrabold tracking-tight" @click="goToTop">
+      <UButton
+        variant="link"
+        color="neutral"
+        class="group flex items-baseline gap-0 p-0 text-3xl font-extrabold tracking-tight hover:bg-transparent"
+        @click="goToTop"
+      >
         <span class="text-white">datea</span>
         <span class="text-secondary">lo</span>
-      </button>
+      </UButton>
 
       <div class="flex items-center gap-2 sm:gap-4">
         <!-- Nav links -->
-        <button
-          class="nav-link hidden sm:inline-flex items-center px-3.5 py-2 text-sm font-semibold text-white/80 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200"
+        <UButton
+          variant="link"
+          color="neutral"
+          class="nav-link hidden sm:inline-flex items-center px-3.5 py-2 text-sm font-semibold text-white/80 hover:text-white active:text-white rounded-lg hover:bg-white/10 transition-all duration-200"
           @click="scrollToSection('#categorias')"
         >
           Categorías
-        </button>
-        <button
-          class="nav-link hidden sm:inline-flex items-center px-3.5 py-2 text-sm font-semibold text-white/80 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200"
+        </UButton>
+        <UButton
+          variant="link"
+          color="neutral"
+          class="nav-link hidden sm:inline-flex items-center px-3.5 py-2 text-sm font-semibold text-white/80 hover:text-white active:text-white rounded-lg hover:bg-white/10 transition-all duration-200"
           @click="scrollToSection('#profesionales')"
         >
           Para profesionales
-        </button>
+        </UButton>
 
         <!-- CTA -->
-        <button
-          class="inline-flex items-center h-10 px-5 rounded-xl text-sm font-bold text-primary bg-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
+        <UButton
+          variant="link"
+          color="neutral"
+          class="inline-flex items-center h-10 px-5 rounded-xl text-sm font-bold text-primary hover:text-primary active:text-primary bg-white hover:bg-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
           @click="scrollToSection('#hero-form')"
         >
           Acceso anticipado
-        </button>
+        </UButton>
       </div>
     </div>
   </nav>
