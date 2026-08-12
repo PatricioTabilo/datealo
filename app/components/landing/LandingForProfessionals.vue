@@ -47,7 +47,7 @@ const { email, loading, submitted, error, submit } = useWaitlist('profesional')
 
           <!-- Inline form -->
           <div class="rounded-2xl bg-white p-3 shadow-2xl shadow-black/20">
-            <p class="text-base-content/60 text-sm mb-3 px-2 font-medium">{{ LANDING_FOR_PROFESSIONALS.ctaContext }}</p>
+            <p class="text-datealo-text/60 text-sm mb-3 px-2 font-medium">{{ LANDING_FOR_PROFESSIONALS.ctaContext }}</p>
 
             <Transition name="fade" mode="out-in">
               <div
@@ -61,25 +61,29 @@ const { email, loading, submitted, error, submit } = useWaitlist('profesional')
               <form v-else class="flex flex-col sm:flex-row gap-2" @submit.prevent="submit">
                 <div class="flex-1 min-w-0 relative">
                   <label for="pro-email" class="sr-only">Email profesional</label>
-                  <input
+                  <UInput
                     id="pro-email"
                     v-model="email"
                     type="email"
                     autocomplete="email"
                     placeholder="Tu email"
-                    class="w-full h-14 rounded-xl bg-base-200/50 border-0 px-4 text-base text-base-content placeholder:text-base-content/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-base-200 transition-all"
                     :disabled="loading"
+                    variant="none"
+                    class="w-full"
+                    :ui="{ base: 'h-14 rounded-xl bg-datealo-surface/50 px-4 text-base text-datealo-text placeholder:text-datealo-text/40 focus:ring-2 focus:ring-primary/20 focus:bg-datealo-surface transition-all' }"
                   />
                   <p v-if="error" class="absolute -bottom-6 left-2 text-xs text-error font-medium">{{ error }}</p>
                 </div>
-                <button
+                <UButton
                   type="submit"
-                  class="btn h-14 rounded-xl px-6 text-sm font-bold bg-secondary text-white border-0 hover:bg-secondary/90 shadow-lg shadow-secondary/20 transition-all shrink-0"
+                  variant="link"
+                  color="neutral"
+                  class="h-14 rounded-xl px-6 text-sm font-bold bg-secondary text-white hover:bg-secondary/90 hover:text-white active:text-white shadow-lg shadow-secondary/20 transition-all shrink-0"
                   :disabled="loading"
                 >
                   <Loader2 v-if="loading" class="h-5 w-5 animate-spin" />
                   <template v-else>{{ LANDING_FOR_PROFESSIONALS.cta }}</template>
-                </button>
+                </UButton>
               </form>
             </Transition>
           </div>
@@ -108,8 +112,8 @@ const { email, loading, submitted, error, submit } = useWaitlist('profesional')
                 </div>
               </div>
               <div>
-                <p class="text-lg font-extrabold text-base-content leading-none">4.9/5</p>
-                <p class="text-xs font-bold text-base-content/50 uppercase tracking-wider mt-1">+200 reseñas</p>
+                <p class="text-lg font-extrabold text-datealo-text leading-none">4.9/5</p>
+                <p class="text-xs font-bold text-datealo-text/50 uppercase tracking-wider mt-1">+200 reseñas</p>
               </div>
             </div>
           </div>
