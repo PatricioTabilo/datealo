@@ -8,18 +8,18 @@ const colorClasses: Record<string, string> = {
   red: 'bg-error/10 text-error border-error/20',
   amber: 'bg-amber-100 text-amber-600 border-amber-200',
   orange: 'bg-orange-100 text-orange-600 border-orange-200',
-  slate: 'bg-base-200 text-base-content/60 border-base-300',
+  slate: 'bg-datealo-surface text-datealo-text/60 border-gray-200',
 }
 </script>
 
 <template>
-  <section class="py-24 sm:py-32 bg-base-100">
+  <section class="py-24 sm:py-32 bg-datealo-bg">
     <div class="container mx-auto px-5 sm:px-8">
       <div class="max-w-2xl mx-auto text-center mb-16 sm:mb-20">
-        <h2 class="text-4xl sm:text-5xl font-extrabold text-base-content mb-6 tracking-tight leading-tight">
+        <h2 class="text-4xl sm:text-5xl font-extrabold text-datealo-text mb-6 tracking-tight leading-tight">
           {{ LANDING_PROBLEM.title }}
         </h2>
-        <p class="text-lg sm:text-xl text-base-content/60 leading-relaxed">
+        <p class="text-lg sm:text-xl text-datealo-text/60 leading-relaxed">
           {{ LANDING_PROBLEM.subtitle }}
         </p>
       </div>
@@ -28,7 +28,7 @@ const colorClasses: Record<string, string> = {
         <div
           v-for="item in LANDING_PROBLEM.items"
           :key="item.title"
-          class="flex flex-col sm:flex-row gap-5 sm:gap-6 rounded-[2rem] bg-white border border-base-200 p-6 sm:p-8 shadow-lg shadow-base-content/[0.02] hover:shadow-xl hover:shadow-base-content/[0.04] transition-shadow duration-300"
+          class="flex flex-col sm:flex-row gap-5 sm:gap-6 rounded-[2rem] bg-white border border-datealo-surface p-6 sm:p-8 shadow-lg shadow-datealo-text/[0.02] hover:shadow-xl hover:shadow-datealo-text/[0.04] transition-shadow duration-300"
         >
           <div
             class="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl flex items-center justify-center shrink-0 border"
@@ -37,10 +37,10 @@ const colorClasses: Record<string, string> = {
             <component :is="iconMap[item.icon]" class="h-6 w-6 sm:h-7 sm:w-7" />
           </div>
           <div>
-            <h3 class="text-xl font-bold text-base-content mb-2">
+            <h3 class="text-xl font-bold text-datealo-text mb-2">
               {{ item.title }}
             </h3>
-            <p class="text-base text-base-content/60 leading-relaxed">
+            <p class="text-base text-datealo-text/60 leading-relaxed">
               {{ item.description }}
             </p>
           </div>
