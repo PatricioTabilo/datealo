@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@nuxt/ui";
 @plugin "daisyui" {
   themes: datealo --default;
 }
@@ -12,6 +13,41 @@
   --color-datealo-surface: #F3F4F6;
   --color-datealo-text: #1F2937;
   --color-datealo-muted: #6B7280;
+}
+
+/* Escalas para Nuxt UI (A-004). Requieren los 11 tonos completos: Nuxt UI los referencia por número
+   en sus compoundVariants, no solo el tono base. El 500 de cada una es el hex de marca exacto que
+   DaisyUI usaba como --color-primary/--color-secondary, para que el resultado visual no cambie. */
+@theme static {
+  --color-indigo-datealo-50: #F9F9FD;
+  --color-indigo-datealo-100: #F0EFFA;
+  --color-indigo-datealo-200: #CFCEF3;
+  --color-indigo-datealo-300: #A2A0E8;
+  --color-indigo-datealo-400: #726FDC;
+  --color-indigo-datealo-500: #423ED0;
+  --color-indigo-datealo-600: #312DB8;
+  --color-indigo-datealo-700: #282598;
+  --color-indigo-datealo-800: #201E7B;
+  --color-indigo-datealo-900: #1D1B5F;
+  --color-indigo-datealo-950: #141343;
+
+  --color-turquesa-datealo-50: #F9FDFD;
+  --color-turquesa-datealo-100: #F4FBFC;
+  --color-turquesa-datealo-200: #D2F3F6;
+  --color-turquesa-datealo-300: #A3E6EC;
+  --color-turquesa-datealo-400: #71D9E2;
+  --color-turquesa-datealo-500: #3ECBD7;
+  --color-turquesa-datealo-600: #29B7C4;
+  --color-turquesa-datealo-700: #2298A2;
+  --color-turquesa-datealo-800: #1B7C84;
+  --color-turquesa-datealo-900: #1A6168;
+  --color-turquesa-datealo-950: #12464B;
+}
+
+/* Radio base de Nuxt UI (A-004): DaisyUI usaba --radius-btn: 0.75rem / --radius-box: 1rem.
+   --ui-radius es un multiplicador, no un valor 1:1 — 0.5rem reproduce el mismo look "generoso". */
+:root {
+  --ui-radius: 0.5rem;
 }
 
 /* DaisyUI custom theme */
