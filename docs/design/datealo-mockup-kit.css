@@ -1,0 +1,159 @@
+/*
+ * Kit de mockups de Datealo
+ * =========================
+ *
+ * Espeja los tokens de `app/assets/css/main.css`. Si ese archivo cambia, este se actualiza a mano
+ * (son ~20 líneas) y se anota en el commit — un mockup con tokens viejos describe un producto
+ * que no existe.
+ *
+ * Los componentes NO viven acá: salen de DaisyUI, cargado por CDN en el esqueleto del mockup.
+ * Este archivo aporta solo dos cosas: los tokens del tema y los marcos de dispositivo.
+ *
+ * Uso: ver docs/design/README.md
+ */
+
+/* ---------------------------------------------------------------- Tokens del tema `datealo` */
+
+[data-theme='datealo'] {
+  --color-base-100: #fafafa;
+  --color-base-200: #f3f4f6;
+  --color-base-300: #e5e7eb;
+  --color-base-content: #1f2937;
+  --color-primary: #423ed0;
+  --color-primary-content: #ffffff;
+  --color-secondary: #3ecbd7;
+  --color-secondary-content: #1f2937;
+  --color-accent: #3ecbd7;
+  --color-accent-content: #1f2937;
+  --color-neutral: #1f2937;
+  --color-neutral-content: #ffffff;
+  --color-success: #10b981;
+  --color-success-content: #ffffff;
+  --color-error: #ef4444;
+  --color-error-content: #ffffff;
+  --radius-btn: 0.75rem;
+  --radius-box: 1rem;
+}
+
+:root {
+  --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --mockup-canvas: #e7e8ec;
+  --mockup-label: #6b7280;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--mockup-canvas);
+  color: var(--color-base-content);
+  margin: 0;
+  padding: 2.5rem 1.5rem;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+/* ---------------------------------------------------------------- Marcos de dispositivo */
+
+.frames {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.frame {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.frame-label {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mockup-label);
+}
+
+.frame-label small {
+  display: block;
+  margin-top: 0.125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #9ca3af;
+}
+
+/* El viewport real del mockup. `overflow: hidden` recorta lo que no cabe:
+   ver qué queda fuera del marco es justamente para lo que sirve. */
+.frame-viewport {
+  background: var(--color-base-100);
+  border-radius: 1.75rem;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 10px 30px -12px rgb(31 41 55 / 0.25);
+  overflow: hidden;
+  position: relative;
+}
+
+.frame-mobile .frame-viewport {
+  width: 390px;
+  height: 844px;
+}
+
+.frame-desktop .frame-viewport {
+  width: 1280px;
+  height: 800px;
+  border-radius: 0.875rem;
+}
+
+/* Alto libre: para pantallas largas que se revisan completas, sin scroll interno. */
+.frame-viewport.is-auto {
+  height: auto;
+  min-height: 0;
+}
+
+/* Barra de estado del celular. Decorativa: da la referencia de dónde empieza el contenido real. */
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-base-content);
+}
+
+/* Área segura inferior, donde vive el CTA fijo en móvil. */
+.safe-bottom {
+  padding-bottom: 1.25rem;
+}
+
+/* Marcador de pliegue: lo que queda debajo de esta línea no se ve sin hacer scroll. */
+.fold {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px dashed #ef4444;
+  pointer-events: none;
+}
+
+.fold::after {
+  content: 'pliegue';
+  position: absolute;
+  right: 0.5rem;
+  top: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: #ef4444;
+}
