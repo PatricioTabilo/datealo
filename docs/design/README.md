@@ -21,19 +21,26 @@ debería obligar a abrir cinco pestañas.
 
 ```html
 <!doctype html>
-<html lang="es-CL" data-theme="datealo">
+<html lang="es-CL">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>V-002 Resultados de búsqueda — misión 01</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/daisyui.css" rel="stylesheet" />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
   </head>
 
   <body>
@@ -45,7 +52,8 @@ debería obligar a abrir cinco pestañas.
         </div>
         <div class="frame-viewport">
           <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
-          <!-- Contenido real de la pantalla, con DaisyUI y utilidades de Tailwind -->
+          <!-- Contenido real de la pantalla, con utilidades de Tailwind: bg-primary, text-primary,
+               rounded-xl, etc. reproducen el look real porque apuntan a las variables --ui-* del kit -->
         </div>
       </section>
 
@@ -60,12 +68,16 @@ debería obligar a abrir cinco pestañas.
 
 Tres detalles que importan:
 
-- **El `data-theme="datealo"` va en el `<html>`**, igual que en la app real (`nuxt.config.ts`). Sin eso los
-  componentes de DaisyUI salen con el tema por defecto y el mockup miente sobre el color.
-- **El kit se carga después de DaisyUI.** Define los tokens del tema y los marcos; los componentes los pone
-  DaisyUI.
-- **Requiere internet.** Tailwind, DaisyUI y las tipografías vienen por CDN. Si vas a trabajar sin
-  conexión, descarga los dos archivos a `docs/design/vendor/` y apunta los `src`/`href` ahí.
+- **El `@theme` va inline, no en el kit.** El Play CDN de Tailwind solo lee `@theme` de un
+  `<style type="text/tailwindcss">` en el propio HTML — nunca de un archivo enlazado con `<link>`, así que
+  no hay forma de meterlo en `datealo-mockup-kit.css`. Por eso el esqueleto lo trae listo: se copia tal
+  cual, no hay que tocarlo salvo que se agregue un color nuevo.
+- **Sin componentes de librería.** Desde que la app usa Nuxt UI (A-004) no hay una versión "para mockups"
+  de sus componentes — son solo utilidades de Tailwind con overrides completos, igual que en el código real
+  (`<UButton variant="link">` con todas sus clases pisadas). Un botón en el mockup es
+  `<button class="rounded-xl bg-primary px-6 py-3 font-bold text-white">`, no un componente.
+- **Requiere internet.** Tailwind y las tipografías vienen por CDN. Si vas a trabajar sin conexión,
+  descarga el script a `docs/design/vendor/` y apuntá el `src` ahí.
 
 ## Cómo verlo
 
@@ -98,6 +110,14 @@ un host externo.
 
 ## Sincronizar el kit
 
-`datealo-mockup-kit.css` espeja los tokens de `app/assets/css/main.css`. No hay script: son unas veinte
-líneas y se copian a mano cuando el tema cambia. Si tocas el tema de la app y no el kit, los mockups
-siguientes describirán un producto que ya no existe.
+`datealo-mockup-kit.css` espeja las dos capas de theming de la app (A-004): los tokens crudos de
+`app/assets/css/main.css` y los tokens semánticos que Nuxt UI genera en runtime desde
+`app/app.config.ts`. Estos últimos no se calculan a mano — se leen de la app real corriendo
+(`getComputedStyle(document.documentElement)` sobre cada `--ui-*`) y se copian tal cual, oklch()
+incluido, porque es un color CSS válido y convertirlo a hex solo agrega una oportunidad de
+equivocarse.
+
+No hay script: son unas treinta líneas y se copian a mano cuando el tema cambia. Si se agrega un color
+nuevo (por ejemplo `warning`), toca actualizar tres lugares juntos: `app.config.ts`, el kit, y el bloque
+`@theme` inline del esqueleto de arriba (agregar `--color-warning: var(--ui-warning);`). Si tocás el tema
+de la app y no el kit, los mockups siguientes describirán un producto que ya no existe.
