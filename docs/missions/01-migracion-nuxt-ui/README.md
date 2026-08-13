@@ -15,10 +15,9 @@ tomada y vive en [A-004](../../../.claude/skills/arquitectura/SKILL.md#a-004--nu
 | Ingeniería | vigente — aprobado por Patricio Tabilo el 2026-08-11 | ninguno — los 12 issues (#1 a #12) están mergeados; TR-001 y TR-002 documentados en `ingenieria.md` |
 
 Los 12 issues del plan de construcción (S-001 a S-012) están mergeados. TR-001 (bundle) quedó medido y
-aceptado. TR-002 (regresión visual) no se verificó a pixel en 390px — la herramienta de resize del browser
-no funcionó en este entorno — pero se descarta por revisión de código: ningún slice tocó una clase
-responsive en los 8 componentes migrados, así que no hay mecanismo por el que mobile difiera de desktop sin
-que también difiriera ahí. Detalle en `ingenieria.md`.
+aceptado. TR-002 (regresión visual) se verificó en desktop en cada PR y en 390px al cierre de la misión,
+con un `<iframe>` de 390px como workaround al resize del browser que no funcionó durante toda la
+construcción. Los 8 componentes calzan en mobile. Detalle en `ingenieria.md`.
 
 ## Resumen ejecutivo
 
