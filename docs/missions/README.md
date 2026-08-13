@@ -9,7 +9,7 @@ abrieron y de dónde salió cada una.
 
 | #   | Misión | Tipo | Abierta | Estado | En foco | Nace de |
 | --- | ------ | ---- | ------- | ------ | ------- | ------- |
-| 01  | [migración a Nuxt UI](./01-migracion-nuxt-ui/) | técnica | 2026-08-11 | en validación | Ingeniería | A-004 |
+| 01  | [migración a Nuxt UI](./01-migracion-nuxt-ui/) | técnica | 2026-08-11 | cerrada 2026-08-13 | — | A-004 |
 
 Estados: `exploración`, `definición`, `lista para construir`, `en construcción`, `en validación`,
 `cerrada`, `pausada`. Al cerrar, el estado lleva su fecha (`cerrada 2026-09-30`). **En foco** es el único

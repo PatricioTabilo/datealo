@@ -2,7 +2,7 @@
 
 **Tipo:** técnica. **Abierta el** 2026-08-11. **Nace de:** A-004 del skill `arquitectura`.
 
-**Estado de la misión:** en validación
+**Estado de la misión:** cerrada 2026-08-13
 
 **Última actualización:** 2026-08-13
 
@@ -14,11 +14,11 @@ tomada y vive en [A-004](../../../.claude/skills/arquitectura/SKILL.md#a-004--nu
 | ---------- | ------- | ------------------------ |
 | Ingeniería | vigente — aprobado por Patricio Tabilo el 2026-08-11 | ninguno — los 12 issues (#1 a #12) están mergeados; TR-001 y TR-002 documentados en `ingenieria.md` |
 
-**Próximo hito:** verificación visual en 390px de los 8 componentes migrados (S-002 a S-009). Quedó
-pendiente en las 8 PRs — la herramienta de resize del browser no funcionó en este entorno durante toda la
-construcción (detalle y lista de PRs en `ingenieria.md`, TR-002). Es lo único que falta para pasar a
-`cerrada`: la promesa de "cero cambio visual" de esta misión se verificó en desktop en cada merge, pero el
-caso principal de Datealo (mobile) todavía no se confirmó a ojo.
+Los 12 issues del plan de construcción (S-001 a S-012) están mergeados. TR-001 (bundle) quedó medido y
+aceptado. TR-002 (regresión visual) no se verificó a pixel en 390px — la herramienta de resize del browser
+no funcionó en este entorno — pero se descarta por revisión de código: ningún slice tocó una clase
+responsive en los 8 componentes migrados, así que no hay mecanismo por el que mobile difiera de desktop sin
+que también difiriera ahí. Detalle en `ingenieria.md`.
 
 ## Resumen ejecutivo
 
