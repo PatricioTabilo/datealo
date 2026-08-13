@@ -73,7 +73,13 @@ documenta la receta de "endpoint de escritura" en `arquitectura/references/recet
 - **Entrada:** el `H3Event` de la request. Nunca confía en un `userId` que venga del body o la query.
 - **Salida:** `{ id: string, email: string | null }` del usuario autenticado.
 - **Invariantes:** valida el JWT de Supabase contra la secret key del servidor, no contra la publishable
-  key del cliente — un JWT expirado o manipulado nunca resuelve a un usuario válido.
+  key del cliente — un JWT expirado o manipulado nunca resuelve a un usuario válido. **La sesión viaja en
+  cookies, no en `localStorage`**: el cliente se arma con `createServerClient()` de `@supabase/ssr` leyendo
+  las cookies de la request, nunca con el `createClient()` plano de `@supabase/supabase-js` — ese guarda la
+  sesión en `localStorage`, invisible para el servidor, y el síntoma es silencioso (login "funciona" en el
+  browser, cualquier endpoint protegido devuelve `401` siempre). El cliente del browser usa el par que
+  corresponde, `createBrowserClient()`, para que ambos lados lean la misma cookie. Receta completa en
+  [`recetas.md`](../../../.claude/skills/arquitectura/references/recetas.md#requireuser-con-supabasessr).
 - **Errores:** sin sesión o sesión inválida → `401 { error: 'unauthorized' }`. El llamador decide si eso
   termina la request (recurso privado) o si sigue como anónimo (recurso público).
 - **Contrato de producto:** A-002.
