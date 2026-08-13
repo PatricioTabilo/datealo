@@ -43,7 +43,7 @@ publishable key, porque la sesión de Auth tiene que vivir ahí. Nitro es el ún
 con la API de Resend. Supabase Auth es el único que habla con el transporte SMTP — eso lo configura el
 dashboard de Supabase, no código de la app.
 
-| Componente                      | Responsabilidad                                              | No debe decidir                        | Contratos     |
+| Componente                      | Responsabilidad                                              | No debe decidir                        | Sustento      |
 | -------------------------------- | -------------------------------------------------------------- | ----------------------------------------- | -------------- |
 | `useDb()` (`server/utils/db.ts`) | Conexión singleton a Postgres vía Drizzle                    | Autorización, forma de la respuesta       | A-001, A-003  |
 | `requireUser()` (`server/utils/auth.ts`) | Validar la sesión de Supabase Auth en el servidor      | Si el usuario es dueño del recurso pedido | A-002         |
@@ -147,22 +147,33 @@ negocio (misión 03).
 ## Plan de construcción
 
 Corte por pieza de infraestructura: cada slice deja algo verificable de punta a punta (no solo "el
-paquete quedó instalado"). S-001 es la base — nada más funciona sin la conexión a Postgres. S-002 y S-003
-no dependen entre sí pero ambos necesitan S-001 para `runtimeConfig`. S-004 depende de que Resend ya esté
-integrado (S-003 verifica el mecanismo de envío).
+paquete quedó instalado"). **Los cuatro son independientes entre sí y se pueden construir y mergear en
+paralelo** — ninguno toca código que otro necesite:
 
-Ninguno de los cuatro slices depende de qué dominio respalda las credenciales de Resend (TQ-001,
+- S-001 (Postgres/Drizzle) y S-002 (Auth) son integraciones distintas de Supabase que no se tocan: `useDb()`
+  usa el driver de Postgres, `requireUser()` usa `@supabase/supabase-js` con la secret key. Ninguno de los
+  dos lee lo que el otro escribe en `runtimeConfig` — cada uno agrega sus propias claves.
+- S-003 (SMTP custom en el dashboard de Supabase) no toca código de este repo en absoluto.
+- S-004 (`sendEmail()`) usa la API HTTP de Resend, un camino completamente distinto del SMTP que configura
+  S-003 — comparten la cuenta de Resend, no código. Su única precondición real es que exista la API key de
+  Resend, que es un dato externo, no un slice.
+
+Ninguno de los cuatro depende tampoco de qué dominio respalda las credenciales de Resend (TQ-001,
 resuelta): el código consume `resendApiKey` y `emailFrom` como variables de entorno, y la verificación de
 dominio en el dashboard de Resend es un paso operativo de Patricio, en paralelo a esta misión, sin bloquear
 ningún merge. El único efecto de hacerlo después es que hasta entonces el correo real solo le llega a
 destinatarios que Resend permita sin dominio verificado (ver TR-003).
 
+**S-003 es el único que no produce un PR** — es configuración de dashboard, no código. Se cierra con un
+comentario de confirmación en el issue, no con un merge; es la excepción al patrón "un Issue = un PR" del
+resto del repo, no un error de corte.
+
 | ID    | Slice (una frase, sin "y") | Sustento | Criterio de aceptación principal | Depende de | Issue |
 | ----- | --------------------------- | -------- | ----------------------------------- | ---------- | ----- |
-| S-001 | Instalar y conectar Supabase + Drizzle | A-001, A-003, TC-001 | `useDb()` existe en `server/utils/db.ts`; `/api/health/db` desplegado en Vercel responde 200 con un `SELECT 1` contra el pooler, con `prepare: false` | — | [#31](https://github.com/PatricioTabilo/datealo/issues/31) |
-| S-002 | Autenticación de servidor con Supabase Auth | A-002, TC-002 | `requireUser()` existe en `server/utils/auth.ts`; un endpoint de prueba responde `401` sin sesión y `200` con una sesión real de un usuario de prueba | S-001 | [#32](https://github.com/PatricioTabilo/datealo/issues/32) |
-| S-003 | Configurar Resend como SMTP custom de Supabase Auth | T-002, T-003, TR-001 | El dashboard de Supabase Auth queda apuntando al SMTP de Resend con la API key de `NUXT_RESEND_API_KEY`; un signup de prueba dispara el correo de confirmación y llega a un destinatario válido para la cuenta de Resend usada, sin tocar el límite de 2/hora por defecto | S-001 | [#33](https://github.com/PatricioTabilo/datealo/issues/33) |
-| S-004 | `sendEmail()` genérico sobre la API de Resend | TC-003 | Llamar `sendEmail()` con un template mínimo entrega el correo usando `resendApiKey`/`emailFrom` de `runtimeConfig`; una API key inválida o un rate limit se propagan como error legible, no un `500` genérico | S-001, S-003 | [#34](https://github.com/PatricioTabilo/datealo/issues/34) |
+| S-001 | Conectar Supabase vía Drizzle | A-001, A-003, TC-001 | `useDb()` existe en `server/utils/db.ts`; `/api/health/db` desplegado en Vercel responde 200 con un `SELECT 1` contra el pooler, con `prepare: false` | — | [#31](https://github.com/PatricioTabilo/datealo/issues/31) |
+| S-002 | Exponer la sesión de Supabase Auth en el servidor | A-002, TC-002 | `requireUser()` existe en `server/utils/auth.ts`; `GET /api/auth/me` responde `401` sin sesión y `200 { id, email }` con una sesión real de un usuario de prueba — queda como endpoint permanente, no de descarte, porque el frontend lo necesita para saber si hay sesión activa | — | [#32](https://github.com/PatricioTabilo/datealo/issues/32) |
+| S-003 | Configurar Resend como SMTP custom de Supabase Auth | T-002, T-003, TR-001 | El dashboard de Supabase Auth queda apuntando al SMTP de Resend con su API key; un `curl -X POST` contra `POST /auth/v1/signup` de Supabase (no hay código de la app que dispare signup todavía — eso es la misión 04) hace llegar el correo de confirmación a un destinatario válido para la cuenta de Resend usada, sin tocar el límite de 2/hora por defecto | — | [#33](https://github.com/PatricioTabilo/datealo/issues/33) |
+| S-004 | `sendEmail()` genérico sobre la API de Resend | TC-003 | `sendEmail()` existe en `server/utils/email.ts`; test unitario con el SDK de Resend mockeado verifica la forma del payload y el mapeo de errores; un envío real de una vez (script local, no código que se mergea) contra el sandbox de Resend confirma que llega, usando `resendApiKey`/`emailFrom` de `runtimeConfig` | requiere que exista la API key de Resend (precondición externa, no un slice) | [#34](https://github.com/PatricioTabilo/datealo/issues/34) |
 
 ## Decisiones técnicas
 
