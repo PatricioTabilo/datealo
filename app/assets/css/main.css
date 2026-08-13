@@ -1,8 +1,5 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
-@plugin "daisyui" {
-  themes: datealo --default;
-}
 
 @theme {
   --font-heading: "Plus Jakarta Sans", sans-serif;
@@ -42,35 +39,27 @@
   --color-turquesa-datealo-800: #1B7C84;
   --color-turquesa-datealo-900: #1A6168;
   --color-turquesa-datealo-950: #12464B;
+
+  /* El "emerald" nativo de Tailwind v4 no sirve acá: sus colores por defecto se redefinieron en
+     OKLCH y el 500 ya no es el hex clásico #10B981 (queda en #00BC7D). DaisyUI usaba el hex exacto,
+     así que esta escala existe solo para reproducirlo, igual que índigo/turquesa arriba. */
+  --color-datealo-success-50: #F1FEFA;
+  --color-datealo-success-100: #BBF9E4;
+  --color-datealo-success-200: #85F4CF;
+  --color-datealo-success-300: #4FF0BA;
+  --color-datealo-success-400: #19EBA5;
+  --color-datealo-success-500: #10B981;
+  --color-datealo-success-600: #0EA170;
+  --color-datealo-success-700: #0C8960;
+  --color-datealo-success-800: #0A714F;
+  --color-datealo-success-900: #085A3E;
+  --color-datealo-success-950: #06422E;
 }
 
 /* Radio base de Nuxt UI (A-004): DaisyUI usaba --radius-btn: 0.75rem / --radius-box: 1rem.
    --ui-radius es un multiplicador, no un valor 1:1 — 0.5rem reproduce el mismo look "generoso". */
 :root {
   --ui-radius: 0.5rem;
-}
-
-/* DaisyUI custom theme */
-[data-theme="datealo"] {
-  --color-base-100: #FAFAFA;
-  --color-base-200: #F3F4F6;
-  --color-base-300: #E5E7EB;
-  --color-base-content: #1F2937;
-  --base-200-rgb: 243 244 246;
-  --color-primary: #423ED0;
-  --color-primary-content: #FFFFFF;
-  --color-secondary: #3ECBD7;
-  --color-secondary-content: #1F2937;
-  --color-accent: #3ECBD7;
-  --color-accent-content: #1F2937;
-  --color-neutral: #1F2937;
-  --color-neutral-content: #FFFFFF;
-  --color-success: #10B981;
-  --color-success-content: #FFFFFF;
-  --color-error: #EF4444;
-  --color-error-content: #FFFFFF;
-  --radius-btn: 0.75rem;
-  --radius-box: 1rem;
 }
 
 @layer base {
