@@ -10,6 +10,17 @@ abrieron y de dónde salió cada una.
 | #   | Misión | Tipo | Abierta | Estado | En foco | Nace de |
 | --- | ------ | ---- | ------- | ------ | ------- | ------- |
 | 01  | [migración a Nuxt UI](./01-migracion-nuxt-ui/) | técnica | 2026-08-11 | cerrada 2026-08-13 | — | A-004 |
+| 02  | [base de datos y Auth (config)](./02-base-de-datos-y-auth/) | técnica | 2026-08-13 | exploración | — | A-001, A-002, A-003 |
+| 03  | [taxonomía: categorías y comunas](./03-taxonomia-categorias-y-comunas/) | producto | 2026-08-13 | exploración | — | — |
+| 04  | [registro y perfil de profesional](./04-registro-perfil-profesional/) | producto | 2026-08-13 | exploración | — | — |
+| 05  | [perfil público de profesional](./05-perfil-publico-profesional/) | producto | 2026-08-13 | exploración | — | — |
+| 06  | [búsqueda y resultados](./06-busqueda-resultados/) | producto | 2026-08-13 | exploración | — | — |
+| 07  | [reseñas verificadas por contacto](./07-resenas-verificadas-por-contacto/) | producto | 2026-08-13 | exploración | — | — |
+
+Misiones 02 a 07 son las seis que llevan al MVP (registrarse, mostrarse, buscar, reseñar), en el orden de
+dependencia definido en la conversación de roadmap del 2026-08-13 — el número no es prioridad, pero acá sí
+refleja el orden real en que cada una desbloquea a la siguiente (ver el "Depende de" en el README de cada
+una).
 
 Estados: `exploración`, `definición`, `lista para construir`, `en construcción`, `en validación`,
 `cerrada`, `pausada`. Al cerrar, el estado lleva su fecha (`cerrada 2026-09-30`). **En foco** es el único
