@@ -9,19 +9,23 @@ Este skill aplica cuando el foco es `experiencia.md`: vistas, flujos, estados, c
 Para el problema y el alcance, ver `discovery-product`. Para arquitectura y contratos, ver
 `discovery-engineering`.
 
-DaisyUI v5 sobre Tailwind v4 es la base para todo elemento interactivo. La investigación de UX define el
-comportamiento esperado; el componente concreto de DaisyUI se decide en implementación.
+Nuxt UI v4 (sobre Reka UI, Tailwind v4) es la base para todo elemento interactivo. La investigación de UX
+define el comportamiento esperado; el componente concreto de Nuxt UI se decide en implementación.
 
-Cuando una vista necesita algo que DaisyUI no tiene (un mapa interactivo, un selector de zona, una galería
-de trabajos), experiencia no elige librería ni componente: **especifica la interacción** —qué se hace, cómo
-se manipula, qué responde—, y esa mecánica se funda en research, heurísticas y la `investigacion.md` de la
-misión, no pidiéndole al dueño de producto que adivine la mejor forma. Al dueño se le llevan trade-offs de
-producto; la interacción se investiga. La decisión build-vs-buy es de ingeniería, contra esa especificación
-(ver YAGNI en `CLAUDE.md`).
+A diferencia de DaisyUI (solo CSS), Nuxt UI trae componentes con comportamiento real resuelto —
+`USelectMenu`/`UInputMenu` para selectores con búsqueda, `UCarousel` para galerías con swipe, `UModal` con
+focus trap. Eso corre el límite de lo que cuenta como "algo que la librería no tiene": ya no es un selector
+de zona ni una galería de trabajos, es algo sin behavior estándar — un mapa interactivo, un editor de
+disponibilidad tipo calendario visual. Ahí experiencia no elige librería ni componente: **especifica la
+interacción** —qué se hace, cómo se manipula, qué responde—, y esa mecánica se funda en research,
+heurísticas y la `investigacion.md` de la misión, no pidiéndole al dueño de producto que adivine la mejor
+forma. Al dueño se le llevan trade-offs de producto; la interacción se investiga. La decisión build-vs-buy
+es de ingeniería, contra esa especificación (ver YAGNI en `CLAUDE.md`).
 
-El design system es el tema `datealo` de DaisyUI: fondo claro `#FAFAFA`, primario índigo `#423ED0`,
-secundario turquesa `#3ECBD7`, texto `#1F2937`, radios generosos (`--radius-box: 1rem`), Plus Jakarta Sans
-para títulos y DM Sans para cuerpo. La fuente de verdad es `app/assets/css/main.css`. Cualquier propuesta
+El design system son los tokens de datealo mapeados a Nuxt UI (A-004 en el skill `arquitectura`): fondo
+claro `#FAFAFA`, primario índigo `#423ED0`, secundario turquesa `#3ECBD7`, texto `#1F2937`, radio generoso
+(`--ui-radius: 0.5rem`), Plus Jakarta Sans para títulos y DM Sans para cuerpo. La fuente de verdad son
+`app/assets/css/main.css` (tokens crudos) y `app/app.config.ts` (mapeo semántico). Cualquier propuesta
 visual parte de ahí.
 
 ## La landing ya hizo promesas públicas
@@ -261,8 +265,11 @@ Tres cosas que el kit ya resuelve:
 - **Los tokens de color, radio y tipografía salen de `docs/design/datealo-mockup-kit.css`**, que espeja
   `app/assets/css/main.css`. Un token escrito a mano en el mockup queda desactualizado sin que nadie lo
   note, y el mockup pasa a describir un producto que no existe.
-- **Los componentes salen de DaisyUI**, cargado por CDN en el mismo esqueleto. Si el mockup necesita algo
-  que DaisyUI no da, se arma con utilidades de Tailwind, no con CSS inventado.
+- **Sin componentes de librería.** Un mockup estático no tiene Vue corriendo, así que no hay Nuxt UI de
+  verdad — se arma con utilidades de Tailwind con overrides completos, coloreadas con las variables
+  `--ui-*` del kit. Mismo resultado visual que el código real (`<UButton variant="link">` totalmente
+  sobrescrito, ver misión 01). Si el mockup necesita algo sin behavior estándar (mapa, calendario visual),
+  se especifica la interacción y se deja como nota para ingeniería, no se inventa con CSS.
 - **El marco de dispositivo correcto**: `frame-mobile` (390px) siempre; `frame-desktop` además si la
   pantalla también vive ahí.
 
