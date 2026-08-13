@@ -12,8 +12,10 @@ interfaz (A-004), la migración está en curso — ver la [misión 01](../../../
 - [Instalar la base de datos](#instalar-la-base-de-datos)
 - [El cliente de base de datos](#el-cliente-de-base-de-datos)
 - [Secretos y runtimeConfig](#secretos-y-runtimeconfig)
+- [`requireUser()` con `@supabase/ssr`](#requireuser-con-supabasessr)
 - [Un endpoint de lectura](#un-endpoint-de-lectura)
 - [Un endpoint de escritura, con su verificación](#un-endpoint-de-escritura-con-su-verificación)
+- [Validación de entrada derivada del schema (drizzle-zod)](#validación-de-entrada-derivada-del-schema-drizzle-zod)
 - [Agregar una tabla](#agregar-una-tabla)
 - [Desplegar a Vercel](#desplegar-a-vercel)
 - [Antes de dar por terminado un endpoint](#antes-de-dar-por-terminado-un-endpoint)
@@ -24,7 +26,7 @@ interfaz (A-004), la migración está en curso — ver la [misión 01](../../../
 ```bash
 npm i drizzle-orm postgres
 npm i -D drizzle-kit
-npm i zod          # validación de entrada en los endpoints
+npm i zod drizzle-zod   # validación de entrada derivada del schema — ver receta más abajo
 ```
 
 `postgres.js` es el driver que documenta Drizzle para Supabase. No usar `node-postgres` salvo que aparezca
@@ -91,7 +93,83 @@ NUXT_PUBLIC_SUPABASE_KEY=...
 **La regla que no se negocia:** todo lo que entra a `public` es legible desde el código fuente de la página.
 Antes de agregar una clave ahí, la pregunta es "¿me da lo mismo publicar esto en el README?".
 
+## `requireUser()` con `@supabase/ssr`
+
+```bash
+npm i @supabase/ssr @supabase/supabase-js
+```
+
+La sesión viaja en cookies, no en `localStorage` (ver "La sesión viaja en cookies" en A-001 de
+[`SKILL.md`](../SKILL.md)). El servidor arma su cliente con `createServerClient()`, leyendo y escribiendo
+las cookies de la request vía los helpers de `h3` — nunca con el `createClient()` plano de
+`@supabase/supabase-js`, que no sabe de cookies de servidor.
+
+```ts
+// server/utils/auth.ts
+import { createServerClient } from '@supabase/ssr'
+import { parseCookies, setCookie } from 'h3'
+import type { H3Event } from 'h3'
+
+function serverSupabase(event: H3Event) {
+  const { public: pub, supabaseSecretKey } = useRuntimeConfig()
+  return createServerClient(pub.supabaseUrl, supabaseSecretKey, {
+    cookies: {
+      getAll: () => Object.entries(parseCookies(event)).map(([name, value]) => ({ name, value })),
+      setAll: (cookies) => cookies.forEach(({ name, value, options }) => setCookie(event, name, value, options)),
+    },
+  })
+}
+
+export async function requireUser(event: H3Event) {
+  const supabase = serverSupabase(event)
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data.user) {
+    throw createError({ statusCode: 401, statusMessage: 'unauthorized' })
+  }
+  return { id: data.user.id, email: data.user.email ?? null }
+}
+```
+
+El cliente del browser usa el par que corresponde — `createBrowserClient()`, no `createClient()` — para que
+la sesión que arma el login quede en la misma cookie que el servidor sabe leer:
+
+```ts
+// app/plugins/supabase.client.ts
+import { createBrowserClient } from '@supabase/ssr'
+
+export default defineNuxtPlugin(() => {
+  const { public: pub } = useRuntimeConfig()
+  const supabase = createBrowserClient(pub.supabaseUrl, pub.supabaseKey)
+  return { provide: { supabase } }
+})
+```
+
+Mezclar los dos pares (`createClient()` en el browser con `createServerClient()` en el servidor, o
+viceversa) es el error típico: cada mitad cree que la sesión existe y ninguna la encuentra donde la otra la
+dejó.
+
 ## Un endpoint de lectura
+
+`findPublicProfile` no hace `select().from(professionals)` — selecciona las columnas públicas a mano.
+Es lo que materializa A-005: una columna nueva en la tabla (una nota de moderación, un score interno) es
+privada hasta que alguien la agrega acá a propósito, no por default.
+
+```ts
+// server/utils/professionals.ts
+export async function findPublicProfile(id: string) {
+  const [row] = await useDb()
+    .select({
+      id: professionals.id,
+      displayName: professionals.displayName,
+      category: professionals.category,
+      comuna: professionals.comuna,
+      // professionals.internalModerationNotes, por ejemplo, no entra acá — y por eso nunca sale
+    })
+    .from(professionals)
+    .where(eq(professionals.id, id))
+  return row
+}
+```
 
 ```ts
 // server/api/professionals/[id].get.ts
@@ -102,7 +180,7 @@ const params = z.object({ id: z.string().uuid() })
 export default defineEventHandler(async (event) => {
   const { id } = await getValidatedRouterParams(event, params.parse)
 
-  const profile = await findPublicProfile(id)   // server/utils/professionals.ts
+  const profile = await findPublicProfile(id)   // server/utils/professionals.ts — ya viene filtrado (A-005)
   if (!profile) {
     throw createError({ statusCode: 404, statusMessage: 'not_found' })
   }
@@ -150,6 +228,58 @@ export default defineEventHandler(async (event) => {
 
 Devolver `404` en vez de `403` cuando el recurso no existe evita confirmarle a un tercero que un ID es
 válido. Cuando existe pero no es suyo, `403` es correcto y más útil para depurar.
+
+## Validación de entrada derivada del schema (drizzle-zod)
+
+Escribir un `z.object()` a mano por endpoint duplica lo que el schema de Drizzle ya sabe: el tipo de cada
+columna, si es nullable, el largo de un `varchar`. Cuando el schema cambia — una columna pasa a
+`notNull()`, un `varchar(80)` pasa a `120` — el `z.object()` escrito a mano no se entera solo; sigue
+validando la regla vieja hasta que alguien lo nota, casi siempre en producción.
+
+`drizzle-zod` genera el `z.object()` desde la tabla, una vez, junto al schema:
+
+```ts
+// server/db/schema/professionals.ts
+import { pgTable, uuid, text, timestamp } from 'drizzle-orm/pg-core'
+import { createInsertSchema, createUpdateSchema } from 'drizzle-zod'
+
+export const professionals = pgTable('professionals', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull(),
+  displayName: text('display_name').notNull(),
+  phone: text('phone').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+})
+
+export const insertProfessionalSchema = createInsertSchema(professionals)
+export const updateProfessionalSchema = createUpdateSchema(professionals)
+```
+
+Cada endpoint lo afina con `.pick()` / `.omit()` / `.extend()` — nunca reescribiendo el tipo de un campo
+que el schema ya define:
+
+```ts
+// server/api/professionals/[id].patch.ts
+import { updateProfessionalSchema } from '../../db/schema/professionals'
+
+const body = updateProfessionalSchema
+  .pick({ displayName: true, phone: true })
+  .extend({ phone: z.string().regex(/^\+56\d{9}$/) })  // regla de negocio que Drizzle no conoce
+
+export default defineEventHandler(async (event) => {
+  const patch = await readValidatedBody(event, body.parse)
+  // ...
+})
+```
+
+`id`, `userId` y `createdAt` quedan afuera del `.pick()` — nadie los manda en el body de un `PATCH`, y no
+hace falta acordarse de omitirlos a mano en cada endpoint nuevo que toque esta tabla.
+
+**No reemplaza A-005.** `createInsertSchema`/`createUpdateSchema` validan la forma de *entrada*, que el
+schema de Drizzle ya conoce por completo. La forma *pública de salida* (qué columnas se devuelven) sigue
+siendo una decisión del endpoint — un `select` explícito, como en "Un endpoint de lectura" — porque ahí la
+pregunta no es "¿qué tipo tiene esta columna?" sino "¿debería salir del servidor?", y esa segunda pregunta
+ninguna herramienta la responde por ti.
 
 ## Agregar una tabla
 

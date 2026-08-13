@@ -38,6 +38,14 @@ Postgres vía Drizzle. Ninguna credencial de Supabase ni cadena de conexión cru
 **La excepción es Auth.** La sesión de Supabase Auth vive en el browser porque tiene que vivir ahí, y la
 publishable key es pública por diseño. Lo que nunca baja es la secret key ni la cadena de conexión.
 
+**La sesión viaja en cookies, no en `localStorage`.** Datealo es SSR, no SPA (misión 02, TC-002): el
+servidor necesita leer la sesión en cada request para que `requireUser()` funcione. El cliente de Supabase
+del browser se arma con `createBrowserClient()` de `@supabase/ssr`, nunca con el `createClient()` plano de
+`@supabase/supabase-js` — ese guarda la sesión en `localStorage`, invisible para el servidor, y el síntoma
+es silencioso: el login "funciona" del lado del browser y cualquier endpoint protegido devuelve `401`
+siempre, porque `requireUser()` nunca ve la cookie que nunca se escribió. Receta concreta en
+[`recetas.md`](./references/recetas.md#requireuser-con-supabasessr).
+
 **Al construir:**
 
 - Todo acceso a datos pasa por `server/api/`. Un componente que importa un cliente de Supabase y consulta
@@ -132,29 +140,112 @@ bundle de la landing creció 70% gzip con la migración completa, revisado y ace
 en `ingenieria.md` de la misión 01, TR-001) — la próxima medición se compara contra esa, no contra el
 DaisyUI original.
 
+## A-005 — Un endpoint nunca devuelve una fila cruda de Drizzle
+
+**Estado:** propuesta. **Fecha:** 2026-08-13.
+
+`select().from(professionals)` devuelve todas las columnas que la tabla tenga, incluida cualquiera que se
+agregue después sin pensar en quién la lee. Nada en TypeScript distingue "columna que el schema tiene" de
+"columna que el cliente debería ver" — compila igual, pasa review igual, y el filtrado solo se nota cuando
+ya salió por la red. `professionals` va a tener campos que no son parte del contrato público desde el día
+uno de la misión 04: notas de moderación, el estado interno de una verificación en curso, quizás un score
+de ranking — ninguno de esos es lo que un buscador debería poder leer en el JSON de un perfil.
+
+**Al construir:**
+
+- Todo endpoint que devuelve una entidad define su forma pública como un `select` explícito de columnas
+  (`select({ id: professionals.id, displayName: professionals.displayName, ... })`) o un mapeo posterior a
+  un tipo propio — nunca el resultado de Drizzle pasado directo al `return` del handler.
+- Una columna nueva en una tabla es privada por default. Se agrega a la forma pública como un cambio
+  explícito, no como un efecto colateral de tocar el schema.
+- Esto es una regla de forma de respuesta, distinta de A-002 (qué filas) y A-001 (qué credenciales) — las
+  tres cierran huecos distintos y ninguna reemplaza a las otras dos.
+
+**Alternativa descartada:** confiar en que RLS filtra columnas — RLS decide qué filas son visibles, nunca
+qué columnas de una fila, y de todos modos no corre en esta conexión (A-002). Confiar en la disciplina de
+"no selecciono esas columnas a mano" sin un tipo que lo fuerce — funciona hasta el primer `select(*)`
+copiado bajo presión de tiempo.
+
+## A-006 — `server/` se organiza por dominio, no solo por tipo de archivo
+
+**Estado:** propuesta. **Fecha:** 2026-08-13.
+
+`CLAUDE.md` ya fija la carpeta por tipo (`api/`, `utils/`, `db/schema/`) para el lado de la app, con la
+YAGNI explícita de no mover nada a `src/` ni inventar estructura antes de que haya fricción real. Eso sigue
+vigente para `app/`. Del lado de `server/`, la fricción ya es previsible: misiones 03 a 07 van a agregar
+`professionals`, `reviews`, `search` como dominios reales, y sin un segundo eje `server/utils/` termina
+mezclando singletons de infraestructura (`db.ts`, `auth.ts`, `email.ts`, sin dueño de dominio) con lógica
+de negocio (`professionals.ts`, `search-ranking.ts`) en la misma carpeta plana — la misión que toca
+`professionals` no puede ver "su" código sin leer los archivos de las otras cuatro.
+
+```
+server/api/professionals/[id].get.ts
+server/api/professionals/[id].patch.ts
+server/api/search/index.get.ts
+server/utils/db.ts              # infraestructura transversal, no es de ningún dominio
+server/utils/auth.ts            # infraestructura transversal
+server/utils/email.ts           # infraestructura transversal
+server/utils/professionals.ts   # dominio: queries y reglas de professionals
+server/utils/search-ranking.ts  # dominio: reglas puras del ranking de search
+```
+
+**Al construir:**
+
+- Cada archivo de `server/utils/` es de un dominio (`professionals.ts`, `reviews.ts`) o es infraestructura
+  transversal (`db.ts`, `auth.ts`, `email.ts`) — nunca las dos cosas, y nunca sirve a dos dominios a la vez.
+- `server/api/` agrupa por dominio en subcarpetas (`professionals/`, `search/`) apenas exista más de un
+  endpoint por dominio — no hace falta esperar a que "duela".
+- `server/db/schema/` ya sigue este eje por convención de `CLAUDE.md` (un archivo por entidad); se
+  mantiene sin cambios.
+- `app/components/` ya agrupa por dominio en subcarpetas — `components/landing/*.vue` es el precedente.
+  Nuxt prefija el nombre del componente con la carpeta (`landing/LandingNavbar.vue` → `<LandingNavbar>`),
+  así que agregar `components/professionals/` o `components/search/` cuando el dominio aparezca sigue el
+  mismo patrón que ya existe, sin costo nuevo.
+- `app/composables/` y `app/utils/` **no siguen el mismo patrón** — por default Nuxt solo auto-importa el
+  nivel superior de esas carpetas, no subcarpetas arbitrarias. Ahí el agrupamiento por dominio va en el
+  nombre del archivo (`useProfessionalProfile.ts`, `professionals.ts` en `utils/`), no en una subcarpeta:
+  meter un composable en `composables/professionals/useProfile.ts` lo saca del auto-import sin ningún
+  error de compilación — se entera recién en runtime, con un `useProfile is not defined`. Esto ya era la
+  convención de `CLAUDE.md` (`useAlgo` por archivo); acá queda explícito el porqué.
+- `app/types/` no tiene esta restricción — los tipos se importan con `import type`, no por auto-import —
+  pero se mantiene igual de flat que `composables/` mientras no haya más de una entidad por dominio, por la
+  misma YAGNI de `CLAUDE.md`.
+
+**Alternativa descartada:** subcarpetas por dominio en cada carpeta desde el día uno
+(`server/utils/professionals/`, `server/db/schema/professionals/`) — con una sola entidad por dominio, un
+archivo ya resuelve el problema real (mezclar infraestructura y negocio); la carpeta agrega ceremonia sin
+un segundo archivo que la justifique. Reabrir esto cuando un dominio necesite más de un archivo de
+`utils/` (ej. `professionals.ts` más `professionals-verification.ts`).
+
+**Reapertura:** si `server/utils/` vuelve a mezclar infraestructura y dominio a pesar de esta regla —
+señal de que la regla no bastó y hace falta la subcarpeta.
+
 ## Dónde va cada cosa
 
 `CLAUDE.md` define la estructura de carpetas y la separación de responsabilidades del lado de la app. Esto
 completa el lado de servidor y datos, que ahí solo está esbozado.
 
-| Qué                                          | Dónde                                  |
-| -------------------------------------------- | -------------------------------------- |
-| Endpoint HTTP                                | `server/api/<recurso>.<método>.ts`     |
-| Regla de negocio o cálculo (función pura)    | `server/utils/<dominio>.ts`            |
-| Cliente de base de datos (singleton)         | `server/utils/db.ts`                   |
-| Schema de Drizzle                            | `server/db/schema/<entidad>.ts`        |
-| Políticas RLS                                | `server/db/sql/rls.sql`                |
-| Esquema de validación de entrada             | junto a su endpoint                    |
-| Secretos y config de runtime                 | `runtimeConfig` en `nuxt.config.ts`    |
-| Estado y acciones del cliente                | `app/composables/`                     |
+| Qué                                          | Dónde                                             |
+| -------------------------------------------- | ---------------------------------------------------- |
+| Endpoint HTTP                                | `server/api/<dominio>/<recurso>.<método>.ts`        |
+| Regla de negocio o cálculo (función pura)    | `server/utils/<dominio>.ts`                         |
+| Infraestructura transversal (sin dominio)    | `server/utils/db.ts`, `auth.ts`, `email.ts`         |
+| Forma pública de una entidad (DTO)           | `select` explícito en el endpoint o `server/utils/<dominio>.ts` — nunca la fila cruda de Drizzle |
+| Schema de Drizzle                            | `server/db/schema/<entidad>.ts`                     |
+| Políticas RLS                                | `server/db/sql/rls.sql`                             |
+| Esquema de validación de entrada             | junto a su endpoint                                 |
+| Secretos y config de runtime                 | `runtimeConfig` en `nuxt.config.ts`                 |
+| Estado y acciones del cliente                | `app/composables/`                                  |
 
-Dos fronteras que no se cruzan:
+Tres fronteras que no se cruzan:
 
 - **La regla de negocio no vive en el handler.** Una función pura en `server/utils/` se prueba con una
   llamada y un `expect`. La misma regla dentro de un `defineEventHandler` solo se prueba levantando Nitro y
   la base. Esto aplica a ranking, distancia, agregación de rating y reglas de verificación — no a CRUD
   simple, donde la abstracción cuesta y no rinde.
 - **El endpoint no decide presentación** y el composable no decide autorización.
+- **La forma pública de una entidad no es su fila de Drizzle** (A-005) — lo que `server/utils/` calcula y
+  lo que el handler devuelve al cliente pueden ser tipos distintos a propósito.
 
 ## Recetas concretas
 
