@@ -8,8 +8,8 @@
 
 Sexta y última misión hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
 [misión 02](../02-base-de-datos-y-auth/) (la identidad ligera del buscador, cualquiera sea el mecanismo que
-esa misión ratifique) y de [misión 05](../05-perfil-publico-profesional/) (el evento de contacto al que se
-ata cada reseña).
+esa misión ratifique, y el `sendEmail()` para notificar al profesional) y de
+[misión 05](../05-perfil-publico-profesional/) (el evento de contacto al que se ata cada reseña).
 
 | Documento     | Estado    | Qué falta para su gate              |
 | ------------- | --------- | ------------------------------------ |
@@ -32,3 +32,9 @@ buscador no la necesita para buscar ni para contactar, por el principio de "sin 
 Hay research general sobre verificación de reviews sin transacción dentro de la plataforma que la respalda,
 pero el mecanismo exacto (qué se verifica, cuándo, con qué fricción real) se define en el `producto.md` y
 `experiencia.md` de esta misión, no acá.
+
+**También entra en el alcance:** cuando llega una reseña nueva, el profesional recibe un correo —
+individual por reseña, no un digest agrupado (no hay volumen todavía que lo justifique), y siempre, buena o
+mala, porque afecta su reputación igual. Lo mantiene volviendo a la plataforma y es el gancho natural si
+más adelante se agrega poder responder una reseña. El contenido y el trigger son de esta misión; el envío
+lo deja listo la 02.
