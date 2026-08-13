@@ -8,6 +8,9 @@ export default defineAppConfig({
       // no es el mismo hex (OKLCH corrió el tono a #00BC7D) — datealo-success es la escala propia
       // que reproduce el original exacto (main.css).
       success: 'datealo-success',
+      // Mismo caso que success: el "red" nativo de Tailwind v4 quedó en #FB2C36, no en el #EF4444
+      // que usaba DaisyUI para error.
+      error: 'datealo-error',
     },
   },
 })

@@ -54,6 +54,20 @@
   --color-datealo-success-800: #0A714F;
   --color-datealo-success-900: #085A3E;
   --color-datealo-success-950: #06422E;
+
+  /* Mismo problema que success: el "red" nativo de Tailwind v4 (el que usa error por defecto) quedó
+     en #FB2C36 tras la redefinición en OKLCH, no en el #EF4444 que usaba DaisyUI. */
+  --color-datealo-error-50: #FEF1F1;
+  --color-datealo-error-100: #FCD7D7;
+  --color-datealo-error-200: #F9B4B4;
+  --color-datealo-error-300: #F69292;
+  --color-datealo-error-400: #F26A6A;
+  --color-datealo-error-500: #EF4444;
+  --color-datealo-error-600: #EC1F1F;
+  --color-datealo-error-700: #D11212;
+  --color-datealo-error-800: #AD0F0F;
+  --color-datealo-error-900: #880C0C;
+  --color-datealo-error-950: #640909;
 }
 
 /* Radio base de Nuxt UI (A-004): DaisyUI usaba --radius-btn: 0.75rem / --radius-box: 1rem.
