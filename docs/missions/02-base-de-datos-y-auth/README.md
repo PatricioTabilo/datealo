@@ -2,7 +2,7 @@
 
 **Tipo:** técnica. **Abierta el** 2026-08-13. **Nace de:** A-001, A-002 y A-003 del skill `arquitectura`.
 
-**Estado de la misión:** exploración
+**Estado de la misión:** lista para construir
 
 **Última actualización:** 2026-08-13
 
@@ -14,11 +14,17 @@ Primera de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar)
 ajustarlas) contra una decisión real, con código de por medio, es parte del trabajo de esta misión, no algo
 que ya viene resuelto de afuera.
 
-| Documento  | Estado    | Qué falta para su gate  |
-| ---------- | --------- | ------------------------ |
-| Ingeniería | pendiente | discovery completo — hoy solo existe la carpeta |
+| Documento  | Estado      | Qué falta para su gate  |
+| ---------- | ----------- | ------------------------ |
+| Ingeniería | en revisión | aprobación del dueño de producto para pasar a `vigente` |
 
-**Próximo hito:** ninguno todavía — esta misión no se ha empezado a trabajar.
+Issues abiertos: [#31](https://github.com/PatricioTabilo/datealo/issues/31) (S-001, Supabase + Drizzle),
+[#32](https://github.com/PatricioTabilo/datealo/issues/32) (S-002, auth de servidor),
+[#33](https://github.com/PatricioTabilo/datealo/issues/33) (S-003, Resend SMTP de Supabase Auth),
+[#34](https://github.com/PatricioTabilo/datealo/issues/34) (S-004, `sendEmail()`).
+
+**Próximo hito:** empezar S-001 (#31) — sin fecha límite todavía. La verificación de dominio en Resend
+(TQ-001/TR-003) queda como tarea operativa de Patricio, en paralelo, sin bloquear el código.
 
 ## Brief
 
