@@ -2,9 +2,9 @@
 
 **Tipo:** técnica. **Abierta el** 2026-08-11. **Nace de:** A-004 del skill `arquitectura`.
 
-**Estado de la misión:** lista para construir
+**Estado de la misión:** cerrada 2026-08-13
 
-**Última actualización:** 2026-08-11
+**Última actualización:** 2026-08-13
 
 Sin `producto.md` ni `experiencia.md`: no hay cambio de producto observable — quien usa Datealo ve la misma
 landing antes y después. La decisión de fondo (por qué Nuxt UI, qué se descarta, cuándo se reabre) ya está
@@ -12,11 +12,12 @@ tomada y vive en [A-004](../../../.claude/skills/arquitectura/SKILL.md#a-004--nu
 
 | Documento  | Estado  | Qué falta para su gate  |
 | ---------- | ------- | ------------------------ |
-| Ingeniería | vigente — aprobado por Patricio Tabilo el 2026-08-11 | ninguno — 12 issues abiertos en GitHub (#1 a #12), plan reconciliado |
+| Ingeniería | vigente — aprobado por Patricio Tabilo el 2026-08-11 | ninguno — los 12 issues (#1 a #12) están mergeados; TR-001 y TR-002 documentados en `ingenieria.md` |
 
-**Próximo hito:** `S-001` (issue [#1](https://github.com/PatricioTabilo/datealo/issues/1), theming)
-mergeado y verificado en el browser — sin fecha límite todavía, es la primera vez que se ejecuta este tipo
-de misión.
+Los 12 issues del plan de construcción (S-001 a S-012) están mergeados. TR-001 (bundle) quedó medido y
+aceptado. TR-002 (regresión visual) se verificó en desktop en cada PR y en 390px al cierre de la misión,
+con un `<iframe>` de 390px como workaround al resize del browser que no funcionó durante toda la
+construcción. Los 8 componentes calzan en mobile. Detalle en `ingenieria.md`.
 
 ## Resumen ejecutivo
 
