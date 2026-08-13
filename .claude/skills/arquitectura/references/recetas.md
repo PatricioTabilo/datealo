@@ -12,6 +12,7 @@ interfaz (A-004), la migración está en curso — ver la [misión 01](../../../
 - [Instalar la base de datos](#instalar-la-base-de-datos)
 - [El cliente de base de datos](#el-cliente-de-base-de-datos)
 - [Secretos y runtimeConfig](#secretos-y-runtimeconfig)
+- [`requireUser()` con `@supabase/ssr`](#requireuser-con-supabasessr)
 - [Un endpoint de lectura](#un-endpoint-de-lectura)
 - [Un endpoint de escritura, con su verificación](#un-endpoint-de-escritura-con-su-verificación)
 - [Validación de entrada derivada del schema (drizzle-zod)](#validación-de-entrada-derivada-del-schema-drizzle-zod)
@@ -91,6 +92,61 @@ NUXT_PUBLIC_SUPABASE_KEY=...
 
 **La regla que no se negocia:** todo lo que entra a `public` es legible desde el código fuente de la página.
 Antes de agregar una clave ahí, la pregunta es "¿me da lo mismo publicar esto en el README?".
+
+## `requireUser()` con `@supabase/ssr`
+
+```bash
+npm i @supabase/ssr @supabase/supabase-js
+```
+
+La sesión viaja en cookies, no en `localStorage` (ver "La sesión viaja en cookies" en A-001 de
+[`SKILL.md`](../SKILL.md)). El servidor arma su cliente con `createServerClient()`, leyendo y escribiendo
+las cookies de la request vía los helpers de `h3` — nunca con el `createClient()` plano de
+`@supabase/supabase-js`, que no sabe de cookies de servidor.
+
+```ts
+// server/utils/auth.ts
+import { createServerClient } from '@supabase/ssr'
+import { parseCookies, setCookie } from 'h3'
+import type { H3Event } from 'h3'
+
+function serverSupabase(event: H3Event) {
+  const { public: pub, supabaseSecretKey } = useRuntimeConfig()
+  return createServerClient(pub.supabaseUrl, supabaseSecretKey, {
+    cookies: {
+      getAll: () => Object.entries(parseCookies(event)).map(([name, value]) => ({ name, value })),
+      setAll: (cookies) => cookies.forEach(({ name, value, options }) => setCookie(event, name, value, options)),
+    },
+  })
+}
+
+export async function requireUser(event: H3Event) {
+  const supabase = serverSupabase(event)
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data.user) {
+    throw createError({ statusCode: 401, statusMessage: 'unauthorized' })
+  }
+  return { id: data.user.id, email: data.user.email ?? null }
+}
+```
+
+El cliente del browser usa el par que corresponde — `createBrowserClient()`, no `createClient()` — para que
+la sesión que arma el login quede en la misma cookie que el servidor sabe leer:
+
+```ts
+// app/plugins/supabase.client.ts
+import { createBrowserClient } from '@supabase/ssr'
+
+export default defineNuxtPlugin(() => {
+  const { public: pub } = useRuntimeConfig()
+  const supabase = createBrowserClient(pub.supabaseUrl, pub.supabaseKey)
+  return { provide: { supabase } }
+})
+```
+
+Mezclar los dos pares (`createClient()` en el browser con `createServerClient()` en el servidor, o
+viceversa) es el error típico: cada mitad cree que la sesión existe y ninguna la encuentra donde la otra la
+dejó.
 
 ## Un endpoint de lectura
 

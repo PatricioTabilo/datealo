@@ -38,6 +38,14 @@ Postgres vía Drizzle. Ninguna credencial de Supabase ni cadena de conexión cru
 **La excepción es Auth.** La sesión de Supabase Auth vive en el browser porque tiene que vivir ahí, y la
 publishable key es pública por diseño. Lo que nunca baja es la secret key ni la cadena de conexión.
 
+**La sesión viaja en cookies, no en `localStorage`.** Datealo es SSR, no SPA (misión 02, TC-002): el
+servidor necesita leer la sesión en cada request para que `requireUser()` funcione. El cliente de Supabase
+del browser se arma con `createBrowserClient()` de `@supabase/ssr`, nunca con el `createClient()` plano de
+`@supabase/supabase-js` — ese guarda la sesión en `localStorage`, invisible para el servidor, y el síntoma
+es silencioso: el login "funciona" del lado del browser y cualquier endpoint protegido devuelve `401`
+siempre, porque `requireUser()` nunca ve la cookie que nunca se escribió. Receta concreta en
+[`recetas.md`](./references/recetas.md#requireuser-con-supabasessr).
+
 **Al construir:**
 
 - Todo acceso a datos pasa por `server/api/`. Un componente que importa un cliente de Supabase y consulta
