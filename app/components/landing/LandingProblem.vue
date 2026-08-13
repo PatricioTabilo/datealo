@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MessageCircle, Clock, ShieldAlert, Globe } from 'lucide-vue-next'
+import { MessageCircle, Clock, ShieldAlert, Globe } from '@lucide/vue'
 import { LANDING_PROBLEM } from '~/constants/landing'
 
 const iconMap = { MessageCircle, Clock, ShieldAlert, Globe } as const

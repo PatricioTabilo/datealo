@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Loader2, CheckCircle, Star } from 'lucide-vue-next'
+import { Loader2, CheckCircle, Star } from '@lucide/vue'
 import { LANDING_HERO } from '~/constants/landing'
 
 const { email, loading, submitted, error, submit } = useWaitlist('buscador')
