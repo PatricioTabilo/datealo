@@ -2,50 +2,73 @@
  * Kit de mockups de Datealo
  * =========================
  *
- * Espeja los tokens de `app/assets/css/main.css`. Si ese archivo cambia, este se actualiza a mano
- * (son ~20 líneas) y se anota en el commit — un mockup con tokens viejos describe un producto
- * que no existe.
+ * Espeja los tokens de `app/assets/css/main.css` + `app/app.config.ts` en sus dos capas (A-004):
+ * los tokens crudos que define la app, y los tokens semánticos que Nuxt UI genera en runtime a partir
+ * de ellos. Si esas capas cambian, este archivo se actualiza a mano (son ~30 líneas) y se anota en el
+ * commit — un mockup con tokens viejos describe un producto que no existe.
  *
- * Los componentes NO viven acá: salen de DaisyUI, cargado por CDN en el esqueleto del mockup.
- * Este archivo aporta solo dos cosas: los tokens del tema y los marcos de dispositivo.
+ * Los componentes NO viven acá: en un mockup estático no hay Vue corriendo, así que no hay Nuxt UI de
+ * verdad — se construyen con utilidades de Tailwind puras, coloreadas con las variables `--ui-*` de
+ * este archivo. Es el mismo resultado visual que un `<UButton variant="link">` totalmente sobrescrito,
+ * que es como está armada la app real desde la migración a Nuxt UI (misión 01).
  *
- * Uso: ver docs/design/README.md
+ * Uso: ver docs/design/README.md — el `@theme` de Tailwind que activa clases como `bg-primary` va
+ * inline en cada mockup, no acá (el Play CDN de Tailwind solo lee `@theme` de un
+ * `<style type="text/tailwindcss">`, nunca de un `<link>` externo).
  */
 
-/* ---------------------------------------------------------------- Tokens del tema `datealo` */
-
-[data-theme='datealo'] {
-  --color-base-100: #fafafa;
-  --color-base-200: #f3f4f6;
-  --color-base-300: #e5e7eb;
-  --color-base-content: #1f2937;
-  --color-primary: #423ed0;
-  --color-primary-content: #ffffff;
-  --color-secondary: #3ecbd7;
-  --color-secondary-content: #1f2937;
-  --color-accent: #3ecbd7;
-  --color-accent-content: #1f2937;
-  --color-neutral: #1f2937;
-  --color-neutral-content: #ffffff;
-  --color-success: #10b981;
-  --color-success-content: #ffffff;
-  --color-error: #ef4444;
-  --color-error-content: #ffffff;
-  --radius-btn: 0.75rem;
-  --radius-box: 1rem;
-}
+/* ---------------------------------------------------------------- Tokens crudos (main.css @theme) */
 
 :root {
+  --color-datealo-primary: #423ed0;
+  --color-datealo-accent: #3ecbd7;
+  --color-datealo-bg: #fafafa;
+  --color-datealo-surface: #f3f4f6;
+  --color-datealo-text: #1f2937;
+  --color-datealo-muted: #6b7280;
+
   --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
   --mockup-canvas: #e7e8ec;
   --mockup-label: #6b7280;
 }
 
+/* ---------------------------------------------------- Tokens semánticos (Nuxt UI, vía app.config.ts) */
+
+/* Valores leídos de la app real corriendo (getComputedStyle sobre <html>) — no son estimados. Los que
+   usan oklch() son el resultado real de la escala "gray" de Tailwind que mapea `neutral` en
+   app.config.ts; se copian tal cual porque oklch() es un color CSS válido, no hace falta convertirlo. */
+:root {
+  --ui-primary: #423ed0;
+  --ui-secondary: #3ecbd7;
+  --ui-success: #10b981;
+  --ui-error: #ef4444;
+
+  --ui-bg: #fff;
+  --ui-bg-muted: oklch(98.5% 0.002 247.839);
+  --ui-bg-elevated: oklch(96.7% 0.003 264.542);
+  --ui-bg-accented: oklch(92.8% 0.006 264.531);
+  --ui-bg-inverted: oklch(21% 0.034 264.665);
+
+  --ui-text: oklch(37.3% 0.034 259.733);
+  --ui-text-dimmed: oklch(70.7% 0.022 261.325);
+  --ui-text-muted: oklch(55.1% 0.027 264.364);
+  --ui-text-toned: oklch(44.6% 0.03 256.802);
+  --ui-text-highlighted: oklch(21% 0.034 264.665);
+  --ui-text-inverted: #fff;
+
+  --ui-border: oklch(92.8% 0.006 264.531);
+  --ui-border-muted: oklch(92.8% 0.006 264.531);
+  --ui-border-accented: oklch(87.2% 0.01 258.338);
+  --ui-border-inverted: oklch(21% 0.034 264.665);
+
+  --ui-radius: 0.5rem;
+}
+
 body {
   font-family: var(--font-body);
   background: var(--mockup-canvas);
-  color: var(--color-base-content);
+  color: var(--color-datealo-text);
   margin: 0;
   padding: 2.5rem 1.5rem;
   -webkit-font-smoothing: antialiased;
@@ -96,9 +119,10 @@ h6 {
 }
 
 /* El viewport real del mockup. `overflow: hidden` recorta lo que no cabe:
-   ver qué queda fuera del marco es justamente para lo que sirve. */
+   ver qué queda fuera del marco es justamente para lo que sirve. Fondo en el token crudo de página
+   (datealo-bg), no en --ui-bg: ese es el blanco de superficie de Nuxt UI, no el fondo de la app. */
 .frame-viewport {
-  background: var(--color-base-100);
+  background: var(--color-datealo-bg);
   border-radius: 1.75rem;
   border: 1px solid #d1d5db;
   box-shadow: 0 10px 30px -12px rgb(31 41 55 / 0.25);
@@ -131,7 +155,7 @@ h6 {
   padding: 0.75rem 1.5rem 0.25rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--color-base-content);
+  color: var(--color-datealo-text);
 }
 
 /* Área segura inferior, donde vive el CTA fijo en móvil. */
@@ -139,7 +163,8 @@ h6 {
   padding-bottom: 1.25rem;
 }
 
-/* Marcador de pliegue: lo que queda debajo de esta línea no se ve sin hacer scroll. */
+/* Marcador de pliegue: lo que queda debajo de esta línea no se ve sin hacer scroll. Rojo fijo a
+   propósito — es una anotación de la herramienta, no un color de marca. */
 .fold {
   position: absolute;
   left: 0;
