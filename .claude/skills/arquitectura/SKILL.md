@@ -22,11 +22,7 @@ documento, verificar qué hay:
 | ---------------------------------------- | ----------------------------------------------- |
 | `server/` (endpoints, schema, RLS)       | no existe — se crea en la primera misión con datos |
 | Supabase, Drizzle, `postgres.js`         | no instalados                                   |
-| DaisyUI v5                               | instalado y en uso en toda la landing            |
-| Nuxt UI v4                               | no instalado — A-004 es una migración pendiente  |
-
-**Consecuencia inmediata:** hasta que A-004 se ejecute, la interfaz se sigue escribiendo con DaisyUI. No
-escribir componentes `U*` en un repo que no tiene `@nuxt/ui` instalado.
+| Nuxt UI v4                               | instalado y en uso en toda la landing (A-004, misión 01) |
 
 ## A-001 — El browser nunca habla con Supabase, habla con Nitro
 
@@ -108,32 +104,33 @@ pagado.
 
 ## A-004 — Nuxt UI v4 es la base de interfaz
 
-**Estado:** aceptada. **Fecha:** 2026-08-11.
+**Estado:** implementada (misión 01, 2026-08-13). **Fecha de aceptación:** 2026-08-11.
 
-DaisyUI es un plugin de CSS: entrega clases, no comportamiento. Los bottom sheets, el combobox con búsqueda
-y los modales que pide el flujo core necesitan focus trap, navegación por teclado y roles ARIA, y con
-DaisyUI eso se escribe a mano cada vez. Nuxt UI v4 está construido sobre Reka UI y lo trae resuelto.
+DaisyUI era un plugin de CSS: entregaba clases, no comportamiento. Los bottom sheets, el combobox con
+búsqueda y los modales que pide el flujo core necesitan focus trap, navegación por teclado y roles ARIA, y
+con DaisyUI eso se escribía a mano cada vez. Nuxt UI v4 está construido sobre Reka UI y lo trae resuelto.
 
-Pesa que viene del core team de Nuxt, que en v4 el tier Pro pasó a ser gratuito, y que Datealo es
+Pesó que viene del core team de Nuxt, que en v4 el tier Pro pasó a ser gratuito, y que Datealo es
 mobile-first para usuarios con poca familiaridad con apps — accesibilidad a mano es donde ese perfil se
 pierde.
 
-**La migración todavía no ocurrió.** Mientras `@nuxt/ui` no esté en `package.json`, se escribe DaisyUI.
-Cuando ocurra, toca cuatro cosas y ninguna es solo la app:
-
-- `app/assets/css/main.css` pierde `@plugin "daisyui"` y el tema `[data-theme="datealo"]`. Los tokens
-  crudos quedan en `@theme` y el mapeo semántico pasa a `app.config.ts` bajo `ui.colors`.
-- Los ocho componentes de `app/components/landing/` se reescriben.
-- `docs/design/datealo-mockup-kit.css` deja de espejar DaisyUI, y esa parte de `docs/design/README.md`
-  se reescribe.
-- El skill `discovery-ux` tiene DaisyUI hardcodeado como base de todo elemento interactivo.
+**La migración ya ocurrió**, en los doce slices de la
+[misión 01](../../../docs/missions/01-migracion-nuxt-ui/): `app/assets/css/main.css` perdió
+`@plugin "daisyui"` y `[data-theme="datealo"]` — los tokens crudos quedan en `@theme` y el mapeo semántico
+vive en `app.config.ts` bajo `ui.colors`. Los ocho componentes de `app/components/landing/` están
+reescritos. `docs/design/datealo-mockup-kit.css` y `docs/design/README.md` espejan Nuxt UI, no DaisyUI. El
+skill `discovery-ux` cita Nuxt UI como base. Receta concreta del theming (colores de marca y radio) en
+[`recetas.md`](./references/recetas.md#colores-de-marca-y-radio-en-nuxt-ui).
 
 **Alternativas descartadas:** quedarse en DaisyUI — cero migración y más liviano, pero traslada el costo de
 accesibilidad a cada misión que necesite un componente interactivo. shadcn-vue — mismo cimiento (Reka UI +
 Tailwind v4), pero cada componente pasa a ser código propio que mantener y auditar.
 
 **Reapertura:** si Nuxt UI resulta demasiado pesado para el presupuesto de carga en móvil con datos
-móviles, se revisa contra una medición concreta, no contra una impresión.
+móviles, se revisa contra una medición concreta, no contra una impresión. Ya hay una primera medición: el
+bundle de la landing creció 70% gzip con la migración completa, revisado y aceptado el 2026-08-12 (detalle
+en `ingenieria.md` de la misión 01, TR-001) — la próxima medición se compara contra esa, no contra el
+DaisyUI original.
 
 ## Dónde va cada cosa
 
