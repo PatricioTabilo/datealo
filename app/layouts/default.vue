@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <div class="min-h-screen bg-base-100">
+  <div class="min-h-screen bg-datealo-bg">
     <slot />
   </div>
 </template>
