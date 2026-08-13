@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   ChevronLeft, ChevronRight
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 import { LANDING_CATEGORIES } from '~/constants/landing'
 
 const scrollContainer = ref<HTMLElement | null>(null)

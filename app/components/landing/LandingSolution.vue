@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ShieldCheck, Star, MapPin, MessageCircle } from 'lucide-vue-next'
+import { ShieldCheck, Star, MapPin, MessageCircle } from '@lucide/vue'
 import { LANDING_SOLUTION } from '~/constants/landing'
 
 const iconMap = { ShieldCheck, Star, MapPin, MessageCircle } as const

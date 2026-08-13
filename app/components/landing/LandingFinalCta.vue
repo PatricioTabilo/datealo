@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Loader2, CheckCircle } from 'lucide-vue-next'
+import { Loader2, CheckCircle } from '@lucide/vue'
 import { LANDING_FINAL_CTA } from '~/constants/landing'
 
 const { email, loading, submitted, error, submit } = useWaitlist('buscador')

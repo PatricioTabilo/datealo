@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Star, Loader2, CheckCircle, Check } from 'lucide-vue-next'
+import { Star, Loader2, CheckCircle, Check } from '@lucide/vue'
 import { LANDING_FOR_PROFESSIONALS } from '~/constants/landing'
 
 const { email, loading, submitted, error, submit } = useWaitlist('profesional')

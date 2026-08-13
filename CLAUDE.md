@@ -50,7 +50,7 @@ trabajos, también desde el celular.
   — la migración a Nuxt UI v4 está decidida y pendiente (A-004 del skill `arquitectura`). Nuxt UI trae
   `@nuxt/fonts`, que auto-hospeda las tipografías en vez de cargarlas por `<link>` a Google Fonts — ojo con
   esto al tocar `nuxt.config.ts` o `app.head` una vez que la migración aterrice.
-- **Iconos**: `lucide-vue-next`
+- **Iconos**: `@lucide/vue` (paquete renombrado desde `lucide-vue-next` en su v1, 2026-03)
 - **Auth/DB**: Supabase (PostgreSQL + Auth + RLS)
 - **ORM**: Drizzle
 - **Estado**: Composition API + composables de Nuxt (`useState`)
