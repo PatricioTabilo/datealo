@@ -7,8 +7,9 @@
 **Última actualización:** 2026-08-13
 
 Sexta y última misión hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
-[misión 02](../02-base-de-datos-y-auth/) (verificación de teléfono del buscador, sobre Supabase Auth) y de
-[misión 05](../05-perfil-publico-profesional/) (el evento de contacto al que se ata cada reseña).
+[misión 02](../02-base-de-datos-y-auth/) (la identidad ligera del buscador, cualquiera sea el mecanismo que
+esa misión ratifique) y de [misión 05](../05-perfil-publico-profesional/) (el evento de contacto al que se
+ata cada reseña).
 
 | Documento     | Estado    | Qué falta para su gate              |
 | ------------- | --------- | ------------------------------------ |
@@ -21,12 +22,13 @@ Sexta y última misión hacia el MVP (registrarse, mostrarse, buscar, reseñar).
 
 ## Brief
 
-Después de contactar a un profesional, el buscador puede dejar una reseña — verificada por teléfono (no
-cuenta completa, solo un OTP puntual), atada al hecho de que el contacto realmente ocurrió. No es un
-formulario abierto que cualquiera llena: es la pieza que sostiene la promesa de "reseñas reales, sin
-inventadas" que la landing ya le mostró a gente real.
+Después de contactar a un profesional, el buscador puede dejar una reseña — atada al hecho de que el
+contacto realmente ocurrió, no un formulario abierto que cualquiera llena. Es la pieza que sostiene la
+promesa de "reseñas reales, sin inventadas" que la landing ya le mostró a gente real.
 
-El buscador no necesita cuenta persistente para buscar ni para contactar — solo para esto. Ver la
-conversación de arquitectura del roadmap (2026-08-13) para el porqué: research sobre verificación de
-reviews sin transacción dentro de la plataforma, y por qué "cuenta completa" sería fricción sin beneficio
-para el resto del flujo.
+**Dirección a confirmar, no decisión cerrada:** la conversación de roadmap (2026-08-13) exploró verificar
+por teléfono (OTP puntual, no cuenta completa) en vez de pedirle cuenta persistente al buscador — el
+buscador no la necesita para buscar ni para contactar, por el principio de "sin fricción" de `CLAUDE.md`.
+Hay research general sobre verificación de reviews sin transacción dentro de la plataforma que la respalda,
+pero el mecanismo exacto (qué se verifica, cuándo, con qué fricción real) se define en el `producto.md` y
+`experiencia.md` de esta misión, no acá.

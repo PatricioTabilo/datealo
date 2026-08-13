@@ -23,8 +23,8 @@ Tercera de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar)
 
 El profesional crea su cuenta y completa su perfil público: qué servicios ofrece, en qué comuna trabaja,
 fotos de trabajos anteriores, precios orientativos. Es el "registrarse" del MVP, y el lado "mostrarse"
-desde quien ofrece el servicio — acá vive el login del profesional (email/password o magic link, sobre
-Supabase Auth de la misión 02).
+desde quien ofrece el servicio — acá vive el login del profesional, sobre lo que la misión 02 termine
+ratificando (no necesariamente email/password o magic link — eso también queda por confirmar).
 
 Verificación de profesional queda fuera de esta misión: para el MVP es manual, un admin marca el flag
 directamente en la base — no hay flujo que construir todavía.

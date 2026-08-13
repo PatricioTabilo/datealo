@@ -7,8 +7,12 @@
 **Última actualización:** 2026-08-13
 
 Primera de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Sin `producto.md`,
-`experiencia.md` ni `investigacion.md`: es pura infraestructura, sin cambio de producto observable, y las
-decisiones que la sustentan ya están tomadas en `arquitectura`.
+`experiencia.md` ni `investigacion.md`: es pura infraestructura, sin cambio de producto observable.
+
+**Ojo con esto al tomar la misión:** `A-001`, `A-002` y `A-003` en `arquitectura` están marcadas
+**"propuesta"**, no "aceptada" — no son un hecho consumado que esta misión solo ejecuta. Ratificarlas (o
+ajustarlas) contra una decisión real, con código de por medio, es parte del trabajo de esta misión, no algo
+que ya viene resuelto de afuera.
 
 | Documento  | Estado    | Qué falta para su gate  |
 | ---------- | --------- | ------------------------ |
@@ -18,9 +22,15 @@ decisiones que la sustentan ya están tomadas en `arquitectura`.
 
 ## Brief
 
-Instalar y configurar lo que hoy no existe en el proyecto: Supabase, Drizzle, y el mecanismo de
-autenticación (Supabase Auth) que van a compartir profesionales y buscadores, cada uno con su propio flujo
-de acceso — no lo mismo, pero la misma base.
+Instalar y configurar lo que hoy no existe en el proyecto: la base de datos (Supabase + Drizzle) y el
+mecanismo de autenticación que van a compartir profesionales y buscadores, cada uno con su propio flujo de
+acceso — no lo mismo, pero la misma base.
+
+**Decisión pendiente de confirmar, no de dar por hecha:** en la conversación de roadmap del 2026-08-13 la
+recomendación fue usar Supabase Auth (no construir autenticación in-house, no sumar un tercer proveedor),
+porque ya es la base de datos elegida y trae nativo lo que necesitan los dos flujos — pero es una
+recomendación, no una decisión ratificada. Evaluar build-vs-buy en serio, con la alternativa descartada y
+el porqué documentados, es parte del `ingenieria.md` de esta misión.
 
 Es solo plomería: cero tablas de negocio, cero pantallas, cero flujo de usuario. Cada misión siguiente
 (03 a 07) modela y construye su propia parte del dato y su propia parte del login cuando le toca — acá

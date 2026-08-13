@@ -22,9 +22,10 @@ perfiles reales que buscar — sin datos, no hay resultados que mostrar ni relev
 
 ## Brief
 
-El buscador filtra por categoría y comuna y ve una lista de profesionales — el "buscar" del MVP. Ordenado
-por relevancia y cercanía por comuna (como un portal inmobiliario, no geolocalización de precisión — esa
-decisión ya está tomada, ver conversación de arquitectura del roadmap, 2026-08-13).
+El buscador filtra por categoría y comuna y ve una lista de profesionales — el "buscar" del MVP. La
+dirección que salió de la conversación de roadmap (2026-08-13) es ordenar por relevancia y cercanía por
+comuna, como un portal inmobiliario, sin geolocalización de precisión — pero es una recomendación a
+confirmar en `producto.md`, no una decisión ratificada.
 
 Sin resultados mientras se escribe (debounce 300ms) y empty states que inviten a probar otra categoría o
 comuna cercana son estándar del producto, no algo que se re-discuta acá (`CLAUDE.md`).
