@@ -8,6 +8,15 @@ export default defineNuxtConfig({
 
   devServer: { port: 3001 },
 
+  nitro: { preset: 'vercel' },
+
+  runtimeConfig: {
+    // Privado: solo servidor. Nunca llega al bundle del cliente (A-001).
+    databaseUrl: '',
+
+    public: {},
+  },
+
   app: {
     head: {
       htmlAttrs: { lang: 'es-CL' },
