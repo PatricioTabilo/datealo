@@ -14,7 +14,11 @@ export default defineNuxtConfig({
     // Privado: solo servidor. Nunca llega al bundle del cliente (A-001).
     databaseUrl: '',
 
-    public: {},
+    public: {
+      // Público por diseño: la publishable key no es un secreto (A-001).
+      supabaseUrl: '',
+      supabaseKey: '',
+    },
   },
 
   app: {

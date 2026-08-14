@@ -104,6 +104,11 @@ La sesión viaja en cookies, no en `localStorage` (ver "La sesión viaja en cook
 las cookies de la request vía los helpers de `h3` — nunca con el `createClient()` plano de
 `@supabase/supabase-js`, que no sabe de cookies de servidor.
 
+**La key es la publishable, no la secret.** Este cliente representa al usuario de la sesión, no un acceso
+admin — con la secret key cualquier query hecha por este cliente saltaría RLS por completo. No hace falta
+para validar la sesión: `getUser()` (nunca `getSession()`, que no revalida) manda el JWT al servidor de
+Supabase Auth y lo valida ahí, sin importar qué key identifica al proyecto en el header.
+
 ```ts
 // server/utils/auth.ts
 import { createServerClient } from '@supabase/ssr'
@@ -111,8 +116,8 @@ import { parseCookies, setCookie } from 'h3'
 import type { H3Event } from 'h3'
 
 function serverSupabase(event: H3Event) {
-  const { public: pub, supabaseSecretKey } = useRuntimeConfig()
-  return createServerClient(pub.supabaseUrl, supabaseSecretKey, {
+  const { public: pub } = useRuntimeConfig()
+  return createServerClient(pub.supabaseUrl, pub.supabaseKey, {
     cookies: {
       getAll: () => Object.entries(parseCookies(event)).map(([name, value]) => ({ name, value })),
       setAll: (cookies) => cookies.forEach(({ name, value, options }) => setCookie(event, name, value, options)),
