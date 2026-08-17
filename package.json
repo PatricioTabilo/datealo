@@ -8,6 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "test": "vitest run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"
@@ -21,12 +22,14 @@
     "drizzle-zod": "^0.8.3",
     "nuxt": "^4.5.2",
     "postgres": "^3.4.9",
+    "resend": "^6.20.0",
     "vue": "^3.5.41",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.10",
     "typescript": "^6.0.3",
+    "vitest": "^4.1.10",
     "vue-tsc": "^3.3.9"
   }
 }
