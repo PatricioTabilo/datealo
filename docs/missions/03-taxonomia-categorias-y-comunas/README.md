@@ -4,19 +4,20 @@
 
 **Estado de la misión:** exploración
 
-**Última actualización:** 2026-08-13
+**Última actualización:** 2026-08-17
 
-Segunda de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de que
-[misión 02](../02-base-de-datos-y-auth/) exista antes de poder guardar algo.
+Segunda de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
+[misión 02](../02-base-de-datos-y-auth/), ya cerrada, para poder guardar algo.
 
 | Documento     | Estado    | Qué falta para su gate              |
 | ------------- | --------- | ------------------------------------ |
-| Investigación | pendiente | discovery completo — hoy solo existe la carpeta |
-| Producto      | pendiente | —                                     |
+| Investigación | activo    | se acumula, no bloquea — el problema tiene situación y consecuencia concretas, hay 3 conclusiones (C-001 a C-003) y un ideal con capacidades observables |
+| Producto      | pendiente | escribir `producto.md`: decisiones D-xxx (lista de categorías, recorte de comunas) y funcionalidades F-xxx en formato JTBD |
 | Experiencia   | pendiente | —                                     |
 | Ingeniería    | pendiente | —                                     |
 
-**Próximo hito:** ninguno todavía — esta misión no se ha empezado a trabajar.
+**Próximo hito:** escribir `producto.md` a partir de las conclusiones de `investigacion.md` — sin fecha
+límite todavía.
 
 ## Brief
 
