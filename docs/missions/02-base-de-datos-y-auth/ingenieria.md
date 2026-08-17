@@ -1,8 +1,8 @@
 # Misión 02: Base de datos, Auth y correo — Ingeniería
 
-**Estado:** en revisión
+**Estado:** vigente
 
-**Última actualización:** 2026-08-13
+**Última actualización:** 2026-08-17
 
 [Índice](./README.md) · [Ingeniería](./ingenieria.md)
 

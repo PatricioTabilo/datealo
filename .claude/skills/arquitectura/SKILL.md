@@ -20,13 +20,13 @@ documento, verificar qué hay:
 
 | Pieza                                    | Estado                                          |
 | ---------------------------------------- | ----------------------------------------------- |
-| `server/` (endpoints, schema, RLS)       | no existe — se crea en la primera misión con datos |
-| Supabase, Drizzle, `postgres.js`         | no instalados                                   |
+| `server/` (endpoints, schema, RLS)       | plomería lista (misión 02) — `db.ts`, `auth.ts`, `email.ts`; sin tablas de negocio aún |
+| Supabase, Drizzle, `postgres.js`         | instalados y en uso (A-001, A-002, A-003, misión 02) |
 | Nuxt UI v4                               | instalado y en uso en toda la landing (A-004, misión 01) |
 
 ## A-001 — El browser nunca habla con Supabase, habla con Nitro
 
-**Estado:** propuesta. **Fecha:** 2026-08-11.
+**Estado:** aceptada (misión 02, 2026-08-17). **Fecha:** 2026-08-11.
 
 Supabase se puede usar de dos formas opuestas. Como BaaS, el browser lleva la publishable key y consulta
 PostgREST directo: ese endpoint es público por diseño y toda la seguridad recae en las policies. Como base
@@ -60,7 +60,7 @@ que Nitro no resuelva.
 
 ## A-002 — RLS es la red de seguridad, no el mecanismo de autorización
 
-**Estado:** propuesta. **Fecha:** 2026-08-11.
+**Estado:** aceptada (misión 02, 2026-08-17). **Fecha:** 2026-08-11.
 
 RLS se evalúa contra el rol de Postgres y los claims del JWT, y PostgREST los setea en cada request. **Una
 conexión de Drizzle con la cadena de conexión normal entra como rol dueño y se salta RLS por completo.**
@@ -91,7 +91,7 @@ integración, el cliente de Supabase desde el browser—, esta decisión se revi
 
 ## A-003 — La conexión va por Supavisor en modo transacción
 
-**Estado:** propuesta. **Fecha:** 2026-08-11.
+**Estado:** aceptada (misión 02, 2026-08-17). **Fecha:** 2026-08-11.
 
 Vercel corre funciones serverless y cada invocación abre su conexión. Contra Postgres directo se agota el
 límite apenas hay tráfico paralelo.

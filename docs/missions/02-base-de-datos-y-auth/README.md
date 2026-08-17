@@ -2,29 +2,27 @@
 
 **Tipo:** técnica. **Abierta el** 2026-08-13. **Nace de:** A-001, A-002 y A-003 del skill `arquitectura`.
 
-**Estado de la misión:** lista para construir
+**Estado de la misión:** cerrada 2026-08-17
 
-**Última actualización:** 2026-08-13
+**Última actualización:** 2026-08-17
 
 Primera de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Sin `producto.md`,
 `experiencia.md` ni `investigacion.md`: es pura infraestructura, sin cambio de producto observable.
 
-**Ojo con esto al tomar la misión:** `A-001`, `A-002` y `A-003` en `arquitectura` están marcadas
-**"propuesta"**, no "aceptada" — no son un hecho consumado que esta misión solo ejecuta. Ratificarlas (o
-ajustarlas) contra una decisión real, con código de por medio, es parte del trabajo de esta misión, no algo
-que ya viene resuelto de afuera.
+`A-001`, `A-002` y `A-003` en `arquitectura` pasaron de **"propuesta"** a **"aceptada"** al cerrar esta
+misión — quedaron ratificadas con código de por medio, no solo con la recomendación original.
 
-| Documento  | Estado      | Qué falta para su gate  |
-| ---------- | ----------- | ------------------------ |
-| Ingeniería | en revisión | aprobación del dueño de producto para pasar a `vigente` |
+| Documento  | Estado  | Qué falta para su gate |
+| ---------- | ------- | ------------------------ |
+| Ingeniería | vigente | — |
 
-Issues abiertos: [#31](https://github.com/PatricioTabilo/datealo/issues/31) (S-001, Supabase + Drizzle),
+Issues: [#31](https://github.com/PatricioTabilo/datealo/issues/31) (S-001, Supabase + Drizzle),
 [#32](https://github.com/PatricioTabilo/datealo/issues/32) (S-002, auth de servidor),
 [#33](https://github.com/PatricioTabilo/datealo/issues/33) (S-003, Resend SMTP de Supabase Auth),
-[#34](https://github.com/PatricioTabilo/datealo/issues/34) (S-004, `sendEmail()`).
+[#34](https://github.com/PatricioTabilo/datealo/issues/34) (S-004, `sendEmail()`) — los cuatro cerrados.
 
-**Próximo hito:** empezar S-001 (#31) — sin fecha límite todavía. La verificación de dominio en Resend
-(TQ-001/TR-003) queda como tarea operativa de Patricio, en paralelo, sin bloquear el código.
+La verificación de dominio en Resend (TQ-001/TR-003) sigue como tarea operativa de Patricio, en paralelo,
+sin bloquear ninguna misión siguiente.
 
 ## Brief
 
