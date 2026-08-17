@@ -2,8 +2,8 @@ import { createServerClient } from '@supabase/ssr'
 import { parseCookies, setCookie } from 'h3'
 import type { H3Event } from 'h3'
 
-// Contrato de requireUser() de cara al resto del código: provider-agnostic a propósito, para que
-// cambiar el proveedor de auth solo implique reescribir este archivo.
+// Contrato de usuario autenticado: usar este tipo al interactuar con el usuario, nunca el `User`
+// de Supabase directo.
 export type AuthUser = {
   id: string
   email: string | null
