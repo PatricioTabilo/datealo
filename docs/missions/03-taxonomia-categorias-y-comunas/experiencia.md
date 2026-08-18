@@ -1,8 +1,8 @@
 # Misión 03: taxonomía de categorías y comunas — Experiencia
 
-**Estado:** en revisión
+**Estado:** vigente
 
-**Última actualización:** 2026-08-18
+**Última actualización:** 2026-08-18. **Aprobado por Patricio el:** 2026-08-18.
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -29,7 +29,7 @@ reglas.
 ## Componente — no es una vista propia
 
 - **C-001 — `ComunaSelect` / `CategoriaSelect`** · móvil / desktop · resuelve D-004 · flujo UXF-001 ·
-  en revisión
+  vigente
   - modo **cerrado** — el campo muestra el valor elegido (si hay uno) o el placeholder; nada más en
     pantalla.
   - modo **enfocado sin texto** — el usuario tocó el campo; el cursor queda activo, pero no aparece
