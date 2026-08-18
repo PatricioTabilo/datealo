@@ -9,15 +9,15 @@
 Segunda de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
 [misión 02](../02-base-de-datos-y-auth/), ya cerrada, para poder guardar algo.
 
-| Documento     | Estado    | Qué falta para su gate              |
-| ------------- | --------- | ------------------------------------ |
-| Investigación | activo    | se acumula, no bloquea — el problema tiene situación y consecuencia concretas, hay 3 conclusiones (C-001 a C-003) y un ideal con capacidades observables |
-| Producto      | pendiente | escribir `producto.md`: decisiones D-xxx (lista de categorías, recorte de comunas) y funcionalidades F-xxx en formato JTBD |
-| Experiencia   | pendiente | —                                     |
-| Ingeniería    | pendiente | —                                     |
+| Documento     | Estado      | Qué falta para su gate              |
+| ------------- | ----------- | ------------------------------------ |
+| Investigación | activo      | se acumula, no bloquea — el problema tiene situación y consecuencia concretas, hay 3 conclusiones (C-001 a C-003) y un ideal con capacidades observables |
+| Producto      | en revisión | aprobación de Patricio sobre D-001 (categorías), D-002 (comunas) y D-003 (vocabulario) — fecha límite 2026-08-24, con Q-001 y Q-002 abiertas |
+| Experiencia   | pendiente   | —                                     |
+| Ingeniería    | pendiente   | —                                     |
 
-**Próximo hito:** escribir `producto.md` a partir de las conclusiones de `investigacion.md` — sin fecha
-límite todavía.
+**Próximo hito:** que Patricio apruebe o ajuste `producto.md` — fecha límite 2026-08-24. Sin
+`experiencia.md` ni `ingenieria.md` hasta que eso pase.
 
 ## Brief
 
