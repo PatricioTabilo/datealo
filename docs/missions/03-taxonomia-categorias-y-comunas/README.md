@@ -2,22 +2,22 @@
 
 **Tipo:** producto. **Abierta el** 2026-08-13. **Nace de:** ninguna.
 
-**Estado de la misión:** definición
+**Estado de la misión:** lista para construir
 
 **Última actualización:** 2026-08-18
 
 Segunda de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
 [misión 02](../02-base-de-datos-y-auth/), ya cerrada, para poder guardar algo.
 
-| Documento     | Estado    | Qué falta para su gate              |
-| ------------- | --------- | ------------------------------------ |
-| Investigación | activo    | se acumula, no bloquea — el problema tiene situación y consecuencia concretas, hay 3 conclusiones (C-001 a C-003) y un ideal con capacidades observables |
-| Producto      | vigente   | aprobado por Patricio el 2026-08-17 — D-001 a D-004 aceptadas, Q-001 y Q-002 resueltas |
-| Experiencia   | vigente   | aprobado por Patricio el 2026-08-18 — componente `ComunaSelect`/`CategoriaSelect` (UXF-001), 6 modos con mockup |
-| Ingeniería    | pendiente | —                                     |
+| Documento     | Estado  | Qué falta para su gate              |
+| ------------- | ------- | ------------------------------------ |
+| Investigación | activo  | se acumula, no bloquea — el problema tiene situación y consecuencia concretas, hay 3 conclusiones (C-001 a C-003) y un ideal con capacidades observables |
+| Producto      | vigente | aprobado por Patricio el 2026-08-17 — D-001 a D-004 aceptadas, Q-001 y Q-002 resueltas |
+| Experiencia   | vigente | aprobado por Patricio el 2026-08-18 — componente `ComunaSelect`/`CategoriaSelect` (UXF-001), 6 modos con mockup |
+| Ingeniería    | vigente | aprobado por Patricio el 2026-08-18 — T-001 a T-003 aceptadas, plan de construcción S-001 a S-004 |
 
-**Próximo hito:** escribir `ingenieria.md` — modelo de datos de `categorias`/`comunas` y el componente
-`ComunaSelect`/`CategoriaSelect` en Vue. Sin fecha límite todavía.
+**Próximo hito:** crear los issues S-001 a S-004 desde el plan de construcción y empezar a construir. Sin
+fecha límite todavía.
 
 ## Brief
 
