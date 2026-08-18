@@ -196,10 +196,6 @@ fuera del filtro de la app.
 | ------ | ------------------------------------------------------------------ | ------------------------ | ------------------------------------------------------ | -------------------------------------- | ------- |
 | TR-001 | El seed de 346 comunas tiene un nombre o código mal transcrito | Una comuna real queda invisible o con nombre incorrecto | Fuente única: el PDF de SUBDERE citado en [E-006](./investigacion.md#e-006), no reescribir a mano — generar el `INSERT` desde ese dato | El conteo final es exactamente 346 filas, verificado contra la fuente | abierto |
 
-<a id="tr-002"></a>
-
-| TR-002 | El header `Cache-Control: s-maxage` de T-004 no se puede verificar en local (no hay CDN de Vercel en `nuxt dev`) — no hay certeza de que Vercel lo respete como se espera | T-004 no cumple su propósito: el catálogo seguiría pegándole a la base en cada request, sin que nada lo avise | Contra el preview de Vercel de este PR (o el primer deploy a producción), `curl -sD - https://<preview>/api/categorias` dos veces seguidas y confirmar `x-vercel-cache: HIT` en la segunda | El header `x-vercel-cache` aparece como `HIT` en un request repetido dentro de la ventana de `s-maxage` | abierto |
-
 ## Estrategia de pruebas
 
 Sin infraestructura de test de integración contra Postgres todavía en el repo — la misión 02 tampoco la
@@ -218,7 +214,7 @@ prueba.
 | UX-001 (nada hasta escribir) | unitario, contra `CatalogSelect` directo | Con el campo enfocado y vacío, la lista de opciones no se renderiza | Al escribir la primera letra, aparece |
 | `CategoriaSelect`/`ComunaSelect` componen bien | unitario | Cada wrapper le pasa a `CatalogSelect` los `items` de su propio composable | Un cambio en `CatalogSelect` (ej. un modo nuevo) no exige tocar los wrappers |
 | TR-001 (conteo del seed) | manual, una vez | `select count(*) from comunas` = 346 después del seed | — |
-| TR-002 (caché de Vercel) | manual, contra el preview del PR | `curl` repetido a `/api/categorias` muestra `x-vercel-cache: HIT` la segunda vez | Si no aparece `HIT`, revisar si Vercel necesita `routeRules` en `nuxt.config.ts` en vez de solo el header |
+| T-004 (caché) | manual, una vez contra el preview del PR | `curl` repetido a `/api/categorias` muestra `x-vercel-cache: HIT` la segunda vez — comportamiento documentado por Vercel, esto es confirmación, no una incertidumbre | — |
 
 ### Propiedades que deben probarse
 
@@ -314,7 +310,7 @@ por capa, un wrapper de una sola responsabilidad por entidad
 ### T-004 — `GET /api/categorias` y `GET /api/comunas` se cachean vía header HTTP, no vía caché de
 aplicación
 
-- **Estado:** propuesta. **Fecha:** 2026-08-18.
+- **Estado:** aceptada. **Fecha:** 2026-08-18. **Aprobada por Patricio el:** 2026-08-18.
 - **Contratos:** TC-001, TC-002.
 - **Tensión:** el dedupe del lado del cliente (TC-003, `dedupe: 'defer'`) evita que una misma página pida
   el catálogo dos veces, pero no evita que cada página nueva, de cada usuario, vuelva a pegarle a la base
@@ -323,21 +319,21 @@ aplicación
 - **Alternativas descartadas:** `defineCachedEventHandler` de Nitro (primera versión de esta decisión) —
   memoiza la ejecución del handler, pero sobre funciones serverless (A-003, preset `vercel`) el storage por
   default no garantiza compartirse entre instancias; es una caché que no se puede observar ni controlar
-  desde afuera sin desplegar y adivinar. Redis/Vercel KV como store explícito — resuelve el problema de
-  observabilidad, pero es infraestructura nueva para un caso que no la necesita: nadie escribe estas tablas
-  desde la app (D-001/D-002, sin panel de admin), así que no hay ningún evento de escritura del que colgar
-  una invalidación inmediata — un TTL por tiempo es la única opción real exista o no Redis de por medio.
+  desde afuera. Redis/Vercel KV como store explícito — resuelve el problema de observabilidad, pero es
+  infraestructura nueva para un caso que no la necesita: nadie escribe estas tablas desde la app
+  (D-001/D-002, sin panel de admin), así que no hay ningún evento de escritura del que colgar una
+  invalidación inmediata — un TTL por tiempo es la única opción real exista o no Redis de por medio.
 - **Decisión y consecuencia:** `setResponseHeader(event, 'cache-control', 'public, s-maxage=3600, stale-while-revalidate=86400')`
-  en ambos handlers. `s-maxage` es el que respetan los CDN compartidos (el Edge Network de Vercel), no el
-  `max-age` de caché del navegador — mecanismo estándar HTTP (RFC 5861 para `stale-while-revalidate`), no
-  una caché de aplicación propia. Verificado en local que el header sale correcto en la respuesta; que
-  Vercel efectivamente lo honra (header `x-vercel-cache: HIT` en requests repetidos) solo se puede
-  confirmar contra el deploy real — ver [TR-002](#tr-002). Consecuencia aceptada: un cambio de `activa` en
-  la base puede tardar hasta una hora en reflejarse en lo que sirve el CDN — ya documentado como invariante
-  en TC-001/TC-002.
+  en ambos handlers — el patrón exacto que documenta Vercel para cachear respuestas de Vercel Functions en
+  su CDN ([Caching Serverless Function Responses](https://vercel.com/docs/functions/serverless-functions/edge-caching)):
+  cualquier respuesta con `s-maxage` cachea, y su checklist de "qué hace cacheable una respuesta" (método
+  `GET`, sin `Authorization`, sin `set-cookie`, sin `private`/`no-cache`, bajo 10MB) la cumplen los dos
+  endpoints sin ajustes. No es una apuesta ni una caché de aplicación propia — es el mecanismo estándar que
+  Vercel expone para exactamente este caso. `x-vercel-cache: HIT` en la respuesta confirma que sirvió desde
+  el CDN (ver Estrategia de pruebas). Consecuencia aceptada: un cambio de `activa` en la base puede tardar
+  hasta una hora en reflejarse en lo que sirve el CDN — ya documentado como invariante en TC-001/TC-002.
 - **Reapertura:** si algún flujo necesita ver un cambio de `activa` reflejado al instante (hoy ninguno lo
-  necesita — los cambios son manuales y poco frecuentes), o si TR-002 revela que Vercel no cachea esta
-  respuesta como se espera.
+  necesita — los cambios son manuales y poco frecuentes).
 
 ## Preguntas
 
