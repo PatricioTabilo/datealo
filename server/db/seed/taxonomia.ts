@@ -9,7 +9,8 @@
 
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
-import { categorias, comunas } from '../schema/taxonomia'
+import { categorias } from '../schema/categorias'
+import { comunas } from '../schema/comunas'
 
 process.loadEnvFile('.env')
 
