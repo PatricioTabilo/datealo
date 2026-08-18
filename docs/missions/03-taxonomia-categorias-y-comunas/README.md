@@ -13,10 +13,10 @@ Segunda de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar)
 | ------------- | --------- | ------------------------------------ |
 | Investigación | activo    | se acumula, no bloquea — el problema tiene situación y consecuencia concretas, hay 3 conclusiones (C-001 a C-003) y un ideal con capacidades observables |
 | Producto      | vigente   | aprobado por Patricio el 2026-08-17 — D-001 a D-004 aceptadas, Q-001 y Q-002 resueltas |
-| Experiencia   | pendiente | diseñar el componente compartido `ComunaSelect`/`CategoriaSelect` (D-004): autocompletado que solo permite elegir del catálogo |
-| Ingeniería    | pendiente | —                                     |
+| Experiencia   | en revisión | aprobación de Patricio sobre el diseño del componente `ComunaSelect`/`CategoriaSelect` (UXF-001), con mockup de sus 6 modos |
+| Ingeniería    | pendiente   | —                                     |
 
-**Próximo hito:** escribir `experiencia.md` — sin fecha límite todavía.
+**Próximo hito:** que Patricio apruebe o ajuste `experiencia.md` — sin fecha límite todavía.
 
 ## Brief
 

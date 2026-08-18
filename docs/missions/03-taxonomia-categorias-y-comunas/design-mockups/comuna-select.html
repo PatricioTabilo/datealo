@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>C-001 ComunaSelect / CategoriaSelect — misión 03</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+    <style>
+      .field-shell {
+        border: 1px solid var(--ui-border);
+        border-radius: var(--ui-radius, 0.5rem);
+        background: var(--ui-bg);
+      }
+      .option-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        font-size: 0.9375rem;
+        color: var(--ui-text-highlighted);
+        border-bottom: 1px solid var(--ui-border-muted);
+      }
+      .option-row:last-child {
+        border-bottom: none;
+      }
+      .skeleton-line {
+        height: 0.9rem;
+        border-radius: 0.375rem;
+        background: var(--ui-bg-accented);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+      <!-- 1. cerrado, sin valor -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          C-001 · modo cerrado, sin valor
+          <small>ComunaSelect embebido en un formulario genérico — el formulario real lo diseña la misión 04/06</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-5">
+            <label class="mb-2 block text-sm font-semibold" style="color: var(--ui-text-highlighted)">Comuna</label>
+            <div class="field-shell flex items-center justify-between px-4 py-3.5">
+              <span style="color: var(--ui-text-dimmed)">¿Qué comuna buscas?</span>
+              <span style="color: var(--ui-text-dimmed)">▾</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. abierto sin texto — lista completa -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          C-001 · modo abierto sin texto
+          <small>tocó el campo — aparece el catálogo activo completo, sin escribir nada</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-5">
+            <label class="mb-2 block text-sm font-semibold" style="color: var(--ui-text-highlighted)">Comuna</label>
+            <div class="field-shell px-4 py-3.5" style="border-color: var(--ui-primary)">
+              <input
+                type="text"
+                placeholder="¿Qué comuna buscas?"
+                class="w-full bg-transparent text-[0.9375rem] outline-none"
+                style="color: var(--ui-text-highlighted)"
+              />
+            </div>
+            <div class="field-shell mt-2 overflow-hidden">
+              <div class="option-row"><span>Cerrillos</span></div>
+              <div class="option-row"><span>Cerro Navia</span></div>
+              <div class="option-row"><span>Estación Central</span></div>
+              <div class="option-row"><span>Las Condes</span></div>
+              <div class="option-row" style="background: var(--ui-bg-accented)"><span>Ñuñoa</span></div>
+              <div class="option-row"><span>Providencia</span></div>
+              <div class="option-row"><span>Puerto Varas</span></div>
+              <div class="option-row"><span>Vitacura</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. abierto con coincidencias -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          C-001 · modo abierto con coincidencias
+          <small>escribió "nun" — filtra en vivo, sin distinguir tildes ni mayúsculas</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-5">
+            <label class="mb-2 block text-sm font-semibold" style="color: var(--ui-text-highlighted)">Comuna</label>
+            <div class="field-shell px-4 py-3.5" style="border-color: var(--ui-primary)">
+              <span class="text-[0.9375rem]" style="color: var(--ui-text-highlighted)">nun</span>
+            </div>
+            <div class="field-shell mt-2 overflow-hidden">
+              <div class="option-row" style="background: var(--ui-bg-accented)">
+                <span><strong style="color: var(--ui-primary)">Ñuñ</strong>oa</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. sin coincidencias -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          C-001 · modo sin coincidencias
+          <small>escribió "nunoaa" — no matchea, pero el catálogo completo sigue disponible debajo</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-5">
+            <label class="mb-2 block text-sm font-semibold" style="color: var(--ui-text-highlighted)">Comuna</label>
+            <div class="field-shell px-4 py-3.5" style="border-color: var(--ui-primary)">
+              <span class="text-[0.9375rem]" style="color: var(--ui-text-highlighted)">nunoaa</span>
+            </div>
+            <p class="mt-2 px-1 text-sm" style="color: var(--ui-text-muted)">No encontramos "nunoaa"</p>
+            <div class="field-shell mt-2 overflow-hidden">
+              <div class="option-row"><span>Cerrillos</span></div>
+              <div class="option-row"><span>Cerro Navia</span></div>
+              <div class="option-row"><span>Estación Central</span></div>
+              <div class="option-row"><span>Las Condes</span></div>
+              <div class="option-row"><span>Ñuñoa</span></div>
+              <div class="option-row"><span>Providencia</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. cargando -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          C-001 · modo cargando
+          <small>primera carga del catálogo en la sesión — skeleton, no spinner</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-5">
+            <label class="mb-2 block text-sm font-semibold" style="color: var(--ui-text-highlighted)">Comuna</label>
+            <div class="field-shell px-4 py-3.5" style="border-color: var(--ui-primary)">
+              <span class="text-[0.9375rem]" style="color: var(--ui-text-dimmed)">¿Qué comuna buscas?</span>
+            </div>
+            <div class="field-shell mt-2 space-y-3 p-4">
+              <div class="skeleton-line" style="width: 70%"></div>
+              <div class="skeleton-line" style="width: 55%"></div>
+              <div class="skeleton-line" style="width: 65%"></div>
+              <div class="skeleton-line" style="width: 45%"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. error -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          C-001 · modo error
+          <small>falló la carga del catálogo — reintentar vuelve a modo cargando</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-5">
+            <label class="mb-2 block text-sm font-semibold" style="color: var(--ui-text-highlighted)">Comuna</label>
+            <div class="field-shell px-4 py-3.5" style="border-color: var(--ui-primary)">
+              <span class="text-[0.9375rem]" style="color: var(--ui-text-dimmed)">¿Qué comuna buscas?</span>
+            </div>
+            <div class="field-shell mt-2 p-4 text-center">
+              <p class="text-sm" style="color: var(--ui-text-muted)">No pudimos cargar las comunas.</p>
+              <button
+                class="mt-3 rounded-xl px-5 py-2 text-sm font-bold text-white"
+                style="background: var(--ui-primary)"
+              >
+                Reintentar
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
