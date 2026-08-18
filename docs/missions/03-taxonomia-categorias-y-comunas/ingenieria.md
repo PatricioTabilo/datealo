@@ -80,7 +80,8 @@ bifurcación, y es deliberada: comparten `CatalogSelect` por composición, no po
 - **Salida:** `200 { categorias: { slug: string, nombre: string }[] }` — solo las `activa = true`, ordenadas
   alfabéticamente por `nombre`.
 - **Invariantes:** nunca incluye una fila con `activa = false`. Nunca incluye columnas internas (si el
-  schema suma alguna después, es privada por default — A-005).
+  schema suma alguna después, es privada por default — A-005). La respuesta se cachea en el servidor
+  hasta una hora (T-004) — un cambio de `activa` puede tardar hasta ese tiempo en reflejarse.
 - **Errores:** ninguno esperado con input inválido (no hay input). Una falla de conexión a la base
   propaga como `500` — no hay una condición de negocio que distinga un error "manejable" de una caída de
   infraestructura acá.
@@ -302,6 +303,29 @@ por capa, un wrapper de una sola responsabilidad por entidad
 - **Reapertura:** si `CategoriaSelect`/`ComunaSelect` o sus composables necesitan alguna vez una regla que
   no aplique a la otra entidad — ahí la implementación compartida deja de ser una talla única y esta
   decisión se revisa.
+
+<a id="t-004"></a>
+
+### T-004 — `GET /api/categorias` y `GET /api/comunas` se cachean en el servidor una hora
+
+- **Estado:** propuesta. **Fecha:** 2026-08-18.
+- **Contratos:** TC-001, TC-002.
+- **Tensión:** el dedupe del lado del cliente (TC-003, `dedupe: 'defer'`) evita que una misma página pida
+  el catálogo dos veces, pero no evita que cada página nueva, de cada usuario, vuelva a pegarle a la base
+  — para un dato que casi no cambia (D-001/D-002: `activa` se toca a mano, rara vez), eso es costo sin
+  beneficio.
+- **Alternativas descartadas:** solo el dedupe de TC-003 sin caché de servidor — resuelve el caso de dos
+  componentes en una página, no el de miles de requests distintos a lo largo del día contra el mismo dato
+  sin cambiar. Caché sin `stale-while-revalidate` (`swr: false`) — el primer request después de expirar el
+  `maxAge` esperaría la query completa en vez de servir la versión vieja mientras revalida en segundo
+  plano; con `swr: true` nadie nota la expiración.
+- **Decisión y consecuencia:** `defineCachedEventHandler` de Nitro envuelve ambos handlers, `maxAge: 3600`
+  segundos, `swr: true`. Verificado con un contador de ejecuciones reales del handler: 3 requests seguidos
+  al mismo endpoint disparan la query una sola vez. Consecuencia aceptada: un cambio de `activa` en la base
+  puede tardar hasta una hora en reflejarse en el catálogo servido — ya documentado como invariante en
+  TC-001/TC-002.
+- **Reapertura:** si algún flujo necesita ver un cambio de `activa` reflejado al instante (hoy ninguno lo
+  necesita — los cambios son manuales y poco frecuentes).
 
 ## Preguntas
 
