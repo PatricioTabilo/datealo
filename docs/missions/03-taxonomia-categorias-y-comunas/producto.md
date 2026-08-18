@@ -57,20 +57,11 @@ profesional o un buscador va a existir recién cuando 04 y 06 se construyan sobr
   | Cerrajería    | Cerraduras, llaves, emergencias de acceso          |
   | Jardinería    | Mantención de jardín, poda, pasto                  |
 
-  Cada categoría lleva además una lista corta de sinónimos con los que un buscador puede escribirla y
-  que Datealo debe reconocer como la misma categoría (detalle de implementación en `ingenieria.md`, pero el
-  contenido de la lista es acá, porque es una decisión de vocabulario):
-
-  | Categoría    | Sinónimos que matchean                              |
-  | ------------ | ----------------------------------------------------- |
-  | Gasfitería   | gasfiter, plomero, plomería                            |
-  | Electricidad | electricista                                           |
-  | Peluquería   | peluquero, peluquera, estilista                        |
-  | Limpieza     | aseo, aseadora, asesora del hogar (solo para aseo puntual, no empleo de planta) |
-  | Mudanzas     | flete, fletero                                         |
-  | Pintura      | pintor, pintora                                        |
-  | Cerrajería   | cerrajero                                               |
-  | Jardinería   | jardinero, jardinera, paisajismo                       |
+  Esta lista es solo el catálogo — cómo un buscador la elige en pantalla (tocar una categoría de una
+  lista, como ya hace el carrusel de la landing, o escribir texto libre) es una decisión de la misión 06,
+  no de esta. No se asume texto libre ni matching de sinónimos acá: eso solo haría falta si 06 decide un
+  buscador de texto, y en ese caso la decisión de vocabulario se toma en su propio `producto.md`, no en
+  este.
 
   Agregar una categoría nueva después es barato (una fila más); sacar una que ya tiene profesionales
   registrados no — por eso el catálogo parte corto a propósito.
@@ -123,7 +114,6 @@ reclutamiento de profesionales es una decisión de go-to-market aparte, no un re
 | ------ | ------------------------------------------------------------------------- | -------------------------- | ------ |
 | CL-001 | Una categoría del catálogo no tiene ningún profesional registrado todavía (ej. Jardinería) | Se sigue mostrando en el catálogo, no se esconde — misión 06 decide cómo se ve en el buscador | misión 04, misión 06 |
 | CL-002 | Una comuna del catálogo no tiene ningún profesional registrado todavía     | Igual que CL-001: la comuna existe en la lista, el estado vacío se resuelve en misión 06 | misión 04, misión 06 |
-| CL-003 | Alguien busca un oficio que no está en el catálogo (ej. "abogado", "gásfiter" mal escrito con acento raro) | No se inventa una categoría nueva. Se registra como intento fuera de catálogo para D-001 (ver M-001) | misión 06 |
 
 ## Fuera de alcance
 
@@ -144,11 +134,11 @@ reclutamiento de profesionales es una decisión de go-to-market aparte, no un re
   seguido y no está?
 - **Señal:** de los registros en la lista de espera y de las conversaciones de reclutamiento de
   profesionales, cuántas veces se menciona un oficio que no es ninguna de las 8.
-- **Método y umbral:** revisión manual de Patricio sobre la lista de espera y el registro de intentos
-  fuera de catálogo (CL-003); sin umbral numérico todavía por falta de volumen — se revisa cualitativamente
-  cada vez que aparece un patrón repetido (3+ menciones del mismo oficio fuera de catálogo).
-- **Guardrail:** ningún profesional se pierde por no encontrar su oficio — un intento fuera de catálogo
-  queda registrado, no se descarta silenciosamente.
+- **Método y umbral:** revisión manual de Patricio sobre la lista de espera y las conversaciones de
+  reclutamiento; sin umbral numérico todavía por falta de volumen — se revisa cualitativamente cada vez que
+  aparece un patrón repetido (3+ menciones del mismo oficio fuera de catálogo).
+- **Guardrail:** ningún profesional interesado se pierde por no encontrar su oficio en la lista — Patricio
+  lo registra a mano mientras el catálogo no lo cubra, no se descarta la conversación.
 
 <a id="m-002"></a>
 
