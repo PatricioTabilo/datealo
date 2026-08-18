@@ -1,8 +1,8 @@
 # Misión 03: taxonomía de categorías y comunas — Producto
 
-**Estado:** en revisión
+**Estado:** vigente
 
-**Última actualización:** 2026-08-17
+**Última actualización:** 2026-08-17. **Aprobado por Patricio el:** 2026-08-17.
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -41,7 +41,7 @@ de usuario que viva acá, pero sí una pieza reutilizable con su propia regla de
 
 ### D-001 — Las 8 categorías ya usadas en la landing son el catálogo oficial del lanzamiento
 
-- **Estado:** propuesta. **Fecha:** 2026-08-17. **Fecha límite:** 2026-08-24.
+- **Estado:** aceptada. **Fecha:** 2026-08-17. **Aprobada por Patricio el:** 2026-08-17.
 - **Sustento:** [C-001](./investigacion.md#c-001).
 - **Tensión:** cubrir más oficios da más superficie de búsqueda, pero cada oficio nuevo sin profesionales
   registrados es una categoría vacía que se ve peor que no tenerla.
@@ -82,7 +82,7 @@ de usuario que viva acá, pero sí una pieza reutilizable con su propia regla de
 ### D-002 — El catálogo tiene las 346 comunas de Chile completas; un campo `activa` por comuna controla
 qué se ofrece en registro y búsqueda, sin tocar código
 
-- **Estado:** propuesta. **Fecha:** 2026-08-17. **Fecha límite:** 2026-08-24.
+- **Estado:** aceptada. **Fecha:** 2026-08-17. **Aprobada por Patricio el:** 2026-08-17.
 - **Sustento:** [C-002](./investigacion.md#c-002). Revisa la implicación de [C-003](./investigacion.md#c-003)
   — ver la nota de revisión ahí.
 - **Tensión:** excluir comunas del catálogo (la primera versión de esta decisión) evita mostrar opciones
@@ -109,7 +109,7 @@ qué se ofrece en registro y búsqueda, sin tocar código
 
 ### D-003 — Los términos canónicos son "categoría" y "comuna"
 
-- **Estado:** propuesta. **Fecha:** 2026-08-17. **Fecha límite:** 2026-08-24.
+- **Estado:** aceptada. **Fecha:** 2026-08-17. **Aprobada por Patricio el:** 2026-08-17.
 - **Sustento:** vocabulario ya en uso en `CLAUDE.md` y en la landing.
 - **Tensión:** ninguna — es ratificar lo que ya se usa, no una alternativa real.
 - **Alternativas descartadas:** "rubro" u "oficio" como nombre del campo — "oficio" es como se explica en
@@ -125,7 +125,7 @@ qué se ofrece en registro y búsqueda, sin tocar código
 
 ### D-004 — Categoría y comuna siempre son una referencia al catálogo, nunca texto libre guardado
 
-- **Estado:** propuesta. **Fecha:** 2026-08-17. **Fecha límite:** 2026-08-24.
+- **Estado:** aceptada. **Fecha:** 2026-08-17. **Aprobada por Patricio el:** 2026-08-17.
 - **Sustento:** [C-001](./investigacion.md#c-001), [C-002](./investigacion.md#c-002) — la lista solo
   cumple su función (que registro y búsqueda hablen el mismo idioma) si nadie puede guardar un valor que no
   esté en ella.
@@ -196,22 +196,9 @@ la misión 06 más adelante define texto libre y necesita un caso límite equiva
 
 ## Preguntas
 
-Solo Q-001 sigue abierta: falta que confirmes si las 8 categorías de la landing son el catálogo real o si
-falta/sobra alguna, lo que bloquea que D-001 pase de "propuesta" a "aceptada".
+Ninguna abierta — Q-001 y Q-002 quedaron resueltas el 2026-08-17.
 
 | ID    | La duda                                                | Estado             | Respuesta, o quién la resuelve |
 | ----- | --------------------------------------------------------- | ------------------- | ----------------------------------- |
-| Q-001 | ¿Las 8 categorías de la landing son de verdad las 8 correctas para el catálogo, o falta/sobra alguna? | abierta             | Patricio confirma o ajusta en la revisión de D-001, antes del 2026-08-24 |
+| Q-001 | ¿Las 8 categorías de la landing son de verdad las 8 correctas para el catálogo, o falta/sobra alguna? | resuelta 2026-08-17 | Sí, son las 8 correctas — Patricio las confirmó sin cambios en D-001 |
 | Q-002 | ¿Hay ya un plan de reclutamiento de profesionales que priorice ciertas comunas?                       | resuelta 2026-08-17 | Sí: Gran Santiago (mercado más grande) y Puerto Varas (donde Patricio vive y puede verificar directo). Esas dos zonas parten activas en [D-002](#d-002) |
-
-<a id="q-001"></a>
-
-### Q-001 — ¿Las 8 categorías de la landing son las correctas para el catálogo real?
-
-- **La duda, con un ejemplo:** la landing se armó para verse bien en un carrusel, no como catálogo — por
-  ejemplo, no incluye "carpintería" ni "cuidado de mascotas", que también son oficios comunes a domicilio en
-  Chile. ¿Se quedan fuera a propósito o es solo que no entraron en el carrusel?
-- **Afecta a:** [D-001](#d-001).
-- **Cómo se resolverá:** Patricio revisa la tabla de D-001 y confirma, agrega o saca categorías.
-- **¿Bloquea algo?:** bloquea que D-001 pase de "propuesta" a "aceptada" — mientras tanto misión 04 y 06
-  no deberían empezar a construir el selector de categoría.
