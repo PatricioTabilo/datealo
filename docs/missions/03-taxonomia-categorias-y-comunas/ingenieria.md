@@ -212,11 +212,11 @@ prueba.
 
 | ID    | Slice (una frase, sin "y")                                  | Sustento             | Criterio de aceptación principal                                                     | Depende de |
 | ----- | ------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------ | ---------- |
-| S-001 | Tablas `categorias` y `comunas` con RLS y seed completo        | D-001, D-002, TR-001 | `select count(*) from comunas` = 346; `select count(*) from categorias` = 8; Gran Santiago (32) + Puerto Varas activas en `comunas`, las 8 categorías activas | — |
-| S-002 | Endpoints `GET /api/categorias` y `GET /api/comunas`            | TC-001, TC-002        | Cada endpoint devuelve solo filas `activa = true`, ordenadas por nombre               | S-001 |
-| S-003 | `useCatalogFetch()` y sus wrappers `useCategoriasCatalog()`/`useComunasCatalog()` | TC-003 | Montar dos componentes que usan el mismo wrapper en la misma página dispara un solo request; ninguno de los dos wrappers pasa de una línea | S-002 |
-| S-004 | Componente `CatalogSelect.vue` con los 6 modos de `experiencia.md` | TC-004, D-004, UXF-001, UX-001 | Test unitario (Vitest + Vue Test Utils) verifica los 6 modos y que nunca emite un valor fuera de `items` | S-003 |
-| S-005 | `CategoriaSelect.vue` y `ComunaSelect.vue`, componiendo `CatalogSelect` | TC-004 | Cada uno monta `CatalogSelect` pasándole su composable — cero lógica de interacción propia, verificable con un diff que no toca `CatalogSelect` | S-004 |
+| S-001 | Tablas `categorias` y `comunas` con RLS y seed completo        | D-001, D-002, TR-001 | `select count(*) from comunas` = 346; `select count(*) from categorias` = 8; Gran Santiago (32) + Puerto Varas activas en `comunas`, las 8 categorías activas | [#45](https://github.com/PatricioTabilo/datealo/issues/45) |
+| S-002 | Endpoints `GET /api/categorias` y `GET /api/comunas`            | TC-001, TC-002        | Cada endpoint devuelve solo filas `activa = true`, ordenadas por nombre               | [#46](https://github.com/PatricioTabilo/datealo/issues/46) |
+| S-003 | `useCatalogFetch()` y sus wrappers `useCategoriasCatalog()`/`useComunasCatalog()` | TC-003 | Montar dos componentes que usan el mismo wrapper en la misma página dispara un solo request; ninguno de los dos wrappers pasa de una línea | [#47](https://github.com/PatricioTabilo/datealo/issues/47) |
+| S-004 | Componente `CatalogSelect.vue` con los 6 modos de `experiencia.md` | TC-004, D-004, UXF-001, UX-001 | Test unitario (Vitest + Vue Test Utils) verifica los 6 modos y que nunca emite un valor fuera de `items` | [#48](https://github.com/PatricioTabilo/datealo/issues/48) |
+| S-005 | `CategoriaSelect.vue` y `ComunaSelect.vue`, componiendo `CatalogSelect` | TC-004 | Cada uno monta `CatalogSelect` pasándole su composable — cero lógica de interacción propia, verificable con un diff que no toca `CatalogSelect` | [#49](https://github.com/PatricioTabilo/datealo/issues/49) |
 
 Cinco slices, en línea recta por dependencia — no hay forma de paralelizar sin que uno bloquee al
 siguiente (los wrappers necesitan `CatalogSelect`, que necesita el composable, que necesita el endpoint,
