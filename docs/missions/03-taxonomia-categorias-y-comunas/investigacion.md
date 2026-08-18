@@ -92,6 +92,14 @@ todas las combinaciones categoría × comuna
   de comunas de alta densidad para el lanzamiento, con una condición explícita de cuándo se amplía.
 - **Confianza:** media — es una aplicación directa del filtro de arranque en frío, sin evidencia externa
   nueva propia de Datealo.
+- **Revisión (2026-08-17):** `producto.md` decidió distinto a la implicación de arriba. En vez de recortar
+  el catálogo de comunas a un subconjunto fijo, el catálogo quedó completo (346 comunas) con un campo
+  `activa` por fila que controla qué se ofrece en registro y búsqueda (D-002). El riesgo que describe esta
+  conclusión — vaciar categoría × comuna — sigue siendo real y sigue sustentando por qué solo un
+  subconjunto empieza activo (Gran Santiago y Puerto Varas); lo que no sobrevivió es la idea de que el
+  catálogo mismo necesitaba excluir comunas para evitarlo. Excluir del catálogo y desactivar son
+  mecanismos distintos con el mismo efecto visible al lanzamiento, pero el segundo no tiene costo de
+  revertir.
 
 ## El ideal: cualquier oficio, en cualquier comuna de Chile, encontrado con las palabras propias del buscador
 

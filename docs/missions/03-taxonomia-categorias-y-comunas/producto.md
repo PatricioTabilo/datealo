@@ -7,29 +7,33 @@
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-## Qué construimos: una lista cerrada de oficios y una lista cerrada de comunas, para que registro y
-búsqueda hablen el mismo idioma
+## Qué construimos: el catálogo completo de oficios y comunas, con un interruptor por fila para
+controlar qué está disponible sin necesitar un deploy
 
 **Resultado:** cuando un profesional se registre (misión 04) va a elegir su oficio y su comuna de dos
-listas fijas, no escribirlas a mano. Cuando alguien busque (misión 06), esas mismas dos listas son las que
-va a poder filtrar. Ningún desarrollador de esas dos misiones inventa su propia versión.
+listas fijas, no escribirlas a mano — y esas listas siempre apuntan a un registro real del catálogo, nunca
+a texto suelto. Cuando alguien busque (misión 06), esas mismas dos listas son las que va a poder filtrar.
+Ningún desarrollador de esas dos misiones inventa su propia versión, y ambas usan el mismo componente de
+selección (ver [D-004](#d-004)).
 
 **Recorte respecto del ideal:** el ideal (ver [investigacion.md](./investigacion.md)) es cualquier oficio
-en cualquiera de las 346 comunas de Chile. Acá se recorta a 8 oficios y a las 32 comunas del Gran Santiago
-— sigue siendo suficiente porque es donde la landing ya asume que va a estar la oferta inicial, y una lista
-más ancha con oferta cero solo agrega categorías y comunas vacías.
+en cualquiera de las 346 comunas de Chile. La tabla de datos ya cubre eso completo — las 346 comunas y las 8
+categorías existen desde el día uno. Lo que se recorta no es la lista, es **cuáles de esas filas están
+activas** (visibles para registro y búsqueda) al lanzamiento: Gran Santiago y Puerto Varas para partir,
+controlado por un campo `activa` que se prende o apaga sin tocar código (ver [D-002](#d-002)).
 
-**Restricciones aceptadas:** solo Gran Santiago al lanzamiento (nada de regiones ni comunas rurales de la
-RM todavía), 8 oficios fijos (nada de subcategorías dentro de un oficio), español chileno como único
-idioma.
+**Restricciones aceptadas:** 8 oficios fijos al lanzamiento (nada de subcategorías dentro de un oficio,
+aunque el catálogo puede sumar categorías nuevas después sin costo), español chileno como único idioma, sin
+panel de administración todavía — activar o desactivar una fila se hace directo en la base de datos.
 
-## Sin funcionalidades propias
+## Sin funcionalidades propias en registro o búsqueda — sí un componente compartido
 
-Esta misión no construye ninguna pantalla ni endpoint que un profesional o un buscador use directo — el
-selector de categoría al registrarse es misión 04, el filtro de comuna en el buscador es misión 06. Lo que
-esta misión entrega son las dos listas cerradas (categorías y comunas) de las que esas dos misiones
-dependen. Por eso no hay una sección de Funcionalidades en formato JTBD: el resultado observable para un
-profesional o un buscador va a existir recién cuando 04 y 06 se construyan sobre estas decisiones.
+Esta misión no construye ninguna pantalla completa que un profesional o un buscador use directo — el
+formulario de registro es misión 04, la pantalla de resultados es misión 06. Lo que esta misión sí entrega,
+además del catálogo, es el **componente de selección** que ambas van a importar (`ComunaSelect`,
+`CategoriaSelect` — ver [D-004](#d-004) e `ingenieria.md`), para que nadie lo construya dos veces ni de
+formas distintas. Por eso no hay una sección de Funcionalidades en formato JTBD: no hay un flujo completo
+de usuario que viva acá, pero sí una pieza reutilizable con su propia regla de comportamiento.
 
 ## Decisiones de producto
 
@@ -63,6 +67,11 @@ profesional o un buscador va a existir recién cuando 04 y 06 se construyan sobr
   buscador de texto, y en ese caso la decisión de vocabulario se toma en su propio `producto.md`, no en
   este.
 
+  Cada categoría tiene además un campo `activa` (ver [D-002](#d-002) para el mismo mecanismo aplicado a
+  comunas) — las 8 parten activas, pero el interruptor existe por si hace falta pausar una sin borrarla
+  (ej. problemas de calidad recurrentes en una categoría) o sumar una nueva sin que aparezca hasta estar
+  lista.
+
   Agregar una categoría nueva después es barato (una fila más); sacar una que ya tiene profesionales
   registrados no — por eso el catálogo parte corto a propósito.
 - **Reapertura:** cuando una categoría fuera del catálogo se pida seguido en el formulario de espera o en
@@ -70,27 +79,31 @@ profesional o un buscador va a existir recién cuando 04 y 06 se construyan sobr
 
 <a id="d-002"></a>
 
-### D-002 — El catálogo de comunas cubre las 32 comunas del Gran Santiago desde el día uno; el foco de
-reclutamiento de profesionales es una decisión de go-to-market aparte, no un recorte de la lista
+### D-002 — El catálogo tiene las 346 comunas de Chile completas; un campo `activa` por comuna controla
+qué se ofrece en registro y búsqueda, sin tocar código
 
 - **Estado:** propuesta. **Fecha:** 2026-08-17. **Fecha límite:** 2026-08-24.
-- **Sustento:** [C-002](./investigacion.md#c-002), [C-003](./investigacion.md#c-003).
-- **Tensión:** cubrir toda la Región Metropolitana (52 comunas) sigue el ideal de cobertura total, pero con
-  oferta inicial en decenas de profesionales la mayoría de comunas van a estar vacías. Cubrir solo un
-  puñado (5-10) evita comunas vacías, pero exige elegir cuáles de antemano sin tener todavía dato propio de
-  dónde va a estar la demanda o los primeros profesionales reclutados — sería una apuesta sin sustento.
-- **Alternativas descartadas:** las 52 comunas de la RM completa — vacía casi todo con la oferta inicial
-  (C-003). Elegir a mano un subconjunto chico (ej. 10 comunas de mayor ingreso) — no hay evidencia propia
-  de Datealo que sustente cuáles 10, y excluir una comuna del modelo de datos es más caro de revertir que
-  restringir dónde se hace difusión.
-- **Decisión y consecuencia:** la tabla de comunas nace con las 32 de la Provincia de Santiago (Gran
-  Santiago urbano — la lista completa está en [E-006](./investigacion.md#e-006) de investigación). Ninguna
-  se excluye estructuralmente. Qué comunas se trabajan primero para reclutar profesionales (dónde se hace
-  difusión, dónde se prioriza el primer lote de verificaciones) es una decisión operativa de Patricio, fuera
-  de este documento — así una comuna sin profesionales todavía no es un bug del catálogo, es el estado
-  esperado de un marketplace recién lanzado.
-- **Reapertura:** cuando haya tracción validada en Gran Santiago (ver [M-002](#m-002)), se evalúa sumar
-  comunas fuera de la Provincia de Santiago o una segunda región.
+- **Sustento:** [C-002](./investigacion.md#c-002). Revisa la implicación de [C-003](./investigacion.md#c-003)
+  — ver la nota de revisión ahí.
+- **Tensión:** excluir comunas del catálogo (la primera versión de esta decisión) evita mostrar opciones
+  sin cobertura, pero cuesta caro revertir y no hay ningún motivo real para no tener el dato completo — es
+  solo una fila más por comuna, sin costo de UI ni de base de datos. Lo que sí es limitado es cuánto puede
+  reclutar y verificar Patricio a mano, y eso no depende de cuántas filas tiene la tabla.
+- **Alternativas descartadas:** catálogo recortado a un subconjunto fijo de comunas (Gran Santiago
+  solamente, la versión anterior de esta decisión) — mezclaba "qué existe en la base de datos" con "dónde
+  reclutamos primero", dos preguntas distintas que no necesitan la misma respuesta. Dejar el campo de comuna
+  como texto libre — rompe [D-004](#d-004), permitiría "Ñuñoa", "ñuñoa" y "Nunoa" como tres valores
+  distintos.
+- **Decisión y consecuencia:** la tabla de comunas tiene las 346 comunas oficiales de Chile
+  ([E-006](./investigacion.md#e-006) de investigación) desde el día uno, cada una con un campo booleano
+  `activa`. Solo las comunas `activa = true` aparecen como opción en el selector de registro y de búsqueda
+  — una comuna inactiva no se ofrece, no se muestra como "sin resultados". Al lanzamiento parten activas
+  las comunas de Gran Santiago y Puerto Varas (los dos mercados donde Patricio puede reclutar y verificar
+  profesionales directamente); el resto existe en la tabla pero apagado. Activar una comuna nueva es
+  cambiar ese campo, sin deploy — hoy a mano en la base de datos, más adelante quizás desde un panel de
+  administración (fuera de alcance de esta misión).
+- **Reapertura:** ninguna — el catálogo ya está completo. Lo que se revisa con el tiempo es qué comunas
+  están activas, y eso no necesita reabrir esta decisión (ver [M-002](#m-002)).
 
 <a id="d-003"></a>
 
@@ -108,20 +121,48 @@ reclutamiento de profesionales es una decisión de go-to-market aparte, no un re
   "oficio" como término formal, "servicio" para esto, "ciudad" ni "región".
 - **Reapertura:** ninguna prevista.
 
+<a id="d-004"></a>
+
+### D-004 — Categoría y comuna siempre son una referencia al catálogo, nunca texto libre guardado
+
+- **Estado:** propuesta. **Fecha:** 2026-08-17. **Fecha límite:** 2026-08-24.
+- **Sustento:** [C-001](./investigacion.md#c-001), [C-002](./investigacion.md#c-002) — la lista solo
+  cumple su función (que registro y búsqueda hablen el mismo idioma) si nadie puede guardar un valor que no
+  esté en ella.
+- **Tensión:** un campo de texto libre es más rápido de construir que un selector con catálogo, pero
+  reabre exactamente el problema que esta misión existe para cerrar — "electricista" vs "instalaciones
+  eléctricas" como dos valores distintos que no matchean entre sí.
+- **Alternativas descartadas:** texto libre con normalización posterior (limpiar mayúsculas, tildes,
+  sinónimos después de guardado) — la inconsistencia ya ocurrió al guardar, limpiarla después es
+  reconstruir el problema de C-001 con pasos extra.
+- **Decisión y consecuencia:** todo formulario que pida categoría o comuna (registro en misión 04, filtro
+  de búsqueda en misión 06) usa el mismo componente de selección — un buscador con autocompletado al estilo
+  del selector de comuna de Mercado Libre: la persona escribe, ve solo opciones que existen en el catálogo,
+  y no puede enviar el formulario con algo que no eligió de la lista. La forma exacta de ese componente
+  (estados de carga, qué pasa si no hay match) se diseña en `experiencia.md`; el componente en sí
+  (`ComunaSelect`, `CategoriaSelect`) se construye una sola vez en `ingenieria.md` de esta misión, y 04 y 06
+  lo importan — no lo reconstruyen.
+- **Reapertura:** ninguna prevista.
+
 ## Casos límite
 
 | ID     | Condición concreta                                                      | Comportamiento esperado | Afecta |
 | ------ | ------------------------------------------------------------------------- | -------------------------- | ------ |
-| CL-001 | Una categoría del catálogo no tiene ningún profesional registrado todavía (ej. Jardinería) | Se sigue mostrando en el catálogo, no se esconde — misión 06 decide cómo se ve en el buscador | misión 04, misión 06 |
-| CL-002 | Una comuna del catálogo no tiene ningún profesional registrado todavía     | Igual que CL-001: la comuna existe en la lista, el estado vacío se resuelve en misión 06 | misión 04, misión 06 |
+| CL-001 | Una categoría activa no tiene ningún profesional registrado todavía (ej. Jardinería) | Se sigue mostrando en el selector, no se esconde — misión 06 decide cómo se ve el estado vacío en el buscador | misión 04, misión 06 |
+| CL-002 | Una comuna activa no tiene ningún profesional registrado todavía           | Igual que CL-001: la comuna existe y es seleccionable, el estado vacío se resuelve en misión 06 | misión 04, misión 06 |
+| CL-004 | Alguien intenta buscar o registrarse en una comuna marcada `activa = false` | La comuna no aparece como opción en el selector — no es un estado vacío, es que Datealo todavía no opera ahí | misión 04, misión 06 |
+
+CL-003 se retiró: era "alguien busca un oficio que no está en el catálogo" con texto libre, y dependía de
+una mecánica de búsqueda por texto que no está decidida (ver historial de D-001). El ID no se reutiliza; si
+la misión 06 más adelante define texto libre y necesita un caso límite equivalente, nace con un ID nuevo.
 
 ## Fuera de alcance
 
 | Capacidad o caso                                              | Estado     | Razón del recorte                                                | Condición para reconsiderar |
 | ---------------------------------------------------------------- | ---------- | -------------------------------------------------------------------- | ------------------------------- |
 | Subcategorías dentro de un oficio (ej. "Gasfitería - filtraciones") | postergada | Sin volumen no se justifica el filtro extra, agrega fricción al registro | Una categoría-comuna promedia 15+ profesionales |
-| Comunas fuera de la Provincia de Santiago (resto de la RM o de Chile) | postergada | Cold start: cobertura sin oferta real es solo un catálogo vacío | Tracción validada en Gran Santiago (M-002) |
-| Categorías fuera de las 8 (ej. carpintería, gasfitería industrial, cuidado de mascotas) | postergada | Mismo criterio de cold start que las comunas | Se piden seguido en la lista de espera o en los primeros meses (M-001) |
+| Categorías fuera de las 8 (ej. carpintería, gasfitería industrial, cuidado de mascotas) | postergada | Mismo criterio de cold start — sumarlas es barato, pero cada una vacía se ve peor que no tenerla | Se piden seguido en la lista de espera o en los primeros meses (M-001) |
+| Panel de administración para activar/desactivar comunas y categorías | postergada | Hoy el volumen de cambios es bajo — se hace directo en la base de datos | El volumen de cambios manuales lo justifique |
 | Traducción del catálogo a otro idioma                          | descartada | Datealo es Chile, español chileno es el único idioma del producto | — |
 
 ## Señales de éxito
@@ -142,25 +183,26 @@ reclutamiento de profesionales es una decisión de go-to-market aparte, no un re
 
 <a id="m-002"></a>
 
-### M-002 — Gran Santiago tiene tracción antes de ampliar cobertura
+### M-002 — Gran Santiago y Puerto Varas tienen tracción antes de activar más comunas
 
-- **Pregunta:** ¿ya vale la pena cubrir más comunas o regiones?
-- **Señal:** profesionales registrados y verificados en al menos la mitad de las 32 comunas del Gran
-  Santiago, con al menos una categoría con más de un profesional en la comuna más poblada.
+- **Pregunta:** ¿ya vale la pena activar comunas nuevas fuera de las que se están trabajando hoy?
+- **Señal:** profesionales registrados y verificados en al menos la mitad de las comunas activas, con al
+  menos una categoría con más de un profesional en la comuna más poblada de cada zona activa.
 - **Método y umbral:** conteo directo en la base de datos una vez exista la tabla de profesionales (misión
-  04); sin fecha objetivo todavía.
-- **Guardrail:** ampliar cobertura no debe diluir la densidad de Gran Santiago — no se suma una comuna
-  nueva a costa de dejar de reclutar en las que ya están activas.
+  04); sin fecha objetivo todavía. Activar una comuna nueva no requiere esperar esta señal — es solo la
+  referencia para decidir cuándo conviene, dado que el campo `activa` no tiene costo de revertir.
+- **Guardrail:** activar comunas nuevas no debe diluir el esfuerzo de reclutamiento en las que ya están
+  activas — no se suma una comuna a costa de dejar de reclutar en Gran Santiago o Puerto Varas.
 
 ## Preguntas
 
-Nada bloquea todavía — D-001 y D-002 están redactadas con recomendación explícita, a la espera de tu
-aprobación (fecha límite 2026-08-24 en ambas).
+Solo Q-001 sigue abierta: falta que confirmes si las 8 categorías de la landing son el catálogo real o si
+falta/sobra alguna, lo que bloquea que D-001 pase de "propuesta" a "aceptada".
 
-| ID    | La duda                                                | Estado  | Respuesta, o quién la resuelve |
-| ----- | --------------------------------------------------------- | ------- | ----------------------------------- |
-| Q-001 | ¿Las 8 categorías de la landing son de verdad las 8 correctas para el catálogo, o falta/sobra alguna? | abierta | Patricio confirma o ajusta en la revisión de D-001, antes del 2026-08-24 |
-| Q-002 | ¿Hay ya un plan de reclutamiento de profesionales que priorice ciertas comunas del Gran Santiago, que debería quedar registrado acá? | abierta | Patricio responde si existe; si no, D-002 queda como está (las 32 sin prioridad explícita) |
+| ID    | La duda                                                | Estado             | Respuesta, o quién la resuelve |
+| ----- | --------------------------------------------------------- | ------------------- | ----------------------------------- |
+| Q-001 | ¿Las 8 categorías de la landing son de verdad las 8 correctas para el catálogo, o falta/sobra alguna? | abierta             | Patricio confirma o ajusta en la revisión de D-001, antes del 2026-08-24 |
+| Q-002 | ¿Hay ya un plan de reclutamiento de profesionales que priorice ciertas comunas?                       | resuelta 2026-08-17 | Sí: Gran Santiago (mercado más grande) y Puerto Varas (donde Patricio vive y puede verificar directo). Esas dos zonas parten activas en [D-002](#d-002) |
 
 <a id="q-001"></a>
 
@@ -173,15 +215,3 @@ aprobación (fecha límite 2026-08-24 en ambas).
 - **Cómo se resolverá:** Patricio revisa la tabla de D-001 y confirma, agrega o saca categorías.
 - **¿Bloquea algo?:** bloquea que D-001 pase de "propuesta" a "aceptada" — mientras tanto misión 04 y 06
   no deberían empezar a construir el selector de categoría.
-
-<a id="q-002"></a>
-
-### Q-002 — ¿Existe ya un orden de prioridad de comunas para reclutar profesionales?
-
-- **La duda, con un ejemplo:** si Patricio ya sabe que va a partir reclutando en Providencia y Ñuñoa antes
-  que en Puente Alto, esa prioridad debería quedar escrita acá aunque el catálogo de datos incluya las 32
-  comunas por igual.
-- **Afecta a:** [D-002](#d-002).
-- **Cómo se resolverá:** Patricio responde directo; si no hay prioridad todavía, no bloquea nada.
-- **¿Bloquea algo?:** no bloquea D-002 (la lista de 32 comunas es independiente de la prioridad de
-  reclutamiento), pero sí conviene saberlo antes de la misión 04.
