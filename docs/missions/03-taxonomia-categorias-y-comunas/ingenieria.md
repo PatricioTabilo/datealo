@@ -11,8 +11,9 @@
 compartido compuesto por dos wrappers
 
 Dos tablas nuevas (`categorias`, `comunas`), cada una con el campo `activa` que D-001/D-002 piden. Dos
-endpoints `GET` de solo lectura, sin autenticación (son catálogo público, no datos de usuario). Dos
-composables que los consumen con cache, y un componente Vue (`CatalogSelect`) que implementa el contrato de
+endpoints `GET` de solo lectura, sin autenticación (son catálogo público, no datos de usuario). Un
+composable genérico (`useCatalogFetch`) que los consume con cache, y un componente Vue (`CatalogSelect`) que
+implementa el contrato de
 D-004 sobre `UInputMenu` de Nuxt UI (A-004) — ya trae resuelto el autocompletado, lo que se construye acá
 es el contenido y las reglas: catálogo cerrado, nada visible hasta escribir. `CategoriaSelect` y
 `ComunaSelect` son dos wrappers delgados que lo componen, no dos copias de la misma lógica (ver T-003).
@@ -45,10 +46,24 @@ enfocado/filtrado/selección.
 | -------------------------------------- | ------------------------------------------------------ | -------------------------------------------- | -------------- |
 | `server/db/schema/taxonomia.ts`        | Forma de las tablas                                     | Qué filas existen (eso es el seed)          | D-001, D-002   |
 | `server/utils/taxonomia.ts`             | Queries: solo filas `activa = true`, columnas públicas | Presentación, formato del texto              | D-001, D-002   |
-| `server/api/categorias.get.ts` / `comunas.get.ts` | I/O: llama la query, devuelve JSON              | Filtrar por texto (eso lo hace el cliente)    | TC-001, TC-002 |
-| `app/composables/useCategoriasCatalog.ts` / `useComunasCatalog.ts` | Fetch con cache, expone `pending`/`error` | Cuándo mostrar la lista (eso es el componente) | TC-003         |
+| `server/api/categorias.get.ts` / `comunas.get.ts` | I/O: llama la query, devuelve JSON — dos archivos porque Nitro enruta por archivo, no porque haya lógica distinta | Filtrar por texto (eso lo hace el cliente) | TC-001, TC-002 |
+| `app/composables/useCatalogFetch.ts`   | Fetch con cache y manejo de error, genérico — no sabe si trae categorías o comunas | De dónde viene el endpoint (eso lo fija cada wrapper) | TC-003 |
+| `app/composables/useCategoriasCatalog.ts` / `useComunasCatalog.ts` | Fijar `key` y `endpoint` para `useCatalogFetch` — una línea cada uno | Cómo se cachea o qué pasa si falla (eso ya lo resolvió `useCatalogFetch`) | TC-003 |
 | `app/components/CatalogSelect.vue`     | Los 6 modos de UXF-001, sobre `UInputMenu` — recibe `items`/`pending`/`error`/`placeholder` por props, nunca sabe si es categoría o comuna | De dónde vienen los datos | D-004, UX-001, TC-004 |
 | `app/components/CategoriaSelect.vue` / `ComunaSelect.vue` | Conectar su composable con `CatalogSelect` — ninguna lógica de interacción propia | Cómo se ve o se comporta el selector (eso ya lo resolvió `CatalogSelect`) | TC-004 |
+
+Fetch (`useCatalogFetch`) y componente (`CatalogSelect`) siguen la misma forma a propósito: una
+implementación genérica que no sabe si es categoría o comuna, y un wrapper de una línea por entidad. Es el
+mismo principio (T-003) aplicado dos veces, no dos decisiones distintas.
+
+**La capa de queries (`server/utils/taxonomia.ts`) queda afuera de este patrón, a propósito.** Ahí las dos
+funciones difieren en los nombres de columna que le pasan a Drizzle (`categorias.slug` vs `comunas.codigo`)
+— typescript necesita esos nombres literales para tipar el resultado. Forzar una función genérica ahí
+cambia columnas explícitas y tipadas por un parámetro genérico sin ese tipo, que es exactamente la
+protección que Drizzle existe para dar. Dos funciones de cinco líneas cada una, en el mismo archivo, no es
+el problema que D-004 vino a resolver — el problema era código repetido *en lugares distintos* que se
+desincroniza sin que nadie lo note; esto es código repetido *en el mismo archivo*, a la vista, con una
+diferencia real (el tipo) entre las dos copias.
 
 No hay diagrama: son cinco capas en línea recta (schema → query → endpoint → composable → componentes),
 sin ramificaciones ni servicios externos de por medio. `CategoriaSelect`/`ComunaSelect` son la única
@@ -78,16 +93,26 @@ bifurcación, y es deliberada: comparten `CatalogSelect` por composición, no po
 - **Errores:** igual que TC-001.
 - **Contrato de producto:** [D-002](./producto.md#d-002), [D-004](./producto.md#d-004).
 
-### TC-003 — `useCategoriasCatalog()` / `useComunasCatalog()`
+### TC-003 — `useCatalogFetch()`, compuesto por `useCategoriasCatalog()` / `useComunasCatalog()`
 
-- **Entrada:** ninguna.
-- **Salida:** `{ items: Ref<{slug, nombre}[]>, pending: Ref<boolean>, error: Ref<boolean> }` (comunas:
-  mismo shape con `codigo` en vez de `slug`).
+Mismo problema que TC-004, un nivel más abajo: pedir un catálogo con cache y manejo de error es una sola
+lógica, no dos. `useCatalogFetch(key, endpoint)` la implementa una vez; `useCategoriasCatalog()` y
+`useComunasCatalog()` son una línea cada uno, solo fijando su `key` y su `endpoint` — igual que
+`CategoriaSelect`/`ComunaSelect` respecto de `CatalogSelect`.
+
+- **Entrada de `useCatalogFetch(key, endpoint)`:** `key: string` (para `useAsyncData`), `endpoint: string`
+  (la ruta a pedir).
+- **Entrada de `useCategoriasCatalog()` / `useComunasCatalog()`:** ninguna — cada uno llama internamente a
+  `useCatalogFetch('categorias', '/api/categorias')` o `useCatalogFetch('comunas', '/api/comunas')`.
+- **Salida (las tres):** `{ items: Ref<{value: string, label: string}[]>, pending: Ref<boolean>, error: Ref<boolean>, refresh: () => void }`.
+  `useCatalogFetch` no sabe si el `value` es un `slug` o un `codigo` — normaliza la respuesta del endpoint
+  (`slug`/`nombre` o `codigo`/`nombre`) a esa forma genérica, que es la que espera `items` en `CatalogSelect`
+  (TC-004).
 - **Invariantes:** el fetch ocurre una sola vez por sesión de navegación — `useAsyncData` con una key fija
   comparte el resultado entre todos los componentes que lo usen, así que abrir `CategoriaSelect` en dos
   formularios distintos de la misma página no dispara dos requests.
-- **Errores:** `error` pasa a `true` si el fetch falla; el composable no reintenta solo, expone `refresh()`
-  para que el componente lo dispare desde el botón "Reintentar" (ver `experiencia.md`, modo error).
+- **Errores:** `error` pasa a `true` si el fetch falla; no reintenta solo, expone `refresh()` para que
+  `CatalogSelect` lo dispare desde el botón "Reintentar" (ver `experiencia.md`, modo error).
 - **Contrato de producto:** soporte de [D-004](./producto.md#d-004).
 
 ### TC-004 — `<CatalogSelect>`, compuesto por `<CategoriaSelect>` / `<ComunaSelect>`
@@ -189,7 +214,7 @@ prueba.
 | ----- | ------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------ | ---------- |
 | S-001 | Tablas `categorias` y `comunas` con RLS y seed completo        | D-001, D-002, TR-001 | `select count(*) from comunas` = 346; `select count(*) from categorias` = 8; Gran Santiago (32) + Puerto Varas activas en `comunas`, las 8 categorías activas | — |
 | S-002 | Endpoints `GET /api/categorias` y `GET /api/comunas`            | TC-001, TC-002        | Cada endpoint devuelve solo filas `activa = true`, ordenadas por nombre               | S-001 |
-| S-003 | Composables `useCategoriasCatalog()` y `useComunasCatalog()`    | TC-003                | Montar dos componentes que usan el mismo composable en la misma página dispara un solo request | S-002 |
+| S-003 | `useCatalogFetch()` y sus wrappers `useCategoriasCatalog()`/`useComunasCatalog()` | TC-003 | Montar dos componentes que usan el mismo wrapper en la misma página dispara un solo request; ninguno de los dos wrappers pasa de una línea | S-002 |
 | S-004 | Componente `CatalogSelect.vue` con los 6 modos de `experiencia.md` | TC-004, D-004, UXF-001, UX-001 | Test unitario (Vitest + Vue Test Utils) verifica los 6 modos y que nunca emite un valor fuera de `items` | S-003 |
 | S-005 | `CategoriaSelect.vue` y `ComunaSelect.vue`, componiendo `CatalogSelect` | TC-004 | Cada uno monta `CatalogSelect` pasándole su composable — cero lógica de interacción propia, verificable con un diff que no toca `CatalogSelect` | S-004 |
 
@@ -238,25 +263,31 @@ específico de categoría o comuna colado adentro.
 
 <a id="t-003"></a>
 
-### T-003 — `CategoriaSelect`/`ComunaSelect` componen `CatalogSelect`, no duplican su lógica
+### T-003 — Categoría y comuna nunca tienen lógica duplicada entre archivos: una implementación genérica
+por capa, un wrapper de una línea por entidad
 
 - **Estado:** propuesta. **Fecha:** 2026-08-18.
 - **Contratos:** D-004, [UX-001](./experiencia.md#ux-001-el-componente-no-muestra-nada-hasta-que-el-usuario-empieza-a-escribir).
-- **Alternativas descartadas:** cada componente implementa sus propios 6 modos por separado — es lo que se
-  proponía en la primera versión de este documento. Funciona, pero duplica la única regla que D-004 definió
-  como una sola cosa para las dos entidades; un cambio a esa regla (un modo nuevo, un ajuste al debounce)
-  se tendría que aplicar dos veces y sincronizar a mano. Un mixin o un composable que devuelva solo el
-  estado (sin el markup) — deja la mitad de la lógica compartida (el estado) y la otra mitad duplicada (el
-  template con sus seis variantes de UI), que es donde vive la mayoría del riesgo de que las dos
+- **Alternativas descartadas:** cada capa implementa su versión para categoría y su versión para comuna por
+  separado — es lo que proponía la primera versión de este documento, tanto para el componente
+  (`CategoriaSelect`/`ComunaSelect` con los 6 modos cada uno) como para el fetch
+  (`useCategoriasCatalog`/`useComunasCatalog` con su propio `useAsyncData` cada uno). Funciona, pero duplica
+  la única regla que D-004 definió como una sola cosa para las dos entidades; un cambio a esa regla (un modo
+  nuevo, un ajuste al debounce) se tendría que aplicar dos veces y sincronizar a mano. Un mixin o un
+  composable que devuelva solo el estado (sin el markup del componente) — deja la mitad de la lógica
+  compartida y la otra mitad duplicada, que es donde vive la mayoría del riesgo de que las dos
   implementaciones diverjan.
-- **Decisión y consecuencias:** `CatalogSelect.vue` es la única implementación de UXF-001. `CategoriaSelect`
-  y `ComunaSelect` son componentes de una sola responsabilidad — conectar su composable con
-  `CatalogSelect` — sin markup ni lógica de interacción propia. Beneficio: un cambio a D-004/UX-001 se hace
-  una vez. Costo aceptado: agregar un tercer archivo por lo que a simple vista son "dos componentes
-  parecidos" — se acepta porque la alternativa es la duplicación exacta que esta misión existe para evitar
-  en los datos, ahora también en el componente.
-- **Reapertura:** si `CategoriaSelect` o `ComunaSelect` necesitan alguna vez una regla que no aplique a la
-  otra — ahí `CatalogSelect` deja de ser una talla única y esta decisión se revisa.
+- **Decisión y consecuencias:** `useCatalogFetch` y `CatalogSelect.vue` son las únicas implementaciones de
+  "traer un catálogo con cache" y de UXF-001, respectivamente. `useCategoriasCatalog`,
+  `useComunasCatalog`, `CategoriaSelect` y `ComunaSelect` son wrappers de una sola responsabilidad — fijar
+  el dato específico de su entidad y nada más. Beneficio: un cambio a D-004/UX-001, o al manejo de error del
+  fetch, se hace una vez y llega a las dos entidades. Costo aceptado: dos archivos genéricos más de los que
+  parecían necesarios a simple vista — se acepta porque la alternativa es la misma duplicación que esta
+  misión existe para evitar en los datos, repetida en cada capa de código que los toca. La capa de queries
+  (`server/utils/taxonomia.ts`) queda fuera de este patrón — ver la nota en la sección de Arquitectura.
+- **Reapertura:** si `CategoriaSelect`/`ComunaSelect` o sus composables necesitan alguna vez una regla que
+  no aplique a la otra entidad — ahí la implementación compartida deja de ser una talla única y esta
+  decisión se revisa.
 
 ## Preguntas
 
