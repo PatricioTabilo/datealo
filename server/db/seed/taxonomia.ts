@@ -1,11 +1,20 @@
-// Seed de categorias y comunas (misión 03). Se corre una vez por entorno: `npm run db:seed:taxonomia`.
-// Conexión directa (puerto 5432), no el pooler de la app — mismo criterio que drizzle-kit (A-003).
+// Seed de categorias y comunas. Se corre una vez por entorno: `npm run db:seed:taxonomia`.
 //
-// Las 8 categorías salen de D-001 (docs/missions/03-taxonomia-categorias-y-comunas/producto.md).
-// Las 346 comunas salen del código oficial SUBDERE (Decreto Exento Nº 817), generadas desde
-// https://github.com/knxroot/bdcut-cl — no transcritas a mano (mitigación de TR-001 en ingenieria.md).
-// Activas: las 8 categorías, más las 32 comunas de la Provincia de Santiago (Gran Santiago) y Puerto Varas
-// (D-002, foco de reclutamiento inicial).
+// Conexión directa (puerto 5432), no el pooler de la app (que usa el modo transacción de Supavisor,
+// sin prepared statements) — drizzle-kit necesita la conexión directa por el mismo motivo (A-003).
+//
+// Las 8 categorías son las que Patricio aprobó como catálogo del lanzamiento (D-001): Gasfitería,
+// Electricidad, Peluquería, Limpieza, Mudanzas, Pintura, Cerrajería, Jardinería — ver el array
+// `categoriasSeed` más abajo para la lista exacta.
+//
+// Las 346 comunas salen del código oficial SUBDERE (Decreto Exento Nº 817 del Ministerio del
+// Interior), generadas desde https://github.com/knxroot/bdcut-cl en vez de transcritas a mano, para
+// no arriesgar un nombre o código mal tipeado en 346 filas.
+//
+// Activas al sembrar: las 8 categorías, más las 32 comunas de la Provincia de Santiago (Gran
+// Santiago) y Puerto Varas — los dos mercados donde Patricio puede reclutar y verificar
+// profesionales directamente al lanzamiento (D-002). El resto de las comunas queda en la tabla pero
+// inactivo, listo para activarse cambiando el campo sin necesitar otro deploy.
 
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
