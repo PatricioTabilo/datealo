@@ -14,10 +14,10 @@ Segunda de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar)
 | Investigación | activo    | se acumula, no bloquea — el problema tiene situación y consecuencia concretas, hay 3 conclusiones (C-001 a C-003) y un ideal con capacidades observables |
 | Producto      | vigente   | aprobado por Patricio el 2026-08-17 — D-001 a D-004 aceptadas, Q-001 y Q-002 resueltas |
 | Experiencia   | vigente   | aprobado por Patricio el 2026-08-18 — componente `ComunaSelect`/`CategoriaSelect` (UXF-001), 6 modos con mockup |
-| Ingeniería    | pendiente | —                                     |
+| Ingeniería    | en revisión | aprobación de Patricio sobre el modelo de datos, contratos y el plan de construcción (S-001 a S-004) |
 
-**Próximo hito:** escribir `ingenieria.md` — modelo de datos de `categorias`/`comunas` y el componente
-`ComunaSelect`/`CategoriaSelect` en Vue. Sin fecha límite todavía.
+**Próximo hito:** que Patricio apruebe o ajuste `ingenieria.md` — el último documento antes de crear los
+issues y cerrar la misión. Sin fecha límite todavía.
 
 ## Brief
 
