@@ -7,14 +7,15 @@
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-## Decisión técnica: dos tablas de catálogo con `activa`, dos endpoints de solo lectura, dos componentes
-compartidos
+## Decisión técnica: dos tablas de catálogo con `activa`, dos endpoints de solo lectura, un componente
+compartido compuesto por dos wrappers
 
 Dos tablas nuevas (`categorias`, `comunas`), cada una con el campo `activa` que D-001/D-002 piden. Dos
 endpoints `GET` de solo lectura, sin autenticación (son catálogo público, no datos de usuario). Dos
-composables que los consumen con cache, y dos componentes Vue (`CategoriaSelect`, `ComunaSelect`) que
-implementan el contrato de D-004 sobre `UInputMenu` de Nuxt UI (A-004) — ya trae resuelto el autocompletado,
-lo que se construye acá es el contenido y las reglas: catálogo cerrado, nada visible hasta escribir.
+composables que los consumen con cache, y un componente Vue (`CatalogSelect`) que implementa el contrato de
+D-004 sobre `UInputMenu` de Nuxt UI (A-004) — ya trae resuelto el autocompletado, lo que se construye acá
+es el contenido y las reglas: catálogo cerrado, nada visible hasta escribir. `CategoriaSelect` y
+`ComunaSelect` son dos wrappers delgados que lo componen, no dos copias de la misma lógica (ver T-003).
 
 Es la primera vez que el repo tiene tablas de negocio, así que también es donde `server/db/schema/`,
 `server/db/sql/rls.sql` y el patrón de "endpoint de lectura pública" (receta del skill `arquitectura`)
@@ -31,9 +32,14 @@ ownership) — son datos de referencia que otros dominios consumen. Por eso `ser
 solo queries, sin lógica que valga la pena aislar como función pura: el principio de "lógica fuera de la
 infraestructura" del skill no aplica acá, sería abstracción sin regla que separar.
 
-Los componentes (`CategoriaSelect`, `ComunaSelect`) sí tienen una regla real — "no mostrar nada hasta
-escribir, nunca emitir un valor fuera del catálogo" (D-004, UX-001) — y esa regla vive en el componente
-mismo, no en el composable: el composable solo trae los datos, el componente decide cuándo mostrarlos.
+Los componentes sí tienen una regla real — "no mostrar nada hasta escribir, nunca emitir un valor fuera
+del catálogo" (D-004, UX-001) — y esa regla es **idéntica** para categoría y comuna, porque D-004 la
+definió como una sola regla para ambos, no dos parecidas. Repetirla en dos archivos sería el mismo error
+que evitar herencia solo de nombre: dos copias que hay que mantener sincronizadas a mano cada vez que
+cambie un modo. Por eso hay un tercer componente, `CatalogSelect.vue`, que implementa los 6 modos una sola
+vez — `CategoriaSelect` y `ComunaSelect` lo **componen**: cada uno es una capa delgada que le pasa su
+composable (`useCategoriasCatalog`/`useComunasCatalog`) y su placeholder, sin repetir la lógica de
+enfocado/filtrado/selección.
 
 | Componente                          | Responsabilidad                                    | No debe decidir                          | Contratos      |
 | -------------------------------------- | ------------------------------------------------------ | -------------------------------------------- | -------------- |
@@ -41,10 +47,12 @@ mismo, no en el composable: el composable solo trae los datos, el componente dec
 | `server/utils/taxonomia.ts`             | Queries: solo filas `activa = true`, columnas públicas | Presentación, formato del texto              | D-001, D-002   |
 | `server/api/categorias.get.ts` / `comunas.get.ts` | I/O: llama la query, devuelve JSON              | Filtrar por texto (eso lo hace el cliente)    | TC-001, TC-002 |
 | `app/composables/useCategoriasCatalog.ts` / `useComunasCatalog.ts` | Fetch con cache, expone `pending`/`error` | Cuándo mostrar la lista (eso es el componente) | TC-003         |
-| `app/components/CategoriaSelect.vue` / `ComunaSelect.vue` | Interacción de UXF-001: enfocado sin texto, filtrado, selección | Qué datos existen | D-004, TC-004  |
+| `app/components/CatalogSelect.vue`     | Los 6 modos de UXF-001, sobre `UInputMenu` — recibe `items`/`pending`/`error`/`placeholder` por props, nunca sabe si es categoría o comuna | De dónde vienen los datos | D-004, UX-001, TC-004 |
+| `app/components/CategoriaSelect.vue` / `ComunaSelect.vue` | Conectar su composable con `CatalogSelect` — ninguna lógica de interacción propia | Cómo se ve o se comporta el selector (eso ya lo resolvió `CatalogSelect`) | TC-004 |
 
-No hay diagrama: son cuatro capas en línea recta (schema → query → endpoint → componente), sin
-ramificaciones ni servicios externos de por medio.
+No hay diagrama: son cinco capas en línea recta (schema → query → endpoint → composable → componentes),
+sin ramificaciones ni servicios externos de por medio. `CategoriaSelect`/`ComunaSelect` son la única
+bifurcación, y es deliberada: comparten `CatalogSelect` por composición, no por copiarse entre sí.
 
 ## Contratos
 
@@ -82,15 +90,22 @@ ramificaciones ni servicios externos de por medio.
   para que el componente lo dispare desde el botón "Reintentar" (ver `experiencia.md`, modo error).
 - **Contrato de producto:** soporte de [D-004](./producto.md#d-004).
 
-### TC-004 — `<CategoriaSelect>` / `<ComunaSelect>`
+### TC-004 — `<CatalogSelect>`, compuesto por `<CategoriaSelect>` / `<ComunaSelect>`
 
-- **Entrada (props):** `modelValue: string | null` — el `slug` o `codigo` elegido, o `null` sin selección.
-- **Salida (emit):** `update:modelValue(value: string | null)`.
-- **Invariantes:** el componente **nunca** emite un valor que no sea un `slug`/`codigo` presente en el
-  catálogo activo, o `null` — es la garantía de D-004, implementada acá porque `UInputMenu` no permite
-  "crear" una opción por default (a diferencia de un combobox libre). Ninguna opción se muestra mientras el
-  campo de búsqueda esté vacío (UX-001, modo "enfocado sin texto") — el componente controla el `open` de
-  `UInputMenu` a mano en vez de dejarlo abrir solo al enfocar.
+- **Entrada (props) de `CatalogSelect`:** `modelValue: string | null`, `items: {value: string, label: string}[]`,
+  `pending: boolean`, `error: boolean`, `placeholder: string`.
+- **Entrada (props) de `CategoriaSelect` / `ComunaSelect`:** solo `modelValue: string | null` — el resto
+  (`items`, `pending`, `error`, `placeholder`) lo arma cada wrapper llamando a su composable y pasándoselo a
+  `CatalogSelect` internamente; quien usa `<CategoriaSelect>` no ve ni necesita saber que existe
+  `CatalogSelect` debajo.
+- **Salida (emit):** `update:modelValue(value: string | null)`, igual en las tres.
+- **Invariantes:** `CatalogSelect` **nunca** emite un valor que no esté en `items`, o `null` — es la
+  garantía de D-004, implementada una sola vez, porque `UInputMenu` no permite "crear" una opción por
+  default (a diferencia de un combobox libre). Ninguna opción se muestra mientras el campo de búsqueda esté
+  vacío (UX-001, modo "enfocado sin texto") — `CatalogSelect` controla el `open` de `UInputMenu` a mano en
+  vez de dejarlo abrir solo al enfocar. `CategoriaSelect`/`ComunaSelect` no reimplementan nada de esto —
+  si D-004 cambia, se edita `CatalogSelect` una vez y el cambio llega gratis a los dos wrappers, porque lo
+  componen — no porque lo copien.
 - **Errores:** si `useCategoriasCatalog()`/`useComunasCatalog()` reportan `error`, el componente entra en
   modo error (ver `experiencia.md`) y el campo queda deshabilitado hasta reintentar.
 - **Contrato de producto:** [D-004](./producto.md#d-004), [UXF-001](./experiencia.md#uxf-001-elegir-categoría-o-comuna-desde-el-catálogo).
@@ -156,8 +171,9 @@ prueba.
 | Contrato o riesgo   | Nivel        | Caso principal                                              | Límite o falla |
 | ------------------------ | ------------ | ------------------------------------------------------------ | ---------------- |
 | TC-001, TC-002           | manual       | `GET /api/categorias` devuelve exactamente 8 filas; `GET /api/comunas` devuelve solo las comunas con `activa = true` | Marcar una comuna en `false` a mano y confirmar que desaparece de la respuesta |
-| TC-004 (D-004)           | unitario (Vitest + Vue Test Utils) | Seleccionar una opción de la lista emite `update:modelValue` con su `slug`/`codigo` | Escribir texto que no matchea nada y no seleccionar nada — el componente nunca emite ese texto |
-| UX-001 (nada hasta escribir) | unitario | Con el campo enfocado y vacío, la lista de opciones no se renderiza | Al escribir la primera letra, aparece |
+| TC-004 (D-004)           | unitario (Vitest + Vue Test Utils), contra `CatalogSelect` directo | Seleccionar una opción de la lista emite `update:modelValue` con su `value` | Escribir texto que no matchea nada y no seleccionar nada — el componente nunca emite ese texto |
+| UX-001 (nada hasta escribir) | unitario, contra `CatalogSelect` directo | Con el campo enfocado y vacío, la lista de opciones no se renderiza | Al escribir la primera letra, aparece |
+| `CategoriaSelect`/`ComunaSelect` componen bien | unitario | Cada wrapper le pasa a `CatalogSelect` los `items` de su propio composable | Un cambio en `CatalogSelect` (ej. un modo nuevo) no exige tocar los wrappers |
 | TR-001 (conteo del seed) | manual, una vez | `select count(*) from comunas` = 346 después del seed | — |
 
 ### Propiedades que deben probarse
@@ -174,10 +190,15 @@ prueba.
 | S-001 | Tablas `categorias` y `comunas` con RLS y seed completo        | D-001, D-002, TR-001 | `select count(*) from comunas` = 346; `select count(*) from categorias` = 8; Gran Santiago (32) + Puerto Varas activas en `comunas`, las 8 categorías activas | — |
 | S-002 | Endpoints `GET /api/categorias` y `GET /api/comunas`            | TC-001, TC-002        | Cada endpoint devuelve solo filas `activa = true`, ordenadas por nombre               | S-001 |
 | S-003 | Composables `useCategoriasCatalog()` y `useComunasCatalog()`    | TC-003                | Montar dos componentes que usan el mismo composable en la misma página dispara un solo request | S-002 |
-| S-004 | Componentes `CategoriaSelect.vue` y `ComunaSelect.vue`          | TC-004, D-004, UXF-001| Test unitario (Vitest + Vue Test Utils) verifica los 6 modos de `experiencia.md` y que nunca emite un valor fuera del catálogo | S-003 |
+| S-004 | Componente `CatalogSelect.vue` con los 6 modos de `experiencia.md` | TC-004, D-004, UXF-001, UX-001 | Test unitario (Vitest + Vue Test Utils) verifica los 6 modos y que nunca emite un valor fuera de `items` | S-003 |
+| S-005 | `CategoriaSelect.vue` y `ComunaSelect.vue`, componiendo `CatalogSelect` | TC-004 | Cada uno monta `CatalogSelect` pasándole su composable — cero lógica de interacción propia, verificable con un diff que no toca `CatalogSelect` | S-004 |
 
-Cuatro slices, en línea recta por dependencia — no hay forma de paralelizar sin que uno bloquee al
-siguiente (el componente necesita el composable, que necesita el endpoint, que necesita la tabla).
+Cinco slices, en línea recta por dependencia — no hay forma de paralelizar sin que uno bloquee al
+siguiente (los wrappers necesitan `CatalogSelect`, que necesita el composable, que necesita el endpoint,
+que necesita la tabla). S-004 y S-005 quedan separados a propósito, aunque parezcan "el mismo componente en
+dos partes": S-004 es donde vive toda la regla de D-004/UX-001 y se puede revisar y probar sola, sin
+todavía saber si hay uno o dos consumidores — separarlo fuerza a que `CatalogSelect` no termine con nada
+específico de categoría o comuna colado adentro.
 
 ## Decisiones técnicas
 
@@ -202,17 +223,40 @@ siguiente (el componente necesita el composable, que necesita el endpoint, que n
 
 <a id="t-002"></a>
 
-### T-002 — `CategoriaSelect`/`ComunaSelect` viven en `app/components/` sin subcarpeta de dominio
+### T-002 — Los tres componentes viven en `app/components/` sin subcarpeta de dominio
 
 - **Estado:** propuesta. **Fecha:** 2026-08-18.
 - **Contratos:** D-004.
 - **Alternativas descartadas:** `app/components/shared/` o `app/components/taxonomia/` — Nuxt prefija el
   nombre del componente con el de la carpeta (A-006), así que `shared/ComunaSelect.vue` se auto-importaría
   como `<SharedComunaSelect>`, un prefijo que no aporta nada y que nadie va a escribir por costumbre.
-- **Decisión y consecuencias:** quedan flat, como `db.ts`/`auth.ts`/`email.ts` en `server/utils/`
-  (infraestructura transversal sin dominio propio, A-006) — mismo criterio aplicado al lado de `app/`.
+- **Decisión y consecuencias:** `CatalogSelect.vue`, `CategoriaSelect.vue` y `ComunaSelect.vue` quedan
+  flat, como `db.ts`/`auth.ts`/`email.ts` en `server/utils/` (infraestructura transversal sin dominio
+  propio, A-006) — mismo criterio aplicado al lado de `app/`.
 - **Reapertura:** si aparecen más componentes verdaderamente transversales (sin dominio) y la carpeta
   `app/components/` empieza a mezclarlos con los de dominio de forma confusa.
+
+<a id="t-003"></a>
+
+### T-003 — `CategoriaSelect`/`ComunaSelect` componen `CatalogSelect`, no duplican su lógica
+
+- **Estado:** propuesta. **Fecha:** 2026-08-18.
+- **Contratos:** D-004, [UX-001](./experiencia.md#ux-001-el-componente-no-muestra-nada-hasta-que-el-usuario-empieza-a-escribir).
+- **Alternativas descartadas:** cada componente implementa sus propios 6 modos por separado — es lo que se
+  proponía en la primera versión de este documento. Funciona, pero duplica la única regla que D-004 definió
+  como una sola cosa para las dos entidades; un cambio a esa regla (un modo nuevo, un ajuste al debounce)
+  se tendría que aplicar dos veces y sincronizar a mano. Un mixin o un composable que devuelva solo el
+  estado (sin el markup) — deja la mitad de la lógica compartida (el estado) y la otra mitad duplicada (el
+  template con sus seis variantes de UI), que es donde vive la mayoría del riesgo de que las dos
+  implementaciones diverjan.
+- **Decisión y consecuencias:** `CatalogSelect.vue` es la única implementación de UXF-001. `CategoriaSelect`
+  y `ComunaSelect` son componentes de una sola responsabilidad — conectar su composable con
+  `CatalogSelect` — sin markup ni lógica de interacción propia. Beneficio: un cambio a D-004/UX-001 se hace
+  una vez. Costo aceptado: agregar un tercer archivo por lo que a simple vista son "dos componentes
+  parecidos" — se acepta porque la alternativa es la duplicación exacta que esta misión existe para evitar
+  en los datos, ahora también en el componente.
+- **Reapertura:** si `CategoriaSelect` o `ComunaSelect` necesitan alguna vez una regla que no aplique a la
+  otra — ahí `CatalogSelect` deja de ser una talla única y esta decisión se revisa.
 
 ## Preguntas
 
