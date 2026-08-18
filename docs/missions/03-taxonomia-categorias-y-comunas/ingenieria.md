@@ -29,9 +29,11 @@ salen a andar por primera vez.
 ## Arquitectura: catálogo de solo lectura, sin dominio de negocio propio
 
 Categorías y comunas no son un dominio con reglas de negocio (no hay cálculo, no hay ranking, no hay
-ownership) — son datos de referencia que otros dominios consumen. Por eso `server/utils/taxonomia.ts` es
-solo queries, sin lógica que valga la pena aislar como función pura: el principio de "lógica fuera de la
-infraestructura" del skill no aplica acá, sería abstracción sin regla que separar.
+ownership) — son datos de referencia que otros dominios consumen. Por eso `server/utils/categorias.ts` y
+`server/utils/comunas.ts` son solo queries, sin lógica que valga la pena aislar como función pura: el
+principio de "lógica fuera de la infraestructura" del skill no aplica acá, sería abstracción sin regla que
+separar. Van en un archivo por entidad, no combinados en uno solo — `server/db/schema/` y `server/utils/`
+siguen esa convención sin excepción (CLAUDE.md, A-006), aunque ambas tablas nazcan de la misma misión.
 
 Los componentes sí tienen una regla real — "no mostrar nada hasta escribir, nunca emitir un valor fuera
 del catálogo" (D-004, UX-001) — y esa regla es **idéntica** para categoría y comuna, porque D-004 la
@@ -44,8 +46,8 @@ enfocado/filtrado/selección.
 
 | Componente                          | Responsabilidad                                    | No debe decidir                          | Contratos      |
 | -------------------------------------- | ------------------------------------------------------ | -------------------------------------------- | -------------- |
-| `server/db/schema/taxonomia.ts`        | Forma de las tablas                                     | Qué filas existen (eso es el seed)          | D-001, D-002   |
-| `server/utils/taxonomia.ts`             | Queries: solo filas `activa = true`, columnas públicas | Presentación, formato del texto              | D-001, D-002   |
+| `server/db/schema/categorias.ts` / `comunas.ts` | Forma de las tablas — un archivo por entidad (A-006) | Qué filas existen (eso es el seed) | D-001, D-002   |
+| `server/utils/categorias.ts` / `comunas.ts` | Queries: solo filas `activa = true`, columnas públicas — un archivo por entidad | Presentación, formato del texto | D-001, D-002   |
 | `server/api/categorias.get.ts` / `comunas.get.ts` | I/O: llama la query, devuelve JSON — dos archivos porque Nitro enruta por archivo, no porque haya lógica distinta | Filtrar por texto (eso lo hace el cliente) | TC-001, TC-002 |
 | `app/composables/useCatalogFetch.ts`   | Fetch con cache y manejo de error, genérico — no sabe si trae categorías o comunas | De dónde viene el endpoint (eso lo fija cada wrapper) | TC-003 |
 | `app/composables/useCategoriasCatalog.ts` / `useComunasCatalog.ts` | Fijar `key` y `endpoint` para `useCatalogFetch` — una línea cada uno | Cómo se cachea o qué pasa si falla (eso ya lo resolvió `useCatalogFetch`) | TC-003 |
@@ -56,14 +58,14 @@ Fetch (`useCatalogFetch`) y componente (`CatalogSelect`) siguen la misma forma a
 implementación genérica que no sabe si es categoría o comuna, y un wrapper de una línea por entidad. Es el
 mismo principio (T-003) aplicado dos veces, no dos decisiones distintas.
 
-**La capa de queries (`server/utils/taxonomia.ts`) queda afuera de este patrón, a propósito.** Ahí las dos
-funciones difieren en los nombres de columna que le pasan a Drizzle (`categorias.slug` vs `comunas.codigo`)
-— typescript necesita esos nombres literales para tipar el resultado. Forzar una función genérica ahí
-cambia columnas explícitas y tipadas por un parámetro genérico sin ese tipo, que es exactamente la
-protección que Drizzle existe para dar. Dos funciones de cinco líneas cada una, en el mismo archivo, no es
-el problema que D-004 vino a resolver — el problema era código repetido *en lugares distintos* que se
-desincroniza sin que nadie lo note; esto es código repetido *en el mismo archivo*, a la vista, con una
-diferencia real (el tipo) entre las dos copias.
+**La capa de queries (`server/utils/categorias.ts` / `comunas.ts`) queda afuera del patrón genérico +
+wrapper, a propósito.** Las dos funciones difieren en los nombres de columna que le pasan a Drizzle
+(`categorias.slug` vs `comunas.codigo`) — TypeScript necesita esos nombres literales para tipar el
+resultado. Forzar una función genérica ahí cambia columnas explícitas y tipadas por un parámetro genérico
+sin ese tipo, que es exactamente la protección que Drizzle existe para dar. Que vivan en dos archivos
+(A-006, un archivo por entidad) no es el mismo problema que D-004 vino a resolver: eso era código repetido
+que se podía desincronizar sin que nadie lo note; acá cada archivo tiene una diferencia real (el tipo de su
+columna) que justifica que sean dos.
 
 No hay diagrama: son cinco capas en línea recta (schema → query → endpoint → composable → componentes),
 sin ramificaciones ni servicios externos de por medio. `CategoriaSelect`/`ComunaSelect` son la única
@@ -169,7 +171,7 @@ Primera tabla del repo con RLS real — no hay política previa que migrar.
 | `comunas`        | nueva  | `comunas_select_public`          | crear — mismo criterio que `categorias` |
 
 **Por qué la policy es `using (true)` y no `using (activa = true)`:** por A-002, la policy es respaldo, no
-el mecanismo — el filtro real vive en `server/utils/taxonomia.ts` (TC-001/TC-002). Restringir la policy a
+el mecanismo — el filtro real vive en `server/utils/categorias.ts`/`comunas.ts` (TC-001/TC-002). Restringir la policy a
 solo filas activas la duplicaría sin necesidad, y estos datos no son sensibles (nombres de comuna y
 categoría son públicos por diseño) — no hay nada que proteger si alguien consultara `comunas` completa por
 fuera del filtro de la app.
@@ -284,7 +286,8 @@ por capa, un wrapper de una línea por entidad
   fetch, se hace una vez y llega a las dos entidades. Costo aceptado: dos archivos genéricos más de los que
   parecían necesarios a simple vista — se acepta porque la alternativa es la misma duplicación que esta
   misión existe para evitar en los datos, repetida en cada capa de código que los toca. La capa de queries
-  (`server/utils/taxonomia.ts`) queda fuera de este patrón — ver la nota en la sección de Arquitectura.
+  (`server/utils/categorias.ts`/`comunas.ts`, un archivo por entidad) queda fuera de este patrón — ver la
+  nota en la sección de Arquitectura.
 - **Reapertura:** si `CategoriaSelect`/`ComunaSelect` o sus composables necesitan alguna vez una regla que
   no aplique a la otra entidad — ahí la implementación compartida deja de ser una talla única y esta
   decisión se revisa.

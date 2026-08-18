@@ -1,1 +1,2 @@
-export * from './taxonomia'
+export * from './categorias'
+export * from './comunas'
