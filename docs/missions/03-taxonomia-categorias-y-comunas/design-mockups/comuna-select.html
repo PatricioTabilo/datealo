@@ -65,11 +65,11 @@
         </div>
       </section>
 
-      <!-- 2. abierto sin texto — lista completa -->
+      <!-- 2. enfocado sin texto — nada visible, como Mercado Libre -->
       <section class="frame frame-mobile">
         <div class="frame-label">
-          C-001 · modo abierto sin texto
-          <small>tocó el campo — aparece el catálogo activo completo, sin escribir nada</small>
+          C-001 · modo enfocado sin texto
+          <small>tocó el campo — no aparece ninguna lista todavía, igual que Mercado Libre; el catálogo se precarga en silencio</small>
         </div>
         <div class="frame-viewport">
           <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
@@ -82,16 +82,7 @@
                 class="w-full bg-transparent text-[0.9375rem] outline-none"
                 style="color: var(--ui-text-highlighted)"
               />
-            </div>
-            <div class="field-shell mt-2 overflow-hidden">
-              <div class="option-row"><span>Cerrillos</span></div>
-              <div class="option-row"><span>Cerro Navia</span></div>
-              <div class="option-row"><span>Estación Central</span></div>
-              <div class="option-row"><span>Las Condes</span></div>
-              <div class="option-row" style="background: var(--ui-bg-accented)"><span>Ñuñoa</span></div>
-              <div class="option-row"><span>Providencia</span></div>
-              <div class="option-row"><span>Puerto Varas</span></div>
-              <div class="option-row"><span>Vitacura</span></div>
+              <span class="animate-pulse" style="color: var(--ui-primary)">|</span>
             </div>
           </div>
         </div>
@@ -123,7 +114,7 @@
       <section class="frame frame-mobile">
         <div class="frame-label">
           C-001 · modo sin coincidencias
-          <small>escribió "nunoaa" — no matchea, pero el catálogo completo sigue disponible debajo</small>
+          <small>escribió "nunoaa" — no matchea nada; sin lista debajo, el catálogo nunca se muestra completo</small>
         </div>
         <div class="frame-viewport">
           <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
@@ -133,14 +124,6 @@
               <span class="text-[0.9375rem]" style="color: var(--ui-text-highlighted)">nunoaa</span>
             </div>
             <p class="mt-2 px-1 text-sm" style="color: var(--ui-text-muted)">No encontramos "nunoaa"</p>
-            <div class="field-shell mt-2 overflow-hidden">
-              <div class="option-row"><span>Cerrillos</span></div>
-              <div class="option-row"><span>Cerro Navia</span></div>
-              <div class="option-row"><span>Estación Central</span></div>
-              <div class="option-row"><span>Las Condes</span></div>
-              <div class="option-row"><span>Ñuñoa</span></div>
-              <div class="option-row"><span>Providencia</span></div>
-            </div>
           </div>
         </div>
       </section>
@@ -149,14 +132,14 @@
       <section class="frame frame-mobile">
         <div class="frame-label">
           C-001 · modo cargando
-          <small>primera carga del catálogo en la sesión — skeleton, no spinner</small>
+          <small>escribió antes de que la precarga en silencio terminara — skeleton, no spinner</small>
         </div>
         <div class="frame-viewport">
           <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
           <div class="p-5">
             <label class="mb-2 block text-sm font-semibold" style="color: var(--ui-text-highlighted)">Comuna</label>
             <div class="field-shell px-4 py-3.5" style="border-color: var(--ui-primary)">
-              <span class="text-[0.9375rem]" style="color: var(--ui-text-dimmed)">¿Qué comuna buscas?</span>
+              <span class="text-[0.9375rem]" style="color: var(--ui-text-highlighted)">nun</span>
             </div>
             <div class="field-shell mt-2 space-y-3 p-4">
               <div class="skeleton-line" style="width: 70%"></div>

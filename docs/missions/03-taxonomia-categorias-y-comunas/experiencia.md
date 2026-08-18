@@ -2,7 +2,7 @@
 
 **Estado:** en revisión
 
-**Última actualización:** 2026-08-17
+**Última actualización:** 2026-08-18
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -32,10 +32,11 @@ reglas.
   en revisión
   - modo **cerrado** — el campo muestra el valor elegido (si hay uno) o el placeholder; nada más en
     pantalla.
-  - modo **abierto sin texto** — el usuario tocó el campo; aparece debajo la lista completa de opciones
-    disponibles (comunas `activa = true`, o las 8 categorías), sin necesitar escribir nada.
-  - modo **abierto con coincidencias** — el usuario escribió algo; la lista se filtra en vivo a las
-    opciones que contienen el texto, sin distinguir mayúsculas ni tildes.
+  - modo **enfocado sin texto** — el usuario tocó el campo; el cursor queda activo, pero no aparece
+    ninguna lista todavía — igual que el selector de comuna de Mercado Libre, no se muestra nada hasta
+    que se empieza a escribir.
+  - modo **abierto con coincidencias** — el usuario escribió al menos una letra; aparece debajo la lista
+    filtrada a las opciones que contienen el texto, sin distinguir mayúsculas ni tildes.
   - modo **sin coincidencias** — lo que escribió no matchea ninguna opción del catálogo.
   - modo **cargando** — primera carga del catálogo (solo la primera vez que se abre el campo en la sesión).
   - modo **error** — la carga del catálogo falló.
@@ -48,13 +49,14 @@ alrededor de 33: Gran Santiago + Puerto Varas) y el placeholder.
 
 | Desde                   | Acción                              | Queda en                | Qué pasa con el trabajo                          |
 | ------------------------ | ------------------------------------ | ------------------------ | -------------------------------------------------- |
-| cerrado                  | toca el campo                        | abierto sin texto        | si ya había un valor, queda precargado como texto para editar |
-| abierto sin texto        | escribe una letra                    | abierto con coincidencias o sin coincidencias | el texto tipeado se conserva mientras escribe |
+| cerrado                  | toca el campo                        | enfocado sin texto       | si ya había un valor, queda precargado como texto para editar; el catálogo empieza a cargar en silencio, sin mostrar nada |
+| enfocado sin texto       | escribe una letra, catálogo ya disponible | abierto con coincidencias o sin coincidencias | el texto tipeado se conserva mientras escribe |
+| enfocado sin texto       | escribe una letra, catálogo aún cargando | cargando                | el texto tipeado se conserva; el filtro se aplica apenas termine de cargar |
 | abierto con coincidencias | toca/selecciona una opción           | cerrado                  | el valor elegido queda guardado con su id de catálogo |
-| sin coincidencias         | borra el texto                       | abierto sin texto        | vuelve a mostrar el catálogo completo               |
-| sin coincidencias         | toca una opción de la lista completa debajo del mensaje | cerrado | igual que seleccionar con coincidencias — el catálogo completo sigue visible aunque no matchee lo escrito |
+| sin coincidencias         | borra el texto hasta dejarlo vacío  | enfocado sin texto       | la lista desaparece, igual que al enfocar por primera vez |
 | abierto (cualquier modo) | toca fuera del campo, sin seleccionar | cerrado                 | si ya había un valor previo, se restaura; si no, queda vacío — el texto tipeado sin seleccionar se descarta |
-| cargando                 | termina la carga                     | abierto sin texto        | ninguno — recién ahí aparece la lista               |
+| cargando                 | termina la carga, sin texto tipeado mientras esperaba | enfocado sin texto | ninguno — el catálogo queda listo para filtrar en cuanto se escriba |
+| cargando                 | termina la carga, con texto ya tipeado mientras esperaba | abierto con coincidencias o sin coincidencias | se aplica el filtro sobre el texto que ya estaba escrito |
 | error                    | toca "Reintentar"                    | cargando                 | ninguno                                             |
 
 ## UXF-001 — Elegir categoría o comuna desde el catálogo
@@ -85,16 +87,16 @@ hover queda visualmente distinta del resto de la lista.
 
 | Paso | Acción                                    | Respuesta del sistema                                                | Información visible |
 | ---- | ------------------------------------------- | ------------------------------------------------------------------------ | ---------------------- |
-| 1    | Toca el campo (vacío o con un valor previo) | Se abre la lista completa de opciones disponibles debajo del campo       | Todas las opciones del catálogo activo, en orden alfabético |
-| 2    | Escribe (opcional)                          | La lista se filtra en vivo a las opciones que contienen el texto, sin distinguir mayúsculas ni tildes | Solo las opciones que matchean, resaltando la parte del texto que coincide |
+| 1    | Toca el campo (vacío o con un valor previo) | El cursor queda activo; no aparece ninguna lista todavía. El catálogo empieza a cargar en silencio | Si había un valor previo, queda como texto editable; si no, el placeholder |
+| 2    | Escribe al menos una letra                  | Aparece debajo la lista filtrada a las opciones que contienen el texto, sin distinguir mayúsculas ni tildes | Solo las opciones que matchean, resaltando la parte del texto que coincide |
 | 3    | Toca/selecciona una opción                  | El campo se cierra mostrando ese valor; aparece un ícono para volver a abrirlo | El valor elegido, en texto legible |
 
 ### Variantes y recuperación
 
 | Condición                             | Qué cambia                                              | Cómo se entiende                                  | Cómo se recupera |
 | ---------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------ | -------------------- |
-| Lo que escribió no matchea nada          | Aparece "No encontramos '<texto>'" arriba de la lista completa | El mensaje nombra exactamente lo que se escribió, no un genérico | Puede seguir escribiendo o tocar cualquier opción de la lista completa que sigue debajo |
-| El catálogo activo es chico (hoy ~33 comunas, 8 categorías) | La lista completa cabe sin scroll largo | No aplica — es el caso normal, no un estado especial | No aplica |
+| Lo que escribió no matchea nada          | Aparece "No encontramos '<texto>'" — sin lista debajo, el catálogo no se muestra completo en ningún momento | El mensaje nombra exactamente lo que se escribió, no un genérico | Puede seguir escribiendo o borrar para volver a "enfocado sin texto" |
+| Escribe antes de que el catálogo termine de cargar | El campo queda en modo cargando con el texto conservado | Skeleton de 4 líneas en vez de la lista filtrada | El filtro se aplica solo al terminar de cargar, sin que el usuario tenga que volver a escribir |
 | Conexión lenta al cargar el catálogo por primera vez | Skeleton de 4 líneas con la forma de una opción, no spinner | El skeleton ocupa el mismo espacio que la lista real, para que no salte el layout | Se resuelve solo cuando termina la carga |
 | Falla la carga del catálogo              | El campo muestra "No pudimos cargar las comunas" con botón "Reintentar" | Mensaje visible en el lugar donde iría la lista | Tocar "Reintentar" vuelve a modo cargando |
 | Intenta continuar el formulario sin seleccionar nada | El botón de acción principal del formulario permanece deshabilitado | El botón se ve visualmente inactivo, no aparece un error al tocarlo | Completar la selección habilita el botón |
@@ -114,8 +116,9 @@ hover queda visualmente distinta del resto de la lista.
 | ------------------------ | --------------------------------------------------------------------- | ---------------------------------------- |
 | cerrado, sin valor        | Placeholder: "¿Qué comuna buscas?" (ComunaSelect) o "¿Qué necesitas?" (CategoriaSelect) | Tocar para abrir |
 | cerrado, con valor        | El nombre elegido, ej. "Ñuñoa" o "Gasfitería"                        | Tocar para cambiar                       |
-| abierto, lista completa   | Todas las opciones activas, orden alfabético, ej. "Cerrillos", "Conchalí", "Estación Central"... | Escribir o tocar una opción |
-| abierto, sin coincidencias | "No encontramos 'nunoaa'" + la lista completa debajo                | Seguir escribiendo o tocar una opción del catálogo |
+| enfocado, sin texto       | Nada debajo del campo — ni lista ni mensaje, solo el cursor activo   | Escribir                                 |
+| abierto, con coincidencias | Las opciones que matchean lo escrito, con la coincidencia resaltada  | Tocar una opción o seguir escribiendo    |
+| abierto, sin coincidencias | "No encontramos 'nunoaa'" — sin lista debajo                        | Seguir escribiendo o borrar               |
 | carga                    | Skeleton de 4 líneas con la forma de una opción                      | Ninguna                                  |
 | error                    | "No pudimos cargar las comunas. Inténtalo de nuevo."                 | Botón "Reintentar"                       |
 
@@ -129,22 +132,27 @@ hover queda visualmente distinta del resto de la lista.
 
 | Decisión | Flujo   | Estados cubiertos                                                 | Estado  |
 | --------- | ------- | --------------------------------------------------------------------- | ------- |
-| D-004     | UXF-001 | cerrado, abierto sin texto, abierto con coincidencias, sin coincidencias, carga, error | vigente |
+| D-004     | UXF-001 | cerrado, enfocado sin texto, abierto con coincidencias, sin coincidencias, carga, error | vigente |
 
 ## Decisiones de experiencia
 
 <a id="ux-001"></a>
 
-### UX-001 — El componente muestra el catálogo completo al abrir, no espera a que se escriba algo
+### UX-001 — El componente no muestra nada hasta que el usuario empieza a escribir
 
-- **Estado:** aceptada. **Fecha:** 2026-08-17.
-- **Sustento:** D-002 — con solo ~33 comunas activas y 8 categorías, obligar a escribir antes de ver
-  cualquier opción agrega un paso sin necesidad; el catálogo es chico a propósito (cold start).
-- **Alternativas descartadas:** no mostrar nada hasta que el usuario escriba al menos una letra (patrón
-  común en catálogos grandes tipo Thumbtack) — tiene sentido con miles de opciones, no con 33; acá solo
-  agrega fricción a alguien que quiere tocar y elegir de una lista corta y reconocible.
-- **Decisión y consecuencia:** tocar el campo, sin escribir nada, ya muestra la lista completa de opciones
-  activas. Escribir es un atajo para achicarla, no un requisito para verla.
+- **Estado:** aceptada. **Fecha:** 2026-08-18.
+- **Sustento:** D-004 — el modelo de interacción ya declarado ahí es "al estilo del selector de comuna de
+  Mercado Libre", y ese selector no abre ninguna lista hasta que se escribe la primera letra. La primera
+  versión de esta decisión (mostrar el catálogo completo al enfocar) se apartaba de esa referencia sin un
+  motivo de Datealo que lo justificara — era una preferencia mía, no algo pedido.
+- **Alternativas descartadas:** mostrar el catálogo completo al enfocar, sin esperar texto (la primera
+  versión de esta decisión) — parecía razonable con un catálogo chico (~33 comunas activas, 8 categorías),
+  pero se apartaba sin necesidad del patrón de referencia que D-004 ya fijó, y agrega una lista completa en
+  pantalla en el primer toque cuando la mayoría de las veces la persona ya sabe qué va a escribir.
+- **Decisión y consecuencia:** tocar el campo no muestra nada — ni lista ni mensaje, solo el cursor activo.
+  El catálogo se precarga en silencio en ese momento (ver mapa de estados) para que, apenas se escriba la
+  primera letra, filtrar sea instantáneo la mayoría de las veces — el modo "cargando" solo aparece si esa
+  precarga no alcanzó a terminar.
 - **Impacto en producto:** ninguno — es una decisión de interacción, no cambia D-001/D-002/D-004.
 
 ## Preguntas
