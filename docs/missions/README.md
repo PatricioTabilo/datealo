@@ -11,7 +11,7 @@ abrieron y de dónde salió cada una.
 | --- | ------ | ---- | ------- | ------ | ------- | ------- |
 | 01  | [migración a Nuxt UI](./01-migracion-nuxt-ui/) | técnica | 2026-08-11 | cerrada 2026-08-13 | — | A-004 |
 | 02  | [base de datos, Auth y correo (config)](./02-base-de-datos-y-auth/) | técnica | 2026-08-13 | cerrada 2026-08-17 | — | A-001, A-002, A-003 |
-| 03  | [taxonomía: categorías y comunas](./03-taxonomia-categorias-y-comunas/) | producto | 2026-08-13 | exploración | — | — |
+| 03  | [taxonomía: categorías y comunas](./03-taxonomia-categorias-y-comunas/) | producto | 2026-08-13 | definición | Experiencia | — |
 | 04  | [registro y perfil de profesional](./04-registro-perfil-profesional/) | producto | 2026-08-13 | exploración | — | — |
 | 05  | [perfil público de profesional](./05-perfil-publico-profesional/) | producto | 2026-08-13 | exploración | — | — |
 | 06  | [búsqueda y resultados](./06-busqueda-resultados/) | producto | 2026-08-13 | exploración | — | — |

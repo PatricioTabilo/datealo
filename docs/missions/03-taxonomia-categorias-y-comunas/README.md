@@ -2,21 +2,21 @@
 
 **Tipo:** producto. **Abierta el** 2026-08-13. **Nace de:** ninguna.
 
-**Estado de la misión:** exploración
+**Estado de la misión:** definición
 
-**Última actualización:** 2026-08-13
+**Última actualización:** 2026-08-17
 
-Segunda de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de que
-[misión 02](../02-base-de-datos-y-auth/) exista antes de poder guardar algo.
+Segunda de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
+[misión 02](../02-base-de-datos-y-auth/), ya cerrada, para poder guardar algo.
 
 | Documento     | Estado    | Qué falta para su gate              |
 | ------------- | --------- | ------------------------------------ |
-| Investigación | pendiente | discovery completo — hoy solo existe la carpeta |
-| Producto      | pendiente | —                                     |
-| Experiencia   | pendiente | —                                     |
+| Investigación | activo    | se acumula, no bloquea — el problema tiene situación y consecuencia concretas, hay 3 conclusiones (C-001 a C-003) y un ideal con capacidades observables |
+| Producto      | vigente   | aprobado por Patricio el 2026-08-17 — D-001 a D-004 aceptadas, Q-001 y Q-002 resueltas |
+| Experiencia   | pendiente | diseñar el componente compartido `ComunaSelect`/`CategoriaSelect` (D-004): autocompletado que solo permite elegir del catálogo |
 | Ingeniería    | pendiente | —                                     |
 
-**Próximo hito:** ninguno todavía — esta misión no se ha empezado a trabajar.
+**Próximo hito:** escribir `experiencia.md` — sin fecha límite todavía.
 
 ## Brief
 

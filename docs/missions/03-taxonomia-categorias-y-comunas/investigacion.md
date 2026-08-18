@@ -1,118 +1,142 @@
-# Misión: <nombre> — Investigación
+# Misión: taxonomía de categorías y comunas — Investigación
 
 **Estado:** activo
 
-**Última actualización:** AAAA-MM-DD
+**Última actualización:** 2026-08-17
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-<!--
-Este documento se acumula: la evidencia y las conclusiones no se borran cuando el alcance cambia, porque
-explican por qué el producto es como es. Lo que sí se actualiza es el ideal, que resume la dirección que
-la investigación sostiene hoy.
+## El problema aparece cuando no existe una lista única de la que todos parten
 
-Gate de salida — la investigación sostiene un producto.md cuando:
-- el problema tiene situación y consecuencia concretas, no una categoría abstracta
-- al menos una conclusión con confianza alta o media respalda la dirección
-- el ideal describe capacidades observables, no intenciones
--->
+**Situación:** don Héctor es electricista y se está por registrar en Datealo (misión 04, todavía en
+exploración). El formulario le pide elegir su oficio y su comuna. Al mismo tiempo, alguien en Ñuñoa abre el
+buscador (misión 06, también en exploración) y escribe "electricista".
 
-## El problema aparece cuando <historia concreta>
+**Acción o necesidad:** ambos formularios — el de registro y el de búsqueda — necesitan la misma lista de
+oficios y la misma lista de comunas para poder cruzarse. Hoy esa lista no existe en ningún lado: la landing
+tiene ocho categorías ilustrativas (`app/constants/landing.ts`) pensadas para verse bien en un carrusel, no
+para ser el catálogo con el que un profesional se registra.
 
-<!--
-Una situación real o reconstruida con precisión. No abras con una categoría como "falta de confianza" —
-abre con quién estaba haciendo qué y qué salió mal. Nombra a la persona y el servicio concreto.
--->
+**Respuesta actual:** sin lista, cada misión que toque el dato inventa la suya. Es lo que ya casi pasó una
+vez: la misión 02 mencionó "categorías de oficio" y "comunas disponibles" como algo que todavía no existía
+formalmente, y las siguientes (04 registro, 06 búsqueda) iban a tener que decidirlo cada una por su cuenta
+si esta misión no se abría primero.
 
-**Situación:** <qué está ocurriendo antes del problema>.
-
-**Acción o necesidad:** <qué se intenta resolver o decidir>.
-
-**Respuesta actual:** <qué hace hoy la persona: grupo de WhatsApp, Google, recomendación de un vecino,
-Datealo si ya existe la superficie>.
-
-**Consecuencia:** <error, demora, riesgo o decisión que no puede tomarse>.
+**Consecuencia:** don Héctor se registra bajo "Instalaciones eléctricas" en la comuna "Región
+Metropolitana" porque el formulario de la misión 04 usó su propia lista de texto libre. La persona de
+Ñuñoa busca "electricista" en "Ñuñoa" con el formulario de la misión 06, que usó otra lista. No matchean.
+Don Héctor existe en la base de datos y es invisible para la única persona que lo estaba buscando esa
+noche.
 
 ## Preguntas que la investigación debe resolver
 
-<!--
-Solo preguntas capaces de cambiar el ideal o una decisión. Al resolver una, moverla a evidencia o
-conclusión. No es un backlog.
--->
-
-- ¿<pregunta y decisión que depende de ella>?
+- ¿Qué tan granular tiene que ser una categoría para que un chileno se reconozca en ella sin dudar —
+  "gasfitería" o "reparación de cañerías"?
+- ¿Cuántas categorías cubrir en el lanzamiento sin que la mayoría queden con cero profesionales?
+- ¿Cuál es la unidad geográfica con la que la gente ya piensa su búsqueda — comuna, barrio, "cerca de mí"?
+- ¿El lanzamiento parte solo en la Región Metropolitana, o hace falta cubrir más desde el día uno?
 
 ## Evidencia
 
-<!--
-Un hecho verificable con fuente y límite. Prioriza observación directa, entrevistas y comportamiento
-comprobado. Los benchmarks de otros productos también son evidencia: qué hacen, qué trade-off eligieron y
-qué no aplica a Datealo.
-
-Datealo no tiene datos de uso propios todavía. Cuando la única evidencia disponible sea un benchmark o
-una entrevista, la columna "límite" es lo que impide que se lea como dato duro.
--->
-
-| ID    | Tipo                                              | Fuente                | Hecho verificable | Límite de la evidencia |
-| ----- | ------------------------------------------------- | --------------------- | ----------------- | ---------------------- |
-| E-001 | <entrevista, benchmark, uso, código, observación> | <enlace o referencia> | <hecho>           | <qué no demuestra>     |
-
-<a id="e-001"></a>
-
-### E-001 — <fuente o hecho en una frase>
-
-<!--
-Desarrollar solo cuando la tabla no alcanza para evaluar la calidad de la evidencia. Cierra con la
-consecuencia para la investigación.
--->
-
-<Observación precisa y contexto necesario.>
-
-Esto permite afirmar <alcance>, pero no demuestra <límite>.
+| ID    | Tipo         | Fuente                 | Hecho verificable | Límite de la evidencia |
+| ----- | ------------ | ----------------------- | ------------------ | ----------------------- |
+| E-001 | código       | `app/constants/landing.ts` | La landing ya usa 8 categorías: Gasfitería, Electricidad, Peluquería, Limpieza, Mudanzas, Pintura, Cerrajería, Jardinería | Elegidas por el fundador para verse bien en un carrusel, sin encuesta ni dato de demanda real |
+| E-002 | benchmark    | [Thumbtack Services](https://www.thumbtack.com/more-services), [Thumbtack Engineering](https://medium.com/thumbtack-engineering/building-multi-category-search-results-616bee77a564) | Thumbtack opera con más de 1.000 microcategorías (ej. "Radon Mitigation", "Fitness Equipment Assembly") sobre un motor de búsqueda y matching por texto libre | Escala de EE.UU. con millones de profesionales; una lista así de granular en un catálogo que un humano recorre a mano, con oferta cero al lanzamiento, garantiza casi todas las categorías vacías |
+| E-003 | benchmark    | [TaskRabbit Services](https://www.taskrabbit.com/services) | TaskRabbit opera con un puñado de categorías amplias: Cleaning, Handyman, Moving, Mounting, Yard Work, Errands | No distingue oficios que en Chile son roles profesionales separados — un gasfiter y un electricista no caben los dos en "Handyman" sin perder la palabra que la gente realmente usa |
+| E-004 | benchmark    | [Yapo.cl — aseo del hogar](https://www.yapo.cl/paginas/servicios/aseo-hogar), [Yapo.cl — servicio doméstico](https://www.yapo.cl/paginas/trabajos/servicio-domestico) | El clasificado chileno más usado para este tipo de oferta organiza el hogar bajo nombres de oficio en español chileno — "aseo del hogar", "asesora del hogar" — no en inglés ni en jerga de marketplace | Yapo mezcla empleo de planta (nana, asesora del hogar full-time) con trabajos puntuales por oficio; Datealo es solo lo segundo |
+| E-005 | observación  | `app/constants/landing.ts` (copy de la landing) | El copy ya asume la comuna como unidad de búsqueda: "Gasfiter en Providencia", "Cerrajero urgente en Ñuñoa", "Mudanza dentro de Santiago" | Es intuición de producto ya congelada en copy de marketing, no algo validado con un buscador real |
+| E-006 | dato oficial | [SUBDERE — división político-administrativa](https://www.subdere.gov.cl/sites/default/files/documentos/articles-73111_recurso_1.pdf), [Wikipedia — comunas de Chile](https://es.wikipedia.org/wiki/Anexo:Comunas_de_Chile) | Chile tiene 346 comunas en 16 regiones. La Región Metropolitana tiene 52 comunas en 6 provincias; la Provincia de Santiago (Gran Santiago urbano) tiene 32: Santiago, Cerrillos, Cerro Navia, Conchalí, El Bosque, Estación Central, Huechuraba, Independencia, La Cisterna, La Florida, La Granja, La Pintana, La Reina, Las Condes, Lo Barnechea, Lo Espejo, Lo Prado, Macul, Maipú, Ñuñoa, Pedro Aguirre Cerda, Peñalolén, Providencia, Pudahuel, Quilicura, Quinta Normal, Recoleta, Renca, San Joaquín, San Miguel, San Ramón, Vitacura | Es geografía administrativa oficial — no dice nada sobre dónde va a haber demanda real de gasfiter o electricista en Datealo |
 
 ## Conclusiones
 
-<!--
-Una conclusión interpreta evidencia; no es una preferencia ni una funcionalidad. El título expresa el
-hallazgo, no el tema.
--->
-
 <a id="c-001"></a>
 
-### C-001 — <conclusión en una frase>
+### C-001 — La categoría es el oficio, no la microtarea ni una etiqueta genérica
 
-- **Sustento:** [E-001](#e-001).
-- **Razonamiento:** <por qué la evidencia conduce a esta lectura y no a otra>.
-- **Implicación:** <qué deberá ser cierto en el producto o qué alternativa queda debilitada>.
-- **Confianza:** <alta, media o baja> porque <razón o validación pendiente>.
+- **Sustento:** [E-001](#e-001), [E-002](#e-002), [E-003](#e-003), [E-004](#e-004).
+- **Razonamiento:** con oferta cero al lanzamiento, una taxonomía de 1.000 microcategorías al estilo
+  Thumbtack garantiza que casi todas queden vacías; una taxonomía de 6 etiquetas genéricas al estilo
+  TaskRabbit borra la palabra exacta que un chileno usa para pedir ayuda ("gasfiter" no es "handyman"). El
+  copy de la propia landing y el vocabulario de Yapo.cl ya coinciden en que la unidad natural es el nombre
+  del oficio, en un solo nivel, sin jerarquía de subcategorías.
+- **Implicación:** la lista de categorías del lanzamiento tiene que ser corta, plana (sin subcategorías) y
+  en el lenguaje de oficio que ya usa la landing — "Gasfitería", no "Reparación de cañerías y filtraciones".
+- **Confianza:** media, porque se apoya en benchmarks y en copy ya escrito por el propio equipo, no en
+  entrevistas a un buscador real pidiendo ayuda.
 
-## El ideal: <resultado completo, sin recortar>
+<a id="c-002"></a>
 
-<!--
-El ideal es el producto de la investigación: la dirección que la evidencia sostiene, sin restricciones de
-implementación. El recorte a la primera entrega no vive aquí — vive en producto.md como decisión de
-alcance. Esta sección sí se reescribe cuando nueva evidencia cambia la dirección.
--->
+### C-002 — La comuna es la unidad geográfica de búsqueda, no la dirección exacta ni la región completa
+
+- **Sustento:** [E-005](#e-005), [E-006](#e-006).
+- **Razonamiento:** la comuna es la unidad con la que la gente ya se identifica y busca ("gasfiter en
+  Providencia"), y es lo bastante fina para ordenar por cercanía sin exponer la dirección exacta de nadie
+  — coherente con que Datealo nunca muestra un dato de contacto sin que el profesional lo autorice.
+- **Implicación:** el modelo de datos necesita una lista cerrada de comunas, no un campo de texto libre. La
+  Provincia de Santiago (las 32 comunas del Gran Santiago) es el candidato natural para arrancar, porque es
+  donde probablemente concentra oferta y demanda inicial — pero esto es hipótesis, no dato propio.
+- **Confianza:** media — que la comuna sea el grano correcto está bien sustentado; cuántas comunas cubrir
+  al lanzamiento todavía no tiene dato propio detrás.
+
+<a id="c-003"></a>
+
+### C-003 — Cubrir toda la Región Metropolitana o más de una región al lanzamiento arriesga vaciar casi
+todas las combinaciones categoría × comuna
+
+- **Sustento:** [E-006](#e-006), el filtro de "arranque en frío" del skill `discovery-product`.
+- **Razonamiento:** con una oferta inicial probablemente de decenas de profesionales, repartirla entre 52
+  comunas de la RM (o más, con una segunda región) deja casi cada cruce categoría × comuna en cero
+  resultados — el peor estado posible, peor que no cubrir la comuna directamente.
+- **Implicación:** el ideal de cobertura total de Chile se recorta en `producto.md` a un subconjunto chico
+  de comunas de alta densidad para el lanzamiento, con una condición explícita de cuándo se amplía.
+- **Confianza:** media — es una aplicación directa del filtro de arranque en frío, sin evidencia externa
+  nueva propia de Datealo.
+- **Revisión (2026-08-17):** `producto.md` decidió distinto a la implicación de arriba. En vez de recortar
+  el catálogo de comunas a un subconjunto fijo, el catálogo quedó completo (346 comunas) con un campo
+  `activa` por fila que controla qué se ofrece en registro y búsqueda (D-002). El riesgo que describe esta
+  conclusión — vaciar categoría × comuna — sigue siendo real y sigue sustentando por qué solo un
+  subconjunto empieza activo (Gran Santiago y Puerto Varas); lo que no sobrevivió es la idea de que el
+  catálogo mismo necesitaba excluir comunas para evitarlo. Excluir del catálogo y desactivar son
+  mecanismos distintos con el mismo efecto visible al lanzamiento, pero el segundo no tiene costo de
+  revertir.
+
+## El ideal: cualquier oficio, en cualquier comuna de Chile, encontrado con las palabras propias del buscador
 
 ### El resultado ideal se ve así
 
-<Narra de principio a fin una situación futura con datos concretos: nombres, comunas, oficios, horarios.
-Qué acción ocurre, qué responde Datealo, qué decisión puede tomar la persona. Evita "una experiencia
-simple" sin comportamiento observable.>
+Alguien en Curicó escribe "el que arregla el portón eléctrico" y Datealo lo entiende como "Electricidad".
+Alguien en Ñuñoa escribe "una peluquera para las once" y llega a "Peluquería". Cualquiera de las 346
+comunas de Chile tiene la posibilidad de tener profesionales registrados — ninguna queda excluida por
+diseño del modelo de datos. Si en Melipilla no hay ningún gasfiter todavía, Datealo lo dice y ofrece los más
+cercanos de las comunas vecinas con su distancia, en vez de un estado vacío sin salida.
 
 ### Capacidades del ideal
 
-| Capacidad | Acción habilitada    | Respuesta esperada              | Conclusión que la justifica |
-| --------- | -------------------- | ------------------------------- | --------------------------- |
-| <nombre>  | <qué se puede hacer> | <qué produce o explica Datealo> | [C-001](#c-001)             |
+| Capacidad                    | Acción habilitada                                              | Respuesta esperada                                                   | Conclusión que la justifica |
+| ----------------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------- |
+| Categoría por nombre de oficio | El buscador escribe el oficio con sus propias palabras           | Datealo lo mapea a la categoría correcta aunque no use el término exacto | [C-001](#c-001)             |
+| Comuna como unidad de búsqueda | El buscador ve resultados de su comuna primero                   | Si no hay oferta ahí, ve comunas vecinas marcadas con su distancia      | [C-002](#c-002)             |
+| Cobertura geográfica total     | Cualquier comuna de Chile puede tener profesionales registrados  | Ninguna comuna queda estructuralmente excluida del modelo de datos      | [C-003](#c-003)             |
 
-### El ideal no significa <confusión probable>
+### El ideal no significa cubrir todo desde el día uno
 
-- <límite conceptual que evita una interpretación incorrecta>.
+- No significa que el lanzamiento tenga que activar las 346 comunas de Chile de partida — el recorte a un
+  subconjunto para la primera entrega vive en `producto.md`, no acá.
+- No significa una categoría por cada microtarea al estilo Thumbtack — el oficio es la unidad, no la tarea
+  puntual dentro de un oficio.
 
 ## Referencias
 
-<!-- Fuentes primarias citadas por las evidencias. El enlace no sustituye el hecho y el límite en E-xxx. -->
-
-- [<título descriptivo>](URL): usado en E-001 para <afirmación concreta>.
+- [Thumbtack — More Services](https://www.thumbtack.com/more-services): usado en E-002 para el tamaño y
+  granularidad de su taxonomía.
+- [Thumbtack Engineering — Building multi-category search results](https://medium.com/thumbtack-engineering/building-multi-category-search-results-616bee77a564):
+  usado en E-002 para confirmar la escala de su catálogo.
+- [TaskRabbit — Services](https://www.taskrabbit.com/services): usado en E-003 para el contraste de
+  categorías amplias vs. microcategorías.
+- [Yapo.cl — Aseo del hogar](https://www.yapo.cl/paginas/servicios/aseo-hogar): usado en E-004 para el
+  vocabulario chileno de categorías de servicio al hogar.
+- [SUBDERE — División político-administrativa de Chile](https://www.subdere.gov.cl/sites/default/files/documentos/articles-73111_recurso_1.pdf):
+  usado en E-006 para el conteo oficial de regiones, provincias y comunas.
+- [Wikipedia — Anexo:Comunas de Chile](https://es.wikipedia.org/wiki/Anexo:Comunas_de_Chile): usado en
+  E-006 para el conteo total de 346 comunas.
