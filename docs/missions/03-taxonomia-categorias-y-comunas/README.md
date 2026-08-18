@@ -4,7 +4,7 @@
 
 **Estado de la misión:** definición
 
-**Última actualización:** 2026-08-17
+**Última actualización:** 2026-08-18
 
 Segunda de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
 [misión 02](../02-base-de-datos-y-auth/), ya cerrada, para poder guardar algo.
@@ -13,10 +13,11 @@ Segunda de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar)
 | ------------- | --------- | ------------------------------------ |
 | Investigación | activo    | se acumula, no bloquea — el problema tiene situación y consecuencia concretas, hay 3 conclusiones (C-001 a C-003) y un ideal con capacidades observables |
 | Producto      | vigente   | aprobado por Patricio el 2026-08-17 — D-001 a D-004 aceptadas, Q-001 y Q-002 resueltas |
-| Experiencia   | pendiente | diseñar el componente compartido `ComunaSelect`/`CategoriaSelect` (D-004): autocompletado que solo permite elegir del catálogo |
+| Experiencia   | vigente   | aprobado por Patricio el 2026-08-18 — componente `ComunaSelect`/`CategoriaSelect` (UXF-001), 6 modos con mockup |
 | Ingeniería    | pendiente | —                                     |
 
-**Próximo hito:** escribir `experiencia.md` — sin fecha límite todavía.
+**Próximo hito:** escribir `ingenieria.md` — modelo de datos de `categorias`/`comunas` y el componente
+`ComunaSelect`/`CategoriaSelect` en Vue. Sin fecha límite todavía.
 
 ## Brief
 

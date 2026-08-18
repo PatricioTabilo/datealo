@@ -1,183 +1,160 @@
-# Misión: <nombre> — Experiencia
+# Misión 03: taxonomía de categorías y comunas — Experiencia
 
-**Estado:** borrador
+**Estado:** vigente
 
-**Última actualización:** AAAA-MM-DD
+**Última actualización:** 2026-08-18. **Aprobado por Patricio el:** 2026-08-18.
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-<!--
-Fuente de verdad para flujos, estados, contenido e interacción. No redefine reglas de producto: si el
-diseño descubre una regla nueva o invalida una, abre o actualiza una decisión en producto.md.
+## Decisión de experiencia: un componente de búsqueda con catálogo cerrado, no una pantalla
 
-Núcleo obligatorio: vistas, mapa de estados, flujos críticos y estados por superficie. Las secciones bajo
-demanda (modelo mental, jerarquía de información, validación) se agregan solo cuando una decisión las
-necesita.
+Esta misión no tiene una vista propia — no hay una URL a la que alguien navegue. Lo que `producto.md`
+(D-004) pide es un **componente** que se embebe donde haga falta elegir categoría o comuna: el formulario
+de registro (misión 04) y el filtro de búsqueda (misión 06). Por eso esta sección reemplaza "Vistas y
+flujos de pantalla completa" por el diseño del componente mismo — sus modos son los mismos sin importar
+dónde se use.
 
-Gate de salida — experiencia.md está lista para ingenieria.md cuando:
-- cada flujo crítico tiene secuencia, variantes, recuperación y criterio de término
-- cada estado tiene contenido concreto (texto real, información visible, acción disponible)
-- cada vista lista sus modos, y el mapa de estados cubre todas las transiciones entre ellos
-- cada modo tiene su indicador permanente de estado, y cada flujo tiene todas sus salidas documentadas
-- los casos límite de producto.md tienen flujo o estado mapeado
-- cada flujo crítico está mockeado en móvil (390px), y en desktop si también vive ahí
-- ninguna pantalla queda descrita como "similar a X" sin especificar qué cambia
--->
+El modelo de interacción es un campo de búsqueda con autocompletado, al estilo del selector de comuna de
+Mercado Libre que mencionaste: se escribe, aparecen coincidencias del catálogo debajo, se elige una — nunca
+queda un valor sin elegir de la lista. En Nuxt UI (A-004) esto es `UInputMenu`, que ya trae el
+comportamiento de búsqueda resuelto — no hay que inventar la mecánica, solo especificar el contenido y las
+reglas.
 
-## Decisión de experiencia: <qué cambia para quien usa el producto>
+- **Decisiones cubiertas:** [D-004](./producto.md#d-004) (categoría/comuna siempre son referencia al
+  catálogo), [D-001](./producto.md#d-001) y [D-002](./producto.md#d-002) (qué contiene cada catálogo, el
+  campo `activa`).
+- **Pendiente bloqueante:** ninguna.
 
-<Modelo de interacción elegido, flujo más importante y la incertidumbre que sigue abierta.>
+## Componente — no es una vista propia
 
-- **Funcionalidades cubiertas:** F-001, <otras>.
-- **Pendiente bloqueante:** <pregunta o "ninguna">.
+- **C-001 — `ComunaSelect` / `CategoriaSelect`** · móvil / desktop · resuelve D-004 · flujo UXF-001 ·
+  vigente
+  - modo **cerrado** — el campo muestra el valor elegido (si hay uno) o el placeholder; nada más en
+    pantalla.
+  - modo **enfocado sin texto** — el usuario tocó el campo; el cursor queda activo, pero no aparece
+    ninguna lista todavía — igual que el selector de comuna de Mercado Libre, no se muestra nada hasta
+    que se empieza a escribir.
+  - modo **abierto con coincidencias** — el usuario escribió al menos una letra; aparece debajo la lista
+    filtrada a las opciones que contienen el texto, sin distinguir mayúsculas ni tildes.
+  - modo **sin coincidencias** — lo que escribió no matchea ninguna opción del catálogo.
+  - modo **cargando** — primera carga del catálogo (solo la primera vez que se abre el campo en la sesión).
+  - modo **error** — la carga del catálogo falló.
 
-## Vistas
-
-<!--
-El listado de pantallas que define la experiencia — el mapa que se entrega antes de los flujos. Una línea
-por vista, sin tabla, con sus modos anidados debajo. Una vista es un destino: se llega a ella. Un modo es
-un estado de esa vista que cambia qué se puede hacer y qué se ve — se anida, nunca se lista como vista
-hermana.
-
-El porqué de cada vista, su trade-off o su justificación no van aquí: viven en su flujo (UXF) o en una
-decisión (UX-xxx). Regla de formato para todo el documento: las tablas se reservan para índices de celdas
-cortas; lo que lleva justificación extensa va en secciones con header + bullets, nunca en una celda.
--->
-
-- **V-001 — <vista>** · móvil / desktop · resuelve F-001 · flujos UXF-001 · pendiente
-  - modo **<nombre>** — <qué lo distingue y qué se puede hacer en él>
-  - modo **<nombre>** — <ídem>
+Los dos componentes (`ComunaSelect`, `CategoriaSelect`) comparten estos seis modos — la única diferencia es
+el tamaño del catálogo que filtran (8 categorías siempre activas vs. las comunas `activa = true`, hoy
+alrededor de 33: Gran Santiago + Puerto Varas) y el placeholder.
 
 ## Mapa de estados
 
-<!--
-Vistas y flujos son listas, y una lista no muestra un camino. Esta tabla conecta los modos: qué acción
-lleva de uno a otro y qué pasa con el trabajo del usuario en cada salto. Cada fila que falte es una
-pregunta que ingeniería resuelve inventando.
--->
+| Desde                   | Acción                              | Queda en                | Qué pasa con el trabajo                          |
+| ------------------------ | ------------------------------------ | ------------------------ | -------------------------------------------------- |
+| cerrado                  | toca el campo                        | enfocado sin texto       | si ya había un valor, queda precargado como texto para editar; el catálogo empieza a cargar en silencio, sin mostrar nada |
+| enfocado sin texto       | escribe una letra, catálogo ya disponible | abierto con coincidencias o sin coincidencias | el texto tipeado se conserva mientras escribe |
+| enfocado sin texto       | escribe una letra, catálogo aún cargando | cargando                | el texto tipeado se conserva; el filtro se aplica apenas termine de cargar |
+| abierto con coincidencias | toca/selecciona una opción           | cerrado                  | el valor elegido queda guardado con su id de catálogo |
+| sin coincidencias         | borra el texto hasta dejarlo vacío  | enfocado sin texto       | la lista desaparece, igual que al enfocar por primera vez |
+| abierto (cualquier modo) | toca fuera del campo, sin seleccionar | cerrado                 | si ya había un valor previo, se restaura; si no, queda vacío — el texto tipeado sin seleccionar se descarta |
+| cargando                 | termina la carga, sin texto tipeado mientras esperaba | enfocado sin texto | ninguno — el catálogo queda listo para filtrar en cuanto se escriba |
+| cargando                 | termina la carga, con texto ya tipeado mientras esperaba | abierto con coincidencias o sin coincidencias | se aplica el filtro sobre el texto que ya estaba escrito |
+| error                    | toca "Reintentar"                    | cargando                 | ninguno                                             |
 
-| Desde  | Acción             | Queda en | Qué pasa con el trabajo              |
-| ------ | ------------------ | -------- | ------------------------------------ |
-| <modo> | <acción concreta>  | <modo>   | <qué se aplicó, qué quedó pendiente> |
-| <modo> | <salir sin cerrar> | <modo>   | <qué se pierde o se conserva>        |
+## UXF-001 — Elegir categoría o comuna desde el catálogo
 
-## UXF-001 — <flujo principal en verbo>
+**Objetivo:** que la persona termine con un valor de categoría o comuna válido, sin poder guardar texto que
+no exista en el catálogo. **Contrato:** [D-004](./producto.md#d-004).
 
-<!--
-Duplica por flujo crítico. Cada paso describe acción → respuesta al nivel de "el usuario toca X → Datealo
-muestra Y". Un mockup no reemplaza la secuencia porque no explica estados ni recuperación.
--->
+**Punto de entrada:** cualquier formulario que necesite un valor de categoría o comuna. Hoy no hay ninguno
+construido — este documento especifica el componente para que la misión 04 (registro) y la misión 06
+(búsqueda) lo embeban igual, sin diseñarlo cada una por su lado.
 
-**Objetivo:** <qué se completa o comprende>. **Contrato:** [F-001](./producto.md#f-001).
+**Criterio de término:** el campo tiene un valor elegido de la lista, identificado por su id de catálogo —
+no basta con que el texto visible coincida con el nombre de una opción.
 
-**Punto de entrada:** <estado y superficie inicial, y qué acción trae al usuario hasta acá>.
-
-**Criterio de término:** <estado observable que confirma que el flujo terminó bien>.
-
-**Cómo sabe el usuario dónde está:** <el elemento concreto y permanente en pantalla que se lo dice, por
-cada modo que toca este flujo>.
+**Cómo sabe el usuario dónde está:** el campo cerrado muestra el valor elegido como texto legible (el
+nombre de la categoría o comuna, nunca un id). Mientras está abierto, la opción resaltada por teclado o por
+hover queda visualmente distinta del resto de la lista.
 
 ### Salidas
 
-<!--
-Todas las formas de irse, no solo terminar bien. El criterio de término cubre la salida buena; las otras
-son las que el usuario encuentra primero. Un modo del que no se sabe salir es un modo donde el usuario se
-pierde.
--->
-
-| Salida                | Cómo se ejecuta       | Qué queda del trabajo           |
-| --------------------- | --------------------- | ------------------------------- |
-| <termina bien>        | <acción>              | <qué se aplicó y dónde>         |
-| <descarta>            | <acción, Esc, cerrar> | <nada, ni a medias>             |
-| <abandona sin cerrar> | <navega a otra parte> | <se conserva, se pierde, avisa> |
+| Salida                              | Cómo se ejecuta                          | Qué queda del trabajo                            |
+| ------------------------------------ | ------------------------------------------ | --------------------------------------------------- |
+| Termina bien                        | toca/selecciona una opción de la lista    | el valor queda aplicado en el campo, cerrado        |
+| Descarta sin seleccionar            | toca fuera del campo (blur), tecla Esc    | vuelve al valor que tenía antes, o queda vacío — nunca guarda el texto tipeado |
+| Abandona sin cerrar (navega afuera) | cierra la pestaña, va a otra pantalla     | lo maneja el formulario que contiene el componente (misión 04/06), no este documento |
 
 ### Secuencia principal
 
-| Paso | Acción            | Respuesta del sistema         | Información visible |
-| ---- | ----------------- | ----------------------------- | ------------------- |
-| 1    | <acción concreta> | <feedback o cambio de estado> | <dato y jerarquía>  |
+| Paso | Acción                                    | Respuesta del sistema                                                | Información visible |
+| ---- | ------------------------------------------- | ------------------------------------------------------------------------ | ---------------------- |
+| 1    | Toca el campo (vacío o con un valor previo) | El cursor queda activo; no aparece ninguna lista todavía. El catálogo empieza a cargar en silencio | Si había un valor previo, queda como texto editable; si no, el placeholder |
+| 2    | Escribe al menos una letra                  | Aparece debajo la lista filtrada a las opciones que contienen el texto, sin distinguir mayúsculas ni tildes | Solo las opciones que matchean, resaltando la parte del texto que coincide |
+| 3    | Toca/selecciona una opción                  | El campo se cierra mostrando ese valor; aparece un ícono para volver a abrirlo | El valor elegido, en texto legible |
 
 ### Variantes y recuperación
 
-| Condición          | Qué cambia              | Cómo se entiende    | Cómo se recupera             |
-| ------------------ | ----------------------- | ------------------- | ---------------------------- |
-| <sin resultados>   | <estado>                | <mensaje concreto>  | <acción disponible>          |
-| <sin permiso de ubicación> | <comportamiento> | <indicador visible> | <alternativa manual>         |
-| <conexión lenta>   | <skeleton, no spinner>  | <qué se ve mientras>| <qué pasa si falla>          |
+| Condición                             | Qué cambia                                              | Cómo se entiende                                  | Cómo se recupera |
+| ---------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------ | -------------------- |
+| Lo que escribió no matchea nada          | Aparece "No encontramos '<texto>'" — sin lista debajo, el catálogo no se muestra completo en ningún momento | El mensaje nombra exactamente lo que se escribió, no un genérico | Puede seguir escribiendo o borrar para volver a "enfocado sin texto" |
+| Escribe antes de que el catálogo termine de cargar | El campo queda en modo cargando con el texto conservado | Skeleton de 4 líneas en vez de la lista filtrada | El filtro se aplica solo al terminar de cargar, sin que el usuario tenga que volver a escribir |
+| Conexión lenta al cargar el catálogo por primera vez | Skeleton de 4 líneas con la forma de una opción, no spinner | El skeleton ocupa el mismo espacio que la lista real, para que no salte el layout | Se resuelve solo cuando termina la carga |
+| Falla la carga del catálogo              | El campo muestra "No pudimos cargar las comunas" con botón "Reintentar" | Mensaje visible en el lugar donde iría la lista | Tocar "Reintentar" vuelve a modo cargando |
+| Intenta continuar el formulario sin seleccionar nada | El botón de acción principal del formulario permanece deshabilitado | El botón se ve visualmente inactivo, no aparece un error al tocarlo | Completar la selección habilita el botón |
 
 ### Decisiones que no deben quedar implícitas
 
-- <qué ocurre al cancelar, volver atrás, reintentar o confirmar>.
-- <qué cambio se guarda inmediato y cuál necesita confirmación>.
+- Si ya había un valor elegido y el usuario vuelve a tocar el campo, el valor previo se precarga como
+  texto editable — no se borra a ciegas ni obliga a escribir desde cero.
+- El componente nunca ofrece "crear" una opción que no está en el catálogo — a diferencia de un combobox
+  genérico que a veces agrega "crear '<texto>'", acá esa opción no existe, es la garantía de D-004.
+- Una comuna con `activa = false` no aparece en absoluto en la lista — no se muestra deshabilitada ni con
+  una nota, simplemente no está (ver [CL-004](./producto.md) de producto).
 
 ## Estados por superficie
 
-<!--
-El contenido es concreto: texto real, no "mensaje apropiado". El estado vacío de un marketplace
-pre-lanzamiento no es un detalle: para muchas búsquedas será el estado principal durante meses.
--->
-
-| Estado  | Qué se muestra (texto e información real) | Acción disponible                   |
-| ------- | ----------------------------------------- | ----------------------------------- |
-| inicial | <contenido>                               | <acción>                            |
-| vacío   | <por qué está vacío, con texto concreto>  | <cómo avanzar, o ninguna y por qué> |
-| carga   | <skeleton de qué forma>                   | <ninguna>                           |
-| error   | <causa útil y alcance>                    | <recuperación>                      |
+| Estado                 | Qué se muestra (texto e información real)                         | Acción disponible                     |
+| ------------------------ | --------------------------------------------------------------------- | ---------------------------------------- |
+| cerrado, sin valor        | Placeholder: "¿Qué comuna buscas?" (ComunaSelect) o "¿Qué necesitas?" (CategoriaSelect) | Tocar para abrir |
+| cerrado, con valor        | El nombre elegido, ej. "Ñuñoa" o "Gasfitería"                        | Tocar para cambiar                       |
+| enfocado, sin texto       | Nada debajo del campo — ni lista ni mensaje, solo el cursor activo   | Escribir                                 |
+| abierto, con coincidencias | Las opciones que matchean lo escrito, con la coincidencia resaltada  | Tocar una opción o seguir escribiendo    |
+| abierto, sin coincidencias | "No encontramos 'nunoaa'" — sin lista debajo                        | Seguir escribiendo o borrar               |
+| carga                    | Skeleton de 4 líneas con la forma de una opción                      | Ninguna                                  |
+| error                    | "No pudimos cargar las comunas. Inténtalo de nuevo."                 | Botón "Reintentar"                       |
 
 ## Mockups
 
-<!--
-Los mockups viven en design-mockups/ como HTML (ver el skill discovery-ux y docs/design/README.md).
-Exploran o materializan una decisión; no son fuente de verdad de reglas de producto.
--->
-
-| Mockup   | Cubre   | Estado                 | Ruta                              |
-| -------- | ------- | ---------------------- | --------------------------------- |
-| <nombre> | UXF-001 | exploración o validado | `./design-mockups/<archivo>.html` |
+| Mockup         | Cubre   | Estado    | Ruta                                            |
+| ---------------- | ------- | --------- | -------------------------------------------------- |
+| Selector de comuna | UXF-001 | validado | `./design-mockups/comuna-select.html`             |
 
 ## Cobertura
 
-<!-- Detecta huecos antes de construir. Una funcionalidad sin pantalla nueva igual tiene estados. -->
-
-| Funcionalidad | Flujo   | Estados cubiertos       | Estado    |
-| ------------- | ------- | ----------------------- | --------- |
-| F-001         | UXF-001 | principal, vacío, error | pendiente |
-
-## Secciones bajo demanda
-
-<!--
-Agregar solo cuando una decisión las necesite, con estos títulos:
-
-- "Modelo mental y lenguaje": cuando un concepto de producto pueda confundirse en la interfaz.
-- "Jerarquía de información": cuando una superficie densa exija decidir qué se ve primero (una card de
-  resultado con foto, rating, distancia, precio y disponibilidad es exactamente ese caso).
-- "Validación (UXV-xxx)": cuando una incertidumbre de diseño necesite prueba con usuarios.
-- "Accesibilidad y adaptación": cuando el contexto de uso cambie el flujo o la representación.
--->
+| Decisión | Flujo   | Estados cubiertos                                                 | Estado  |
+| --------- | ------- | --------------------------------------------------------------------- | ------- |
+| D-004     | UXF-001 | cerrado, enfocado sin texto, abierto con coincidencias, sin coincidencias, carga, error | vigente |
 
 ## Decisiones de experiencia
 
 <a id="ux-001"></a>
 
-### UX-001 — <decisión en una frase>
+### UX-001 — El componente no muestra nada hasta que el usuario empieza a escribir
 
-- **Estado:** propuesta, aceptada, reemplazada o descartada. **Fecha:** AAAA-MM-DD.
-- **Sustento:** F-001 o <hallazgo>.
-- **Alternativas descartadas:** <opciones relevantes y trade-off, con el porqué del rechazo>.
-- **Decisión y consecuencia:** <qué flujo o superficie cambia>.
-- **Impacto en producto:** <ninguno o enlace a D-xxx/F-xxx actualizado>.
+- **Estado:** aceptada. **Fecha:** 2026-08-18.
+- **Sustento:** D-004 — el modelo de interacción ya declarado ahí es "al estilo del selector de comuna de
+  Mercado Libre", y ese selector no abre ninguna lista hasta que se escribe la primera letra. La primera
+  versión de esta decisión (mostrar el catálogo completo al enfocar) se apartaba de esa referencia sin un
+  motivo de Datealo que lo justificara — era una preferencia mía, no algo pedido.
+- **Alternativas descartadas:** mostrar el catálogo completo al enfocar, sin esperar texto (la primera
+  versión de esta decisión) — parecía razonable con un catálogo chico (~33 comunas activas, 8 categorías),
+  pero se apartaba sin necesidad del patrón de referencia que D-004 ya fijó, y agrega una lista completa en
+  pantalla en el primer toque cuando la mayoría de las veces la persona ya sabe qué va a escribir.
+- **Decisión y consecuencia:** tocar el campo no muestra nada — ni lista ni mensaje, solo el cursor activo.
+  El catálogo se precarga en silencio en ese momento (ver mapa de estados) para que, apenas se escriba la
+  primera letra, filtrar sea instantáneo la mayoría de las veces — el modo "cargando" solo aparece si esa
+  precarga no alcanzó a terminar.
+- **Impacto en producto:** ninguno — es una decisión de interacción, no cambia D-001/D-002/D-004.
 
 ## Preguntas
 
-<!--
-Todas viven en esta tabla ordenada por ID, abiertas y cerradas juntas. Ningún ID se borra ni se reutiliza.
-Estado: abierta | resuelta AAAA-MM-DD | disuelta AAAA-MM-DD. Solo las abiertas llevan bloque de detalle.
--->
-
-<Una frase que responde "¿qué falta?": la pregunta que bloquea construcción y qué bloquea.>
-
-| ID      | La duda                | Estado              | Respuesta, o quién la resuelve                                  |
-| ------- | ---------------------- | ------------------- | --------------------------------------------------------------- |
-| UXQ-001 | <la duda en una frase> | abierta             | <quién la resuelve, con qué método, qué bloquea y hasta cuándo> |
-| UXQ-002 | <la duda en una frase> | resuelta AAAA-MM-DD | <qué se respondió, enlazando la decisión que la cerró>          |
+Ninguna abierta.
