@@ -1,8 +1,8 @@
 # Misión 03: taxonomía de categorías y comunas — Ingeniería
 
-**Estado:** en revisión
+**Estado:** vigente
 
-**Última actualización:** 2026-08-18
+**Última actualización:** 2026-08-18. **Aprobado por Patricio el:** 2026-08-18.
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -231,7 +231,7 @@ específico de categoría o comuna colado adentro.
 
 ### T-001 — Las claves primarias son naturales (`slug`, `codigo`), no `uuid`
 
-- **Estado:** propuesta. **Fecha:** 2026-08-18.
+- **Estado:** aceptada. **Fecha:** 2026-08-18. **Aprobada por Patricio el:** 2026-08-18.
 - **Contratos:** D-001, D-002.
 - **Alternativas descartadas:** `uuid` autogenerado como en `professionals` (patrón del resto del repo) —
   para una tabla de catálogo fijo y pequeño, un id sin significado obliga a un join o un mapeo extra en
@@ -250,7 +250,7 @@ específico de categoría o comuna colado adentro.
 
 ### T-002 — Los tres componentes viven en `app/components/` sin subcarpeta de dominio
 
-- **Estado:** propuesta. **Fecha:** 2026-08-18.
+- **Estado:** aceptada. **Fecha:** 2026-08-18. **Aprobada por Patricio el:** 2026-08-18.
 - **Contratos:** D-004.
 - **Alternativas descartadas:** `app/components/shared/` o `app/components/taxonomia/` — Nuxt prefija el
   nombre del componente con el de la carpeta (A-006), así que `shared/ComunaSelect.vue` se auto-importaría
@@ -266,7 +266,7 @@ específico de categoría o comuna colado adentro.
 ### T-003 — Categoría y comuna nunca tienen lógica duplicada entre archivos: una implementación genérica
 por capa, un wrapper de una línea por entidad
 
-- **Estado:** propuesta. **Fecha:** 2026-08-18.
+- **Estado:** aceptada. **Fecha:** 2026-08-18. **Aprobada por Patricio el:** 2026-08-18.
 - **Contratos:** D-004, [UX-001](./experiencia.md#ux-001-el-componente-no-muestra-nada-hasta-que-el-usuario-empieza-a-escribir).
 - **Alternativas descartadas:** cada capa implementa su versión para categoría y su versión para comuna por
   separado — es lo que proponía la primera versión de este documento, tanto para el componente
