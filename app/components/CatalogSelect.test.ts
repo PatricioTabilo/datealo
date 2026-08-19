@@ -11,12 +11,14 @@ import CatalogSelect from './CatalogSelect.vue'
 // UInputMenu, que es de Nuxt UI y no de este componente.
 const UInputMenuStub = {
   props: ['modelValue', 'searchTerm', 'items', 'open', 'loading', 'disabled', 'placeholder'],
-  emits: ['update:modelValue', 'update:searchTerm'],
+  emits: ['update:modelValue', 'update:searchTerm', 'focus', 'blur'],
   template: `
     <div>
       <input
         :value="searchTerm"
         @input="$emit('update:searchTerm', $event.target.value)"
+        @focus="$emit('focus')"
+        @blur="$emit('blur')"
       />
       <div v-if="open" data-testid="dropdown">
         <slot v-for="item in items" :key="item.value" name="item" :item="item" />
@@ -110,5 +112,28 @@ describe('CatalogSelect', () => {
     await wrapper.find('input').setValue('a')
     await wrapper.find('[data-testid="retry-button"]').trigger('click')
     expect(wrapper.emitted('retry')).toBeTruthy()
+  })
+
+  it('sin showAllOnFocus (comunas): enfocar sin escribir no abre la lista', async () => {
+    const wrapper = mountCatalogSelect()
+    await wrapper.find('input').trigger('focus')
+    expect(wrapper.find('[data-testid="dropdown"]').exists()).toBe(false)
+  })
+
+  it('con showAllOnFocus (categorías): enfocar sin escribir muestra el catálogo completo', async () => {
+    const wrapper = mountCatalogSelect({ showAllOnFocus: true })
+    await wrapper.find('input').trigger('focus')
+
+    expect(wrapper.find('[data-testid="dropdown"]').exists()).toBe(true)
+    for (const item of items) {
+      expect(wrapper.find(`[data-testid="option-${item.value}"]`).isVisible()).toBe(true)
+    }
+  })
+
+  it('con showAllOnFocus: al salir sin seleccionar, la lista se vuelve a cerrar', async () => {
+    const wrapper = mountCatalogSelect({ showAllOnFocus: true })
+    await wrapper.find('input').trigger('focus')
+    await wrapper.find('input').trigger('blur')
+    expect(wrapper.find('[data-testid="dropdown"]').exists()).toBe(false)
   })
 })

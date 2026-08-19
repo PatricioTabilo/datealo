@@ -1,9 +1,8 @@
 <script setup lang="ts">
 // Única implementación de UXF-001 (docs/missions/03-taxonomia-categorias-y-comunas/experiencia.md):
 // los 6 modos del selector de catálogo. No sabe si trabaja con categorías o comunas — quien lo usa
-// (CategoriaSelect, ComunaSelect) le pasa los datos y el copy. Nunca emite un valor que no esté en
-// `items`, y no muestra ninguna opción hasta que se escribe la primera letra (estilo Mercado Libre),
-// en vez de mostrar el catálogo completo al enfocar.
+// (CategoriaSelect, ComunaSelect) le pasa los datos, el copy y `showAllOnFocus`. Nunca emite un valor
+// que no esté en `items`.
 // ref/computed importados explícitos (no solo auto-import de Nuxt): así el componente se puede
 // montar en un test con Vitest + Vue Test Utils plano, sin levantar un contexto de Nuxt completo.
 import { computed, ref, watch } from 'vue'
@@ -16,6 +15,10 @@ const props = defineProps<{
   error: boolean
   placeholder: string
   errorMessage: string
+  // Con pocas opciones (categorías: 8) mostrar todo al enfocar no cuesta nada y ahorra un toque. Con
+  // muchas (comunas: 346, ~33 activas) esperar a que se escriba es el patrón de Mercado Libre que ya
+  // se validó — mostrar 33 opciones de entrada es más ruido que ayuda. UX-002 en experiencia.md.
+  showAllOnFocus?: boolean
 }>()
 
 const emit = defineEmits<{ retry: [] }>()
@@ -42,7 +45,9 @@ function matchesSearch(item: CatalogOption) {
 // en cada tecla (con `ignoreFilter`) hacía que un click en la única opción visible seleccionara otra
 // distinta — la que ocupaba esa misma posición en el catálogo original. Qué se ve filtrado y qué no
 // se controla visualmente en el slot `#item` (v-show, no v-if — nunca se saca del array).
-const isOpen = computed(() => searchTerm.value.length > 0)
+const focused = ref(false)
+
+const isOpen = computed(() => searchTerm.value.length > 0 || Boolean(props.showAllOnFocus && focused.value))
 
 const hasNoMatches = computed(
   () => isOpen.value && !props.pending && !props.error && !props.items.some(matchesSearch),
@@ -62,6 +67,11 @@ watch(modelValue, () => {
 // también, no solo al seleccionar.
 function handleBlur() {
   searchTerm.value = ''
+  focused.value = false
+}
+
+function handleFocus() {
+  focused.value = true
 }
 
 // Selección 100% propia — nunca se confía en que UInputMenu resuelva qué se clickeó.
@@ -85,6 +95,7 @@ function selectItem(item: CatalogOption) {
     :reset-search-term-on-select="false"
     :placeholder="placeholder"
     @blur="handleBlur"
+    @focus="handleFocus"
   >
     <template #item="{ item }">
       <div

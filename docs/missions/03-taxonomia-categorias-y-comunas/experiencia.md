@@ -138,9 +138,9 @@ hover queda visualmente distinta del resto de la lista.
 
 <a id="ux-001"></a>
 
-### UX-001 — El componente no muestra nada hasta que el usuario empieza a escribir
+### UX-001 — Por default, el componente no muestra nada hasta que el usuario empieza a escribir
 
-- **Estado:** aceptada. **Fecha:** 2026-08-18.
+- **Estado:** aceptada. **Fecha:** 2026-08-18. Acotada por UX-002 (categorías son la excepción).
 - **Sustento:** D-004 — el modelo de interacción ya declarado ahí es "al estilo del selector de comuna de
   Mercado Libre", y ese selector no abre ninguna lista hasta que se escribe la primera letra. La primera
   versión de esta decisión (mostrar el catálogo completo al enfocar) se apartaba de esa referencia sin un
@@ -152,8 +152,29 @@ hover queda visualmente distinta del resto de la lista.
 - **Decisión y consecuencia:** tocar el campo no muestra nada — ni lista ni mensaje, solo el cursor activo.
   El catálogo se precarga en silencio en ese momento (ver mapa de estados) para que, apenas se escriba la
   primera letra, filtrar sea instantáneo la mayoría de las veces — el modo "cargando" solo aparece si esa
-  precarga no alcanzó a terminar.
+  precarga no alcanzó a terminar. Este es el comportamiento de `ComunaSelect` — `CategoriaSelect` no lo
+  usa, ver UX-002.
 - **Impacto en producto:** ninguno — es una decisión de interacción, no cambia D-001/D-002/D-004.
+
+<a id="ux-002"></a>
+
+### UX-002 — `CategoriaSelect` sí muestra el catálogo completo al enfocar; `ComunaSelect` no
+
+- **Estado:** aceptada. **Fecha:** 2026-08-19.
+- **Sustento:** D-001 (8 categorías fijas) vs. D-002 (346 comunas, ~33 activas) — la razón que sostiene
+  UX-001 (una lista larga en pantalla al primer toque es más ruido que ayuda) no aplica con solo 8
+  opciones: cabe entera sin scroll y ahorra un toque a alguien que igual iba a abrir la lista para mirar
+  las opciones antes de escribir.
+- **Alternativas descartadas:** la misma regla para las dos (UX-001 sin excepción) — trataba igual dos
+  catálogos con un orden de magnitud de diferencia en tamaño por el valor de no tener una regla especial,
+  no porque la experiencia fuera mejor así para categorías.
+- **Decisión y consecuencia:** `CatalogSelect` recibe un prop `showAllOnFocus` (booleano, default `false`)
+  — `CategoriaSelect` lo pasa en `true`, `ComunaSelect` no lo pasa (queda en `false`, el comportamiento de
+  UX-001). Con `showAllOnFocus`, tocar el campo sin escribir muestra las 8 categorías completas; escribir
+  sigue filtrando igual que siempre. `CatalogSelect` sigue sin saber qué entidad es — el prop lo decide
+  cada wrapper, no una condición interna sobre cuántos `items` llegaron.
+- **Impacto en producto:** ninguno — sigue siendo D-004 (catálogo cerrado), solo cambia cuándo se ve la
+  lista completa.
 
 ## Preguntas
 

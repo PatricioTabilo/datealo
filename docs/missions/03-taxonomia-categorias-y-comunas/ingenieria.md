@@ -132,19 +132,23 @@ y `useComunasCatalog()` son un wrapper de una sola responsabilidad cada uno, sol
 ### TC-004 — `<CatalogSelect>`, compuesto por `<CategoriaSelect>` / `<ComunaSelect>`
 
 - **Entrada (props) de `CatalogSelect`:** `modelValue: string | null`, `items: {value: string, label: string}[]`,
-  `pending: boolean`, `error: boolean`, `placeholder: string`.
+  `pending: boolean`, `error: boolean`, `placeholder: string`, `showAllOnFocus?: boolean` (default `false`
+  — ver UX-002).
 - **Entrada (props) de `CategoriaSelect` / `ComunaSelect`:** solo `modelValue: string | null` — el resto
-  (`items`, `pending`, `error`, `placeholder`) lo arma cada wrapper llamando a su composable y pasándoselo a
-  `CatalogSelect` internamente; quien usa `<CategoriaSelect>` no ve ni necesita saber que existe
-  `CatalogSelect` debajo.
+  (`items`, `pending`, `error`, `placeholder`, `showAllOnFocus`) lo arma cada wrapper llamando a su
+  composable y pasándoselo a `CatalogSelect` internamente; quien usa `<CategoriaSelect>` no ve ni necesita
+  saber que existe `CatalogSelect` debajo. `CategoriaSelect` pasa `showAllOnFocus: true`; `ComunaSelect` no
+  lo pasa (queda en `false`).
 - **Salida (emit):** `update:modelValue(value: string | null)`, igual en las tres.
 - **Invariantes:** `CatalogSelect` **nunca** emite un valor que no esté en `items`, o `null` — es la
   garantía de D-004, implementada una sola vez, porque `UInputMenu` no permite "crear" una opción por
-  default (a diferencia de un combobox libre). Ninguna opción se muestra mientras el campo de búsqueda esté
-  vacío (UX-001, modo "enfocado sin texto") — `CatalogSelect` controla el `open` de `UInputMenu` a mano en
-  vez de dejarlo abrir solo al enfocar. `CategoriaSelect`/`ComunaSelect` no reimplementan nada de esto —
-  si D-004 cambia, se edita `CatalogSelect` una vez y el cambio llega gratis a los dos wrappers, porque lo
-  componen — no porque lo copien.
+  default (a diferencia de un combobox libre). Con `showAllOnFocus: false` (default, `ComunaSelect`),
+  ninguna opción se muestra mientras el campo de búsqueda esté vacío (UX-001); con `showAllOnFocus: true`
+  (`CategoriaSelect`), el catálogo completo se muestra apenas se enfoca, sin esperar texto (UX-002).
+  `CatalogSelect` sigue sin saber qué entidad es — decide según el prop, nunca según cuántos `items`
+  recibió. `CategoriaSelect`/`ComunaSelect` no reimplementan nada de esto — si D-004/UX-001/UX-002 cambian,
+  se edita `CatalogSelect` una vez y el cambio llega gratis a los dos wrappers, porque lo componen — no
+  porque lo copien.
 - **Errores:** si `useCategoriasCatalog()`/`useComunasCatalog()` reportan `error`, el componente entra en
   modo error (ver `experiencia.md`) y el campo queda deshabilitado hasta reintentar.
 - **Contrato de producto:** [D-004](./producto.md#d-004), [UXF-001](./experiencia.md#uxf-001-elegir-categoría-o-comuna-desde-el-catálogo).
@@ -212,6 +216,7 @@ prueba.
 | TC-001, TC-002           | manual       | `GET /api/categorias` devuelve exactamente 8 filas; `GET /api/comunas` devuelve solo las comunas con `activa = true` | Marcar una comuna en `false` a mano y confirmar que desaparece de la respuesta |
 | TC-004 (D-004)           | unitario (Vitest + Vue Test Utils), contra `CatalogSelect` directo | Seleccionar una opción de la lista emite `update:modelValue` con su `value` | Escribir texto que no matchea nada y no seleccionar nada — el componente nunca emite ese texto |
 | UX-001 (nada hasta escribir) | unitario, contra `CatalogSelect` directo | Con el campo enfocado y vacío, la lista de opciones no se renderiza | Al escribir la primera letra, aparece |
+| UX-002 (categorías muestran todo al enfocar) | unitario, contra `CatalogSelect` directo | Con `showAllOnFocus: true`, enfocar sin escribir muestra el catálogo completo | Con `showAllOnFocus: false` (default), enfocar sin escribir no muestra nada |
 | `CategoriaSelect`/`ComunaSelect` componen bien | unitario | Cada wrapper le pasa a `CatalogSelect` los `items` de su propio composable | Un cambio en `CatalogSelect` (ej. un modo nuevo) no exige tocar los wrappers |
 | TR-001 (conteo del seed) | manual, una vez | `select count(*) from comunas` = 346 después del seed | — |
 | T-004 (caché) | manual, una vez contra el preview del PR | `curl` repetido a `/api/categorias` muestra `x-vercel-cache: HIT` la segunda vez — comportamiento documentado por Vercel, esto es confirmación, no una incertidumbre | — |
