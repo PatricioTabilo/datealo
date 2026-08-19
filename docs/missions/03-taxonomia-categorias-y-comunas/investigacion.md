@@ -73,11 +73,16 @@ noche.
 - **Razonamiento:** la comuna es la unidad con la que la gente ya se identifica y busca ("gasfiter en
   Providencia"), y es lo bastante fina para ordenar por cercanía sin exponer la dirección exacta de nadie
   — coherente con que Datealo nunca muestra un dato de contacto sin que el profesional lo autorice.
-- **Implicación:** el modelo de datos necesita una lista cerrada de comunas, no un campo de texto libre. La
-  Provincia de Santiago (las 32 comunas del Gran Santiago) es el candidato natural para arrancar, porque es
-  donde probablemente concentra oferta y demanda inicial — pero esto es hipótesis, no dato propio.
+- **Implicación:** el modelo de datos necesita una lista cerrada de comunas, no un campo de texto libre. El
+  Gran Santiago es el candidato natural para arrancar, porque es donde probablemente concentra oferta y
+  demanda inicial — pero esto es hipótesis, no dato propio.
 - **Confianza:** media — que la comuna sea el grano correcto está bien sustentado; cuántas comunas cubrir
   al lanzamiento todavía no tiene dato propio detrás.
+- **Corrección (2026-08-19):** esta conclusión decía "la Provincia de Santiago (las 32 comunas del Gran
+  Santiago)", tratando ambos términos como sinónimos. No lo son: Gran Santiago es el área urbana continua
+  (32 comunas de la Provincia de Santiago + Puente Alto + San Bernardo, 34 en total), Provincia de
+  Santiago es una unidad administrativa más angosta que deja afuera esos dos conurbados. `producto.md`
+  (D-002) ya quedó corregido con la definición precisa.
 
 <a id="c-003"></a>
 
