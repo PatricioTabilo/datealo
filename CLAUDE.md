@@ -233,6 +233,7 @@ Skills propios del repo en `.claude/skills/`:
 | `discovery-ux`            | Iterar `experiencia.md`: vistas, flujos, estados, mockups          |
 | `discovery-engineering`   | Iterar `ingenieria.md`: contratos, datos, slicing en issues        |
 | `vue-composition`         | Extraer componentes o composables; auditoría de salud de archivos  |
+| `comentarios`             | Antes de escribir o revisar cualquier comentario de código          |
 
 Skills de terceros pre-instalados en `.agents/skills/` (ver `skills-lock.json`): `nuxt`, `vue`,
 `drizzle-orm`, `frontend-design`, `ui-ux-pro-max`, `web-design-guidelines`, `marketing-psychology`,
