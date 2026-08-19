@@ -13,10 +13,9 @@ compartido compuesto por dos wrappers
 Dos tablas nuevas (`categorias`, `comunas`), cada una con el campo `activa` que D-001/D-002 piden. Dos
 endpoints `GET` de solo lectura, sin autenticación (son catálogo público, no datos de usuario). Un
 composable genérico (`useCatalogFetch`) que los consume con cache, y un componente Vue (`CatalogSelect`) que
-implementa el contrato de
-D-004 sobre `UInputMenu` de Nuxt UI (A-004) — ya trae resuelto el autocompletado, lo que se construye acá
-es el contenido y las reglas: catálogo cerrado, nada visible hasta escribir. `CategoriaSelect` y
-`ComunaSelect` son dos wrappers delgados que lo componen, no dos copias de la misma lógica (ver T-003).
+implementa el contrato de D-004 sobre un `UInput` de Nuxt UI (A-004) más una lista propia: catálogo
+cerrado, nada visible hasta escribir. `CategoriaSelect` y `ComunaSelect` son dos wrappers delgados que lo
+componen, no dos copias de la misma lógica (ver T-003).
 
 Es la primera vez que el repo tiene tablas de negocio, así que también es donde `server/db/schema/`,
 `server/db/sql/rls.sql` y el patrón de "endpoint de lectura pública" (receta del skill `arquitectura`)
@@ -51,7 +50,7 @@ enfocado/filtrado/selección.
 | `server/api/categorias.get.ts` / `comunas.get.ts` | I/O: llama la query, devuelve JSON — dos archivos porque Nitro enruta por archivo, no porque haya lógica distinta | Filtrar por texto (eso lo hace el cliente) | TC-001, TC-002 |
 | `app/composables/useCatalogFetch.ts`   | Fetch con cache y manejo de error, genérico — no sabe si trae categorías o comunas | De dónde viene el endpoint (eso lo fija cada wrapper) | TC-003 |
 | `app/composables/useCategoriasCatalog.ts` / `useComunasCatalog.ts` | Fijar `key`, `endpoint` y el `normalize` de su entidad para `useCatalogFetch` — un solo `return`, sin lógica propia | Cómo se cachea o qué pasa si falla (eso ya lo resolvió `useCatalogFetch`) | TC-003 |
-| `app/components/CatalogSelect.vue`     | Los 6 modos de UXF-001, sobre `UInputMenu` — recibe `items`/`pending`/`error`/`placeholder` por props, nunca sabe si es categoría o comuna | De dónde vienen los datos | D-004, UX-001, TC-004 |
+| `app/components/CatalogSelect.vue`     | Los 6 modos de UXF-001, sobre `UInput` + lista propia — recibe `items`/`pending`/`error`/`placeholder` por props, nunca sabe si es categoría o comuna | De dónde vienen los datos | D-004, UX-001, TC-004 |
 | `app/components/CategoriaSelect.vue` / `ComunaSelect.vue` | Conectar su composable con `CatalogSelect` — ninguna lógica de interacción propia | Cómo se ve o se comporta el selector (eso ya lo resolvió `CatalogSelect`) | TC-004 |
 
 Fetch (`useCatalogFetch`) y componente (`CatalogSelect`) siguen la misma forma a propósito: una
@@ -132,21 +131,27 @@ y `useComunasCatalog()` son un wrapper de una sola responsabilidad cada uno, sol
 ### TC-004 — `<CatalogSelect>`, compuesto por `<CategoriaSelect>` / `<ComunaSelect>`
 
 - **Entrada (props) de `CatalogSelect`:** `modelValue: string | null`, `items: {value: string, label: string}[]`,
-  `pending: boolean`, `error: boolean`, `placeholder: string`.
+  `pending: boolean`, `error: boolean`, `placeholder: string`, `showAllOnFocus?: boolean` (default `false`
+  — ver UX-002).
 - **Entrada (props) de `CategoriaSelect` / `ComunaSelect`:** solo `modelValue: string | null` — el resto
-  (`items`, `pending`, `error`, `placeholder`) lo arma cada wrapper llamando a su composable y pasándoselo a
-  `CatalogSelect` internamente; quien usa `<CategoriaSelect>` no ve ni necesita saber que existe
-  `CatalogSelect` debajo.
+  (`items`, `pending`, `error`, `placeholder`, `showAllOnFocus`) lo arma cada wrapper llamando a su
+  composable y pasándoselo a `CatalogSelect` internamente; quien usa `<CategoriaSelect>` no ve ni necesita
+  saber que existe `CatalogSelect` debajo. `CategoriaSelect` pasa `showAllOnFocus: true`; `ComunaSelect` no
+  lo pasa (queda en `false`).
 - **Salida (emit):** `update:modelValue(value: string | null)`, igual en las tres.
 - **Invariantes:** `CatalogSelect` **nunca** emite un valor que no esté en `items`, o `null` — es la
-  garantía de D-004, implementada una sola vez, porque `UInputMenu` no permite "crear" una opción por
-  default (a diferencia de un combobox libre). Ninguna opción se muestra mientras el campo de búsqueda esté
-  vacío (UX-001, modo "enfocado sin texto") — `CatalogSelect` controla el `open` de `UInputMenu` a mano en
-  vez de dejarlo abrir solo al enfocar. `CategoriaSelect`/`ComunaSelect` no reimplementan nada de esto —
-  si D-004 cambia, se edita `CatalogSelect` una vez y el cambio llega gratis a los dos wrappers, porque lo
-  componen — no porque lo copien.
+  garantía de D-004, implementada una sola vez: el único camino que escribe `modelValue` es elegir una
+  opción de la lista, y al salir del campo sin elegir, el texto tipeado se descarta y vuelve el label de lo
+  que ya estaba seleccionado (o queda vacío), así que el campo nunca queda mostrando algo fuera del
+  catálogo. Con `showAllOnFocus: false` (default, `ComunaSelect`), ninguna opción se muestra hasta que se
+  escribe (UX-001); con `showAllOnFocus: true` (`CategoriaSelect`), el catálogo completo se muestra apenas
+  se enfoca (UX-002). `CatalogSelect` sigue sin saber qué entidad es — decide según el prop, nunca según
+  cuántos `items` recibió. `CategoriaSelect`/`ComunaSelect` no reimplementan nada de esto — si
+  D-004/UX-001/UX-002 cambian, se edita `CatalogSelect` una vez y el cambio llega gratis a los dos
+  wrappers, porque lo componen — no porque lo copien.
 - **Errores:** si `useCategoriasCatalog()`/`useComunasCatalog()` reportan `error`, el componente entra en
-  modo error (ver `experiencia.md`) y el campo queda deshabilitado hasta reintentar.
+  modo error (ver `experiencia.md`): el campo queda de solo lectura (no deshabilitado — un campo
+  deshabilitado no recibe foco, y sin foco el mensaje de error nunca llegaría a verse) hasta reintentar.
 - **Contrato de producto:** [D-004](./producto.md#d-004), [UXF-001](./experiencia.md#uxf-001-elegir-categoría-o-comuna-desde-el-catálogo).
 
 ## Modelo de datos
@@ -212,6 +217,7 @@ prueba.
 | TC-001, TC-002           | manual       | `GET /api/categorias` devuelve exactamente 8 filas; `GET /api/comunas` devuelve solo las comunas con `activa = true` | Marcar una comuna en `false` a mano y confirmar que desaparece de la respuesta |
 | TC-004 (D-004)           | unitario (Vitest + Vue Test Utils), contra `CatalogSelect` directo | Seleccionar una opción de la lista emite `update:modelValue` con su `value` | Escribir texto que no matchea nada y no seleccionar nada — el componente nunca emite ese texto |
 | UX-001 (nada hasta escribir) | unitario, contra `CatalogSelect` directo | Con el campo enfocado y vacío, la lista de opciones no se renderiza | Al escribir la primera letra, aparece |
+| UX-002 (categorías muestran todo al enfocar) | unitario, contra `CatalogSelect` directo | Con `showAllOnFocus: true`, enfocar sin escribir muestra el catálogo completo | Con `showAllOnFocus: false` (default), enfocar sin escribir no muestra nada |
 | `CategoriaSelect`/`ComunaSelect` componen bien | unitario | Cada wrapper le pasa a `CatalogSelect` los `items` de su propio composable | Un cambio en `CatalogSelect` (ej. un modo nuevo) no exige tocar los wrappers |
 | TR-001 (conteo del seed) | manual, una vez | `select count(*) from comunas` = 346 después del seed | — |
 | T-004 (caché) | manual, una vez contra el preview del PR | `curl` repetido a `/api/categorias` muestra `x-vercel-cache: HIT` la segunda vez — comportamiento documentado por Vercel, esto es confirmación, no una incertidumbre | — |
@@ -334,6 +340,34 @@ aplicación
   hasta una hora en reflejarse en lo que sirve el CDN — ya documentado como invariante en TC-001/TC-002.
 - **Reapertura:** si algún flujo necesita ver un cambio de `activa` reflejado al instante (hoy ninguno lo
   necesita — los cambios son manuales y poco frecuentes).
+
+<a id="t-005"></a>
+
+### T-005 — `CatalogSelect` no usa el modo combobox de `UInputMenu`: es un `UInput` más una lista propia
+
+- **Estado:** aceptada. **Fecha:** 2026-08-19. **Aprobada por Patricio el:** 2026-08-19.
+- **Contratos:** TC-004.
+- **Tensión:** `UInputMenu` (A-004) ya trae autocompletado resuelto y era la opción por default de esta
+  misión — construir la interacción a mano es más código propio del que el principio YAGNI querría. Pero
+  probado en un browser real, no funcionaba: al filtrar la lista por lo escrito, clickear una opción
+  seleccionaba otra (la que ocupaba ese índice en el array sin filtrar), y a veces la lista no abría.
+- **Alternativas descartadas:** parchar `UInputMenu` — se intentó con `by="value"`, sacando `ignoreFilter`,
+  y con un slot `#item` con handler manual sobre la lista ya filtrada; ninguna resolvió el problema de
+  fondo, que es que Reka UI resuelve internamente qué ítem se eligió y esa resolución no coincide con una
+  lista de items controlada desde afuera. Mantener los items estables y ocultar los que no matchean con
+  `v-show` sí pasaba los tests unitarios, pero seguía fallando en el browser del usuario — señal de que se
+  estaba construyendo alrededor de un comportamiento que no se controla, no sobre uno entendido.
+- **Decisión y consecuencia:** `CatalogSelect` usa `UInput` (input de texto, sin comportamiento propio de
+  combobox) más una lista propia debajo; apertura, filtrado y selección se manejan en el componente. El
+  cierre al hacer click en una opción usa `focusout` + `relatedTarget` contenido en el contenedor, que es
+  el patrón estándar para no perder el click por el blur del input. El comportamiento del campo se calcó
+  del selector de comuna de mercadolibre.cl, medido sobre el sitio real (D-004 lo cita como referencia):
+  es un input de texto normal — al elegir una opción su label queda como texto, al volver a enfocarlo el
+  cursor cae donde se hizo click sin autoseleccionar nada, y la lista se abre al escribir, no al enfocar.
+  Consecuencia aceptada: la interacción es código propio de Datealo y hay que mantenerla; a cambio es
+  código que se entiende entero y que se puede testear sin depender de la resolución interna de Reka.
+- **Reapertura:** si una versión futura de Nuxt UI resuelve el caso de items controlados + filtrado
+  externo, conviene volver a evaluar `UInputMenu` y borrar esta implementación.
 
 ## Preguntas
 
