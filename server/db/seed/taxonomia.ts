@@ -11,9 +11,11 @@
 // Interior), generadas desde https://github.com/knxroot/bdcut-cl en vez de transcritas a mano, para
 // no arriesgar un nombre o código mal tipeado en 346 filas.
 //
-// Activas al sembrar: las 8 categorías, más las 32 comunas de la Provincia de Santiago (Gran
-// Santiago) y Puerto Varas — los dos mercados donde Patricio puede reclutar y verificar
-// profesionales directamente al lanzamiento (D-002). El resto de las comunas queda en la tabla pero
+// Activas al sembrar: las 8 categorías, más el Gran Santiago (34 comunas: las 32 de la Provincia de
+// Santiago más Puente Alto y San Bernardo, los dos conurbados que quedan fuera de esa provincia pero
+// son parte del área urbana continua — la definición administrativa "Provincia de Santiago" no
+// alcanza sola, ver D-002) y Puerto Varas — los mercados donde Patricio puede reclutar y verificar
+// profesionales directamente al lanzamiento. El resto de las comunas queda en la tabla pero
 // inactivo, listo para activarse cambiando el campo sin necesitar otro deploy.
 
 import { drizzle } from 'drizzle-orm/postgres-js'
@@ -351,13 +353,13 @@ const comunasSeed = [
   { codigo: '13130', nombre: 'San Miguel', activa: true },
   { codigo: '13131', nombre: 'San Ramón', activa: true },
   { codigo: '13132', nombre: 'Vitacura', activa: true },
-  { codigo: '13201', nombre: 'Puente Alto', activa: false },
+  { codigo: '13201', nombre: 'Puente Alto', activa: true },
   { codigo: '13202', nombre: 'Pirque', activa: false },
   { codigo: '13203', nombre: 'San José de Maipo', activa: false },
   { codigo: '13301', nombre: 'Colina', activa: false },
   { codigo: '13302', nombre: 'Lampa', activa: false },
   { codigo: '13303', nombre: 'Tiltil', activa: false },
-  { codigo: '13401', nombre: 'San Bernardo', activa: false },
+  { codigo: '13401', nombre: 'San Bernardo', activa: true },
   { codigo: '13402', nombre: 'Buin', activa: false },
   { codigo: '13403', nombre: 'Calera de Tango', activa: false },
   { codigo: '13404', nombre: 'Paine', activa: false },
