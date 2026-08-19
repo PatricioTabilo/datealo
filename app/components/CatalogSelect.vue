@@ -22,9 +22,9 @@ const props = defineProps<{
   error: boolean
   placeholder: string
   errorMessage: string
-  // Con pocas opciones (categorías: 8) mostrar todo al enfocar no cuesta nada y ahorra un toque. Con
-  // muchas (comunas: 346, ~33 activas) esperar a que se escriba es el patrón de Mercado Libre que ya
-  // se validó — mostrar 33 opciones de entrada es más ruido que ayuda. UX-002 en experiencia.md.
+  // Catálogo chico (categorías): mostrar todo al enfocar no cuesta nada. Catálogo grande (comunas):
+  // esperar a que se escriba, el patrón ya validado de Mercado Libre — mostrar todas las opciones de
+  // entrada es más ruido que ayuda. UX-002 en experiencia.md.
   showAllOnFocus?: boolean
 }>()
 
