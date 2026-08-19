@@ -142,6 +142,20 @@ Sin `console.log` de debug en el código que se mergea.
 SCREAMING_SNAKE_CASE, tipos en PascalCase, funciones en camelCase. Named exports sobre default exports.
 
 **Comentarios**: solo para reglas de negocio no obvias. El naming claro es la documentación por defecto.
+Autocontenidos: explican el porqué en la misma línea, sin obligar a abrir `docs/missions/` ni el skill
+`arquitectura` para entenderlos. Una referencia (`D-001`, `A-002`) puede acompañar como trazabilidad hacia
+la decisión completa, pero nunca reemplaza la explicación — si el documento se mueve, se reescribe o
+desaparece, el comentario tiene que seguir teniendo sentido solo.
+
+```ts
+// ❌ Obliga a ir a buscar D-002 para entender qué significa "activa"
+// Catálogo de referencia, cambia solo a mano (D-002).
+
+// ✅ Se entiende sin abrir nada más; D-002 queda como trazabilidad, no como la explicación
+// El campo `activa` se cambia a mano en la base, no desde la app — no hay panel de admin
+// todavía, así que no hay ningún evento de escritura del que colgar una invalidación de
+// caché al instante (D-002).
+```
 
 ## Umbrales de salud de archivos
 

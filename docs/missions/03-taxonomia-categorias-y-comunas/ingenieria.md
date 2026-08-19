@@ -50,13 +50,14 @@ enfocado/filtrado/selección.
 | `server/utils/categorias.ts` / `comunas.ts` | Queries: solo filas `activa = true`, columnas públicas — un archivo por entidad | Presentación, formato del texto | D-001, D-002   |
 | `server/api/categorias.get.ts` / `comunas.get.ts` | I/O: llama la query, devuelve JSON — dos archivos porque Nitro enruta por archivo, no porque haya lógica distinta | Filtrar por texto (eso lo hace el cliente) | TC-001, TC-002 |
 | `app/composables/useCatalogFetch.ts`   | Fetch con cache y manejo de error, genérico — no sabe si trae categorías o comunas | De dónde viene el endpoint (eso lo fija cada wrapper) | TC-003 |
-| `app/composables/useCategoriasCatalog.ts` / `useComunasCatalog.ts` | Fijar `key` y `endpoint` para `useCatalogFetch` — una línea cada uno | Cómo se cachea o qué pasa si falla (eso ya lo resolvió `useCatalogFetch`) | TC-003 |
+| `app/composables/useCategoriasCatalog.ts` / `useComunasCatalog.ts` | Fijar `key`, `endpoint` y el `normalize` de su entidad para `useCatalogFetch` — un solo `return`, sin lógica propia | Cómo se cachea o qué pasa si falla (eso ya lo resolvió `useCatalogFetch`) | TC-003 |
 | `app/components/CatalogSelect.vue`     | Los 6 modos de UXF-001, sobre `UInputMenu` — recibe `items`/`pending`/`error`/`placeholder` por props, nunca sabe si es categoría o comuna | De dónde vienen los datos | D-004, UX-001, TC-004 |
 | `app/components/CategoriaSelect.vue` / `ComunaSelect.vue` | Conectar su composable con `CatalogSelect` — ninguna lógica de interacción propia | Cómo se ve o se comporta el selector (eso ya lo resolvió `CatalogSelect`) | TC-004 |
 
 Fetch (`useCatalogFetch`) y componente (`CatalogSelect`) siguen la misma forma a propósito: una
-implementación genérica que no sabe si es categoría o comuna, y un wrapper de una línea por entidad. Es el
-mismo principio (T-003) aplicado dos veces, no dos decisiones distintas.
+implementación genérica que no sabe si es categoría o comuna, y un wrapper de una sola responsabilidad por
+entidad, sin lógica de interacción ni de fetch propia. Es el mismo principio (T-003) aplicado dos veces, no
+dos decisiones distintas.
 
 **La capa de queries (`server/utils/categorias.ts` / `comunas.ts`) queda afuera del patrón genérico +
 wrapper, a propósito.** Las dos funciones difieren en los nombres de columna que le pasan a Drizzle
@@ -79,7 +80,8 @@ bifurcación, y es deliberada: comparten `CatalogSelect` por composición, no po
 - **Salida:** `200 { categorias: { slug: string, nombre: string }[] }` — solo las `activa = true`, ordenadas
   alfabéticamente por `nombre`.
 - **Invariantes:** nunca incluye una fila con `activa = false`. Nunca incluye columnas internas (si el
-  schema suma alguna después, es privada por default — A-005).
+  schema suma alguna después, es privada por default — A-005). La respuesta se cachea en el servidor
+  hasta una hora (T-004) — un cambio de `activa` puede tardar hasta ese tiempo en reflejarse.
 - **Errores:** ninguno esperado con input inválido (no hay input). Una falla de conexión a la base
   propaga como `500` — no hay una condición de negocio que distinga un error "manejable" de una caída de
   infraestructura acá.
@@ -98,21 +100,31 @@ bifurcación, y es deliberada: comparten `CatalogSelect` por composición, no po
 ### TC-003 — `useCatalogFetch()`, compuesto por `useCategoriasCatalog()` / `useComunasCatalog()`
 
 Mismo problema que TC-004, un nivel más abajo: pedir un catálogo con cache y manejo de error es una sola
-lógica, no dos. `useCatalogFetch(key, endpoint)` la implementa una vez; `useCategoriasCatalog()` y
-`useComunasCatalog()` son una línea cada uno, solo fijando su `key` y su `endpoint` — igual que
+lógica, no dos. `useCatalogFetch(key, endpoint, normalize)` la implementa una vez; `useCategoriasCatalog()`
+y `useComunasCatalog()` son un wrapper de una sola responsabilidad cada uno, solo fijando su `key`, su
+`endpoint` y cómo traducir la respuesta del endpoint a la forma genérica — igual que
 `CategoriaSelect`/`ComunaSelect` respecto de `CatalogSelect`.
 
-- **Entrada de `useCatalogFetch(key, endpoint)`:** `key: string` (para `useAsyncData`), `endpoint: string`
-  (la ruta a pedir).
+- **Entrada de `useCatalogFetch(key, endpoint, normalize)`:** `key: string` (para `useAsyncData`),
+  `endpoint: string` (la ruta a pedir), `normalize: (data: T) => {value, label}[]` (traduce la respuesta
+  cruda del endpoint). El tercer parámetro es necesario porque `useCatalogFetch` no conoce la forma de esa
+  respuesta — no puede adivinar si el campo identificador se llama `slug` o `codigo` con solo `key` y
+  `endpoint`; eso quedó mal especificado en una versión anterior de este documento.
 - **Entrada de `useCategoriasCatalog()` / `useComunasCatalog()`:** ninguna — cada uno llama internamente a
-  `useCatalogFetch('categorias', '/api/categorias')` o `useCatalogFetch('comunas', '/api/comunas')`.
-- **Salida (las tres):** `{ items: Ref<{value: string, label: string}[]>, pending: Ref<boolean>, error: Ref<boolean>, refresh: () => void }`.
-  `useCatalogFetch` no sabe si el `value` es un `slug` o un `codigo` — normaliza la respuesta del endpoint
-  (`slug`/`nombre` o `codigo`/`nombre`) a esa forma genérica, que es la que espera `items` en `CatalogSelect`
-  (TC-004).
-- **Invariantes:** el fetch ocurre una sola vez por sesión de navegación — `useAsyncData` con una key fija
-  comparte el resultado entre todos los componentes que lo usen, así que abrir `CategoriaSelect` en dos
-  formularios distintos de la misma página no dispara dos requests.
+  `useCatalogFetch('categorias', '/api/categorias', normalize)` con el `normalize` que mapea
+  `{slug, nombre}` a `{value, label}` (o `{codigo, nombre}` en el caso de comunas).
+- **Salida (las tres):** `{ items: ComputedRef<{value: string, label: string}[]>, pending: Ref<boolean>, error: Ref<boolean>, refresh: () => void }`.
+- **Invariantes:** el fetch ocurre una sola vez por sesión de navegación, incluso si dos componentes montan
+  el mismo wrapper al mismo tiempo (ej. `CategoriaSelect` en dos formularios de la misma página). Esto
+  necesita **dos** opciones de `useAsyncData`, no solo una `key` compartida — verificado con un componente
+  que monta el mismo wrapper dos veces y cuenta las requests reales al endpoint:
+  - `getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]` — reusa datos
+    ya resueltos (ej. al volver a una página).
+  - `dedupe: 'defer'` — sin esto, dos llamadas con la misma `key` que ocurren casi al mismo tiempo (sin
+    `await` entre medio, que es como se usan los composables en la práctica) hacen que la segunda cancele
+    la primera y dispare su propia request: dos hits al servidor en vez de uno, aunque el resultado final
+    se vea igual reactivamente. El default de `useAsyncData` (`dedupe: 'cancel'`) no alcanza para este
+    caso.
 - **Errores:** `error` pasa a `true` si el fetch falla; no reintenta solo, expone `refresh()` para que
   `CatalogSelect` lo dispare desde el botón "Reintentar" (ver `experiencia.md`, modo error).
 - **Contrato de producto:** soporte de [D-004](./producto.md#d-004).
@@ -202,6 +214,7 @@ prueba.
 | UX-001 (nada hasta escribir) | unitario, contra `CatalogSelect` directo | Con el campo enfocado y vacío, la lista de opciones no se renderiza | Al escribir la primera letra, aparece |
 | `CategoriaSelect`/`ComunaSelect` componen bien | unitario | Cada wrapper le pasa a `CatalogSelect` los `items` de su propio composable | Un cambio en `CatalogSelect` (ej. un modo nuevo) no exige tocar los wrappers |
 | TR-001 (conteo del seed) | manual, una vez | `select count(*) from comunas` = 346 después del seed | — |
+| T-004 (caché) | manual, una vez contra el preview del PR | `curl` repetido a `/api/categorias` muestra `x-vercel-cache: HIT` la segunda vez — comportamiento documentado por Vercel, esto es confirmación, no una incertidumbre | — |
 
 ### Propiedades que deben probarse
 
@@ -216,7 +229,7 @@ prueba.
 | ----- | ------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------ | ---------- |
 | S-001 | Tablas `categorias` y `comunas` con RLS y seed completo        | D-001, D-002, TR-001 | `select count(*) from comunas` = 346; `select count(*) from categorias` = 8; Gran Santiago (32) + Puerto Varas activas en `comunas`, las 8 categorías activas | [#45](https://github.com/PatricioTabilo/datealo/issues/45) |
 | S-002 | Endpoints `GET /api/categorias` y `GET /api/comunas`            | TC-001, TC-002        | Cada endpoint devuelve solo filas `activa = true`, ordenadas por nombre               | [#46](https://github.com/PatricioTabilo/datealo/issues/46) |
-| S-003 | `useCatalogFetch()` y sus wrappers `useCategoriasCatalog()`/`useComunasCatalog()` | TC-003 | Montar dos componentes que usan el mismo wrapper en la misma página dispara un solo request; ninguno de los dos wrappers pasa de una línea | [#47](https://github.com/PatricioTabilo/datealo/issues/47) |
+| S-003 | `useCatalogFetch()` y sus wrappers `useCategoriasCatalog()`/`useComunasCatalog()` | TC-003 | Montar dos componentes que usan el mismo wrapper en la misma página dispara un solo request (verificado, requirió `dedupe: 'defer'` además de `getCachedData`); ningún wrapper tiene lógica de fetch propia | [#47](https://github.com/PatricioTabilo/datealo/issues/47) |
 | S-004 | Componente `CatalogSelect.vue` con los 6 modos de `experiencia.md` | TC-004, D-004, UXF-001, UX-001 | Test unitario (Vitest + Vue Test Utils) verifica los 6 modos y que nunca emite un valor fuera de `items` | [#48](https://github.com/PatricioTabilo/datealo/issues/48) |
 | S-005 | `CategoriaSelect.vue` y `ComunaSelect.vue`, componiendo `CatalogSelect` | TC-004 | Cada uno monta `CatalogSelect` pasándole su composable — cero lógica de interacción propia, verificable con un diff que no toca `CatalogSelect` | [#49](https://github.com/PatricioTabilo/datealo/issues/49) |
 
@@ -266,7 +279,7 @@ específico de categoría o comuna colado adentro.
 <a id="t-003"></a>
 
 ### T-003 — Categoría y comuna nunca tienen lógica duplicada entre archivos: una implementación genérica
-por capa, un wrapper de una línea por entidad
+por capa, un wrapper de una sola responsabilidad por entidad
 
 - **Estado:** aceptada. **Fecha:** 2026-08-18. **Aprobada por Patricio el:** 2026-08-18.
 - **Contratos:** D-004, [UX-001](./experiencia.md#ux-001-el-componente-no-muestra-nada-hasta-que-el-usuario-empieza-a-escribir).
@@ -291,6 +304,36 @@ por capa, un wrapper de una línea por entidad
 - **Reapertura:** si `CategoriaSelect`/`ComunaSelect` o sus composables necesitan alguna vez una regla que
   no aplique a la otra entidad — ahí la implementación compartida deja de ser una talla única y esta
   decisión se revisa.
+
+<a id="t-004"></a>
+
+### T-004 — `GET /api/categorias` y `GET /api/comunas` se cachean vía header HTTP, no vía caché de
+aplicación
+
+- **Estado:** aceptada. **Fecha:** 2026-08-18. **Aprobada por Patricio el:** 2026-08-18.
+- **Contratos:** TC-001, TC-002.
+- **Tensión:** el dedupe del lado del cliente (TC-003, `dedupe: 'defer'`) evita que una misma página pida
+  el catálogo dos veces, pero no evita que cada página nueva, de cada usuario, vuelva a pegarle a la base
+  — para un dato que casi no cambia (D-001/D-002: `activa` se toca a mano, rara vez), eso es costo sin
+  beneficio.
+- **Alternativas descartadas:** `defineCachedEventHandler` de Nitro (primera versión de esta decisión) —
+  memoiza la ejecución del handler, pero sobre funciones serverless (A-003, preset `vercel`) el storage por
+  default no garantiza compartirse entre instancias; es una caché que no se puede observar ni controlar
+  desde afuera. Redis/Vercel KV como store explícito — resuelve el problema de observabilidad, pero es
+  infraestructura nueva para un caso que no la necesita: nadie escribe estas tablas desde la app
+  (D-001/D-002, sin panel de admin), así que no hay ningún evento de escritura del que colgar una
+  invalidación inmediata — un TTL por tiempo es la única opción real exista o no Redis de por medio.
+- **Decisión y consecuencia:** `setResponseHeader(event, 'cache-control', 'public, s-maxage=3600, stale-while-revalidate=86400')`
+  en ambos handlers — el patrón exacto que documenta Vercel para cachear respuestas de Vercel Functions en
+  su CDN ([Caching Serverless Function Responses](https://vercel.com/docs/functions/serverless-functions/edge-caching)):
+  cualquier respuesta con `s-maxage` cachea, y su checklist de "qué hace cacheable una respuesta" (método
+  `GET`, sin `Authorization`, sin `set-cookie`, sin `private`/`no-cache`, bajo 10MB) la cumplen los dos
+  endpoints sin ajustes. No es una apuesta ni una caché de aplicación propia — es el mecanismo estándar que
+  Vercel expone para exactamente este caso. `x-vercel-cache: HIT` en la respuesta confirma que sirvió desde
+  el CDN (ver Estrategia de pruebas). Consecuencia aceptada: un cambio de `activa` en la base puede tardar
+  hasta una hora en reflejarse en lo que sirve el CDN — ya documentado como invariante en TC-001/TC-002.
+- **Reapertura:** si algún flujo necesita ver un cambio de `activa` reflejado al instante (hoy ninguno lo
+  necesita — los cambios son manuales y poco frecuentes).
 
 ## Preguntas
 
