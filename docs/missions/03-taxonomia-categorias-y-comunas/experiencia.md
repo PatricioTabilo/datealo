@@ -17,9 +17,11 @@ dónde se use.
 
 El modelo de interacción es un campo de búsqueda con autocompletado, al estilo del selector de comuna de
 Mercado Libre que mencionaste: se escribe, aparecen coincidencias del catálogo debajo, se elige una — nunca
-queda un valor sin elegir de la lista. En Nuxt UI (A-004) esto es `UInputMenu`, que ya trae el
-comportamiento de búsqueda resuelto — no hay que inventar la mecánica, solo especificar el contenido y las
-reglas.
+queda un valor sin elegir de la lista. El campo se comporta como un input de texto normal, tal cual el de
+Mercado Libre (medido sobre el sitio real): al elegir una opción su label queda como texto del campo, al
+volver a enfocarlo el cursor cae donde se hizo click sin autoseleccionar ni borrar nada, y la lista se abre
+al escribir — no al enfocar. La mecánica se construye en el componente y no sobre el combobox de Nuxt UI;
+el porqué está en [T-005](./ingenieria.md#t-005).
 
 - **Decisiones cubiertas:** [D-004](./producto.md#d-004) (categoría/comuna siempre son referencia al
   catálogo), [D-001](./producto.md#d-001) y [D-002](./producto.md#d-002) (qué contiene cada catálogo, el
@@ -107,6 +109,9 @@ hover queda visualmente distinta del resto de la lista.
   texto editable — no se borra a ciegas ni obliga a escribir desde cero.
 - El componente nunca ofrece "crear" una opción que no está en el catálogo — a diferencia de un combobox
   genérico que a veces agrega "crear '<texto>'", acá esa opción no existe, es la garantía de D-004.
+- Si el usuario sale del campo con texto escrito a medias y sin elegir nada, ese texto se descarta y vuelve
+  el label de lo que ya estaba seleccionado (o el campo queda vacío si no había nada). El campo nunca queda
+  mostrando algo que no está en el catálogo, aunque no se haya enviado el formulario todavía (D-004).
 - Una comuna con `activa = false` no aparece en absoluto en la lista — no se muestra deshabilitada ni con
   una nota, simplemente no está (ver [CL-004](./producto.md) de producto).
 
