@@ -141,21 +141,8 @@ Sin `console.log` de debug en el código que se mergea.
 **Naming**: archivos en kebab-case, componentes en PascalCase, composables `useAlgo`, constantes en
 SCREAMING_SNAKE_CASE, tipos en PascalCase, funciones en camelCase. Named exports sobre default exports.
 
-**Comentarios**: solo para reglas de negocio no obvias. El naming claro es la documentación por defecto.
-Autocontenidos: explican el porqué en la misma línea, sin obligar a abrir `docs/missions/` ni el skill
-`arquitectura` para entenderlos. Una referencia (`D-001`, `A-002`) puede acompañar como trazabilidad hacia
-la decisión completa, pero nunca reemplaza la explicación — si el documento se mueve, se reescribe o
-desaparece, el comentario tiene que seguir teniendo sentido solo.
-
-```ts
-// ❌ Obliga a ir a buscar D-002 para entender qué significa "activa"
-// Catálogo de referencia, cambia solo a mano (D-002).
-
-// ✅ Se entiende sin abrir nada más; D-002 queda como trazabilidad, no como la explicación
-// El campo `activa` se cambia a mano en la base, no desde la app — no hay panel de admin
-// todavía, así que no hay ningún evento de escritura del que colgar una invalidación de
-// caché al instante (D-002).
-```
+**Comentarios**: ver el skill `comentarios` — cuándo escribir uno, cómo evitar que se pudra, ejemplos
+reales de este repo. Es la fuente de verdad, no se repite acá.
 
 ## Umbrales de salud de archivos
 
@@ -233,6 +220,7 @@ Skills propios del repo en `.claude/skills/`:
 | `discovery-ux`            | Iterar `experiencia.md`: vistas, flujos, estados, mockups          |
 | `discovery-engineering`   | Iterar `ingenieria.md`: contratos, datos, slicing en issues        |
 | `vue-composition`         | Extraer componentes o composables; auditoría de salud de archivos  |
+| `comentarios`             | Antes de escribir o revisar cualquier comentario de código          |
 
 Skills de terceros pre-instalados en `.agents/skills/` (ver `skills-lock.json`): `nuxt`, `vue`,
 `drizzle-orm`, `frontend-design`, `ui-ux-pro-max`, `web-design-guidelines`, `marketing-psychology`,
