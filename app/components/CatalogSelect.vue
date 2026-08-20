@@ -40,9 +40,9 @@ const selectedLabel = computed(() => props.items.find(item => item.value === mod
 const searchTerm = ref(selectedLabel.value ?? '')
 
 const focused = ref(false)
-// Distingue "enfocado pero sin tocar nada" de "está buscando". La lista solo filtra cuando de verdad se
-// escribió algo — si no, reenfocar un campo ya elegido filtraría por su propio label y dejaría una lista
-// de un solo elemento, que no ayuda a cambiar de opción.
+// searchTerm ya arranca con el label elegido (ver más abajo) — sin hasTyped, matchesSearch usaría ese
+// texto para filtrar apenas focused se pone en true, mostrando una lista de un solo resultado en vez de
+// dejar cambiar de opción. hasTyped solo se prende con un keystroke real, en handleInput.
 const hasTyped = ref(false)
 
 // Mantiene el campo en sintonía cuando el valor cambia desde afuera (v-model seteado por el formulario,
@@ -66,9 +66,10 @@ function matchesSearch(item: CatalogOption) {
 
 const visibleItems = computed(() => props.items.filter(matchesSearch))
 
-// La lista se abre al escribir, no al enfocar — reenfocar un campo ya elegido no dispara nada, igual que
-// en Mercado Libre. Dos excepciones: `showAllOnFocus` (categorías) y el modo error, que si no se
-// mostrara apenas hay foco quedaría inalcanzable — el campo de solo lectura no deja escribir para verlo.
+// isOpen depende de hasTyped, no solo de focused: hacer click/tab en un campo con un valor ya elegido no
+// abre la lista, igual que en Mercado Libre — recién se abre cuando handleInput marca hasTyped en true.
+// Dos excepciones: showAllOnFocus (categorías) y el modo error, que si dependiera de hasTyped quedaría
+// inalcanzable — el campo es readonly cuando error es true, así que nunca dispara handleInput.
 const isOpen = computed(() => {
   if (!focused.value) return false
   if (props.error) return true
