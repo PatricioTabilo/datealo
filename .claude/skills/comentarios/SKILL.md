@@ -39,6 +39,10 @@ Un comentario largo casi nunca arregla un diseño confuso, solo lo documenta.
   no puede cargar solo — la razón, la restricción, el caso límite.
 - **Usa palabras distintas a las del nombre.** Si el comentario es la prop/función/variable traducida a
   prosa, no agrega información — es ruido con forma de explicación.
+- **Ancla en los identificadores reales, no en verbos sueltos.** "Reenfocar un campo" no es una acción que
+  exista en el código si lo que hay es un ref `focused` y una función `handleFocusIn` — nombralos. Un
+  comentario que parafrasea con palabras propias en vez de citar lo que el código realmente hace es más
+  difícil de verificar contra el código, y más fácil que quede mal descrito.
 - **No lo dupliques.** Si la misma razón ya está explicada donde vive el dato o la prop, no la repitas en
   cada lugar que la usa — una copia, no N que se pueden desincronizar.
 - **En positivo, nunca en negativo.** Qué hace, qué extiende, dónde vive la lógica relacionada — nunca "no
@@ -121,6 +125,29 @@ no `CategoriaOComunaSelect`), sus props sin nada de categoría ni comuna, y la e
 de cualquier extracción de componente, no un insight de esta decisión puntual.
 
 ✅ Sin comentario — la estructura de archivos ya lo dice.
+
+❌ Verbos sueltos que no corresponden a nada del código — encontrado en `CatalogSelect.vue`:
+
+```ts
+const focused = ref(false)
+// Distingue "enfocado pero sin tocar nada" de "está buscando". La lista solo filtra cuando de verdad se
+// escribió algo — si no, reenfocar un campo ya elegido filtraría por su propio label...
+const hasTyped = ref(false)
+```
+
+"Enfocar" y "reenfocar un campo" no son acciones que existan en el código — lo que hay es un ref
+`focused` y una función `handleInput`. Parafrasear con palabras propias en vez de citar lo que el código
+realmente hace es más difícil de verificar, y más fácil que quede mal descrito.
+
+✅ Ancla en los identificadores reales:
+
+```ts
+const focused = ref(false)
+// searchTerm ya arranca con el label elegido (ver más abajo) — sin hasTyped, matchesSearch usaría ese
+// texto para filtrar apenas focused se pone en true, mostrando una lista de un solo resultado en vez de
+// dejar cambiar de opción. hasTyped solo se prende con un keystroke real, en handleInput.
+const hasTyped = ref(false)
+```
 
 ## Al revisar un comentario existente
 
