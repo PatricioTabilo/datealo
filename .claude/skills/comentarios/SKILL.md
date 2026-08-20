@@ -21,6 +21,14 @@ que duplican el código o un hecho que cambia tienen valor negativo: ensucian y 
 de una decisión, una restricción no obvia, o un caso límite. Si lo único que hace es repetir en prosa lo
 que el nombre de la variable, función o prop ya dice, no suma nada — bórralo.
 
+**"Explica el porqué" no es un pase automático.** Un porqué puede seguir siendo redundante si ya se
+infiere de la estructura del archivo — su nombre, sus props, o la existencia de otros archivos que lo
+rodean. "Este componente es genérico para evitar lógica duplicada entre sus dos wrappers" es la
+justificación de manual para cualquier extracción de componente compartido — si el nombre del archivo, sus
+props sin nada específico de ningún caso de uso, y la existencia de esos wrappers ya cuentan esa historia,
+repetirla en prosa no agrega nada. Preguntá no solo "¿explica el porqué?" sino "¿ese porqué ya era
+inferible sin el comentario?".
+
 **Si te cuesta escribirlo en una o dos líneas claras, la señal no es "necesito un comentario más largo" —
 es que el código mismo es demasiado complicado y conviene simplificarlo primero** (Google eng-practices).
 Un comentario largo casi nunca arregla un diseño confuso, solo lo documenta.
@@ -97,6 +105,22 @@ resolvía ningún matiz que la frase no dijera ya.
 // slug es la clave primaria: ya es el identificador natural y estable de la categoría, no hace falta
 // inventar un uuid encima.
 ```
+
+❌ Porqué correcto en forma, pero redundante con lo que la estructura de archivos ya dice — encontrado en
+`CatalogSelect.vue`:
+
+```ts
+// CategoriaSelect y ComunaSelect necesitan exactamente el mismo comportamiento de selección — que viva
+// una sola vez acá, en vez de copiado en cada wrapper, evita que con el tiempo terminen comportándose
+// distinto sin que nadie lo note.
+```
+
+Pasa el test de "explica el porqué, no el qué" — y aun así sobra: el nombre del archivo (`CatalogSelect`,
+no `CategoriaOComunaSelect`), sus props sin nada de categoría ni comuna, y la existencia de
+`CategoriaSelect.vue`/`ComunaSelect.vue` ya cuentan que es un componente compartido. Es la razón esperable
+de cualquier extracción de componente, no un insight de esta decisión puntual.
+
+✅ Sin comentario — la estructura de archivos ya lo dice.
 
 ## Al revisar un comentario existente
 
