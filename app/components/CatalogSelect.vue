@@ -1,9 +1,4 @@
 <script setup lang="ts">
-// Única implementación de UXF-001 (docs/missions/03-taxonomia-categorias-y-comunas/experiencia.md):
-// los 6 modos del selector de catálogo. No sabe si trabaja con categorías o comunas — quien lo usa
-// (CategoriaSelect, ComunaSelect) le pasa los datos, el copy y `showAllOnFocus`. Nunca emite un valor
-// que no esté en `items`.
-//
 // No usa el modo combobox de UInputMenu: probado en un browser real, la combinación de items
 // controlados + selección interna de Reka UI no resolvía de forma confiable qué opción se había
 // clickeado, y a veces no abría la lista en absoluto. Es un `UInput` simple (input de texto, sin
@@ -22,9 +17,9 @@ const props = defineProps<{
   error: boolean
   placeholder: string
   errorMessage: string
-  // Con pocas opciones (categorías: 8) mostrar todo al enfocar no cuesta nada y ahorra un toque. Con
-  // muchas (comunas: 346, ~33 activas) esperar a que se escriba es el patrón de Mercado Libre que ya
-  // se validó — mostrar 33 opciones de entrada es más ruido que ayuda. UX-002 en experiencia.md.
+  // Catálogo chico (categorías): mostrar todo al enfocar no cuesta nada. Catálogo grande (comunas):
+  // esperar a que se escriba, el patrón ya validado de Mercado Libre — mostrar todas las opciones de
+  // entrada es más ruido que ayuda.
   showAllOnFocus?: boolean
 }>()
 
@@ -45,9 +40,9 @@ const selectedLabel = computed(() => props.items.find(item => item.value === mod
 const searchTerm = ref(selectedLabel.value ?? '')
 
 const focused = ref(false)
-// Distingue "enfocado pero sin tocar nada" de "está buscando". La lista solo filtra cuando de verdad se
-// escribió algo — si no, reenfocar un campo ya elegido filtraría por su propio label y dejaría una lista
-// de un solo elemento, que no ayuda a cambiar de opción.
+// searchTerm ya arranca con el label elegido (ver más abajo) — sin hasTyped, matchesSearch usaría ese
+// texto para filtrar apenas focused se pone en true, mostrando una lista de un solo resultado en vez de
+// dejar cambiar de opción. hasTyped solo se prende con un keystroke real, en handleInput.
 const hasTyped = ref(false)
 
 // Mantiene el campo en sintonía cuando el valor cambia desde afuera (v-model seteado por el formulario,
@@ -57,7 +52,6 @@ watch(selectedLabel, (label) => {
   if (!hasTyped.value) searchTerm.value = label ?? ''
 })
 
-// Sin distinguir mayúsculas ni tildes, como pide UXF-001 — "nunoa" tiene que encontrar "Ñuñoa".
 function normalize(value: string) {
   return value
     .normalize('NFD')
@@ -72,9 +66,10 @@ function matchesSearch(item: CatalogOption) {
 
 const visibleItems = computed(() => props.items.filter(matchesSearch))
 
-// La lista se abre al escribir, no al enfocar — reenfocar un campo ya elegido no dispara nada, igual que
-// en Mercado Libre. Dos excepciones: `showAllOnFocus` (categorías, UX-002) y el modo error, que si no se
-// mostrara apenas hay foco quedaría inalcanzable — el campo de solo lectura no deja escribir para verlo.
+// isOpen depende de hasTyped, no solo de focused: hacer click/tab en un campo con un valor ya elegido no
+// abre la lista, igual que en Mercado Libre — recién se abre cuando handleInput marca hasTyped en true.
+// Dos excepciones: showAllOnFocus (categorías) y el modo error, que si dependiera de hasTyped quedaría
+// inalcanzable — el campo es readonly cuando error es true, así que nunca dispara handleInput.
 const isOpen = computed(() => {
   if (!focused.value) return false
   if (props.error) return true
@@ -107,7 +102,7 @@ function handleFocusOut(event: FocusEvent) {
   focused.value = false
   hasTyped.value = false
   // Al salir sin elegir nada, el texto a medio escribir se descarta y vuelve el label elegido (o queda
-  // vacío): el campo nunca puede quedar mostrando algo que no está en el catálogo (D-004).
+  // vacío): el campo nunca puede quedar mostrando algo que no está en el catálogo.
   searchTerm.value = selectedLabel.value ?? ''
 }
 
