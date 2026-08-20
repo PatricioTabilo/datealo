@@ -11,7 +11,7 @@ export function useDb() {
     // donde cada invocación abriría su propia conexión contra Postgres directo). Ese modo no soporta
     // prepared statements, que Drizzle usa por defecto — sin prepare: false esto compila y solo falla
     // en runtime contra el pooler; en local, contra una base directa, funciona igual y esconde el bug
-    // hasta producción (A-003).
+    // hasta producción.
     const client = postgres(databaseUrl, { prepare: false })
     db = drizzle({ client, schema })
   }

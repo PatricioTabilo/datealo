@@ -1,9 +1,9 @@
 // Seed de categorias y comunas. Se corre una vez por entorno: `npm run db:seed:taxonomia`.
 //
 // Conexión directa (puerto 5432), no el pooler de la app (que usa el modo transacción de Supavisor,
-// sin prepared statements) — drizzle-kit necesita la conexión directa por el mismo motivo (A-003).
+// sin prepared statements) — drizzle-kit necesita la conexión directa por el mismo motivo.
 //
-// Las 8 categorías son las que Patricio aprobó como catálogo del lanzamiento (D-001): Gasfitería,
+// Las 8 categorías son las que Patricio aprobó como catálogo del lanzamiento: Gasfitería,
 // Electricidad, Peluquería, Limpieza, Mudanzas, Pintura, Cerrajería, Jardinería — ver el array
 // `categoriasSeed` más abajo para la lista exacta.
 //
@@ -14,9 +14,9 @@
 // Activas al sembrar: las 8 categorías, más el Gran Santiago (34 comunas: las 32 de la Provincia de
 // Santiago más Puente Alto y San Bernardo, los dos conurbados que quedan fuera de esa provincia pero
 // son parte del área urbana continua — la definición administrativa "Provincia de Santiago" no
-// alcanza sola, ver D-002) y Puerto Varas — los mercados donde Patricio puede reclutar y verificar
-// profesionales directamente al lanzamiento. El resto de las comunas queda en la tabla pero
-// inactivo, listo para activarse cambiando el campo sin necesitar otro deploy.
+// alcanza sola) y Puerto Varas — los mercados donde Patricio puede reclutar y verificar profesionales
+// directamente al lanzamiento. El resto de las comunas queda en la tabla pero inactivo, listo para
+// activarse cambiando el campo sin necesitar otro deploy.
 
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
