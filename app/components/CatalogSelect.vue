@@ -1,8 +1,8 @@
 <script setup lang="ts">
-// Única implementación de UXF-001 (docs/missions/03-taxonomia-categorias-y-comunas/experiencia.md):
-// los 6 modos del selector de catálogo. No sabe si trabaja con categorías o comunas — quien lo usa
-// (CategoriaSelect, ComunaSelect) le pasa los datos, el copy y `showAllOnFocus`. Nunca emite un valor
-// que no esté en `items`.
+// Única implementación de los 6 modos del selector de catálogo (cerrado, enfocado sin texto, con
+// coincidencias, sin coincidencias, cargando, error). No sabe si trabaja con categorías o comunas —
+// quien lo usa (CategoriaSelect, ComunaSelect) le pasa los datos, el copy y `showAllOnFocus`. Nunca
+// emite un valor que no esté en `items`.
 //
 // No usa el modo combobox de UInputMenu: probado en un browser real, la combinación de items
 // controlados + selección interna de Reka UI no resolvía de forma confiable qué opción se había
@@ -57,7 +57,7 @@ watch(selectedLabel, (label) => {
   if (!hasTyped.value) searchTerm.value = label ?? ''
 })
 
-// Sin distinguir mayúsculas ni tildes, como pide UXF-001 — "nunoa" tiene que encontrar "Ñuñoa".
+// Sin distinguir mayúsculas ni tildes — "nunoa" tiene que encontrar "Ñuñoa".
 function normalize(value: string) {
   return value
     .normalize('NFD')
