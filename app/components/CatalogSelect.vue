@@ -52,7 +52,6 @@ watch(selectedLabel, (label) => {
   if (!hasTyped.value) searchTerm.value = label ?? ''
 })
 
-// Sin distinguir mayúsculas ni tildes — "nunoa" tiene que encontrar "Ñuñoa".
 function normalize(value: string) {
   return value
     .normalize('NFD')
