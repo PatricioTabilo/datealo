@@ -1,8 +1,7 @@
 <script setup lang="ts">
-// Única implementación de los 6 modos del selector de catálogo (cerrado, enfocado sin texto, con
-// coincidencias, sin coincidencias, cargando, error). No sabe si trabaja con categorías o comunas —
-// quien lo usa (CategoriaSelect, ComunaSelect) le pasa los datos, el copy y `showAllOnFocus`. Nunca
-// emite un valor que no esté en `items`.
+// CategoriaSelect y ComunaSelect necesitan exactamente el mismo comportamiento de selección — que viva
+// una sola vez acá, en vez de copiado en cada wrapper, evita que con el tiempo terminen comportándose
+// distinto sin que nadie lo note.
 //
 // No usa el modo combobox de UInputMenu: probado en un browser real, la combinación de items
 // controlados + selección interna de Reka UI no resolvía de forma confiable qué opción se había
