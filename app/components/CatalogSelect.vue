@@ -24,7 +24,7 @@ const props = defineProps<{
   errorMessage: string
   // Catálogo chico (categorías): mostrar todo al enfocar no cuesta nada. Catálogo grande (comunas):
   // esperar a que se escriba, el patrón ya validado de Mercado Libre — mostrar todas las opciones de
-  // entrada es más ruido que ayuda. UX-002 en experiencia.md.
+  // entrada es más ruido que ayuda.
   showAllOnFocus?: boolean
 }>()
 
@@ -73,7 +73,7 @@ function matchesSearch(item: CatalogOption) {
 const visibleItems = computed(() => props.items.filter(matchesSearch))
 
 // La lista se abre al escribir, no al enfocar — reenfocar un campo ya elegido no dispara nada, igual que
-// en Mercado Libre. Dos excepciones: `showAllOnFocus` (categorías, UX-002) y el modo error, que si no se
+// en Mercado Libre. Dos excepciones: `showAllOnFocus` (categorías) y el modo error, que si no se
 // mostrara apenas hay foco quedaría inalcanzable — el campo de solo lectura no deja escribir para verlo.
 const isOpen = computed(() => {
   if (!focused.value) return false
@@ -107,7 +107,7 @@ function handleFocusOut(event: FocusEvent) {
   focused.value = false
   hasTyped.value = false
   // Al salir sin elegir nada, el texto a medio escribir se descarta y vuelve el label elegido (o queda
-  // vacío): el campo nunca puede quedar mostrando algo que no está en el catálogo (D-004).
+  // vacío): el campo nunca puede quedar mostrando algo que no está en el catálogo.
   searchTerm.value = selectedLabel.value ?? ''
 }
 
