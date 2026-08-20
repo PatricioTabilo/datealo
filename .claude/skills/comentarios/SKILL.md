@@ -1,6 +1,6 @@
 ---
 name: comentarios
-description: Cuándo escribir un comentario de código en Datealo y cómo no dejarlo pudrirse — evita comentarios que restan el porqué a favor del qué, negativos ("no hace X"), duplicados entre archivos, con números que se desactualizan, o que citan una decisión (D-001, T-003, UX-002) sin explicar nada en la misma línea. Usar antes de escribir cualquier comentario nuevo, o al revisar si uno existente debería reescribirse o borrarse.
+description: Cuándo escribir un comentario de código en Datealo y cómo no dejarlo pudrirse — evita comentarios que restan el porqué a favor del qué, negativos ("no hace X"), duplicados entre archivos, con números que se desactualizan, o que citan un ID de decisión (D-001, T-003, UX-002) en vez de explicar. Usar antes de escribir cualquier comentario nuevo, o al revisar si uno existente debería reescribirse o borrarse.
 ---
 
 # Comentarios en Datealo
@@ -38,10 +38,11 @@ Un comentario largo casi nunca arregla un diseño confuso, solo lo documenta.
 - **Sin números ni hechos que se pudren solos.** Si el valor puede cambiar sin que el comentario se
   entere, no lo hardcodees — describí la forma cualitativa ("catálogo chico" vs. "catálogo grande"), el
   valor exacto vive en el código o los datos.
-- **Una referencia a una decisión (D-001, T-003, UX-002) acompaña, nunca reemplaza.** Si al sacar la cita
-  el comentario deja de tener sentido, todavía no estaba explicando nada.
+- **Nunca cites un ID de decisión (D-001, T-003, UX-002).** Si la explicación no se sostiene sola sin la
+  cita, todavía no explica nada — y si se sostiene sola, la cita no agrega nada. Trazabilidad hacia la
+  decisión completa se resuelve con `git blame` o los docs de la misión, no desde el comentario.
 
-## Ejemplo real de este repo
+## Ejemplos reales de este repo
 
 ❌ Cita sin explicar — encontrado en `server/db/seed/taxonomia.ts` antes de corregirse:
 
@@ -51,11 +52,11 @@ Un comentario largo casi nunca arregla un diseño confuso, solo lo documenta.
 
 Obliga a ir a buscar D-002 para entender qué significa que el catálogo "cambie a mano".
 
-✅ La razón vive en la línea, D-002 queda como trazabilidad:
+✅ La razón vive en la línea, sin cita:
 
 ```ts
 // El campo `activa` se cambia a mano en la base, no desde la app — no hay panel de admin todavía, así
-// que no hay ningún evento de escritura del que colgar una invalidación de caché al instante (D-002).
+// que no hay ningún evento de escritura del que colgar una invalidación de caché al instante.
 ```
 
 ❌ Negativo + duplicado + con un número que ya estaba mal el día que se escribió — encontrado en
@@ -69,12 +70,32 @@ Obliga a ir a buscar D-002 para entender qué significa que el catálogo "cambie
 ```
 
 ✅ Cero comentario en el wrapper — el prop `show-all-on-focus="true"` ya es el hecho, y la razón vive una
-sola vez donde la prop se declara (`CatalogSelect.vue`), sin número exacto:
+sola vez donde la prop se declara (`CatalogSelect.vue`), sin número exacto ni cita:
 
 ```ts
 // Catálogo chico (categorías): mostrar todo al enfocar no cuesta nada. Catálogo grande (comunas): esperar
 // a que se escriba, el patrón ya validado de Mercado Libre — mostrar todas las opciones de entrada es
-// más ruido que ayuda. UX-002 en experiencia.md.
+// más ruido que ayuda.
+```
+
+❌ Explicación completa pero con relleno y una cita que no agregaba nada — encontrado en
+`server/db/schema/categorias.ts`:
+
+```ts
+// slug es la clave primaria en vez de un uuid autogenerado: el catálogo es fijo y chico (8 filas), y
+// el slug ya es único y estable por definición — un id sin significado encima solo obligaría a un
+// join o un mapeo extra en cada lugar que ya conoce el nombre (T-001).
+```
+
+Tres problemas: "(8 filas)" es un número que se pudre (D-001 dice explícitamente que sumar categorías
+después es esperado), "fijo y chico" y "por definición" son relleno que no agrega razón, y T-001 no
+resolvía ningún matiz que la frase no dijera ya.
+
+✅ La razón real en una frase, sin relleno ni cita:
+
+```ts
+// slug es la clave primaria: ya es el identificador natural y estable de la categoría, no hace falta
+// inventar un uuid encima.
 ```
 
 ## Al revisar un comentario existente
