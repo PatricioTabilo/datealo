@@ -2,9 +2,9 @@
 
 **Tipo:** producto. **Abierta el** 2026-08-13. **Nace de:** ninguna.
 
-**Estado de la misión:** lista para construir
+**Estado de la misión:** cerrada 2026-08-20
 
-**Última actualización:** 2026-08-18
+**Última actualización:** 2026-08-20
 
 Segunda de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
 [misión 02](../02-base-de-datos-y-auth/), ya cerrada, para poder guardar algo.
@@ -16,13 +16,17 @@ Segunda de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar)
 | Experiencia   | vigente | aprobado por Patricio el 2026-08-18 — componente `ComunaSelect`/`CategoriaSelect` (UXF-001), 6 modos con mockup |
 | Ingeniería    | vigente | aprobado por Patricio el 2026-08-18 — T-001 a T-003 aceptadas, plan de construcción S-001 a S-005 |
 
-Issues abiertos: [#45](https://github.com/PatricioTabilo/datealo/issues/45) (S-001, tablas + RLS + seed),
+Issues cerrados: [#45](https://github.com/PatricioTabilo/datealo/issues/45) (S-001, tablas + RLS + seed),
 [#46](https://github.com/PatricioTabilo/datealo/issues/46) (S-002, endpoints),
 [#47](https://github.com/PatricioTabilo/datealo/issues/47) (S-003, composables),
 [#48](https://github.com/PatricioTabilo/datealo/issues/48) (S-004, `CatalogSelect`),
 [#49](https://github.com/PatricioTabilo/datealo/issues/49) (S-005, `CategoriaSelect`/`ComunaSelect`).
+También corregido en el camino: [#55](https://github.com/PatricioTabilo/datealo/issues/55) (Puente Alto y
+San Bernardo activados en el catálogo de comunas).
 
-**Próximo hito:** empezar S-001 (#45) — sin fecha límite todavía.
+Plan de construcción completo — las 346 comunas y 8 categorías existen desde el día uno (D-002), Gran
+Santiago y Puerto Varas activos, y el componente de selección (`CategoriaSelect`, `ComunaSelect`) listo
+para que lo importen las misiones 04 y 06.
 
 ## Brief
 
