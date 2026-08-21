@@ -31,8 +31,8 @@ te encuentran" ([E-001](#e-001)).
   dejó esto explícitamente abierto para esta misión (TQ-002, [E-003](#e-003)).
 - ¿Un perfil recién creado, sin fotos ni reseñas, aparece visible en el buscador (misión 06) o queda oculto
   hasta tener algo que mostrar? Afecta directo el arranque en frío del lado profesional.
-- ¿"Verificado" bloquea la visibilidad del perfil, o es una insignia que se agrega después sin esconder el
-  perfil mientras tanto?
+- ¿"Verificado" bloquea la visibilidad del perfil, o el perfil queda visible igual mientras se espera? Y
+  cómo se muestra esa diferencia — es una decisión de `experiencia.md`, no de este documento.
 
 ## Evidencia
 
@@ -41,7 +41,7 @@ te encuentran" ([E-001](#e-001)).
 | E-001 | código      | `app/constants/landing.ts`, `LandingForProfessionals.vue` | La landing ya promete al profesional: perfil público con fotos, reseñas, contacto directo de clientes de su zona, registro "gratis, menos de 1 minuto" | Es copy de marketing para captar la lista de espera, no una decisión de producto — compromete expectativa, no diseño |
 | E-002 | decisión interna | [D-002 de misión 03](../03-taxonomia-categorias-y-comunas/producto.md#d-002) | Al lanzamiento, Patricio recluta y verifica profesionales directamente en Gran Santiago y Puerto Varas — no hay panel de administración ni proceso automático | Es la decisión que ya se tomó para el catálogo de comunas, no una decisión propia de esta misión, pero fija el techo de qué automatización tiene sentido pedir acá |
 | E-003 | decisión interna | [TQ-002 de misión 02](../02-base-de-datos-y-auth/ingenieria.md) | El método de autenticación del profesional (email/password, magic link, OTP) quedó explícitamente sin resolver, delegado a esta misión | No es evidencia de qué elegir, es la confirmación de que esta misión tiene que decidirlo |
-| E-004 | benchmark   | [Thumbtack — requisitos para pros](https://www.everlance.com/gig-guides/thumbtack-requirements) | El registro pide email, zona de servicio y categorías de servicio; identidad y background check son opcionales (dan una insignia, no bloquean el registro) | Thumbtack ya tiene volumen y un sistema de matching por lead pagado — su modelo de monetización no aplica a Datealo, pero el patrón de "registro instantáneo, verificación opcional" sí es comparable |
+| E-004 | benchmark   | [Thumbtack — requisitos para pros](https://www.everlance.com/gig-guides/thumbtack-requirements) | El registro pide email, zona de servicio y categorías de servicio; identidad y background check son opcionales y no bloquean el registro (Thumbtack los premia con una insignia visual en el perfil) | Thumbtack ya tiene volumen y un sistema de matching por lead pagado — su modelo de monetización no aplica a Datealo. El patrón "registro instantáneo, verificación opcional" sí es comparable; la insignia visual es un detalle de UI de Thumbtack, no una decisión de Datealo — no se importa solo por aparecer acá |
 | E-005 | benchmark   | [TaskRabbit — requisitos para Tasker](https://support.taskrabbit.com/hc/en-us/articles/204411070-What-s-Required-to-Become-a-Tasker) | El registro exige background check obligatorio, una tarifa de USD 25, y toma alrededor de 4 días hábiles antes de poder trabajar | Es el extremo opuesto a Thumbtack: alta fricción de entrada a cambio de confianza pre-verificada. TaskRabbit opera con un volumen de aplicantes que puede permitirse filtrar así; Datealo con cero profesionales no |
 | E-006 | producto (CLAUDE.md) | Sección "Tipos de usuario" de `CLAUDE.md` | El profesional "no es un usuario técnico y gestiona su perfil entre trabajos, también desde el celular" | Es una caracterización ya asumida por el proyecto, no dato de una entrevista real — confianza del hecho en sí es alta (es cómo se diseñó todo lo demás), pero no está validada con un profesional real todavía |
 
@@ -71,8 +71,8 @@ categoría, comuna, fotos y precio — es una promesa de marketing escrita antes
   Thumbtack (registro inmediato, verificación opcional y posterior) es el comparable correcto, no el de
   TaskRabbit.
 - **Implicación:** el formulario de registro no debe bloquearse esperando una verificación de nadie. Un
-  perfil se crea y publica de inmediato; lo que se agregue después (insignia de verificado) es una capa
-  encima, no una condición para existir.
+  perfil se crea y publica de inmediato; que después Patricio lo marque como verificado es un cambio de
+  estado que se agrega encima, no una condición para existir.
 - **Confianza:** alta — está sostenido por la promesa ya publicada en la landing (E-001) y por el filtro de
   arranque en frío del skill `discovery-product`, no solo por benchmark.
 
@@ -129,9 +129,10 @@ Don Héctor abre datealo.cl desde su celular un domingo en la tarde. Toca "Soy p
 email y recibe un enlace mágico — no tiene que inventar ni recordar ninguna contraseña. Elige "Electricidad"
 de la lista de categorías (la misma que ya existe para búsqueda) y "Ñuñoa" de la lista de comunas. Sube tres
 fotos de trabajos que ya tiene en el celular y escribe un rango de precio orientativo. Su perfil queda
-publicado de inmediato — sin insignia de verificado todavía, pero visible para cualquiera que busque
-"electricista" en Ñuñoa. Unos días después, Patricio lo llama, confirma que es real y le agrega la insignia
-de verificado a mano, sin que don Héctor tenga que hacer nada más.
+publicado de inmediato — todavía sin marcar como verificado, pero visible para cualquiera que busque
+"electricista" en Ñuñoa. Unos días después, Patricio lo llama, confirma que es real y cambia ese estado a
+mano, sin que don Héctor tenga que hacer nada más. Cómo se ve esa diferencia en el perfil (un texto, un
+ícono, nada visible todavía) es una decisión de `experiencia.md`, no de esta investigación.
 
 ### Capacidades del ideal
 
@@ -144,7 +145,7 @@ de verificado a mano, sin que don Héctor tenga que hacer nada más.
 
 ### El ideal no significa que cualquier perfil sea igual de confiable
 
-- Un perfil sin insignia de verificado sigue siendo público — "sin verificar" no es lo mismo que "oculto".
+- Un perfil sin verificar sigue siendo público — "sin verificar" no es lo mismo que "oculto".
   Quien busca decide con esa información a la vista, no Datealo por él.
 - El ideal no incluye un proceso de verificación automatizado (background check, validación de RUT) — eso
   es explícitamente lo que C-002 descarta para esta etapa del producto.
