@@ -4,7 +4,7 @@
 
 **Estado de la misión:** exploración
 
-**Última actualización:** 2026-08-13
+**Última actualización:** 2026-08-20
 
 Tercera de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
 [misión 02](../02-base-de-datos-y-auth/) (login del profesional, y el `sendEmail()` que esta misión usa
@@ -13,12 +13,12 @@ qué categorías y comunas se registra).
 
 | Documento     | Estado    | Qué falta para su gate              |
 | ------------- | --------- | ------------------------------------ |
-| Investigación | pendiente | discovery completo — hoy solo existe la carpeta |
-| Producto      | pendiente | —                                     |
+| Investigación | activo    | situación y consecuencia concretas, 4 conclusiones (C-001 a C-004) con confianza alta/media, ideal con capacidades observables — se acumula, no bloquea |
+| Producto      | pendiente | escribir `producto.md` a partir de las conclusiones de investigación |
 | Experiencia   | pendiente | —                                     |
 | Ingeniería    | pendiente | —                                     |
 
-**Próximo hito:** ninguno todavía — esta misión no se ha empezado a trabajar.
+**Próximo hito:** escribir `producto.md` — sin fecha límite todavía.
 
 ## Brief
 
