@@ -2,7 +2,7 @@
 
 **Estado:** activo
 
-**Última actualización:** 2026-08-20
+**Última actualización:** 2026-08-22
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -43,6 +43,7 @@ te encuentran" ([E-001](#e-001)).
 | E-004 | benchmark   | [Thumbtack — requisitos para pros](https://www.everlance.com/gig-guides/thumbtack-requirements) | El registro pide email, zona de servicio y categorías de servicio; identidad y background check son opcionales y no bloquean el registro (Thumbtack los premia con una insignia visual en el perfil) | Thumbtack ya tiene volumen y un sistema de matching por lead pagado — su modelo de monetización no aplica a Datealo. El patrón "registro instantáneo, verificación opcional" sí es comparable; la insignia visual es un detalle de UI de Thumbtack, no una decisión de Datealo — no se importa solo por aparecer acá |
 | E-005 | benchmark   | [TaskRabbit — requisitos para Tasker](https://support.taskrabbit.com/hc/en-us/articles/204411070-What-s-Required-to-Become-a-Tasker) | El registro exige background check obligatorio, una tarifa de USD 25, y toma alrededor de 4 días hábiles antes de poder trabajar | Es el extremo opuesto a Thumbtack: alta fricción de entrada a cambio de confianza pre-verificada. TaskRabbit opera con un volumen de aplicantes que puede permitirse filtrar así; Datealo con cero profesionales no |
 | E-006 | producto (CLAUDE.md) | Sección "Tipos de usuario" de `CLAUDE.md` | El profesional "no es un usuario técnico y gestiona su perfil entre trabajos, también desde el celular" | Es una caracterización ya asumida por el proyecto, no dato de una entrevista real — confianza del hecho en sí es alta (es cómo se diseñó todo lo demás), pero no está validada con un profesional real todavía |
+| E-007 | benchmark   | [What Do I Need To Know About Changes To Categories (TaskRabbit Support)](https://support.taskrabbit.com/hc/en-us/articles/12874675233933-What-Do-I-Need-To-Know-About-The-Recent-Changes-To-Categories) | Cuando un Tasker cambia de categoría, sus reseñas, historial de trabajos, desempeño y estado Elite se mantienen — no se pierden ni se reinician | Confirma que la reputación en TaskRabbit vive en la persona, no en la combinación categoría+perfil con la que se registró — Datealo hoy no tiene reseñas (misión 07 postergada), así que el riesgo que esto resuelve todavía no existe en la práctica, pero informa cómo diseñar para cuando exista |
 
 <a id="e-001"></a>
 
@@ -125,6 +126,23 @@ categoría, comuna, fotos y precio — es una promesa de marketing escrita antes
 - **Confianza:** media — el razonamiento es sólido, pero no hay ninguna entrevista real con un profesional
   chileno que confirme que una contraseña es, en la práctica, la fricción que se asume que es.
 
+<a id="c-005"></a>
+
+### C-005 — Editar los campos del registro no arriesga perder reputación acumulada
+
+- **Sustento:** [E-007](#e-007).
+- **Razonamiento:** la duda concreta era si dejar que don Héctor cambie categoría, comuna, nombre o
+  contacto después de registrado podía "perder" algo — reseñas, antigüedad, historial. TaskRabbit ya
+  resolvió exactamente esa duda en un producto con reseñas reales: cuando un Tasker cambia de categoría,
+  nada de eso se reinicia, porque la reputación es de la persona. Datealo hoy no tiene reseñas (misión 07
+  postergada), así que el riesgo es todavía más chico de lo que era para TaskRabbit — no hay nada que
+  perder en la práctica, pero tampoco hace falta inventar una regla nueva para cuando sí lo haya.
+- **Implicación:** el registro de un profesional no debería tratarse como inmutable después de creado. Los
+  4 campos de F-001 (categoría, comuna, contacto, nombre) — no solo fotos y precio de F-002 — son
+  candidatos a poder editarse, sin que eso reinicie ni oculte nada que se acumule a futuro.
+- **Confianza:** media — la evidencia es de otro producto con más escala y con reseñas reales, que Datealo
+  hoy no tiene; el razonamiento se sostiene, pero no hay validación propia todavía.
+
 ## El ideal: cualquier profesional se registra y aparece en el buscador en el acto
 
 ### El resultado ideal se ve así
@@ -134,7 +152,9 @@ email y recibe un enlace mágico — no tiene que inventar ni recordar ninguna c
 de la lista de categorías (la misma que ya existe para búsqueda) y "Ñuñoa" de la lista de comunas. Sube tres
 fotos de trabajos que ya tiene en el celular y escribe un rango de precio orientativo. Termina su registro
 en menos de dos minutos, y su perfil queda activo de inmediato — nadie lo revisa antes: si alguien busca
-"electricista" en Ñuñoa esa misma tarde, don Héctor ya aparece.
+"electricista" en Ñuñoa esa misma tarde, don Héctor ya aparece. Meses después se muda a Providencia y
+empieza a hacer también gasfitería — entra a su perfil y cambia comuna y categoría él mismo, sin perder
+nada de lo que ya acumuló.
 
 ### Capacidades del ideal
 
@@ -144,6 +164,7 @@ en menos de dos minutos, y su perfil queda activo de inmediato — nadie lo revi
 | Activación automática             | El perfil nace `activa = true`, sin que Patricio intervenga | El perfil es buscable apenas se completa el registro | [C-002](#c-002)              |
 | Categoría y comuna del catálogo   | El profesional elige de una lista cerrada, no escribe texto libre | El perfil queda indexado exactamente igual que espera el buscador (misión 06) | [C-003](#c-003)              |
 | Autenticación sin contraseña      | El profesional entra con un enlace o código, no una contraseña | Menos pasos entre "quiero registrarme" y "mi perfil existe" | [C-004](#c-004)              |
+| Editar el registro después de creado | El profesional cambia categoría, comuna, nombre o contacto cuando su situación cambia | Nada de lo acumulado (reseñas, antigüedad) se pierde ni se reinicia | [C-005](#c-005)              |
 
 ### El ideal no significa que cualquier perfil sea igual de confiable
 
@@ -162,3 +183,5 @@ en menos de dos minutos, y su perfil queda activo de inmediato — nadie lo revi
   usado en E-004 para el patrón de registro instantáneo con verificación opcional.
 - [What's Required to Become a Tasker (TaskRabbit Support)](https://support.taskrabbit.com/hc/en-us/articles/204411070-What-s-Required-to-Become-a-Tasker):
   usado en E-005 para el costo de un registro con aprobación obligatoria.
+- [What Do I Need To Know About Changes To Categories (TaskRabbit Support)](https://support.taskrabbit.com/hc/en-us/articles/12874675233933-What-Do-I-Need-To-Know-About-The-Recent-Changes-To-Categories):
+  usado en E-007 para confirmar que la reputación no se pierde al cambiar de categoría.
