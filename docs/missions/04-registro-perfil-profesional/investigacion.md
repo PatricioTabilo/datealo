@@ -44,6 +44,7 @@ te encuentran" ([E-001](#e-001)).
 | E-005 | benchmark   | [TaskRabbit — requisitos para Tasker](https://support.taskrabbit.com/hc/en-us/articles/204411070-What-s-Required-to-Become-a-Tasker) | El registro exige background check obligatorio, una tarifa de USD 25, y toma alrededor de 4 días hábiles antes de poder trabajar | Es el extremo opuesto a Thumbtack: alta fricción de entrada a cambio de confianza pre-verificada. TaskRabbit opera con un volumen de aplicantes que puede permitirse filtrar así; Datealo con cero profesionales no |
 | E-006 | producto (CLAUDE.md) | Sección "Tipos de usuario" de `CLAUDE.md` | El profesional "no es un usuario técnico y gestiona su perfil entre trabajos, también desde el celular" | Es una caracterización ya asumida por el proyecto, no dato de una entrevista real — confianza del hecho en sí es alta (es cómo se diseñó todo lo demás), pero no está validada con un profesional real todavía |
 | E-007 | benchmark   | [What Do I Need To Know About Changes To Categories (TaskRabbit Support)](https://support.taskrabbit.com/hc/en-us/articles/12874675233933-What-Do-I-Need-To-Know-About-The-Recent-Changes-To-Categories) | Cuando un Tasker cambia de categoría, sus reseñas, historial de trabajos, desempeño y estado Elite se mantienen — no se pierden ni se reinician | Confirma que la reputación en TaskRabbit vive en la persona, no en la combinación categoría+perfil con la que se registró — Datealo hoy no tiene reseñas (misión 07 postergada), así que el riesgo que esto resuelve todavía no existe en la práctica, pero informa cómo diseñar para cuando exista |
+| E-008 | benchmark   | [Login Success Rates: Passkeys vs OTP vs Magic Links vs Passwords (MojoAuth)](https://mojoauth.com/blog/login-success-rates-passkeys-otp-magic-links-passwords) | Estudios de productos SaaS reportan 22-38% más finalización de registro al sacar la contraseña del formulario; SMS OTP mide solo entrega (85-98%), no login exitoso | La fuente es un vendedor de autenticación sin contraseña — sesgo de marketing directo, la propia nota dice "no hay tasa de éxito publicada e independiente para enlace mágico entre industrias, cualquier número exacto merece sospecha". La fuente también nombra un riesgo real no cuantificado: deliverability del correo (spam, demora) para un remitente nuevo sin reputación de envío — exactamente la situación de Datealo con Resend |
 
 <a id="e-001"></a>
 
@@ -114,17 +115,23 @@ categoría, comuna, fotos y precio — es una promesa de marketing escrita antes
 
 ### C-004 — El método de autenticación debe minimizar pasos y fricción para un usuario no técnico en el celular
 
-- **Sustento:** [E-003](#e-003), [E-006](#e-006).
+- **Sustento:** [E-003](#e-003), [E-006](#e-006), [E-008](#e-008).
 - **Razonamiento:** un profesional no técnico, gestionando su perfil entre trabajos desde el celular
   (E-006), es exactamente el perfil de usuario que más sufre un flujo de contraseña (crearla, recordarla,
   recuperarla). El benchmark de TaskRabbit (E-005) muestra el costo de un registro con pasos extra: aunque
   ahí el paso extra es un background check y no una contraseña, el principio es el mismo — cada paso
-  adicional es una oportunidad de abandono antes de tener un solo profesional registrado.
+  adicional es una oportunidad de abandono antes de tener un solo profesional registrado. E-008 confirma la
+  dirección con datos (22-38% más finalización sin contraseña), aunque son datos de un vendedor de
+  autenticación sin contraseña, no investigación neutral — hay que leerlos con esa sospecha.
 - **Implicación:** magic link u OTP son candidatos más fuertes que email/password para el método de
   autenticación (TQ-002), pero cuál de los dos exactos no se resuelve acá — es una decisión técnica que le
-  corresponde a `producto.md`/`ingenieria.md` de esta misión, no a la investigación.
-- **Confianza:** media — el razonamiento es sólido, pero no hay ninguna entrevista real con un profesional
-  chileno que confirme que una contraseña es, en la práctica, la fricción que se asume que es.
+  corresponde a `producto.md`/`ingenieria.md` de esta misión, no a la investigación. E-008 también señala un
+  riesgo real y propio de Datealo si se elige un enlace por correo: sin reputación de envío (dominio
+  nuevo, Resend recién configurado en misión 02), el correo puede demorar o caer en spam — el mismo
+  problema que se quería evitar con la contraseña, pero por otra vía.
+- **Confianza:** media — el razonamiento es sólido y ahora tiene datos que lo acompañan, pero la fuente de
+  esos datos tiene sesgo de vendedor y no hay ninguna entrevista real con un profesional chileno que
+  confirme que una contraseña es, en la práctica, la fricción que se asume que es.
 
 <a id="c-005"></a>
 
@@ -185,3 +192,5 @@ nada de lo que ya acumuló.
   usado en E-005 para el costo de un registro con aprobación obligatoria.
 - [What Do I Need To Know About Changes To Categories (TaskRabbit Support)](https://support.taskrabbit.com/hc/en-us/articles/12874675233933-What-Do-I-Need-To-Know-About-The-Recent-Changes-To-Categories):
   usado en E-007 para confirmar que la reputación no se pierde al cambiar de categoría.
+- [Login Success Rates: Passkeys vs OTP vs Magic Links vs Passwords (MojoAuth)](https://mojoauth.com/blog/login-success-rates-passkeys-otp-magic-links-passwords):
+  usado en E-008 para la tasa de conversión de enlace mágico vs contraseña, con su sesgo de vendedor.
