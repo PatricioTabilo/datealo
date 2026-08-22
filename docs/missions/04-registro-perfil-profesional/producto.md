@@ -229,20 +229,24 @@ público.
 ### D-001 — La autenticación del profesional es sin contraseña, con enlace mágico por correo
 
 - **Estado:** aceptada. **Fecha:** 2026-08-22.
-- **Sustento:** [C-004](./investigacion.md#c-004) — datos reales de conversión (E-008: 22-38% más
-  finalización de registro sin contraseña, con sesgo de vendedor), confirmación de que WhatsApp OTP exige
-  Twilio específicamente en Supabase Auth (ningún otro proveedor lo soporta), y mitigación documentada del
-  riesgo de deliverability (E-009).
-- **Tensión:** OTP por teléfono también evita la contraseña y es más común en Chile para trámites, pero
-  exige contratar Twilio — proveedor que Datealo no tiene y que Supabase Auth exige específicamente para
-  WhatsApp (ningún otro de sus proveedores soportados lo ofrece). Email con enlace mágico usa el SMTP de
-  Supabase Auth que misión 02 ya dejó configurado (Resend), sin infraestructura nueva — pero tiene su
-  propio riesgo: sin reputación de envío (dominio nuevo), el correo puede demorar o caer en spam.
-- **Alternativas descartadas:** email/password — un profesional no técnico gestionando su perfil entre
-  trabajos (E-006 de investigación) es justo el usuario que más abandona en el paso de "crear una
-  contraseña segura" o "la olvidé, recupérala". OTP por SMS/WhatsApp — mejor UX percibida en Chile, pero
-  exige contratar Twilio específicamente (no cualquier proveedor de SMS) solo para esto; queda como
-  candidato para reabrir la decisión si Datealo contrata Twilio por otra razón, no descartado por mérito.
+- **Sustento:** [C-004](./investigacion.md#c-004) — la evidencia no apunta a un solo ganador (ver Tensión),
+  la decisión final la tomó Patricio con el cuadro completo, no algo que investigación cerrara sola.
+- **Tensión:** los dos exponentes reales que se revisaron no hacen lo mismo entre sí. Mercado Libre (E-011
+  de investigación) — el propio benchmark de confianza LATAM de este proyecto — usa contraseña como método
+  principal, no algo sin contraseña; pero maneja plata (Mercado Pago), otra escala de riesgo que la de un
+  perfil público de Datealo. WhatsApp (E-012) — la app que don Héctor ya usa a diario para su negocio —
+  prueba a escala masiva que número de teléfono + código funciona sin contraseña en exactamente este
+  público, pero exige contratar Twilio (único proveedor de WhatsApp en Supabase Auth) — costo de
+  infraestructura real, no hipotético. El enlace mágico por correo no tiene un precedente de escala tan
+  directo como ninguno de los dos — solo datos de un vendedor de autenticación (E-008) — pero no exige
+  contratar nada nuevo, reusa el Resend que misión 02 ya configuró.
+- **Alternativas descartadas:** email/password (como Mercado Libre) — un profesional no técnico gestionando
+  su perfil entre trabajos (E-006) es justo el usuario que más abandona creando y recordando una
+  contraseña; se prioriza esa fricción sobre replicar el patrón de Mercado Libre, que resuelve un problema
+  de seguridad (proteger plata) que Datealo no tiene. OTP por SMS/WhatsApp (como WhatsApp mismo) — el
+  precedente más parecido al público de Datealo de los tres, descartado igual por el costo real de
+  contratar Twilio antes de tener un solo profesional registrado, no por dudas sobre si funcionaría — queda
+  como el candidato más fuerte para reabrir esta decisión, no descartado por mérito.
 - **Decisión y consecuencia:** el profesional entra con su email; Supabase Auth le manda un enlace mágico
   vía el mismo SMTP custom (Resend) que misión 02 ya configuró. No hay campo de contraseña en ningún
   formulario de esta misión. El riesgo de deliverability se mitiga con la guía oficial de Resend para
@@ -251,9 +255,10 @@ público.
   de un solo uso), y DMARC configurado. Es trabajo de configuración sobre lo que misión 02 ya dejó
   pendiente, no una decisión ni infraestructura nueva — se documenta como requisito de esta decisión, el
   detalle técnico exacto lo resuelve `ingenieria.md`.
-- **Reapertura:** si Datealo contrata Twilio por otra razón de negocio, vale la pena revisar si OTP por
-  WhatsApp da mejor conversión que el enlace por correo. También si, ya con la mitigación de E-009
-  aplicada, los primeros registros reales siguen mostrando que el correo no llega o se demora.
+- **Reapertura:** si Datealo contrata Twilio por otra razón de negocio, OTP por WhatsApp pasa a ser el
+  candidato más fuerte para reemplazar esta decisión — es el precedente de escala más directo de los tres.
+  También si, ya con la mitigación de E-009 aplicada, los primeros registros reales siguen mostrando que el
+  correo no llega o se demora.
 
 <a id="d-002"></a>
 
