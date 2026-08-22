@@ -12,7 +12,8 @@
 **Resultado:** don Héctor completa su registro desde el celular en un par de minutos, con solo lo mínimo
 necesario para ser encontrable (categoría, comuna, contacto), y su perfil queda visible de inmediato — sin
 esperar a que nadie lo apruebe. Fotos y precio orientativo los agrega cuando quiera, antes o después de
-publicarse, sin que eso bloquee nada.
+publicarse, sin que eso bloquee nada. Todo el registro (incluidas categoría y comuna) sigue siendo editable
+después, si su situación cambia.
 
 **Recorte respecto del ideal:** el ideal (ver [investigacion.md](./investigacion.md)) no distingue entre
 "registrarse" y "tener un perfil completo" — ambos pasan en el mismo momento. Acá sí se separan: el
@@ -31,6 +32,7 @@ administración para activar/desactivar perfiles — mismo criterio manual que c
 | F-001 | Crear cuenta y quedar publicado de inmediato       | profesional  | C-001, C-002, D-001, D-002 | M-001 |
 | F-002 | Completar o editar fotos y precio orientativo      | profesional  | C-001 (landing, E-001)     | M-002 |
 | F-003 | Confirmar por correo que el registro funcionó      | profesional  | brief de esta misión (ver README) | M-001 |
+| F-004 | Editar categoría, comuna, nombre o contacto        | profesional  | C-005                      | M-003 |
 
 <a id="f-001"></a>
 
@@ -126,6 +128,36 @@ es de misiones futuras si hace falta.
 **Experiencia:** pendiente. **Ingeniería:** pendiente. El mecanismo de envío (`sendEmail()`) ya existe
 (misión 02); esta misión define el contenido y el disparador, no el transporte.
 
+<a id="f-004"></a>
+
+### F-004 — Editar categoría, comuna, nombre o contacto
+
+Cuando don Héctor se muda de comuna o empieza a ofrecer un oficio distinto,
+quiero corregir esos datos en mi perfil ya publicado,
+para seguir apareciendo bien representado sin tener que crear una cuenta nueva.
+
+**Lado del marketplace:** profesional. **Qué necesita del otro lado:** nada.
+
+**Sustento:** [C-005](./investigacion.md#c-005). **Éxito:** [M-003](#m-003).
+
+**Reglas:**
+
+- Don Héctor puede editar categoría, comuna, nombre y contacto en cualquier momento después de registrado,
+  igual que ya puede con fotos y precio (F-002).
+- Editar cualquiera de estos campos no reinicia ni oculta nada acumulado — reseñas futuras, antigüedad del
+  perfil (C-005).
+- Editar categoría o comuna no requiere una nueva revisión ni cambia el estado `activa` — sigue publicado
+  mientras edita, sin una ventana de "guardando cambios" donde desaparezca del buscador.
+
+**Ejemplo verificable:** dado el perfil activo de don Héctor con categoría "Electricidad" y comuna "Ñuñoa",
+cuando lo cambia a categoría "Gasfitería" y comuna "Providencia", entonces su perfil sigue activo y aparece
+de inmediato para quien busque "gasfiter" en Providencia, no ya para "electricista" en Ñuñoa.
+
+**No incluye:** un historial visible de qué categorías/comunas tuvo antes — solo el estado actual es
+público.
+
+**Experiencia:** pendiente. **Ingeniería:** pendiente.
+
 ## Casos límite que cruzan funcionalidades
 
 <a id="cl-001"></a>
@@ -171,6 +203,18 @@ es de misiones futuras si hace falta.
 - **Método y umbral:** conteo directo en la base una vez exista tráfico real; sin fecha objetivo todavía.
 - **Guardrail:** ningún profesional queda invisible o penalizado en el buscador por no haber completado
   esta parte — CL-001 y CL-002 son la garantía de esto, no solo la intención.
+
+<a id="m-003"></a>
+
+### M-003 — Editar el registro no genera dudas ni errores
+
+- **Pregunta:** ¿editar categoría/comuna/contacto es igual de simple que editar fotos/precio, o la gente
+  se confunde porque cambia "más" del perfil?
+- **Señal:** ningún reporte de un profesional que no entendió que su perfil siguió activo mientras editaba,
+  ni de un perfil que quedó con datos a medio cambiar.
+- **Método y umbral:** revisión cualitativa de Patricio en los primeros meses — sin volumen todavía para
+  medir esto con un número.
+- **Guardrail:** ningún perfil desaparece del buscador por el solo hecho de estar editándose.
 
 ## Decisiones de producto
 
