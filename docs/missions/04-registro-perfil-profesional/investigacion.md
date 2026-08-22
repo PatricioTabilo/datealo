@@ -29,16 +29,16 @@ te encuentran" ([E-001](#e-001)).
 
 - ¿Con qué método se autentica un profesional — email/password, magic link, OTP por teléfono? Mission 02
   dejó esto explícitamente abierto para esta misión (TQ-002, [E-003](#e-003)).
-- Mientras un perfil está registrado pero todavía no lo activa Patricio, ¿qué ve el profesional? ¿Un
-  mensaje de "en revisión", o nada distinto de un perfil activo hasta que le pregunte? Afecta directo si el
-  profesional entiende que su registro sí funcionó.
+- ¿Bajo qué condición concreta conviene pasar de activación automática a que Patricio active cada perfil a
+  mano? [C-002](#c-002) elige automático para el lanzamiento, a propósito reversible — no bloquea esta
+  misión, pero conviene dejarlo señalado para no reabrir la conclusión desde cero cuando llegue el momento.
 
 ## Evidencia
 
 | ID    | Tipo        | Fuente                                                | Hecho verificable | Límite de la evidencia |
 | ----- | ----------- | ------------------------------------------------------ | ------------------ | ----------------------- |
 | E-001 | código      | `app/constants/landing.ts`, `LandingForProfessionals.vue` | La landing ya promete al profesional: perfil público con fotos, reseñas, contacto directo de clientes de su zona, registro "gratis, menos de 1 minuto" | Es copy de marketing para captar la lista de espera, no una decisión de producto — compromete expectativa, no diseño |
-| E-002 | decisión interna | [D-002 de misión 03](../03-taxonomia-categorias-y-comunas/producto.md#d-002) | Al lanzamiento, Patricio recluta y verifica profesionales directamente en Gran Santiago y Puerto Varas — no hay panel de administración ni proceso automático | Es la decisión que ya se tomó para el catálogo de comunas, no una decisión propia de esta misión, pero fija el techo de qué automatización tiene sentido pedir acá |
+| E-002 | decisión interna | [D-002 de misión 03](../03-taxonomia-categorias-y-comunas/producto.md#d-002) | El campo `activa` que controla qué categorías/comunas se ofrecen es booleano y lo cambia Patricio a mano, sin panel de administración | Es evidencia de que el mecanismo (`activa`, cambiable a mano) ya existe y es reusable — no dice qué valor por default le conviene a un perfil de profesional, que es una decisión distinta con otro contexto (D-002 activa comunas para definir dónde opera Datealo, no para filtrar personas) |
 | E-003 | decisión interna | [TQ-002 de misión 02](../02-base-de-datos-y-auth/ingenieria.md) | El método de autenticación del profesional (email/password, magic link, OTP) quedó explícitamente sin resolver, delegado a esta misión | No es evidencia de qué elegir, es la confirmación de que esta misión tiene que decidirlo |
 | E-004 | benchmark   | [Thumbtack — requisitos para pros](https://www.everlance.com/gig-guides/thumbtack-requirements) | El registro pide email, zona de servicio y categorías de servicio; identidad y background check son opcionales y no bloquean el registro (Thumbtack los premia con una insignia visual en el perfil) | Thumbtack ya tiene volumen y un sistema de matching por lead pagado — su modelo de monetización no aplica a Datealo. El patrón "registro instantáneo, verificación opcional" sí es comparable; la insignia visual es un detalle de UI de Thumbtack, no una decisión de Datealo — no se importa solo por aparecer acá |
 | E-005 | benchmark   | [TaskRabbit — requisitos para Tasker](https://support.taskrabbit.com/hc/en-us/articles/204411070-What-s-Required-to-Become-a-Tasker) | El registro exige background check obligatorio, una tarifa de USD 25, y toma alrededor de 4 días hábiles antes de poder trabajar | Es el extremo opuesto a Thumbtack: alta fricción de entrada a cambio de confianza pre-verificada. TaskRabbit opera con un volumen de aplicantes que puede permitirse filtrar así; Datealo con cero profesionales no |
@@ -78,20 +78,23 @@ categoría, comuna, fotos y precio — es una promesa de marketing escrita antes
 
 <a id="c-002"></a>
 
-### C-002 — La visibilidad del perfil usa el mismo mecanismo `activa` que categorías y comunas, no un estado "verificado" aparte
+### C-002 — El perfil queda activo automáticamente al registrarse, sin que Patricio intervenga — por ahora
 
-- **Sustento:** [E-002](#e-002), [E-005](#e-005).
-- **Razonamiento:** misión 03 ya resolvió exactamente este problema para categorías y comunas — un campo
-  `activa` que Patricio cambia a mano, sin panel de administración (D-002). Un profesional recién
-  registrado no necesita un mecanismo nuevo ni un segundo estado ("publicado" más "verificado" por
-  separado) — necesita el mismo interruptor que ya existe: mientras `activa` sea `false`, el perfil no
-  aparece en el buscador. Patricio lo prende a mano cuando confirma al profesional, y ese acto de prender
-  es, en sí mismo, la verificación — no hay dos pasos.
-- **Implicación:** el registro no publica nada por sí solo. Un perfil recién completado por don Héctor
-  existe en la base pero no aparece en ninguna búsqueda hasta que Patricio lo active. No hace falta
-  construir un flujo de verificación automatizado (background check, documentos) — Datealo no tiene esa
-  infraestructura y el volumen de lanzamiento no la justifica.
-- **Confianza:** alta — reusa un mecanismo ya construido y aprobado en misión 03, no propone uno nuevo.
+- **Sustento:** [E-002](#e-002).
+- **Razonamiento:** el mecanismo es el mismo campo `activa` que misión 03 ya construyó para categorías y
+  comunas (D-002) — no hace falta inventar nada nuevo. Lo que cambia es el valor por default: una comuna
+  nueva nace `activa = false` porque agregarla al catálogo no implica que Datealo ya opere ahí; un
+  profesional que completa su propio registro sí es una señal directa de intención, así que acá el default
+  es `activa = true`. Al lanzamiento, sin volumen de registros que filtrar, exigir que Patricio revise cada
+  uno a mano antes de que aparezca es fricción sin un problema real detrás todavía.
+- **Implicación:** al terminar el registro, el perfil de don Héctor ya es buscable — nadie lo revisa antes.
+  Es una decisión explícitamente reversible: el campo `activa` ya existe y ya soporta cambiarse a mano
+  (mismo mecanismo de categorías y comunas), así que pasar a activación manual más adelante no exige
+  ningún cambio de modelo de datos, solo dejar de setear el default en `true`.
+- **Confianza:** media — la decisión de partir automático es de producto, no una conclusión que la
+  evidencia sostenga por sí sola (E-002 en todo caso apunta a lo manual); queda anotada acá porque define
+  el ideal de esta investigación, y su condición de reapertura (cuándo pasar a manual) es de las Preguntas
+  de arriba.
 
 <a id="c-003"></a>
 
@@ -122,7 +125,7 @@ categoría, comuna, fotos y precio — es una promesa de marketing escrita antes
 - **Confianza:** media — el razonamiento es sólido, pero no hay ninguna entrevista real con un profesional
   chileno que confirme que una contraseña es, en la práctica, la fricción que se asume que es.
 
-## El ideal: cualquier profesional completa su registro en minutos; aparecer en el buscador es un paso aparte que Patricio confirma a mano
+## El ideal: cualquier profesional se registra y aparece en el buscador en el acto
 
 ### El resultado ideal se ve así
 
@@ -130,26 +133,26 @@ Don Héctor abre datealo.cl desde su celular un domingo en la tarde. Toca "Soy p
 email y recibe un enlace mágico — no tiene que inventar ni recordar ninguna contraseña. Elige "Electricidad"
 de la lista de categorías (la misma que ya existe para búsqueda) y "Ñuñoa" de la lista de comunas. Sube tres
 fotos de trabajos que ya tiene en el celular y escribe un rango de precio orientativo. Termina su registro
-en menos de dos minutos — pero su perfil todavía no aparece si alguien busca "electricista" en Ñuñoa: existe
-en la base con `activa = false`, igual que una comuna recién agregada al catálogo pero todavía apagada.
-Unos días después, Patricio lo llama, confirma que es real y activa su perfil a mano. Recién ahí don Héctor
-aparece en el buscador — activarlo es lo único que hace falta, no hay un segundo estado de "verificado" por
-separado.
+en menos de dos minutos, y su perfil queda activo de inmediato — nadie lo revisa antes: si alguien busca
+"electricista" en Ñuñoa esa misma tarde, don Héctor ya aparece.
 
 ### Capacidades del ideal
 
 | Capacidad                        | Acción habilitada                                  | Respuesta esperada                                       | Conclusión que la justifica |
 | --------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------ | ---------------------------- |
-| Registro sin aprobación previa    | El profesional completa el formulario entero sin que nadie lo bloquee | El registro queda guardado, listo para que Patricio lo active | [C-001](#c-001)              |
-| Activación manual, un solo estado | Patricio activa el perfil a mano, mismo mecanismo que `activa` en categorías y comunas | Mientras `activa` sea `false`, el perfil no aparece en ninguna búsqueda | [C-002](#c-002)              |
+| Registro sin aprobación previa    | El profesional completa el formulario entero sin que nadie lo bloquee | El registro se guarda y publica en el mismo paso | [C-001](#c-001)              |
+| Activación automática             | El perfil nace `activa = true`, sin que Patricio intervenga | El perfil es buscable apenas se completa el registro | [C-002](#c-002)              |
 | Categoría y comuna del catálogo   | El profesional elige de una lista cerrada, no escribe texto libre | El perfil queda indexado exactamente igual que espera el buscador (misión 06) | [C-003](#c-003)              |
 | Autenticación sin contraseña      | El profesional entra con un enlace o código, no una contraseña | Menos pasos entre "quiero registrarme" y "mi perfil existe" | [C-004](#c-004)              |
 
-### El ideal no significa que el registro se convierta en un panel de administración
+### El ideal no significa que cualquier perfil sea igual de confiable
 
-- No hay una cola de solicitudes que revisar en una pantalla — Patricio activa el perfil directo en la
-  base, mismo mecanismo manual que ya usa para categorías y comunas (fuera de alcance de esta misión
-  construir un panel).
+- Que el perfil aparezca de inmediato no significa que Datealo ya lo verificó — es una decisión deliberada
+  de partir sin ese filtro mientras no hay volumen que lo justifique, no una afirmación de que todo
+  profesional registrado es confiable.
+- Es una decisión hecha para revertirse fácil: el mismo campo `activa` que hoy nace en `true` puede pasar
+  a nacer en `false` (activación manual) sin ningún cambio de modelo — ver la pregunta abierta sobre bajo
+  qué condición conviene hacer ese cambio.
 - El ideal no incluye un proceso de verificación automatizado (background check, validación de RUT) — eso
   es explícitamente lo que C-002 descarta para esta etapa del producto.
 
