@@ -10,14 +10,14 @@
 ## Qué construimos: un profesional se registra y aparece en el buscador el mismo día
 
 **Resultado:** don Héctor completa su registro desde el celular en un par de minutos, con solo lo mínimo
-necesario para ser encontrable (categoría, comuna, contacto), y su perfil queda visible de inmediato — sin
-esperar a que nadie lo apruebe. Fotos y precio orientativo los agrega cuando quiera, antes o después de
-publicarse, sin que eso bloquee nada. Todo el registro (incluidas categoría y comuna) sigue siendo editable
-después, si su situación cambia.
+necesario para ser encontrable (nombre, categoría, comuna, contacto), y su perfil queda visible de
+inmediato — sin esperar a que nadie lo apruebe. Fotos y precio orientativo los agrega cuando quiera, antes
+o después de publicarse, sin que eso bloquee nada. Todo el registro (incluidas categoría y comuna) sigue
+siendo editable después, si su situación cambia.
 
 **Recorte respecto del ideal:** el ideal (ver [investigacion.md](./investigacion.md)) no distingue entre
 "registrarse" y "tener un perfil completo" — ambos pasan en el mismo momento. Acá sí se separan: el
-registro exige solo 4 campos, el resto del perfil (fotos, precio, descripción) es editable después, en
+registro exige solo 5 campos, el resto del perfil (fotos, precio, descripción) es editable después, en
 cualquier momento, sin volver a pasar por el formulario de registro.
 
 **Restricciones aceptadas:** una sola categoría por perfil al lanzamiento — `CategoriaSelect` (misión 03)
@@ -51,16 +51,16 @@ búsquedas en Electricidad + Ñuñoa (o comuna vecina), pero eso no es una condi
 
 **Reglas:**
 
-- Si don Héctor completa email, categoría (`CategoriaSelect`), comuna (`ComunaSelect`) y un WhatsApp o
-  teléfono de contacto, Datealo crea el perfil con `activa = true` en el mismo paso.
-- Si falta cualquiera de esos 4 campos, Datealo no deja enviar el formulario — son los únicos obligatorios,
+- Si don Héctor completa email, nombre, categoría (`CategoriaSelect`), comuna (`ComunaSelect`) y un
+  WhatsApp o teléfono de contacto, Datealo crea el perfil con `activa = true` en el mismo paso.
+- Si falta cualquiera de esos 5 campos, Datealo no deja enviar el formulario — son los únicos obligatorios,
   no hay más.
 - Datealo nunca pide RUT, antecedentes, ni ningún dato que sirva para un background check.
 - Si el email ya tiene una cuenta, Datealo lo manda a iniciar sesión en vez de crear un perfil duplicado.
 
 **Ejemplo verificable:** dado que don Héctor no tiene ninguna cuenta en Datealo, cuando completa email,
-"Electricidad", "Ñuñoa" y su WhatsApp y envía el formulario, entonces su perfil existe con `activa = true`
-y aparece si alguien busca "electricista" en Ñuñoa desde ese mismo instante.
+"Héctor Silva", "Electricidad", "Ñuñoa" y su WhatsApp y envía el formulario, entonces su perfil existe con
+`activa = true` y aparece si alguien busca "electricista" en Ñuñoa desde ese mismo instante.
 
 **No incluye:** elegir más de una categoría (restricción aceptada de esta entrega), ni ningún paso de
 verificación previo a publicarse.
@@ -183,7 +183,7 @@ público.
 
 ### M-001 — El registro se completa sin abandono ni confusión
 
-- **Pregunta:** ¿el formulario de 4 campos es de verdad rápido, o la gente lo empieza y no lo termina?
+- **Pregunta:** ¿el formulario de 5 campos es de verdad rápido, o la gente lo empieza y no lo termina?
 - **Señal (qué observaríamos si funciona):** de cada 10 profesionales que abren el formulario, al menos 7
   lo terminan y reciben la confirmación por correo.
 - **Método y umbral:** sin instrumentación todavía — se resuelve cuando exista analítica básica de
@@ -267,13 +267,14 @@ público.
 
 - **Estado:** propuesta. **Fecha:** 2026-08-22.
 - **Sustento:** [C-001](./investigacion.md#c-001), [C-002](./investigacion.md#c-002).
-- **Tensión:** un formulario único (email + categoría + comuna + contacto + fotos + precio) da perfiles más
-  completos desde el día uno, pero cada campo extra en el camino de "quiero registrarme" es una oportunidad
-  de que don Héctor lo abandone antes de terminar — más aún si no tiene fotos buenas a mano en ese momento.
+- **Tensión:** un formulario único (email + nombre + categoría + comuna + contacto + fotos + precio) da
+  perfiles más completos desde el día uno, pero cada campo extra en el camino de "quiero registrarme" es
+  una oportunidad de que don Héctor lo abandone antes de terminar — más aún si no tiene fotos buenas a mano
+  en ese momento.
 - **Alternativas descartadas:** un solo formulario que pida todo de una — TaskRabbit y su fricción de
   entrada (E-005 de investigación) es el ejemplo de lo que se quiere evitar, aunque ahí la fricción sea de
   otro tipo (background check), el principio de "cada campo extra es abandono potencial" es el mismo.
-- **Decisión y consecuencia:** F-001 (registro) solo pide los 4 campos mínimos para ser encontrable; F-002
+- **Decisión y consecuencia:** F-001 (registro) solo pide los 5 campos mínimos para ser encontrable; F-002
   (fotos, precio) es una pantalla separada, editable cuando sea, no un paso obligatorio del registro.
 - **Reapertura:** si M-002 muestra que casi nadie vuelve a completar su perfil después de registrarse,
   vale la pena reconsiderar si algún campo de F-002 debería ser obligatorio en F-001.
