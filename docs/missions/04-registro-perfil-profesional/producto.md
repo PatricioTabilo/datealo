@@ -57,6 +57,9 @@ búsquedas en Electricidad + Ñuñoa (o comuna vecina), pero eso no es una condi
   no hay más.
 - Datealo nunca pide RUT, antecedentes, ni ningún dato que sirva para un background check.
 - Si el email ya tiene una cuenta, Datealo lo manda a iniciar sesión en vez de crear un perfil duplicado.
+- Al terminar el registro, Datealo lleva a don Héctor directo a la pantalla de F-002 (fotos y precio) — no
+  a una pantalla genérica de "listo". Es una invitación, no un paso obligatorio: puede salir de ahí sin
+  completar nada y su perfil sigue publicado igual.
 
 **Ejemplo verificable:** dado que don Héctor no tiene ninguna cuenta en Datealo, cuando completa email,
 "Héctor Silva", "Electricidad", "Ñuñoa" y su WhatsApp y envía el formulario, entonces su perfil existe con
@@ -116,11 +119,14 @@ investigación. **Éxito:** [M-001](#m-001) (mismo indicador que F-001 — es pa
 
 - Al crear el perfil (F-001), Datealo envía un correo a don Héctor confirmando que su perfil ya está
   publicado — no "en revisión", porque no hay revisión (D-002).
+- Si don Héctor no subió ninguna foto ni definió precio al momento del registro (se fue de la pantalla de
+  F-002 sin completarla), el correo incluye una invitación a hacerlo, con un enlace directo a esa pantalla.
 - Si el correo no llega (falla de Resend), Datealo no bloquea ni deshace el registro — el perfil ya existe
   igual, el correo es una confirmación, no una condición.
 
-**Ejemplo verificable:** dado que don Héctor completa el registro, cuando el perfil se crea, entonces
-recibe un correo en menos de un minuto confirmando que su perfil ya es visible en el buscador.
+**Ejemplo verificable:** dado que don Héctor completa el registro sin agregar fotos, cuando el perfil se
+crea, entonces recibe un correo en menos de un minuto confirmando que su perfil ya es visible, con un
+enlace para agregar fotos y precio.
 
 **No incluye:** ningún otro correo transaccional de esta misión (recordatorios, digest de mensajes) — eso
 es de misiones futuras si hace falta.
