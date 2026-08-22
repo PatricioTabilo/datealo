@@ -229,10 +229,15 @@ público.
 ### D-001 — La autenticación del profesional es sin contraseña, con enlace mágico por correo
 
 - **Estado:** propuesta. **Fecha:** 2026-08-22.
-- **Sustento:** [C-004](./investigacion.md#c-004).
+- **Sustento:** [C-004](./investigacion.md#c-004) — incluye datos reales de conversión (E-008: 22-38% más
+  finalización de registro sin contraseña), con la salvedad de que la fuente es un vendedor de
+  autenticación sin contraseña, no investigación neutral.
 - **Tensión:** OTP por teléfono también evita la contraseña y es más común en Chile para trámites, pero
   exige un proveedor de SMS que Datealo no tiene contratado — email con enlace mágico usa el SMTP de
-  Supabase Auth que misión 02 ya dejó configurado (Resend), sin infraestructura nueva.
+  Supabase Auth que misión 02 ya dejó configurado (Resend), sin infraestructura nueva. El propio enlace
+  mágico tiene un riesgo aceptado: sin reputación de envío (Resend recién configurado, dominio nuevo), el
+  correo puede demorar o caer en spam — reintroduciendo por otra vía la misma fricción que se quiere
+  evitar con la contraseña (E-008).
 - **Alternativas descartadas:** email/password — un profesional no técnico gestionando su perfil entre
   trabajos (E-006 de investigación) es justo el usuario que más abandona en el paso de "crear una
   contraseña segura" o "la olvidé, recupérala". OTP por SMS/WhatsApp — mejor UX percibida en Chile, pero
@@ -240,9 +245,13 @@ público.
   reabrir esta decisión, no descartado por mérito.
 - **Decisión y consecuencia:** el profesional entra con su email; Supabase Auth le manda un enlace mágico
   vía el mismo SMTP custom (Resend) que misión 02 ya configuró. No hay campo de contraseña en ningún
-  formulario de esta misión.
+  formulario de esta misión. El riesgo de deliverability queda aceptado, no mitigado — no hay presupuesto
+  ni justificación todavía para invertir en reputación de envío (dominio dedicado, warm-up) antes de tener
+  un solo profesional registrado.
 - **Reapertura:** si Datealo contrata un proveedor de SMS/WhatsApp Business por otra razón de negocio, vale
-  la pena revisar si OTP por WhatsApp da mejor conversión que el enlace por correo.
+  la pena revisar si OTP por WhatsApp da mejor conversión que el enlace por correo. También si los primeros
+  registros reales muestran que el correo con el enlace no llega o se demora — ahí el riesgo aceptado dejó
+  de ser hipotético.
 
 <a id="d-002"></a>
 
