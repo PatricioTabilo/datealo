@@ -45,6 +45,8 @@ te encuentran" ([E-001](#e-001)).
 | E-006 | producto (CLAUDE.md) | Sección "Tipos de usuario" de `CLAUDE.md` | El profesional "no es un usuario técnico y gestiona su perfil entre trabajos, también desde el celular" | Es una caracterización ya asumida por el proyecto, no dato de una entrevista real — confianza del hecho en sí es alta (es cómo se diseñó todo lo demás), pero no está validada con un profesional real todavía |
 | E-007 | benchmark   | [What Do I Need To Know About Changes To Categories (TaskRabbit Support)](https://support.taskrabbit.com/hc/en-us/articles/12874675233933-What-Do-I-Need-To-Know-About-The-Recent-Changes-To-Categories) | Cuando un Tasker cambia de categoría, sus reseñas, historial de trabajos, desempeño y estado Elite se mantienen — no se pierden ni se reinician | Confirma que la reputación en TaskRabbit vive en la persona, no en la combinación categoría+perfil con la que se registró — Datealo hoy no tiene reseñas (misión 07 postergada), así que el riesgo que esto resuelve todavía no existe en la práctica, pero informa cómo diseñar para cuando exista |
 | E-008 | benchmark   | [Login Success Rates: Passkeys vs OTP vs Magic Links vs Passwords (MojoAuth)](https://mojoauth.com/blog/login-success-rates-passkeys-otp-magic-links-passwords) | Estudios de productos SaaS reportan 22-38% más finalización de registro al sacar la contraseña del formulario; SMS OTP mide solo entrega (85-98%), no login exitoso | La fuente es un vendedor de autenticación sin contraseña — sesgo de marketing directo, la propia nota dice "no hay tasa de éxito publicada e independiente para enlace mágico entre industrias, cualquier número exacto merece sospecha". La fuente también nombra un riesgo real no cuantificado: deliverability del correo (spam, demora) para un remitente nuevo sin reputación de envío — exactamente la situación de Datealo con Resend |
+| E-009 | documentación oficial | [Cómo maximizar deliverability de correos de Supabase Auth (Resend)](https://resend.com/docs/knowledge-base/how-do-i-maximize-deliverability-for-supabase-auth-emails) | Resend documenta 5 pasos concretos para la combinación exacta que usa Datealo (Supabase Auth + Resend): dominio propio en vez de `supabase.co`, subdominio dedicado para auth, desactivar link/open tracking (corrompe el link de un solo uso), anticipar escáneres de correo empresariales, configurar DMARC | Es documentación del propio proveedor, no un estudio independiente — pero es instrucción técnica verificable (se puede confirmar configurando y midiendo), no una afirmación de marketing como E-008. TQ-001 de misión 02 ya dejó pendiente que Patricio configure el dominio en Resend — esto le agrega la lista específica de qué configurar |
+| E-010 | benchmark   | [Driver Requirements (Uber Chile)](https://www.uber.com/cl/en/drive/requirements/), [Repartidor Rappi Chile](https://www.rappi.cl/repartidor) | Uber y Rappi piden teléfono + email + subida de documentos, con revisión y aprobación de hasta 48 horas antes de poder operar | Ninguno de los dos documenta públicamente qué mecanismo de login usan (contraseña, OTP, magic link) — solo confirman que piden teléfono en el registro. Ambos son mucho más pesados que lo que D-002 ya descartó para Datealo (aprobación previa) — no aportan una respuesta directa a la pregunta de autenticación, pero confirman que el patrón de aprobación manual no es el que Datealo eligió |
 
 <a id="e-001"></a>
 
@@ -115,23 +117,26 @@ categoría, comuna, fotos y precio — es una promesa de marketing escrita antes
 
 ### C-004 — El método de autenticación debe minimizar pasos y fricción para un usuario no técnico en el celular
 
-- **Sustento:** [E-003](#e-003), [E-006](#e-006), [E-008](#e-008).
+- **Sustento:** [E-003](#e-003), [E-005](#e-005), [E-006](#e-006), [E-008](#e-008), [E-009](#e-009),
+  [E-010](#e-010).
 - **Razonamiento:** un profesional no técnico, gestionando su perfil entre trabajos desde el celular
   (E-006), es exactamente el perfil de usuario que más sufre un flujo de contraseña (crearla, recordarla,
   recuperarla). El benchmark de TaskRabbit (E-005) muestra el costo de un registro con pasos extra: aunque
   ahí el paso extra es un background check y no una contraseña, el principio es el mismo — cada paso
   adicional es una oportunidad de abandono antes de tener un solo profesional registrado. E-008 confirma la
-  dirección con datos (22-38% más finalización sin contraseña), aunque son datos de un vendedor de
-  autenticación sin contraseña, no investigación neutral — hay que leerlos con esa sospecha.
+  dirección con datos (22-38% más finalización sin contraseña), con sesgo de vendedor. Uber y Rappi (E-010)
+  no aportan una respuesta directa — no documentan públicamente su mecanismo de login — pero sí confirman
+  que el patrón de aprobación previa (que D-002 ya descartó) no es el estándar que Datealo eligió seguir.
 - **Implicación:** magic link u OTP son candidatos más fuertes que email/password para el método de
-  autenticación (TQ-002), pero cuál de los dos exactos no se resuelve acá — es una decisión técnica que le
-  corresponde a `producto.md`/`ingenieria.md` de esta misión, no a la investigación. E-008 también señala un
-  riesgo real y propio de Datealo si se elige un enlace por correo: sin reputación de envío (dominio
-  nuevo, Resend recién configurado en misión 02), el correo puede demorar o caer en spam — el mismo
-  problema que se quería evitar con la contraseña, pero por otra vía.
-- **Confianza:** media — el razonamiento es sólido y ahora tiene datos que lo acompañan, pero la fuente de
-  esos datos tiene sesgo de vendedor y no hay ninguna entrevista real con un profesional chileno que
-  confirme que una contraseña es, en la práctica, la fricción que se asume que es.
+  autenticación (TQ-002). Entre esos dos: OTP por WhatsApp solo está disponible en Supabase Auth a través
+  de Twilio (ningún otro proveedor soportado lo ofrece) — confirma que exige contratar infraestructura
+  nueva, no es una alternativa "gratis" frente al enlace por correo. El riesgo de deliverability del enlace
+  por correo (E-008) tiene mitigación concreta y de bajo costo, no exige cambiar de método: dominio propio,
+  subdominio dedicado para auth, tracking desactivado y DMARC configurado (E-009) — trabajo de
+  configuración sobre el Resend que misión 02 ya dejó pendiente (TQ-001), no una alternativa técnica nueva.
+- **Confianza:** media-alta — el razonamiento tiene datos (con sesgo de vendedor) y ahora también una
+  mitigación técnica verificable para su principal riesgo, pero sigue sin haber ninguna entrevista real con
+  un profesional chileno que confirme que una contraseña es, en la práctica, la fricción que se asume.
 
 <a id="c-005"></a>
 
@@ -194,3 +199,8 @@ nada de lo que ya acumuló.
   usado en E-007 para confirmar que la reputación no se pierde al cambiar de categoría.
 - [Login Success Rates: Passkeys vs OTP vs Magic Links vs Passwords (MojoAuth)](https://mojoauth.com/blog/login-success-rates-passkeys-otp-magic-links-passwords):
   usado en E-008 para la tasa de conversión de enlace mágico vs contraseña, con su sesgo de vendedor.
+- [Cómo maximizar deliverability de correos de Supabase Auth (Resend)](https://resend.com/docs/knowledge-base/how-do-i-maximize-deliverability-for-supabase-auth-emails):
+  usado en E-009 para la mitigación concreta del riesgo de deliverability señalado en E-008.
+- [Driver Requirements (Uber Chile)](https://www.uber.com/cl/en/drive/requirements/) y
+  [Repartidor Rappi Chile](https://www.rappi.cl/repartidor): usados en E-010 como benchmark local, sin
+  aportar una respuesta directa sobre método de login.
