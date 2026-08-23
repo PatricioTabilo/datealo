@@ -211,7 +211,7 @@ al final de la pantalla, cada campo se guarda por su cuenta.
 | V-002 inicial (formulario vacío)            | Título "Crea tu perfil", los 5 campos vacíos con placeholder, botón deshabilitado            | Completar los campos |
 | V-002 error al enviar                       | "No pudimos publicar tu perfil. Tus datos siguen acá — inténtalo de nuevo"                   | "Reintentar" |
 | V-003 vacío (recién publicado)              | "¡Listo! Tu perfil ya es visible." + secciones de fotos/descripción/precio con invitación a completar | "+ Agregar foto", tocar cualquier campo |
-| V-003 con datos                             | Perfil completo: "Héctor Silva · Electricidad · Ñuñoa · +56 9 1234 5678", 3 fotos, descripción y "Desde $10.000" | Tocar cualquier campo para editar |
+| V-003 con datos                             | Encabezado "Héctor Silva · Electricidad · Ñuñoa", 3 fotos, descripción, "Desde $10.000" y tarjeta "Tus datos" con las 4 filas (nombre, categoría, comuna, contacto) | Tocar cualquier campo para editar, incluidos los de "Tus datos" |
 | V-003 guardando un campo                    | El campo muestra un spinner chico inline, el resto de la pantalla no se bloquea              | Ninguna hasta que termine |
 | V-003 error al guardar un campo             | Ícono de error junto al campo + "No se pudo guardar, toca para reintentar"                   | Reintentar ese campo |
 | V-001 revisa tu correo                      | "Te mandamos un enlace a hector@gmail.com. Ábrelo desde este mismo celular."                 | "¿No te llegó? Revisa spam o pide otro enlace" (aparece a los 60s) |
