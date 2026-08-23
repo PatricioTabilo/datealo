@@ -65,7 +65,39 @@
         </div>
       </section>
 
-      <!-- 2. revisa tu correo -->
+      <!-- 2. formato de email inválido -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo formato de email inválido
+          <small>escribió un email mal formado y tocó "Enviar enlace" — no se manda nada</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-6 pt-10">
+            <h1 class="text-2xl font-extrabold" style="color: var(--ui-text-highlighted)">Entra a Datealo</h1>
+            <p class="mt-2 text-sm" style="color: var(--ui-text-muted)">
+              Te mandamos un enlace a tu correo — sin contraseña que recordar.
+            </p>
+
+            <label class="mb-2 mt-8 block text-sm font-semibold" style="color: var(--ui-text-highlighted)">Tu email</label>
+            <div class="field-shell px-4 py-3.5" style="border-color: var(--ui-error)">
+              <input
+                type="email"
+                value="hector@gmail,com"
+                class="w-full bg-transparent text-[0.9375rem] outline-none"
+                style="color: var(--ui-text-highlighted)"
+              />
+            </div>
+            <p class="mt-2 text-xs font-semibold" style="color: var(--ui-error)">
+              Ese correo no parece válido — revisa que esté bien escrito
+            </p>
+
+            <button class="btn-primary mt-6 w-full py-3.5 text-[0.9375rem]">Enviar enlace</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. revisa tu correo -->
       <section class="frame frame-mobile">
         <div class="frame-label">
           V-001 · modo revisa tu correo
@@ -93,7 +125,7 @@
         </div>
       </section>
 
-      <!-- 3. enlace inválido -->
+      <!-- 4. enlace inválido -->
       <section class="frame frame-mobile">
         <div class="frame-label">
           V-001 · modo enlace inválido o expirado

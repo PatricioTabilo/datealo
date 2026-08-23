@@ -26,6 +26,7 @@ explícita (UX-001), no queda implícito.
 
 - **V-001 — Iniciar sesión** · móvil · resuelve [D-001](./producto.md#d-001) · flujos UXF-001
   - modo **ingresar email** — el único campo, sin contraseña en ningún lado
+  - modo **formato de email inválido** — escribió un email mal formado y tocó "Enviar enlace"
   - modo **revisa tu correo** — el enlace ya se mandó, esperando que lo toque
   - modo **enlace inválido o expirado** — volvió a la app por un enlace viejo o ya usado
 
@@ -39,6 +40,8 @@ explícita (UX-001), no queda implícito.
   - modo **vacío** — recién publicado, sin fotos, descripción ni precio todavía
   - modo **con datos** — ya tiene algo cargado, editable campo por campo
   - modo **editando un campo** — tocó un campo, se volvió input in-place con el valor actual precargado
+  - modo **formato inválido al escribir** — escribió un contacto sin formato de teléfono válido, no deja
+    guardar hasta corregir
   - modo **guardando** — salió del campo con un valor nuevo, esperando confirmación
   - modo **error al guardar** — un cambio no se pudo guardar
 
@@ -47,6 +50,8 @@ explícita (UX-001), no queda implícito.
 | Desde                        | Acción                                       | Queda en                     | Qué pasa con el trabajo |
 | ----------------------------- | --------------------------------------------- | ------------------------------ | -------------------------- |
 | V-001 modo ingresar email     | escribe su email, toca "Enviar enlace"        | V-001 modo revisa tu correo    | el email queda guardado en la sesión, no se reenvía si vuelve a esta pantalla |
+| V-001 modo ingresar email     | escribe un email mal formado, toca "Enviar enlace" | V-001 modo formato de email inválido | el texto escrito se mantiene en el campo para corregirlo, no se envía nada |
+| V-001 modo formato de email inválido | corrige el email, toca "Enviar enlace" de nuevo | V-001 modo revisa tu correo    | sigue el flujo normal, como si no hubiera fallado |
 | V-001 modo revisa tu correo   | toca el enlace desde su correo                | V-003 modo con datos (si ya tenía cuenta) o V-002 modo formulario (si el email no tiene cuenta todavía) | ninguno — recién entra |
 | V-001 modo revisa tu correo   | el enlace expiró (pasaron más de 60 min) o ya se usó | V-001 modo enlace inválido o expirado | ninguno |
 | V-001 modo enlace inválido    | toca "Enviar uno nuevo"                       | V-001 modo ingresar email      | vuelve a empezar, sin dato previo que conservar |
@@ -58,6 +63,8 @@ explícita (UX-001), no queda implícito.
 | V-003 modo vacío o con datos  | toca un campo                                 | V-003 modo editando un campo   | el valor actual queda precargado como punto de partida del input |
 | V-003 modo editando un campo  | escribe y sale de foco / toca "Listo"          | V-003 modo guardando           | el valor anterior sigue visible hasta confirmar |
 | V-003 modo editando un campo  | sale de foco sin cambiar el valor              | V-003 modo con datos           | no dispara guardado — nada cambió |
+| V-003 modo editando un campo (Contacto) | escribe un valor sin formato de teléfono válido, sale de foco / toca "Listo" | V-003 modo formato inválido al escribir | el valor escrito se mantiene en el campo para corregirlo, no se envía al servidor |
+| V-003 modo formato inválido al escribir | corrige el valor, sale de foco / toca "Listo" (ahora válido) | V-003 modo guardando           | sigue el flujo normal, como si no hubiera fallado |
 | V-003 modo guardando          | el servidor confirma                          | V-003 modo con datos           | el cambio ya es público de inmediato |
 | V-003 modo guardando          | el servidor falla                             | V-003 modo error al guardar    | el valor anterior se mantiene visible; el cambio no se pierde, queda para reintentar |
 | V-003 (cualquier modo)        | se va a WhatsApp o cierra la pestaña sin guardar un campo a medio escribir | V-003 modo con datos (al volver) | los campos ya guardados quedan; el que estaba a medio escribir sin confirmar se descarta |
@@ -97,6 +104,7 @@ tener que recordarlo.
 
 | Condición                          | Qué cambia                                  | Cómo se entiende                          | Cómo se recupera |
 | --------------------------------------- | ---------------------------------------------- | ---------------------------------------------- | --------------------- |
+| Escribe un email mal formado (sin @, dominio incompleto) | El botón "Enviar enlace" no manda nada | El campo se marca en rojo + "Ese correo no parece válido — revisa que esté bien escrito" bajo el campo | Corrige el texto ahí mismo, sin perder lo que ya había escrito |
 | El enlace se abre en otro navegador/dispositivo del que lo pidió | Igual funciona — Supabase Auth no exige que sea el mismo browser | No hay ningún aviso especial, simplemente entra | No aplica, funciona igual |
 | El enlace ya expiró (+60 min) o ya se usó | No autentica                                | "Este enlace ya no funciona" + botón "Enviar uno nuevo" | Vuelve a V-001 modo ingresar email |
 | El correo no llega (falla de Resend/spam) | No hay forma de que Datealo lo detecte en el momento | Después de un minuto sin nada, se muestra "¿No te llegó? Revisa spam o pide otro enlace" bajo el mensaje principal | Botón "Enviar otro enlace" reintenta sin perder el email ya escrito |
@@ -107,6 +115,9 @@ tener que recordarlo.
   correos por doble click.
 - Si don Héctor pide un segundo enlace antes de que expire el primero, el primero deja de servir — solo el
   más reciente es válido (comportamiento estándar de Supabase Auth, no algo que Datealo decide a mano).
+- El email valida formato antes de enviar nada — es el único dato de D-001, un typo ahí significa que el
+  enlace mágico nunca le llega a nadie (ni a él, ni a un error obvio de otra persona) y don Héctor se queda
+  sin saber por qué.
 
 ## UXF-002 — Registrarse y quedar publicado
 
@@ -195,9 +206,10 @@ al final de la pantalla, cada campo se guarda por su cuenta.
 | Condición                          | Qué cambia                                | Cómo se entiende                            | Cómo se recupera |
 | ---------------------------------------- | ---------------------------------------------- | -------------------------------------------------- | --------------------- |
 | Falla el guardado de un campo            | El valor vuelve al anterior, no se queda a medias | Ícono de error junto al campo + "No se pudo guardar, toca para reintentar" | Toca el campo de nuevo, reintenta con el valor que había escrito |
+| Escribe el Contacto sin formato de teléfono válido | No llega a guardarse — ni siquiera lo intenta | El input se marca en rojo + "Ese número no parece válido" bajo el campo, mientras sigue escribiendo | Corrige el valor ahí mismo; recién ahí sale de foco y guarda |
 | Cambia categoría o comuna (campos del registro) | Mismo mecanismo in-place que cualquier otro campo — no hay un flujo distinto ni una advertencia especial | Mismo check verde al guardar | Igual que cualquier campo |
 | Perfil sin fotos todavía (modo vacío, CL-001) | La sección de fotos muestra un espacio invitando a subir, no un error | "Agrega fotos de tus trabajos — los perfiles con fotos generan más confianza" con el botón "+ Agregar foto" destacado | No aplica — es el estado esperado al llegar de UXF-002 |
-| Perfil sin descripción o precio (CL-002) | Esos campos muestran su placeholder ("Agrega una descripción", "Agrega tu precio"), nunca un dato inventado | El placeholder es visualmente distinto al valor real (más claro, cursiva) | Toca el placeholder para escribir el valor por primera vez |
+| Perfil sin descripción o precio (CL-002) | Esos campos muestran un ejemplo real como placeholder ("Ej: 'Electricista con 10 años de experiencia en Ñuñoa'", "Ej: Desde $10.000"), nunca un dato inventado ni una instrucción vacía | El placeholder es visualmente distinto al valor real (más claro, cursiva) — y le muestra a don Héctor el formato esperado, no solo que falta completarlo | Toca el placeholder para escribir el valor por primera vez |
 
 ### Decisiones que no deben quedar implícitas
 
@@ -210,6 +222,9 @@ al final de la pantalla, cada campo se guarda por su cuenta.
   quedaron definidos en misión 03 (su propio comportamiento — buscar, filtrar, elegir de la lista — no se
   rediseña acá). No hay mockup nuevo para ese estado: es el componente ya construido, no una pantalla
   distinta.
+- Contacto valida formato de teléfono en el momento, igual que en el registro (UXF-002) — no espera a
+  intentar guardar contra el servidor para avisar que el número no sirve. Es el dato que un buscador usa
+  para contactar a don Héctor; un contacto mal escrito lo deja invisible sin que nadie lo note.
 
 ## Estados por superficie
 
@@ -217,13 +232,15 @@ al final de la pantalla, cada campo se guarda por su cuenta.
 | ------------------------------------------ | -------------------------------------------------------------------------------------------- | ---------------------- |
 | V-002 inicial (formulario vacío)            | Título "Crea tu perfil", los 5 campos vacíos con placeholder, botón deshabilitado            | Completar los campos |
 | V-002 error al enviar                       | "No pudimos publicar tu perfil. Tus datos siguen acá — inténtalo de nuevo"                   | "Reintentar" |
-| V-003 vacío (recién publicado)              | "¡Listo! Tu perfil ya es visible." + secciones de fotos/descripción/precio con invitación a completar | "+ Agregar foto", tocar cualquier campo |
+| V-003 vacío (recién publicado)              | "¡Listo! Tu perfil ya es visible." + fotos con invitación a completar, descripción con placeholder "Ej: 'Electricista con 10 años de experiencia en Ñuñoa'" y precio con "Ej: Desde $10.000" | "+ Agregar foto", tocar cualquier campo |
 | V-003 con datos                             | Encabezado "Héctor Silva · Electricidad · Ñuñoa", 3 fotos, descripción, "Desde $10.000" y tarjeta "Tus datos" con las 4 filas (nombre, categoría, comuna, contacto) | Tocar cualquier campo para editar, incluidos los de "Tus datos" |
 | V-003 editando un campo                     | El campo tocado (ej. "Contacto") se vuelve un input con el valor actual precargado, el resto de la pantalla no se mueve | Escribir y salir del campo para guardar |
+| V-003 formato inválido al escribir          | El input de Contacto en rojo + "Ese número no parece válido" bajo el campo, el valor escrito se mantiene | Corregir el valor, no se guarda hasta que sea válido |
 | V-003 guardando un campo                    | El campo muestra un spinner chico inline, el resto de la pantalla no se bloquea              | Ninguna hasta que termine |
 | V-003 error al guardar un campo             | Ícono de error junto al campo + "No se pudo guardar, toca para reintentar"                   | Reintentar ese campo |
 | V-001 revisa tu correo                      | "Te mandamos un enlace a hector@gmail.com. Ábrelo desde este mismo celular."                 | "¿No te llegó? Revisa spam o pide otro enlace" (aparece a los 60s) |
 | V-001 enlace inválido                       | "Este enlace ya no funciona"                                                                 | "Enviar uno nuevo" |
+| V-001 formato de email inválido             | Campo en rojo + "Ese correo no parece válido — revisa que esté bien escrito" bajo el campo    | Corregir el texto y tocar "Enviar enlace" de nuevo |
 
 ## Mockups
 
@@ -238,9 +255,9 @@ al final de la pantalla, cada campo se guarda por su cuenta.
 | Funcionalidad | Flujo    | Estados cubiertos                              | Estado    |
 | ------------- | -------- | ----------------------------------------------- | --------- |
 | F-001         | UXF-002  | formulario, enviando, error, perfil ya existe por doble envío (CL-003) | borrador |
-| F-002         | UXF-003  | vacío (CL-001, CL-002), con datos, editando, guardando, error | borrador |
+| F-002         | UXF-003  | vacío (CL-001, CL-002), con datos, editando, formato inválido, guardando, error | borrador |
 | F-003         | UXF-002  | correo de confirmación (contenido en la secuencia) | borrador |
-| D-001         | UXF-001  | ingresar email, revisa tu correo, enlace inválido | borrador |
+| D-001         | UXF-001  | ingresar email, formato inválido, revisa tu correo, enlace inválido | borrador |
 
 ## Decisiones de experiencia
 
