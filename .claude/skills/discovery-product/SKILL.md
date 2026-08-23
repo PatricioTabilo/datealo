@@ -42,6 +42,10 @@ Por eso cada `F-xxx` declara **a qué lado sirve** y **qué necesita del otro la
 resultado**. Y por eso el estado vacío no es un caso límite decorativo: para muchas búsquedas será el
 estado principal durante meses.
 
+Para decidir con qué categoría-comuna arrancar, cómo tratar al lado difícil (profesionales) frente al lado
+fácil (clientes), y qué significa "suplir oferta manualmente" sin fingir actividad falsa, usar el skill
+`cold-start-problem`.
+
 ```
 ❌ "F-004: filtrar resultados por rating mínimo, disponibilidad y rango de precio"
    (con 6 profesionales en una comuna, tres filtros combinados devuelven cero siempre)
@@ -140,6 +144,10 @@ Jerarquía de evidencia mientras no haya producto en producción:
 | Benchmark de otro producto              | Qué trade-off eligió alguien con otra escala    | No transfiere a nuestro volumen      |
 | Intuición del equipo                     | Nada. Es hipótesis                              | Se declara como tal o no se escribe  |
 
+Para conseguir la primera fila de la tabla sin contaminarla con respuestas de cortesía, usar el skill
+`mom-test` al preparar y correr la conversación: hablar de su vida y su comportamiento pasado, nunca de la
+idea, y cerrar con un compromiso real en vez de un "me encantaría usarlo".
+
 Toda `C-xxx` sostenida solo por benchmark lleva confianza `media` o `baja`, y su implicación se escribe
 como "esto deberá ser cierto", no como "esto es así".
 
@@ -179,6 +187,10 @@ oral? Si sí, la traducción oral es la redacción correcta.
 ✅ "Señal (qué observaríamos si funciona): de cada 10 personas que buscan una categoría
    y abren un perfil, al menos 3 tocan el botón de WhatsApp."
 ```
+
+Antes de fijar una señal, usar el skill `lean-analytics` para distinguirla de una vanity metric: una señal
+vale si es un ratio (no un total acumulado que solo sube) y si cambia lo que Datealo hace después. "500
+profesionales registrados" no es una señal — "3 de 10 tocan WhatsApp" sí lo es.
 
 ### Cómo se redacta una decisión (D-xxx)
 
@@ -265,6 +277,11 @@ Reglas:
           (no describe quién, en qué contexto, ni qué pasa cuando no hay nadie)
 ```
 
+Para profundizar un `F-xxx` dudoso, usar el skill `jobs-to-be-done`: separar la dimensión funcional (llamar
+a alguien hoy) de la emocional (dejar de angustiarse) y la social (no depender del grupo del edificio), y
+recordar que la competencia real de Datealo no es otro marketplace — es "no hacer nada" o resolverlo con el
+vecino.
+
 ## Cómo estructurar la investigación
 
 1. Describir el problema con situación + acción + respuesta actual + consecuencia.
@@ -311,6 +328,10 @@ concepto importado.
 Para el mercado chileno, el punto de comparación honesto no es Yelp: es el grupo de WhatsApp del edificio,
 Marketplace de Facebook y la recomendación de un vecino. Ese es el sustituto real, y es contra ese
 estándar que una funcionalidad tiene que ganar.
+
+Cuando haga falta explicar contra qué compite Datealo o por qué alguien lo elegiría sobre su alternativa
+actual, usar el skill `obviously-awesome`: partir siempre de la alternativa real del usuario (el grupo de
+WhatsApp, no Yelp), no de una categoría de mercado abstracta.
 
 ## El ideal vive en investigación; el recorte, en producto
 

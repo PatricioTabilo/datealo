@@ -76,6 +76,31 @@
       "source": "unknown",
       "sourceType": "unverified",
       "note": "Assumed to be from coreyhaines31/marketingskills (same pack as ai-seo/content-strategy/etc.) but content diverges completely from that repo's current copywriting skill — likely a different or older source. Left as-is; recommend re-sourcing."
+    },
+    "mom-test": {
+      "source": "wondelai/skills",
+      "sourceType": "github",
+      "computedHash": "fbf036f31e5932e68adc6d26abe8d75f2213b3c50ea345f7dffa2f235b0ce0ae"
+    },
+    "jobs-to-be-done": {
+      "source": "wondelai/skills",
+      "sourceType": "github",
+      "computedHash": "cc227aa837bda4ae0910324e52a90d338354501d005f7ef2fbd0cff9fd73aaf1"
+    },
+    "cold-start-problem": {
+      "source": "wondelai/skills",
+      "sourceType": "github",
+      "computedHash": "6ee3a73a0ab3c0e0c70c75c1c36222cbca418e3c4fbfec75130f99079683af29"
+    },
+    "lean-analytics": {
+      "source": "wondelai/skills",
+      "sourceType": "github",
+      "computedHash": "ed66ef399bdfeb2ab56583940b47d58b516162826bb81a40d121c9a17c0c8006"
+    },
+    "obviously-awesome": {
+      "source": "wondelai/skills",
+      "sourceType": "github",
+      "computedHash": "abfb03a452f964cfdd06a8ee11d51a541894778c2d4013c15b16dd1718002af6"
     }
   }
 }
