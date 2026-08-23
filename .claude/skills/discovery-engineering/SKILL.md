@@ -214,6 +214,6 @@ Una limitación técnica puede influir en el recorte, pero no debe presentarse c
 ingeniería descubre que algo es inviable, el cambio se registra primero en `producto.md` como decisión de
 alcance con su trade-off, y luego se actualiza `ingenieria.md`.
 
-Para patrones de Nuxt y Nitro, ver `.agents/skills/nuxt/`. Para schemas y queries, ver
-`.agents/skills/drizzle-orm/`. Para extraer composables y componentes al implementar, ver el skill
+Para patrones de Nuxt y Nitro, ver `.claude/skills/nuxt/`. Para schemas y queries, ver
+`.claude/skills/drizzle-orm/`. Para extraer composables y componentes al implementar, ver el skill
 `vue-composition`.

@@ -8,7 +8,7 @@ Esta es una página de **WAITLIST PRE-LANZAMIENTO**. No hay producto funcional. 
 
 Lee estos archivos COMPLETOS antes de escribir una sola línea de código o copy. Cada uno contiene frameworks que DEBES aplicar:
 
-1. **Marketing Psychology** — Lee `.agents/skills/marketing-psychology/SKILL.md` completo. Aplica estos modelos específicos en la página:
+1. **Marketing Psychology** — Lee `.claude/skills/marketing-psychology/SKILL.md` completo. Aplica estos modelos específicos en la página:
    - **Jobs to Be Done**: El copy vende el JOB ("encontrar un gasfiter confiable en 5 min"), no el producto
    - **Mimetic Desire**: Waitlist = exclusividad. "Otros ya se anotaron" genera deseo
    - **Commitment & Consistency**: Micro-compromiso (email) → mayor probabilidad de usar el producto
@@ -17,7 +17,7 @@ Lee estos archivos COMPLETOS antes de escribir una sola línea de código o copy
    - **Scarcity / Urgency**: Acceso anticipado limitado, no fecha falsa
    - **EAST Framework**: Easy (un campo), Attractive (diseño premium), Social (otros se anotan), Timely (pre-lanzamiento)
 
-2. **Copywriting** — Lee `.agents/skills/copywriting/SKILL.md` completo. Aplica:
+2. **Copywriting** — Lee `.claude/skills/copywriting/SKILL.md` completo. Aplica:
    - **AIDA** como estructura macro de la página: Attention (hero) → Interest (problema) → Desire (solución + visión) → Action (waitlist CTA)
    - **PAS** para la sección del problema: Problem → Agitate → Solution
    - **Fórmula de CTA**: [Verbo de acción] + [Qué obtienen] + [Facilidad]. Ej: "Reserva tu acceso — es gratis"
@@ -25,7 +25,7 @@ Lee estos archivos COMPLETOS antes de escribir una sola línea de código o copy
    - **Emotional triggers**: Frustración (buscar en redes es un caos), esperanza (un lugar confiable), ease (sin esfuerzo)
    - **Objection handling** cerca del CTA: "Sin spam", "Gratis", "Te avisamos cuando lancemos"
 
-3. **Page CRO** — Lee `.agents/skills/page-cro/SKILL.md` completo. Aplica:
+3. **Page CRO** — Lee `.claude/skills/page-cro/SKILL.md` completo. Aplica:
    - **Un solo goal de conversión**: email signup. No hay segundo CTA compitiendo
    - **5-second test**: En 5 seg debe quedar claro QUÉ es datealo y POR QUÉ darles tu email
    - **CTA visible above the fold** Y repetido al final
@@ -33,23 +33,23 @@ Lee estos archivos COMPLETOS antes de escribir una sola línea de código o copy
    - **Trust signals**: No stats inventados, pero sí: "Verificaremos a cada profesional", "Tu email está seguro"
    - **Visual hierarchy**: El email input es EL protagonista visual del hero
 
-4. **Content Strategy** — Lee `.agents/skills/content-strategy/SKILL.md`. Aplica:
+4. **Content Strategy** — Lee `.claude/skills/content-strategy/SKILL.md`. Aplica:
    - Copy orientado a **búsquedas reales** que haría alguien con el problema: "buscar gasfiter cerca", "encontrar electricista confiable"
    - **Lenguaje del cliente**, no jerga de producto: "profesional" no "proveedor de servicios"
 
-5. **AI SEO** — Lee `.agents/skills/ai-seo/SKILL.md`. Aplica:
+5. **AI SEO** — Lee `.claude/skills/ai-seo/SKILL.md`. Aplica:
    - Contenido **extractable por LLMs**: estructura clara, oraciones declarativas sobre qué es datealo
    - **Schema.org** Organization + WebSite
    - Meta description que responda la query "¿qué es datealo?"
 
-6. **Frontend Design** — Lee `.agents/skills/frontend-design/SKILL.md`. Aplica anti-AI-slop: sin Inter, sin gradientes genéricos, sin layouts predecibles.
+6. **Frontend Design** — Lee `.claude/skills/frontend-design/SKILL.md`. Aplica anti-AI-slop: sin Inter, sin gradientes genéricos, sin layouts predecibles.
 
-7. **UI/UX Pro Max** — Lee `.agents/skills/ui-ux-pro-max/SKILL.md` y ejecuta:
+7. **UI/UX Pro Max** — Lee `.claude/skills/ui-ux-pro-max/SKILL.md` y ejecuta:
    ```bash
-   python3 .agents/skills/ui-ux-pro-max/scripts/search.py "waitlist pre-launch landing page service marketplace" --design-system -p "Datealo"
+   python3 .claude/skills/ui-ux-pro-max/scripts/search.py "waitlist pre-launch landing page service marketplace" --design-system -p "Datealo"
    ```
 
-8. **Web Design Guidelines** — Lee `.agents/skills/web-design-guidelines/SKILL.md` y sigue su instrucción de fetch. Aplícalas como checklist al final.
+8. **Web Design Guidelines** — Lee `.claude/skills/web-design-guidelines/SKILL.md` y sigue su instrucción de fetch. Aplícalas como checklist al final.
 
 **NO empieces a implementar hasta haber leído los 8 skills.**
 

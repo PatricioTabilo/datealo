@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "hashNote": "computedHash = sha256 of SKILL.md content. Entries added after 2026-08-22 were verified and hashed manually (cloned upstream repo, diffed, copied in) because `skill add` was not run for them directly — see git log for this file.",
   "skills": {
     "ai-seo": {
       "source": "coreyhaines31/marketingskills",
@@ -25,6 +26,56 @@
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
       "computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a"
+    },
+    "ux-writing": {
+      "source": "content-designer/ux-writing-skill",
+      "sourceType": "github",
+      "computedHash": "67dda2a5ba7e26f69860e1018a37068ca201735ff8ae98199c143138d91b4550"
+    },
+    "nuxt": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "computedHash": "0c7759f5201fcdd6fc149d14e4f55b29090228800a22b61f96c065b77caaff3a"
+    },
+    "vue": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "computedHash": "eba0d129cc4c2cf9c08116d4b136cc6800322985e831a9e04da4e97f3dca137a"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "1608ea77fbb6fc30d13a97d12cfa8ebf31358d40f0dd97beed24829d6b3f45dd"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "computedHash": "ea087c341bfb5b23195c7302027268ede86da802554c18a5c4896a6017b439f9"
+    },
+    "vue-best-practices": {
+      "source": "vuejs-ai/skills",
+      "sourceType": "github",
+      "computedHash": "05b373713e6bbd216fb3ee9709289b68bcdeb9eac8ffea477e35bdbd8e0f9acd"
+    },
+    "supabase-postgres-best-practices": {
+      "source": "supabase/agent-skills",
+      "sourceType": "github",
+      "computedHash": "ad65e776f45e761bafc609d3f506c77c1032225aa65e0c4c02f241b8071e5855"
+    },
+    "drizzle-orm": {
+      "source": "unknown",
+      "sourceType": "unverified",
+      "note": "Pre-existing in .agents/skills with no source metadata. Content doesn't match any upstream repo I could confirm — recommend re-sourcing or dropping."
+    },
+    "prompt-engineering-patterns": {
+      "source": "unknown",
+      "sourceType": "unverified",
+      "note": "Pre-existing in .agents/skills with no source metadata. Content doesn't match any upstream repo I could confirm — recommend re-sourcing or dropping."
+    },
+    "copywriting": {
+      "source": "unknown",
+      "sourceType": "unverified",
+      "note": "Assumed to be from coreyhaines31/marketingskills (same pack as ai-seo/content-strategy/etc.) but content diverges completely from that repo's current copywriting skill — likely a different or older source. Left as-is; recommend re-sourcing."
     }
   }
 }
