@@ -38,7 +38,8 @@ explícita (UX-001), no queda implícito.
   UXF-003
   - modo **vacío** — recién publicado, sin fotos, descripción ni precio todavía
   - modo **con datos** — ya tiene algo cargado, editable campo por campo
-  - modo **guardando** — cambió un campo, esperando confirmación
+  - modo **editando un campo** — tocó un campo, se volvió input in-place con el valor actual precargado
+  - modo **guardando** — salió del campo con un valor nuevo, esperando confirmación
   - modo **error al guardar** — un cambio no se pudo guardar
 
 ## Mapa de estados
@@ -54,7 +55,9 @@ explícita (UX-001), no queda implícito.
 | V-002 modo enviando           | el servidor falla                             | V-002 modo error al enviar     | los datos del formulario se conservan, nada se pierde |
 | V-002 modo error al enviar    | toca "Reintentar"                             | V-002 modo enviando            | reintenta con los mismos datos, sin que los vuelva a escribir |
 | V-002 modo formulario         | el email ya tiene cuenta (CL-003)             | V-001 modo ingresar email, con un aviso | nada del formulario se guarda — no era un registro nuevo |
-| V-003 modo vacío o con datos  | edita un campo y sale de foco / toca "Guardar" | V-003 modo guardando          | el campo anterior sigue visible hasta confirmar |
+| V-003 modo vacío o con datos  | toca un campo                                 | V-003 modo editando un campo   | el valor actual queda precargado como punto de partida del input |
+| V-003 modo editando un campo  | escribe y sale de foco / toca "Listo"          | V-003 modo guardando           | el valor anterior sigue visible hasta confirmar |
+| V-003 modo editando un campo  | sale de foco sin cambiar el valor              | V-003 modo con datos           | no dispara guardado — nada cambió |
 | V-003 modo guardando          | el servidor confirma                          | V-003 modo con datos           | el cambio ya es público de inmediato |
 | V-003 modo guardando          | el servidor falla                             | V-003 modo error al guardar    | el valor anterior se mantiene visible; el cambio no se pierde, queda para reintentar |
 | V-003 (cualquier modo)        | se va a WhatsApp o cierra la pestaña sin guardar un campo a medio escribir | V-003 modo con datos (al volver) | los campos ya guardados quedan; el que estaba a medio escribir sin confirmar se descarta |
@@ -212,6 +215,7 @@ al final de la pantalla, cada campo se guarda por su cuenta.
 | V-002 error al enviar                       | "No pudimos publicar tu perfil. Tus datos siguen acá — inténtalo de nuevo"                   | "Reintentar" |
 | V-003 vacío (recién publicado)              | "¡Listo! Tu perfil ya es visible." + secciones de fotos/descripción/precio con invitación a completar | "+ Agregar foto", tocar cualquier campo |
 | V-003 con datos                             | Encabezado "Héctor Silva · Electricidad · Ñuñoa", 3 fotos, descripción, "Desde $10.000" y tarjeta "Tus datos" con las 4 filas (nombre, categoría, comuna, contacto) | Tocar cualquier campo para editar, incluidos los de "Tus datos" |
+| V-003 editando un campo                     | El campo tocado (ej. "Contacto") se vuelve un input con el valor actual precargado, el resto de la pantalla no se mueve | Escribir y salir del campo para guardar |
 | V-003 guardando un campo                    | El campo muestra un spinner chico inline, el resto de la pantalla no se bloquea              | Ninguna hasta que termine |
 | V-003 error al guardar un campo             | Ícono de error junto al campo + "No se pudo guardar, toca para reintentar"                   | Reintentar ese campo |
 | V-001 revisa tu correo                      | "Te mandamos un enlace a hector@gmail.com. Ábrelo desde este mismo celular."                 | "¿No te llegó? Revisa spam o pide otro enlace" (aparece a los 60s) |
@@ -230,7 +234,7 @@ al final de la pantalla, cada campo se guarda por su cuenta.
 | Funcionalidad | Flujo    | Estados cubiertos                              | Estado    |
 | ------------- | -------- | ----------------------------------------------- | --------- |
 | F-001         | UXF-002  | formulario, enviando, error, email ya existe (CL-003) | borrador |
-| F-002         | UXF-003  | vacío (CL-001, CL-002), con datos, guardando, error | borrador |
+| F-002         | UXF-003  | vacío (CL-001, CL-002), con datos, editando, guardando, error | borrador |
 | F-003         | UXF-002  | correo de confirmación (contenido en la secuencia) | borrador |
 | D-001         | UXF-001  | ingresar email, revisa tu correo, enlace inválido | borrador |
 

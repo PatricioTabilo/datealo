@@ -166,7 +166,68 @@
         </div>
       </section>
 
-      <!-- 3. guardando un campo -->
+      <!-- 3. editando un campo -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 · modo editando un campo
+          <small>tocó "Contacto" en Tus datos — el campo se vuelve input in-place, con el valor actual precargado</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="h-full overflow-y-auto p-5 pb-10">
+            <h1 class="text-xl font-extrabold" style="color: var(--ui-text-highlighted)">Héctor Silva</h1>
+            <p class="mt-0.5 text-sm" style="color: var(--ui-text-muted)">Electricidad · Ñuñoa</p>
+
+            <div class="section-card mt-5 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Fotos de tus trabajos</p>
+              <div class="mt-3 grid grid-cols-3 gap-2">
+                <div class="photo-slot"></div>
+                <div class="photo-slot"></div>
+                <div class="add-photo flex items-center justify-center text-2xl">+</div>
+              </div>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Descripción</p>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-highlighted)">
+                Electricista con 10 años de experiencia en Ñuñoa y alrededores.
+              </p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Precio</p>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-highlighted)">Desde $10.000</p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="mb-2 text-sm font-semibold" style="color: var(--ui-text-highlighted)">Tus datos</p>
+              <div class="flex justify-between border-b py-2 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Nombre</span>
+                <span style="color: var(--ui-text-highlighted)">Héctor Silva</span>
+              </div>
+              <div class="flex justify-between border-b py-2 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Categoría</span>
+                <span style="color: var(--ui-text-highlighted)">Electricidad</span>
+              </div>
+              <div class="flex justify-between border-b py-2 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Comuna</span>
+                <span style="color: var(--ui-text-highlighted)">Ñuñoa</span>
+              </div>
+              <div class="flex items-center justify-between py-2 text-sm">
+                <span style="color: var(--ui-text-muted)">Contacto</span>
+                <input
+                  type="tel"
+                  value="+56 9 1234 5678"
+                  class="w-36 rounded-md border px-2 py-1 text-right text-sm outline-none"
+                  style="border-color: var(--ui-primary); color: var(--ui-text-highlighted)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. guardando un campo -->
       <section class="frame frame-mobile">
         <div class="frame-label">
           V-003 · modo guardando
@@ -225,7 +286,7 @@
         </div>
       </section>
 
-      <!-- 4. error al guardar -->
+      <!-- 5. error al guardar -->
       <section class="frame frame-mobile">
         <div class="frame-label">
           V-003 · modo error al guardar
