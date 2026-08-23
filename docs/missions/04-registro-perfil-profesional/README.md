@@ -13,12 +13,12 @@ qué categorías y comunas se registra).
 
 | Documento     | Estado    | Qué falta para su gate              |
 | ------------- | --------- | ------------------------------------ |
-| Investigación | activo    | situación y consecuencia concretas, 4 conclusiones (C-001 a C-004) con confianza alta/media, ideal con capacidades observables — se acumula, no bloquea |
-| Producto      | borrador  | esperando revisión de Patricio — 3 funcionalidades (F-001 a F-003, F-004 fusionada en F-002), 4 decisiones (D-001 a D-004), sin preguntas bloqueantes |
-| Experiencia   | pendiente | —                                     |
+| Investigación | activo    | situación y consecuencia concretas, 6 conclusiones (C-001 a C-006) con confianza media/alta, ideal con capacidades observables — se acumula, no bloquea |
+| Producto      | vigente   | aprobado por Patricio el 2026-08-22 — 3 funcionalidades (F-001 a F-003, F-004 fusionada en F-002), 4 decisiones (D-001 a D-004) |
+| Experiencia   | activo    | en foco — diseñar el flujo de registro y edición de perfil (UXF-xxx) |
 | Ingeniería    | pendiente | —                                     |
 
-**Próximo hito:** que Patricio revise y apruebe `producto.md` — sin fecha límite todavía.
+**Próximo hito:** completar `experiencia.md` — sin fecha límite todavía.
 
 ## Brief
 
