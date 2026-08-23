@@ -135,7 +135,7 @@ perfil existente.
 
 | Paso | Acción                                        | Respuesta del sistema                                    | Información visible |
 | ---- | -------------------------------------------------- | ---------------------------------------------------------- | ----------------------- |
-| 1    | Completa nombre, elige categoría (`CategoriaSelect`), elige comuna (`ComunaSelect`), escribe su WhatsApp | Cada campo valida en el momento (ej. formato de teléfono) — nunca solo al final | Los 5 campos en una sola pantalla, el botón "Publicar mi perfil" abajo, deshabilitado hasta que los 5 estén completos |
+| 1    | Completa nombre, elige categoría (`CategoriaSelect`), elige comuna (`ComunaSelect`), escribe su contacto (WhatsApp o teléfono) | Cada campo valida en el momento (ej. formato de teléfono) — nunca solo al final | Los 5 campos en una sola pantalla, el botón "Publicar mi perfil" abajo, deshabilitado hasta que los 5 estén completos |
 | 2    | Toca "Publicar mi perfil"                          | Botón pasa a estado de carga; a los <2s, Datealo crea el perfil y redirige | Spinner en el botón, sin bloquear el resto de la pantalla |
 | 3    | Llega a V-003 modo vacío                           | El correo de confirmación (F-003) se dispara en paralelo, no bloquea la navegación | "¡Listo! Tu perfil ya es visible. Agrega fotos para que la gente confíe más en ti" + los campos de F-002 vacíos, listos para completar |
 
