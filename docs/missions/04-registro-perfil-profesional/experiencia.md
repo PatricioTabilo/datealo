@@ -104,7 +104,7 @@ tener que recordarlo.
 
 | Condición                          | Qué cambia                                  | Cómo se entiende                          | Cómo se recupera |
 | --------------------------------------- | ---------------------------------------------- | ---------------------------------------------- | --------------------- |
-| Escribe un email mal formado (sin @, dominio incompleto) | El botón "Enviar enlace" no manda nada | El campo se marca en rojo + "Ese correo no parece válido — revisa que esté bien escrito" bajo el campo | Corrige el texto ahí mismo, sin perder lo que ya había escrito |
+| Escribe un email mal formado (sin @, dominio incompleto) | El botón "Enviar enlace" no manda nada | El campo se marca en rojo + "Ese correo no parece válido. Revisa que esté bien escrito." bajo el campo | Corrige el texto ahí mismo, sin perder lo que ya había escrito |
 | El enlace se abre en otro navegador/dispositivo del que lo pidió | Igual funciona — Supabase Auth no exige que sea el mismo browser | No hay ningún aviso especial, simplemente entra | No aplica, funciona igual |
 | El enlace ya expiró (+60 min) o ya se usó | No autentica                                | "Este enlace ya no funciona" + botón "Enviar uno nuevo" | Vuelve a V-001 modo ingresar email |
 | El correo no llega (falla de Resend/spam) | No hay forma de que Datealo lo detecte en el momento | Después de un minuto sin nada, se muestra "¿No te llegó? Revisa spam o pide otro enlace" bajo el mensaje principal | Botón "Enviar otro enlace" reintenta sin perder el email ya escrito |
@@ -140,7 +140,7 @@ perfil existente.
 | --------------------------------------- | -------------------------------------------- | -------------------------- |
 | Termina bien                            | completa los 5 campos, toca "Publicar mi perfil" | el perfil se crea y publica; pasa a V-003 |
 | Cierra la app a medio llenar             | cierra la pestaña o navega afuera            | nada se guarda — no hay borrador; tiene que volver a escribir todo si regresa |
-| Ya existe su perfil al tocar "Publicar" (CL-003, doble envío) | envía el formulario dos veces (dos pestañas, o un formulario viejo que quedó cargado) | nada del formulario se guarda; va directo a V-003 con un aviso ("Ya tienes un perfil — te llevamos a verlo") |
+| Ya existe su perfil al tocar "Publicar" (CL-003, doble envío) | envía el formulario dos veces (dos pestañas, o un formulario viejo que quedó cargado) | nada del formulario se guarda; va directo a V-003 con un aviso ("Ya tienes un perfil. Te llevamos a verlo.") |
 
 ### Secuencia principal
 
@@ -154,8 +154,8 @@ perfil existente.
 
 | Condición                     | Qué cambia                              | Cómo se entiende                             | Cómo se recupera |
 | ---------------------------------- | -------------------------------------------- | --------------------------------------------------- | --------------------- |
-| Falla el servidor al publicar      | No se crea el perfil                         | "No pudimos publicar tu perfil. Tus datos siguen acá" + botón "Reintentar" | Reintenta con los mismos datos, sin volver a escribirlos |
-| Ya existe su perfil (CL-003), envió el formulario dos veces | No se crea un perfil duplicado | "Ya tienes un perfil — te llevamos a verlo" en V-003 | No aplica — sigue autenticado, no hay nada que recuperar, solo ve su perfil ya existente |
+| Falla el servidor al publicar      | No se crea el perfil                         | "No pudimos publicar tu perfil, pero tus datos siguen acá." + botón "Reintentar" | Reintenta con los mismos datos, sin volver a escribirlos |
+| Ya existe su perfil (CL-003), envió el formulario dos veces | No se crea un perfil duplicado | "Ya tienes un perfil. Te llevamos a verlo." en V-003 | No aplica — sigue autenticado, no hay nada que recuperar, solo ve su perfil ya existente |
 | Conexión lenta al publicar (>300ms)| El botón muestra un spinner, no toda la pantalla | El resto del formulario sigue visible y legible, no se congela | Si pasa de 10s, mismo mensaje de falla de servidor con "Reintentar" |
 
 ### Decisiones que no deben quedar implícitas
@@ -208,7 +208,7 @@ al final de la pantalla, cada campo se guarda por su cuenta.
 | Falla el guardado de un campo            | El valor vuelve al anterior, no se queda a medias | Ícono de error junto al campo + "No se pudo guardar, toca para reintentar" | Toca el campo de nuevo, reintenta con el valor que había escrito |
 | Escribe el Contacto sin formato de teléfono válido | No llega a guardarse — ni siquiera lo intenta | El input se marca en rojo + "Ese número no parece válido" bajo el campo, mientras sigue escribiendo | Corrige el valor ahí mismo; recién ahí sale de foco y guarda |
 | Cambia categoría o comuna (campos del registro) | Mismo mecanismo in-place que cualquier otro campo — no hay un flujo distinto ni una advertencia especial | Mismo check verde al guardar | Igual que cualquier campo |
-| Perfil sin fotos todavía (modo vacío, CL-001) | La sección de fotos muestra un espacio invitando a subir, no un error | "Agrega fotos de tus trabajos — los perfiles con fotos generan más confianza" con el botón "+ Agregar foto" destacado | No aplica — es el estado esperado al llegar de UXF-002 |
+| Perfil sin fotos todavía (modo vacío, CL-001) | La sección de fotos muestra un espacio invitando a subir, no un error | "Agrega fotos de tus trabajos: los perfiles con fotos generan más confianza" con el botón "+ Agregar foto" destacado | No aplica — es el estado esperado al llegar de UXF-002 |
 | Perfil sin descripción o precio (CL-002) | Esos campos muestran un ejemplo real como placeholder ("Ej: 'Electricista con 10 años de experiencia en Ñuñoa'", "Ej: Desde $10.000"), nunca un dato inventado ni una instrucción vacía | El placeholder es visualmente distinto al valor real (más claro, cursiva) — y le muestra a don Héctor el formato esperado, no solo que falta completarlo | Toca el placeholder para escribir el valor por primera vez |
 
 ### Decisiones que no deben quedar implícitas
@@ -231,7 +231,7 @@ al final de la pantalla, cada campo se guarda por su cuenta.
 | Estado                                | Qué se muestra (texto e información real)                                            | Acción disponible |
 | ------------------------------------------ | -------------------------------------------------------------------------------------------- | ---------------------- |
 | V-002 inicial (formulario vacío)            | Título "Crea tu perfil", los 5 campos vacíos con placeholder, botón deshabilitado            | Completar los campos |
-| V-002 error al enviar                       | "No pudimos publicar tu perfil. Tus datos siguen acá — inténtalo de nuevo"                   | "Reintentar" |
+| V-002 error al enviar                       | "No pudimos publicar tu perfil, pero tus datos siguen acá. Inténtalo de nuevo."               | "Reintentar" |
 | V-003 vacío (recién publicado)              | "¡Listo! Tu perfil ya es visible." + fotos con invitación a completar, descripción con placeholder "Ej: 'Electricista con 10 años de experiencia en Ñuñoa'" y precio con "Ej: Desde $10.000" | "+ Agregar foto", tocar cualquier campo |
 | V-003 con datos                             | Encabezado "Héctor Silva · Electricidad · Ñuñoa", 3 fotos, descripción, "Desde $10.000" y tarjeta "Tus datos" con las 4 filas (nombre, categoría, comuna, contacto) | Tocar cualquier campo para editar, incluidos los de "Tus datos" |
 | V-003 editando un campo                     | El campo tocado (ej. "Contacto") se vuelve un input con el valor actual precargado, el resto de la pantalla no se mueve | Escribir y salir del campo para guardar |
@@ -240,7 +240,7 @@ al final de la pantalla, cada campo se guarda por su cuenta.
 | V-003 error al guardar un campo             | Ícono de error junto al campo + "No se pudo guardar, toca para reintentar"                   | Reintentar ese campo |
 | V-001 revisa tu correo                      | "Te mandamos un enlace a hector@gmail.com. Ábrelo desde este mismo celular."                 | "¿No te llegó? Revisa spam o pide otro enlace" (aparece a los 60s) |
 | V-001 enlace inválido                       | "Este enlace ya no funciona"                                                                 | "Enviar uno nuevo" |
-| V-001 formato de email inválido             | Campo en rojo + "Ese correo no parece válido — revisa que esté bien escrito" bajo el campo    | Corregir el texto y tocar "Enviar enlace" de nuevo |
+| V-001 formato de email inválido             | Campo en rojo + "Ese correo no parece válido. Revisa que esté bien escrito." bajo el campo    | Corregir el texto y tocar "Enviar enlace" de nuevo |
 
 ## Mockups
 
