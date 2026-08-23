@@ -11,10 +11,10 @@
 
 **Resultado:** don Héctor completa su registro desde el celular en un par de minutos, con solo lo mínimo
 necesario para ser encontrable (nombre, categoría, comuna, contacto), y su perfil queda visible de
-inmediato — sin esperar a que nadie lo apruebe. Fotos, descripción y precio orientativo los agrega cuando
+inmediato — sin esperar a que nadie lo apruebe. Fotos, descripción y un precio "desde $X" los agrega cuando
 quiera, antes o después de publicarse, sin que eso bloquee nada. Todo el registro (incluidas categoría y
-comuna) sigue siendo editable después, si su situación cambia. El precio orientativo es solo texto que se
-muestra en el perfil — Datealo nunca gestiona ni cobra comisión por el pago del servicio ([D-004](#d-004)).
+comuna) sigue siendo editable después, si su situación cambia. El precio es solo texto que se muestra en
+el perfil — Datealo nunca gestiona ni cobra comisión por el pago del servicio ([D-004](#d-004)).
 
 **Recorte respecto del ideal:** el ideal (ver [investigacion.md](./investigacion.md)) no distingue entre
 "registrarse" y "tener un perfil completo" — ambos pasan en el mismo momento. Acá sí se separan: el
@@ -31,7 +31,7 @@ administración para activar/desactivar perfiles — mismo criterio manual que c
 | ID    | Funcionalidad                                    | Lado         | Sustento     | Éxito |
 | ----- | ------------------------------------------------- | ------------ | ------------ | ----- |
 | F-001 | Crear cuenta y quedar publicado de inmediato       | profesional  | C-001, C-002, D-001, D-002 | M-001 |
-| F-002 | Completar o editar fotos, descripción y precio orientativo | profesional | C-001 (landing, E-001), D-004 | M-002 |
+| F-002 | Completar o editar fotos, descripción y precio ("desde $X") | profesional | C-001, C-006, D-004 | M-002 |
 | F-003 | Confirmar por correo que el registro funcionó      | profesional  | brief de esta misión (ver README) | M-001 |
 | F-004 | Editar categoría, comuna, nombre o contacto        | profesional  | C-005                      | M-003 |
 
@@ -73,11 +73,11 @@ verificación previo a publicarse.
 
 <a id="f-002"></a>
 
-### F-002 — Completar o editar fotos, descripción y precio orientativo
+### F-002 — Completar o editar fotos, descripción y precio ("desde $X")
 
 Cuando don Héctor quiere que alguien que no lo conoce confíe en él antes de escribirle,
-quiero agregar fotos de trabajos que ya hizo, contar en un par de líneas a qué se dedica, y dar un rango de
-precio orientativo,
+quiero agregar fotos de trabajos que ya hizo, contar en un par de líneas a qué se dedica, y dar un precio
+desde el cual empieza a cobrar,
 para que mi perfil se vea tan creíble como el de cualquier otro, sin depender de una reseña que todavía no
 tengo.
 
@@ -85,25 +85,28 @@ tengo.
 hace solo, en cualquier momento después de registrarse.
 
 **Sustento:** [C-001 de investigación](./investigacion.md#c-001) (E-001: la landing ya promete "perfil
-público con fotos"). **Éxito:** [M-002](#m-002).
+público con fotos"), [C-006](./investigacion.md#c-006). **Éxito:** [M-002](#m-002).
 
 **Reglas:**
 
-- Don Héctor puede agregar, cambiar o borrar fotos, descripción y precio orientativo en cualquier momento,
-  no solo durante el registro — no hay una ventana de tiempo para completarlo.
+- Don Héctor puede agregar, cambiar o borrar fotos, descripción y precio en cualquier momento, no solo
+  durante el registro — no hay una ventana de tiempo para completarlo.
 - La descripción es texto libre corto (pensado para 1-2 frases, no un currículum) — cuenta a qué se dedica,
   no reemplaza ningún campo del catálogo (categoría sigue siendo la de `CategoriaSelect`, no texto suelto).
-- El precio orientativo es texto que el profesional escribe (ej. "$15.000 - $40.000", "desde $20.000") —
-  **no es un monto que Datealo procese, cobre ni retenga.** Es información que se muestra en el perfil,
-  igual que una foto — ver [D-004](#d-004).
+- El precio es un solo número: "desde $X" — el piso, no un rango. Un rango fijo miente para trabajos tan
+  distintos entre sí como destapar un WC o cambiar un calefont completo (C-006); "desde" nunca miente,
+  solo dice el mínimo. Si quiere aclarar qué cubre ese mínimo (ej. "desde $10.000 la visita"), esa nuance
+  va en la descripción, no en el número.
+- El precio **no es un monto que Datealo procese, cobre ni retenga.** Es información que se muestra en el
+  perfil, igual que una foto — ver [D-004](#d-004).
 - Si no sube ninguna foto, el perfil sigue visible igual — ver [CL-001](#cl-001).
-- Si no define descripción o precio orientativo, el perfil sigue visible igual — ver [CL-002](#cl-002).
+- Si no define descripción o precio, el perfil sigue visible igual — ver [CL-002](#cl-002).
 - Datealo nunca oculta ni penaliza la posición de un perfil por tener el precio, la descripción o las
   fotos vacías.
 
 **Ejemplo verificable:** dado el perfil ya activo de don Héctor, cuando sube 3 fotos, escribe "Electricista
-con 10 años de experiencia en Ñuñoa y alrededores" y define "$15.000 - $40.000" como rango, entonces esas
-fotos, esa descripción y ese rango aparecen en su perfil público de inmediato, como texto — sin que nadie
+con 10 años de experiencia en Ñuñoa y alrededores" y define "Desde $10.000" como precio, entonces esas
+fotos, esa descripción y ese precio aparecen en su perfil público de inmediato, como texto — sin que nadie
 pueda pagar ni reservar nada desde ahí.
 
 **No incluye:** un límite mínimo de fotos para publicar, una revisión de que las fotos sean reales o
@@ -182,7 +185,7 @@ público.
 | ID     | Condición concreta                                          | Comportamiento esperado                                              | Funcionalidades |
 | ------ | ------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------------- |
 | CL-001 | Un perfil activo no tiene ninguna foto subida                 | Se muestra igual en el buscador, con un espacio vacío o genérico — nunca una foto de stock que insinúe que es del profesional | F-001, F-002 |
-| CL-002 | Un perfil activo no tiene descripción ni precio orientativo definido | Se muestra igual, sin esos datos — el buscador no filtra por precio si no lo puso | F-002 |
+| CL-002 | Un perfil activo no tiene descripción ni precio definido        | Se muestra igual, sin esos datos — el buscador no filtra por precio si no lo puso | F-002 |
 | CL-003 | Alguien intenta registrarse con un email que ya tiene cuenta   | Datealo lo redirige a iniciar sesión, no crea un perfil nuevo ni duplica    | F-001 |
 
 ## Fuera de alcance
@@ -315,7 +318,7 @@ público.
 
 <a id="d-004"></a>
 
-### D-004 — Datealo nunca gestiona ni cobra comisión por el pago del servicio; el precio orientativo es solo información
+### D-004 — Datealo nunca gestiona ni cobra comisión por el pago del servicio; el precio ("desde $X") es solo información
 
 - **Estado:** aceptada. **Fecha:** 2026-08-22.
 - **Sustento:** guardrail ya vigente en `CLAUDE.md` ("pago obligatorio para contactar" nunca se
@@ -329,10 +332,11 @@ público.
   Datealo, contradice el guardrail de "sin intermediación" de `CLAUDE.md`. Cobro por lead (modelo
   Thumbtack) — el profesional paga por cada contacto que recibe, se lo concrete o no; le agrega un costo a
   algo que hoy es gratis para todos los lados del marketplace.
-- **Decisión y consecuencia:** el precio orientativo (F-002) es texto que el profesional escribe — nunca un
-  monto que Datealo procesa, retiene o cobra. No hay ningún flujo de pago, cotización formal ni reserva en
-  esta misión ni en el roadmap actual. Features futuras que ayuden al profesional a cobrar (ej. generar una
-  boleta, un link de pago externo) son herramientas para él, nunca algo que pase por una cuenta de Datealo
+- **Decisión y consecuencia:** el precio (F-002, "desde $X" — ver [C-006](./investigacion.md#c-006) para
+  por qué no es un rango) es un número que el profesional escribe — nunca un monto que Datealo procesa,
+  retiene o cobra. No hay ningún flujo de pago, cotización formal ni reserva en esta misión ni en el
+  roadmap actual. Features futuras que ayuden al profesional a cobrar (ej. generar una boleta, un link de
+  pago externo) son herramientas para él, nunca algo que pase por una cuenta de Datealo
   ni genere comisión.
 - **Reapertura:** ninguna prevista — es un guardrail de identidad del producto (la principal diferencia con
   otras plataformas del rubro, según Patricio), no una restricción temporal de este MVP.
