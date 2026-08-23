@@ -99,7 +99,8 @@ desde producto — no en paralelo a una revisión de `producto.md` "para mantene
 **Gate de salida — `experiencia.md` está lista para `ingenieria.md` cuando:**
 
 - los flujos críticos tienen punto de partida, camino principal, estados intermedios, errores y recuperación
-- cada estado tiene contenido concreto (texto real, acción disponible) — no "mensaje de error apropiado"
+- cada estado tiene contenido concreto (texto real, acción disponible) — no "mensaje de error apropiado";
+  ese texto sigue el skill `ux-writing` (claro, específico, sin relleno de guiones)
 - cada vista lista sus modos, y el mapa de estados cubre todas las transiciones entre ellos
 - cada modo tiene su indicador permanente de estado, y cada flujo tiene todas sus salidas documentadas
 - los casos límite de `producto.md` tienen flujo mapeado, empezando por "no hay resultados"
@@ -110,8 +111,8 @@ desde producto — no en paralelo a una revisión de `producto.md` "para mantene
 **Evaluar antes de cerrar:** proponer y juzgar son actos distintos, y hacerlos en la misma pasada produce
 ceguera — el flujo recién escrito parece bueno porque uno acaba de convencerse a sí mismo. Antes de marcar
 `en revisión`, contrastar los flujos críticos contra heurísticas de usabilidad usando los skills instalados
-en `.agents/skills/`: `ui-ux-pro-max` y `web-design-guidelines` para el juicio, `frontend-design` para la
-propuesta visual.
+en `.claude/skills/`: `ui-ux-pro-max` y `web-design-guidelines` para el juicio, `frontend-design` para la
+propuesta visual, `ux-writing` para el texto de cada estado (labels, errores, empty states, CTAs).
 
 **Loop de vuelta:** si al diseñar un flujo se descubre que una regla de producto no funciona, registrar la
 contradicción en `producto.md` antes de simplificar el flujo aquí.
@@ -277,7 +278,8 @@ Tres cosas que el kit ya resuelve:
 
 - **Contenido real del feature**, con vocabulario chileno y los términos decididos en `producto.md`. Nada
   de lorem ipsum ni "Profesional 1": "Marcela Fuentes · Peluquería a domicilio · Ñuñoa · 4,8 (23 reseñas)"
-  revela los desbordes de texto que "Profesional 1" esconde.
+  revela los desbordes de texto que "Profesional 1" esconde. Al redactar labels, errores, empty states y
+  CTAs, aplicar el skill `ux-writing` en el momento de escribirlos, no como revisión posterior.
 - **Los modos y estados como frames rotulados** en el orden en que el usuario los recorre — así el archivo
   se lee como camino, no como galería.
 - **Interacción con JS puro solo si el flujo se evalúa mejor moviéndolo** — abrir un bottom sheet, cambiar

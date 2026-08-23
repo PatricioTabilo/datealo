@@ -211,20 +211,34 @@ si hay basura, mostrar la lista al usuario.
 
 ## Skills
 
-Skills propios del repo en `.claude/skills/`:
+Todos los skills (propios y de terceros) viven juntos en `.claude/skills/` — es la única carpeta que
+Claude Code carga; una carpeta `.agents/skills/` separada no se detecta y quedaba inerte.
 
-| Skill                     | Cuándo                                                             |
-| ------------------------- | ------------------------------------------------------------------ |
-| `arquitectura`            | Endpoints, base de datos, RLS, secretos, despliegue, librería de UI |
-| `discovery-product`       | Iterar `investigacion.md` o `producto.md` de una misión            |
-| `discovery-ux`            | Iterar `experiencia.md`: vistas, flujos, estados, mockups          |
-| `discovery-engineering`   | Iterar `ingenieria.md`: contratos, datos, slicing en issues        |
-| `vue-composition`         | Extraer componentes o composables; auditoría de salud de archivos  |
-| `comentarios`             | Antes de escribir o revisar cualquier comentario de código          |
+Skills propios del repo, escritos para las convenciones de Datealo:
 
-Skills de terceros pre-instalados en `.agents/skills/` (ver `skills-lock.json`): `nuxt`, `vue`,
-`drizzle-orm`, `frontend-design`, `ui-ux-pro-max`, `web-design-guidelines`, `marketing-psychology`,
-`ai-seo`, `content-strategy`, `page-cro`. Están todos localmente — nunca sugerir instalarlos.
+| Skill                       | Cuándo                                                              |
+| ---------------------------- | -------------------------------------------------------------------- |
+| `arquitectura`               | Endpoints, base de datos, RLS, secretos, despliegue, librería de UI |
+| `discovery-product`          | Iterar `investigacion.md` o `producto.md` de una misión              |
+| `discovery-ux`               | Iterar `experiencia.md`: vistas, flujos, estados, mockups            |
+| `discovery-engineering`      | Iterar `ingenieria.md`: contratos, datos, slicing en issues          |
+| `vue-composition`            | Extraer componentes o composables; auditoría de salud de archivos    |
+| `comentarios`                | Antes de escribir o revisar cualquier comentario de código           |
+| `nuxt-server-endpoints`      | Implementar endpoints en `server/api`/`server/utils` con Drizzle     |
+| `supabase-functions-logic`   | Lógica de negocio en Supabase Edge Functions (`supabase/functions/**`) |
+
+Skills de terceros, pre-instalados y trackeados en `skills-lock.json` (con su fuente exacta): `nuxt`,
+`vue`, `drizzle-orm`, `frontend-design`, `ui-ux-pro-max`, `web-design-guidelines`, `marketing-psychology`,
+`ai-seo`, `content-strategy`, `page-cro`, `vue-best-practices`, `supabase-postgres-best-practices`,
+`prompt-engineering-patterns`, `copywriting`, `ux-writing` (microcopy/content design — usarlo al redactar
+o revisar texto de interfaz en `discovery-ux`: labels, errores, empty states, CTAs), `mom-test` (entrevistas
+sin sesgo), `jobs-to-be-done` (profundiza el formato JTBD de `producto.md`), `cold-start-problem`
+(bootstrapping de marketplaces de dos lados — el arranque en frío de `discovery-product`), `lean-analytics`
+(métricas y benchmarks por modelo/etapa, evita vanity metrics en las señales `M-xxx`), `obviously-awesome`
+(positioning competitivo). Los últimos cinco se usan en `discovery-product`. Están todos localmente — nunca
+sugerir instalarlos. `drizzle-orm`, `prompt-engineering-patterns` y `copywriting` tienen origen sin
+verificar (ver nota en `skills-lock.json`) — evaluar re-sourcing antes de confiar ciegamente en su
+contenido.
 
 ## Guardrails de trabajo
 
