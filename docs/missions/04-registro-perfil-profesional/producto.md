@@ -31,9 +31,9 @@ administración para activar/desactivar perfiles — mismo criterio manual que c
 | ID    | Funcionalidad                                    | Lado         | Sustento     | Éxito |
 | ----- | ------------------------------------------------- | ------------ | ------------ | ----- |
 | F-001 | Crear cuenta y quedar publicado de inmediato       | profesional  | C-001, C-002, D-001, D-002 | M-001 |
-| F-002 | Completar o editar fotos, descripción y precio ("desde $X") | profesional | C-001, C-006, D-004 | M-002 |
+| F-002 | Editar el perfil: fotos, descripción, precio ("desde $X"), categoría, comuna, nombre y contacto | profesional | C-001, C-005, C-006, D-004 | M-002, M-003 |
 | F-003 | Confirmar por correo que el registro funcionó      | profesional  | brief de esta misión (ver README) | M-001 |
-| F-004 | Editar categoría, comuna, nombre o contacto        | profesional  | C-005                      | M-003 |
+| F-004 | *(fusionada en F-002 el 2026-08-22)*               | —            | —                          | —     |
 
 <a id="f-001"></a>
 
@@ -73,45 +73,51 @@ verificación previo a publicarse.
 
 <a id="f-002"></a>
 
-### F-002 — Completar o editar fotos, descripción y precio ("desde $X")
+### F-002 — Editar el perfil: fotos, descripción, precio, categoría, comuna, nombre y contacto
 
-Cuando don Héctor quiere que alguien que no lo conoce confíe en él antes de escribirle,
-quiero agregar fotos de trabajos que ya hizo, contar en un par de líneas a qué se dedica, y dar un precio
-desde el cual empieza a cobrar,
-para que mi perfil se vea tan creíble como el de cualquier otro, sin depender de una reseña que todavía no
-tengo.
+Cuando algo en el perfil de don Héctor deja de reflejar su situación real — le faltan fotos, cambió de
+comuna, empezó a hacer otro oficio, quiere ajustar su precio —
+quiero poder editarlo directo, sin crear una cuenta nueva ni perder nada de lo que ya tiene,
+para que mi perfil público siempre sea verdad, no una foto fija del día que me registré.
 
 **Lado del marketplace:** profesional. **Qué necesita del otro lado:** nada — es una acción que don Héctor
 hace solo, en cualquier momento después de registrarse.
 
 **Sustento:** [C-001 de investigación](./investigacion.md#c-001) (E-001: la landing ya promete "perfil
-público con fotos"), [C-006](./investigacion.md#c-006). **Éxito:** [M-002](#m-002).
+público con fotos"), [C-005](./investigacion.md#c-005), [C-006](./investigacion.md#c-006). **Éxito:**
+[M-002](#m-002), [M-003](#m-003).
 
 **Reglas:**
 
-- Don Héctor puede agregar, cambiar o borrar fotos, descripción y precio en cualquier momento, no solo
-  durante el registro — no hay una ventana de tiempo para completarlo.
+- Don Héctor puede editar cualquier campo de su perfil — fotos, descripción, precio, categoría, comuna,
+  nombre, contacto — en cualquier momento después de registrarse, no solo durante el registro. No hay una
+  ventana de tiempo para completarlo, y no es una pantalla distinta según qué campo se edite.
 - La descripción es texto libre corto (pensado para 1-2 frases, no un currículum) — cuenta a qué se dedica,
   no reemplaza ningún campo del catálogo (categoría sigue siendo la de `CategoriaSelect`, no texto suelto).
 - El precio es un solo número: "desde $X" — el piso, no un rango. Un rango fijo miente para trabajos tan
   distintos entre sí como destapar un WC o cambiar un calefont completo (C-006); "desde" nunca miente,
   solo dice el mínimo. Si quiere aclarar qué cubre ese mínimo (ej. "desde $10.000 la visita"), esa nuance
   va en la descripción, no en el número.
-- El precio **no es un monto que Datealo procese, cobre ni retenga.** Es información que se muestra en el
-  perfil, igual que una foto — ver [D-004](#d-004).
+- El precio es **siempre opcional** — nunca una condición para que el perfil exista o siga visible, ni al
+  registrarse ni después. Tampoco **es un monto que Datealo procese, cobre ni retenga**: es información
+  que se muestra en el perfil, igual que una foto — ver [D-004](#d-004).
+- Editar categoría, comuna, nombre o contacto no reinicia ni oculta nada acumulado — reseñas futuras,
+  antigüedad del perfil (C-005).
+- Ningún campo requiere una nueva revisión para guardarse — el perfil sigue publicado mientras se edita,
+  sin una ventana de "guardando cambios" donde desaparezca del buscador.
 - Si no sube ninguna foto, el perfil sigue visible igual — ver [CL-001](#cl-001).
 - Si no define descripción o precio, el perfil sigue visible igual — ver [CL-002](#cl-002).
-- Datealo nunca oculta ni penaliza la posición de un perfil por tener el precio, la descripción o las
-  fotos vacías.
+- Datealo nunca oculta ni penaliza la posición de un perfil por tener cualquiera de estos campos vacíos.
 
-**Ejemplo verificable:** dado el perfil ya activo de don Héctor, cuando sube 3 fotos, escribe "Electricista
-con 10 años de experiencia en Ñuñoa y alrededores" y define "Desde $10.000" como precio, entonces esas
-fotos, esa descripción y ese precio aparecen en su perfil público de inmediato, como texto — sin que nadie
-pueda pagar ni reservar nada desde ahí.
+**Ejemplo verificable:** dado el perfil activo de don Héctor (categoría Electricidad, comuna Ñuñoa, sin
+fotos ni precio), cuando sube 3 fotos, escribe "Electricista con 10 años de experiencia" como descripción,
+define "Desde $10.000" como precio, y más adelante cambia su categoría a Gasfitería y su comuna a
+Providencia, entonces cada cambio se refleja de inmediato en su perfil público, sin ocultarlo ni perder
+nada acumulado, y sin que nadie pueda pagar ni reservar nada desde ahí.
 
-**No incluye:** un límite mínimo de fotos para publicar, una revisión de que las fotos sean reales o
-correspondan al trabajo de don Héctor, ni ningún mecanismo de pago, cotización formal o reserva — ver
-[D-004](#d-004).
+**No incluye:** un historial visible de valores anteriores (solo el estado actual es público), un límite
+mínimo de fotos para publicar, una revisión de que las fotos sean reales o correspondan al trabajo de don
+Héctor, ni ningún mecanismo de pago, cotización formal o reserva — ver [D-004](#d-004).
 
 **Experiencia:** pendiente. **Ingeniería:** pendiente.
 
@@ -150,33 +156,13 @@ es de misiones futuras si hace falta.
 
 <a id="f-004"></a>
 
-### F-004 — Editar categoría, comuna, nombre o contacto
+### F-004 — Editar categoría, comuna, nombre o contacto *(fusionada en F-002)*
 
-Cuando don Héctor se muda de comuna o empieza a ofrecer un oficio distinto,
-quiero corregir esos datos en mi perfil ya publicado,
-para seguir apareciendo bien representado sin tener que crear una cuenta nueva.
-
-**Lado del marketplace:** profesional. **Qué necesita del otro lado:** nada.
-
-**Sustento:** [C-005](./investigacion.md#c-005). **Éxito:** [M-003](#m-003).
-
-**Reglas:**
-
-- Don Héctor puede editar categoría, comuna, nombre y contacto en cualquier momento después de registrado,
-  igual que ya puede con fotos y precio (F-002).
-- Editar cualquiera de estos campos no reinicia ni oculta nada acumulado — reseñas futuras, antigüedad del
-  perfil (C-005).
-- Editar categoría o comuna no requiere una nueva revisión ni cambia el estado `activa` — sigue publicado
-  mientras edita, sin una ventana de "guardando cambios" donde desaparezca del buscador.
-
-**Ejemplo verificable:** dado el perfil activo de don Héctor con categoría "Electricidad" y comuna "Ñuñoa",
-cuando lo cambia a categoría "Gasfitería" y comuna "Providencia", entonces su perfil sigue activo y aparece
-de inmediato para quien busque "gasfiter" en Providencia, no ya para "electricista" en Ñuñoa.
-
-**No incluye:** un historial visible de qué categorías/comunas tuvo antes — solo el estado actual es
-público.
-
-**Experiencia:** pendiente. **Ingeniería:** pendiente.
+**Estado: fusionada en [F-002](#f-002) el 2026-08-22.** No eran dos funcionalidades distintas — editar
+categoría/comuna/nombre/contacto y editar fotos/descripción/precio son la misma acción (editar el perfil
+ya creado), solo con campos distintos; no hay razón para dos pantallas ni dos flujos separados. El detalle
+completo (reglas, ejemplo, sustento) vive ahora en F-002. Esta entrada se conserva para que el ID no
+desaparezca sin explicación.
 
 ## Casos límite que cruzan funcionalidades
 
@@ -227,10 +213,11 @@ público.
 
 <a id="m-003"></a>
 
-### M-003 — Editar el registro no genera dudas ni errores
+### M-003 — Editar categoría, comuna, nombre o contacto no genera dudas ni errores
 
-- **Pregunta:** ¿editar categoría/comuna/contacto es igual de simple que editar fotos/precio, o la gente
-  se confunde porque cambia "más" del perfil?
+- **Pregunta:** editar categoría/comuna es un cambio más "grande" (afecta dónde y bajo qué oficio aparece
+  don Héctor) que editar una foto — ¿eso genera dudas o errores, o para quien edita se siente igual de
+  simple?
 - **Señal:** ningún reporte de un profesional que no entendió que su perfil siguió activo mientras editaba,
   ni de un perfil que quedó con datos a medio cambiar.
 - **Método y umbral:** revisión cualitativa de Patricio en los primeros meses — sin volumen todavía para

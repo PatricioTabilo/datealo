@@ -14,7 +14,7 @@ qué categorías y comunas se registra).
 | Documento     | Estado    | Qué falta para su gate              |
 | ------------- | --------- | ------------------------------------ |
 | Investigación | activo    | situación y consecuencia concretas, 4 conclusiones (C-001 a C-004) con confianza alta/media, ideal con capacidades observables — se acumula, no bloquea |
-| Producto      | borrador  | esperando revisión de Patricio — 4 funcionalidades (F-001 a F-004), 4 decisiones (D-001 a D-004), sin preguntas bloqueantes |
+| Producto      | borrador  | esperando revisión de Patricio — 3 funcionalidades (F-001 a F-003, F-004 fusionada en F-002), 4 decisiones (D-001 a D-004), sin preguntas bloqueantes |
 | Experiencia   | pendiente | —                                     |
 | Ingeniería    | pendiente | —                                     |
 
