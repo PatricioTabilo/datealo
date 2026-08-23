@@ -49,6 +49,7 @@ te encuentran" ([E-001](#e-001)).
 | E-010 | benchmark   | [Driver Requirements (Uber Chile)](https://www.uber.com/cl/en/drive/requirements/), [Repartidor Rappi Chile](https://www.rappi.cl/repartidor) | Uber y Rappi piden teléfono + email + subida de documentos, con revisión y aprobación de hasta 48 horas antes de poder operar | Ninguno de los dos documenta públicamente qué mecanismo de login usan (contraseña, OTP, magic link) — solo confirman que piden teléfono en el registro. Ambos son mucho más pesados que lo que D-002 ya descartó para Datealo (aprobación previa) — no aportan una respuesta directa a la pregunta de autenticación, pero confirman que el patrón de aprobación manual no es el que Datealo eligió |
 | E-011 | benchmark   | [Cómo iniciar sesión en Mercado Libre](https://ittechguys.com/tecnologia/iniciar-sesion/mercado-libre/) | La contraseña es el método principal de login — códigos por SMS/email y reconocimiento facial/QR son secundarios, para recuperación y verificación en dos pasos, no el login del día a día | Es el benchmark de confianza LATAM que ya usa este proyecto (misión 03), y contradice directo el razonamiento de C-004 (que un usuario no técnico evita la contraseña). El límite real: Mercado Libre maneja plata (Mercado Pago), la barra de seguridad que justifica una contraseña ahí no es la misma que la de un perfil público sin transacciones — puede ser la razón del método, o puede ser inercia de una plataforma con décadas de antigüedad, la fuente no lo distingue |
 | E-012 | benchmark   | [Cómo verificar tu número por SMS (WhatsApp)](https://faq.whatsapp.com/424583226816348/?locale=es_LA) | La identidad completa en WhatsApp es número de teléfono + código por SMS/llamada — nunca hay contraseña, a ninguna escala | Es la app que don Héctor ya usa a diario para su propio negocio — no es un patrón nuevo que aprender, y está probado a la escala más grande posible exactamente en el público mobile-first y no técnico que busca Datealo. Es el precedente más directamente comparable de los diez reunidos, pero implica el mismo costo de infraestructura (Twilio) que ya se había descartado en D-001 |
+| E-013 | benchmark   | [TaskRabbit vs Thumbtack pricing comparison](https://www.getjobber.com/academy/thumbtack-vs-taskrabbit/) | TaskRabbit: cada tasker fija su propia tarifa por hora, visible en su perfil, sin importar el tipo de trabajo. Thumbtack: rangos de precio por tipo de proyecto ($50-$1000+), agregados de todos sus profesionales, con negociación caso a caso | Thumbtack resuelve la variación de alcance con datos que Datealo no tiene (agregación de miles de proyectos por categoría) — no es replicable con cero profesionales registrados. TaskRabbit resuelve el mismo problema con una unidad que no depende del alcance del trabajo (la hora), sin necesitar ningún dato agregado — es el patrón replicable para Datealo hoy, aunque no hay dato de si "tarifa por hora" es como cobran los oficios chilenos en la práctica (suelen cobrar por visita + materiales) |
 
 <a id="e-001"></a>
 
@@ -159,6 +160,25 @@ categoría, comuna, fotos y precio — es una promesa de marketing escrita antes
 - **Confianza:** media — la evidencia es de otro producto con más escala y con reseñas reales, que Datealo
   hoy no tiene; el razonamiento se sostiene, pero no hay validación propia todavía.
 
+<a id="c-006"></a>
+
+### C-006 — El precio orientativo no puede ser un rango fijo; el trabajo varía demasiado dentro de un mismo oficio
+
+- **Sustento:** [E-013](#e-013).
+- **Razonamiento:** un gasfiter puede cobrar $10.000 por destapar un WC o $90.000 por cambiar un calefont
+  completo — un rango fijo por perfil ("$15.000-$40.000") siempre termina siendo falso para alguno de los
+  dos casos. E-013 muestra dos formas reales de resolver esto: Thumbtack agrega datos de miles de proyectos
+  por categoría (no replicable con cero profesionales registrados), TaskRabbit usa una unidad que no
+  depende del alcance del trabajo — la tarifa por hora — sin necesitar ningún dato agregado.
+- **Implicación:** ni un rango ni un número único ("desde $X") resuelven la variación de alcance tan bien
+  como una tarifa por hora en teoría — pero cuál calza mejor con cómo cobran los oficios chilenos en la
+  práctica (por visita + materiales, no siempre por hora) es algo que la evidencia de benchmark no puede
+  responder, solo el conocimiento directo del mercado local. Patricio confirmó "desde $X" (el piso, no un
+  rango ni una tarifa horaria) como el que mejor calza con la práctica real — la decisión queda en
+  `producto.md` (D-004).
+- **Confianza:** media — el problema (rango fijo miente) está bien sustentado; la solución elegida se
+  apoya en conocimiento de mercado de Patricio, no en un benchmark que la confirme directamente.
+
 ## El ideal: cualquier profesional se registra y aparece en el buscador en el acto
 
 ### El resultado ideal se ve así
@@ -212,3 +232,5 @@ nada de lo que ya acumuló.
   usado en E-011 — el benchmark de confianza LATAM de este proyecto usa contraseña como método principal.
 - [Cómo verificar tu número por SMS (WhatsApp)](https://faq.whatsapp.com/424583226816348/?locale=es_LA):
   usado en E-012 — identidad completa por teléfono + código, sin contraseña, a escala masiva.
+- [Thumbtack vs TaskRabbit pricing comparison (Jobber)](https://www.getjobber.com/academy/thumbtack-vs-taskrabbit/):
+  usado en E-013 — dos formas reales de mostrar precio cuando el alcance del trabajo varía mucho.
