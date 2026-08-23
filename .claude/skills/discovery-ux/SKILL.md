@@ -278,7 +278,8 @@ Tres cosas que el kit ya resuelve:
 
 - **Contenido real del feature**, con vocabulario chileno y los términos decididos en `producto.md`. Nada
   de lorem ipsum ni "Profesional 1": "Marcela Fuentes · Peluquería a domicilio · Ñuñoa · 4,8 (23 reseñas)"
-  revela los desbordes de texto que "Profesional 1" esconde.
+  revela los desbordes de texto que "Profesional 1" esconde. Al redactar labels, errores, empty states y
+  CTAs, aplicar el skill `ux-writing` en el momento de escribirlos, no como revisión posterior.
 - **Los modos y estados como frames rotulados** en el orden en que el usuario los recorre — así el archivo
   se lee como camino, no como galería.
 - **Interacción con JS puro solo si el flujo se evalúa mejor moviéndolo** — abrir un bottom sheet, cambiar
