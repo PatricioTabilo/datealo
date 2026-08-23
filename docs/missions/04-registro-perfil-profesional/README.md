@@ -4,7 +4,7 @@
 
 **Estado de la misión:** definición
 
-**Última actualización:** 2026-08-22
+**Última actualización:** 2026-08-23
 
 Tercera de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
 [misión 02](../02-base-de-datos-y-auth/) (login del profesional, y el `sendEmail()` que esta misión usa
@@ -15,10 +15,10 @@ qué categorías y comunas se registra).
 | ------------- | --------- | ------------------------------------ |
 | Investigación | activo    | situación y consecuencia concretas, 6 conclusiones (C-001 a C-006) con confianza media/alta, ideal con capacidades observables — se acumula, no bloquea |
 | Producto      | vigente   | aprobado por Patricio el 2026-08-22 — 3 funcionalidades (F-001 a F-003, F-004 fusionada en F-002), 4 decisiones (D-001 a D-004) |
-| Experiencia   | activo    | en foco — diseñar el flujo de registro y edición de perfil (UXF-xxx) |
+| Experiencia   | en revisión | pasó la evaluación heurística — 3 flujos (UXF-001 a UXF-003), a la espera de aprobación de Patricio |
 | Ingeniería    | pendiente | —                                     |
 
-**Próximo hito:** completar `experiencia.md` — sin fecha límite todavía.
+**Próximo hito:** aprobación de `experiencia.md` por Patricio.
 
 ## Brief
 

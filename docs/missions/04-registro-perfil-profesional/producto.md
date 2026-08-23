@@ -172,7 +172,7 @@ desaparezca sin explicación.
 | ------ | ------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------------- |
 | CL-001 | Un perfil activo no tiene ninguna foto subida                 | Se muestra igual en el buscador, con un espacio vacío o genérico — nunca una foto de stock que insinúe que es del profesional | F-001, F-002 |
 | CL-002 | Un perfil activo no tiene descripción ni precio definido        | Se muestra igual, sin esos datos — el buscador no filtra por precio si no lo puso | F-002 |
-| CL-003 | Alguien intenta registrarse con un email que ya tiene cuenta   | Datealo lo redirige a iniciar sesión, no crea un perfil nuevo ni duplica    | F-001 |
+| CL-003 | Don Héctor ya tiene perfil pero el formulario de registro se envía igual (dos pestañas con el mismo enlace mágico, o un formulario viejo que quedó cargado) | Datealo no crea un perfil duplicado — lo lleva a ver/editar el que ya existe; nunca "esa cuenta es de otra persona", porque el email siempre viene de su propia sesión autenticada (D-001) | F-001 |
 
 ## Fuera de alcance
 

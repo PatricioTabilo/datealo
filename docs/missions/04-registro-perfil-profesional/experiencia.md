@@ -1,8 +1,8 @@
 # Misión 04: registro y perfil de profesional — Experiencia
 
-**Estado:** borrador
+**Estado:** en revisión
 
-**Última actualización:** 2026-08-22
+**Última actualización:** 2026-08-23
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -54,7 +54,7 @@ explícita (UX-001), no queda implícito.
 | V-002 modo enviando           | el servidor confirma                          | V-003 modo vacío               | el perfil ya existe y está `activa = true`; llega el correo de F-003 en paralelo |
 | V-002 modo enviando           | el servidor falla                             | V-002 modo error al enviar     | los datos del formulario se conservan, nada se pierde |
 | V-002 modo error al enviar    | toca "Reintentar"                             | V-002 modo enviando            | reintenta con los mismos datos, sin que los vuelva a escribir |
-| V-002 modo formulario         | el email ya tiene cuenta (CL-003)             | V-001 modo ingresar email, con un aviso | nada del formulario se guarda — no era un registro nuevo |
+| V-002 modo formulario         | ya existe un perfil suyo al tocar "Publicar" (CL-003, doble envío) | V-003 modo con datos, con un aviso | nada del formulario se guarda — pero tampoco se pierde nada, es su perfil ya existente |
 | V-003 modo vacío o con datos  | toca un campo                                 | V-003 modo editando un campo   | el valor actual queda precargado como punto de partida del input |
 | V-003 modo editando un campo  | escribe y sale de foco / toca "Listo"          | V-003 modo guardando           | el valor anterior sigue visible hasta confirmar |
 | V-003 modo editando un campo  | sale de foco sin cambiar el valor              | V-003 modo con datos           | no dispara guardado — nada cambió |
@@ -129,7 +129,7 @@ perfil existente.
 | --------------------------------------- | -------------------------------------------- | -------------------------- |
 | Termina bien                            | completa los 5 campos, toca "Publicar mi perfil" | el perfil se crea y publica; pasa a V-003 |
 | Cierra la app a medio llenar             | cierra la pestaña o navega afuera            | nada se guarda — no hay borrador; tiene que volver a escribir todo si regresa |
-| El email ya tiene cuenta (CL-003)        | Datealo lo detecta al tocar "Publicar"       | nada del formulario se guarda; va a V-001 con un aviso ("Ese correo ya tiene una cuenta — entra con tu enlace") |
+| Ya existe su perfil al tocar "Publicar" (CL-003, doble envío) | envía el formulario dos veces (dos pestañas, o un formulario viejo que quedó cargado) | nada del formulario se guarda; va directo a V-003 con un aviso ("Ya tienes un perfil — te llevamos a verlo") |
 
 ### Secuencia principal
 
@@ -144,7 +144,7 @@ perfil existente.
 | Condición                     | Qué cambia                              | Cómo se entiende                             | Cómo se recupera |
 | ---------------------------------- | -------------------------------------------- | --------------------------------------------------- | --------------------- |
 | Falla el servidor al publicar      | No se crea el perfil                         | "No pudimos publicar tu perfil. Tus datos siguen acá" + botón "Reintentar" | Reintenta con los mismos datos, sin volver a escribirlos |
-| El email ya tiene cuenta (CL-003)  | No se crea un perfil nuevo                   | "Ese correo ya tiene una cuenta en Datealo" en V-001 | Entra con su enlace mágico normal, llega a V-003 con su perfil existente |
+| Ya existe su perfil (CL-003), envió el formulario dos veces | No se crea un perfil duplicado | "Ya tienes un perfil — te llevamos a verlo" en V-003 | No aplica — sigue autenticado, no hay nada que recuperar, solo ve su perfil ya existente |
 | Conexión lenta al publicar (>300ms)| El botón muestra un spinner, no toda la pantalla | El resto del formulario sigue visible y legible, no se congela | Si pasa de 10s, mismo mensaje de falla de servidor con "Reintentar" |
 
 ### Decisiones que no deben quedar implícitas
@@ -154,6 +154,10 @@ perfil existente.
   resumen).
 - Los 5 campos van en una sola pantalla scrolleable, no en pasos separados con "Siguiente" — ver
   [UX-001](#ux-001) para el porqué.
+- El chequeo de "perfil ya existente" al tocar "Publicar" (CL-003) es una red de seguridad para un doble
+  envío del mismo usuario (dos pestañas, formulario viejo) — el email nunca lo escribe en V-002, viene fijo
+  de su sesión autenticada (D-001), así que nunca puede ser la cuenta de otra persona. Por eso lleva directo
+  a V-003, no de vuelta a V-001 a autenticarse de nuevo.
 
 ## UXF-003 — Editar el perfil ya creado
 
@@ -233,7 +237,7 @@ al final de la pantalla, cada campo se guarda por su cuenta.
 
 | Funcionalidad | Flujo    | Estados cubiertos                              | Estado    |
 | ------------- | -------- | ----------------------------------------------- | --------- |
-| F-001         | UXF-002  | formulario, enviando, error, email ya existe (CL-003) | borrador |
+| F-001         | UXF-002  | formulario, enviando, error, perfil ya existe por doble envío (CL-003) | borrador |
 | F-002         | UXF-003  | vacío (CL-001, CL-002), con datos, editando, guardando, error | borrador |
 | F-003         | UXF-002  | correo de confirmación (contenido en la secuencia) | borrador |
 | D-001         | UXF-001  | ingresar email, revisa tu correo, enlace inválido | borrador |
