@@ -73,6 +73,26 @@ en revisión se paga dos veces.
 - los escenarios críticos tienen criterio de prueba antes de considerar el feature listo
 - el diseño está cortado en slices (ver [Slicing](#slicing-del-diseño-a-tareas-atómicas)) y el plan de
   construcción vive en la sección homónima de `ingenieria.md`
+- el diseño pasó una auditoría en un contexto separado (ver "Evaluar antes de cerrar, en un contexto
+  separado" más abajo) y sus hallazgos bloqueantes están resueltos
+
+**Evaluar antes de cerrar, en un contexto separado:** mismo problema que en `discovery-ux` — la
+conversación que diseñó `ingenieria.md` ya se convenció a sí misma de por qué cada capa, cada contrato y
+cada policy tienen sentido; juzgar el propio diseño en la misma pasada no encuentra lo que ese diseño no vio.
+
+- **La auditoría corre en un agente sin memoria de haber escrito el diseño** — recibe `ingenieria.md`
+  terminado, `producto.md`, `experiencia.md` y el código existente, nunca el razonamiento de cómo se llegó
+  ahí. Un fork no sirve: hereda la conversación completa, incluida la justificación de cada decisión. Un
+  agente nuevo (`Agent` con un `subagent_type` que no sea `fork`, o una sesión distinta) sí aísla el sesgo.
+- **Cada skill se invoca de verdad**, con la tool `Skill`, uno por uno — `clean-architecture` para la
+  Dependency Rule y el acoplamiento entre capas, `domain-driven-design` para el lenguaje ubicuo y el criterio
+  build-vs-buy, `supabase-postgres-best-practices` para schema/RLS/índices/migraciones. Un hallazgo que no
+  cita qué dijo el skill invocado es una aplicación de memoria, no una auditoría — no cuenta para el gate.
+- **La auditoría cuestiona el diseño, no solo lo confirma.** Verificar que cada contrato esté "bien escrito"
+  es más fácil que objetar si la capa está en el lugar correcto o si dos entidades deberían compartir una
+  regla que hoy están duplicando (o al revés). Antes de cerrar, la auditoría tiene que intentar tumbar al
+  menos una decisión ya tomada (una `T-xxx`, un límite de capa, una policy RLS) citando por qué — si ninguna
+  sobrevive el intento, recién ahí se confirma el diseño; si nunca se intenta, la auditoría fue cosmética.
 
 **Loop de vuelta:** si ingeniería descubre que algo es inviable, el cambio entra primero en `producto.md`
 como recorte de alcance con trade-off explícito, luego se actualiza `experiencia.md`, y por último
@@ -176,6 +196,53 @@ handler, un modelo de Drizzle que se filtra como si fuera la entidad de dominio,
 líneas son exactamente el tipo de hallazgo que hoy solo aparece en code review — el objetivo es que
 `ingenieria.md` los prevenga antes de que se escriba una línea de código.
 
+## Cada capa expone su interfaz, nunca su implementación
+
+Cuando la misma regla aplica a dos o más entidades (el mismo modo de selección para categoría y comuna, el
+mismo manejo de error para dos catálogos), la pregunta no es "¿comparten código?" sino "¿es la misma regla,
+o dos reglas que hoy se ven parecidas?". Confundir esas dos cosas produce el error contrario: duplicar una
+regla real (hay que sincronizarla a mano cada vez que cambia) o unificar una similitud superficial (la
+abstracción compartida termina llena de parámetros y condicionales para servir a consumidores que en
+realidad necesitaban cosas distintas).
+
+**Cuando es la misma regla:** una implementación genérica que no sabe a qué entidad sirve, y un wrapper
+delgado por entidad que solo fija su dato propio — nunca reimplementa la regla. El consumidor final solo ve
+la interfaz del wrapper, nunca la implementación genérica de abajo. Ejemplo real de Datealo:
+[T-003 de misión 03](../../../docs/missions/03-taxonomia-categorias-y-comunas/ingenieria.md#t-003):
+`CatalogSelect` implementa los 6 modos de UXF-001 una sola vez, sin saber si sirve categoría o comuna;
+`CategoriaSelect`/`ComunaSelect` son wrappers que solo fijan su composable y su placeholder. Quien usa
+`<CategoriaSelect modelValue="...">` no necesita saber que `CatalogSelect` existe — ese es el punto: la
+interfaz pública es un solo prop, la implementación (fetch, filtrado, apertura de la lista) queda escondida
+y puede cambiar sin que ningún consumidor se entere.
+
+```vue
+<!-- ✅ El consumidor conoce la interfaz, nunca la implementación -->
+<CategoriaSelect v-model="categoria" />
+<!-- CategoriaSelect por dentro le pasa items/pending/error a CatalogSelect —
+     nadie fuera de CategoriaSelect sabe que CatalogSelect existe -->
+
+<!-- ❌ La implementación se filtra hacia el consumidor -->
+<CatalogSelect v-model="categoria" :items="categorias" :pending="pending" :error="error" />
+<!-- cada pantalla que usa el selector ahora tiene que saber cómo se trae el catálogo,
+     y un cambio a cómo se cachea o filtra rompe cada lugar que lo usa -->
+```
+
+**Por qué importa (Information Hiding, Parnas):** un módulo esconde una decisión de diseño que
+probablemente va a cambiar — cómo se cachea el catálogo, cómo se filtra la lista al escribir. La interfaz
+tiene que ser más estable que esa decisión. Si el consumidor conoce la implementación (pasa `items`,
+`pending`, `error` a mano en vez de usar el wrapper), un cambio a la implementación obliga a tocar cada
+consumidor — eso es *content coupling*, el tipo de acoplamiento más caro de deshacer. Pasar solo lo que la
+interfaz define (*data coupling*) es lo que se busca en cada capa — mismo criterio que ISP y Boundaries del
+skill `clean-architecture`, aplicado a componentes y composables, no solo a capas de arquitectura.
+
+**Cuándo NO aplica — la duplicación es más barata que la abstracción equivocada:** dos cosas que se ven
+parecidas no siempre son la misma regla. El propio T-003 dejó la capa de queries
+(`server/utils/categorias.ts`/`comunas.ts`) **sin unificar a propósito**: los nombres de columna
+(`categorias.slug` vs `comunas.codigo`) son distintos y TypeScript necesita esa forma explícita para tipar
+bien — forzar una función genérica ahí cambia una diferencia real por un parámetro sin tipo. La pregunta
+antes de extraer: si esta regla cambia, ¿cambia para las dos entidades a la vez, por el mismo motivo? Si la
+respuesta es no, son dos reglas parecidas, no una — la duplicación es correcta.
+
 ## RLS no es un paso posterior, y tampoco es la autorización
 
 Toda tabla con datos de usuario nace con su política. `ingenieria.md` resuelve, para cada cambio de schema:
@@ -201,6 +268,8 @@ query la paga en el plan), o una migración sin estrategia para las filas existe
 
 - ¿La lógica de negocio está separada de Drizzle, del handler y de la reactividad?
 - ¿Los contratos de datos entre capas están definidos antes de la implementación?
+- ¿Un consumidor necesita conocer la implementación de otra capa para usarla, o le basta su interfaz?
+- Si dos entidades comparten una regla, ¿es la misma regla o dos que hoy solo se ven parecidas?
 - ¿El diseño de datos soporta los casos límite de `producto.md`, empezando por "no hay resultados"?
 - ¿Qué pasa si Supabase responde lento o falla? ¿La pantalla degrada con gracia?
 - ¿Qué policy RLS toca este cambio, y esa policy es respaldo o es la barrera real para la conexión que la
