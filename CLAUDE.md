@@ -229,16 +229,18 @@ Skills propios del repo, escritos para las convenciones de Datealo:
 
 Skills de terceros, pre-instalados y trackeados en `skills-lock.json` (con su fuente exacta): `nuxt`,
 `vue`, `drizzle-orm`, `frontend-design`, `ui-ux-pro-max`, `web-design-guidelines`, `marketing-psychology`,
-`ai-seo`, `content-strategy`, `page-cro`, `vue-best-practices`, `supabase-postgres-best-practices`,
+`ai-seo`, `content-strategy`, `page-cro`, `vue-best-practices`,
 `prompt-engineering-patterns`, `copywriting`, `ux-writing` (microcopy/content design — usarlo al redactar
 o revisar texto de interfaz en `discovery-ux`: labels, errores, empty states, CTAs), `mom-test` (entrevistas
 sin sesgo), `jobs-to-be-done` (profundiza el formato JTBD de `producto.md`), `cold-start-problem`
 (bootstrapping de marketplaces de dos lados — el arranque en frío de `discovery-product`), `lean-analytics`
 (métricas y benchmarks por modelo/etapa, evita vanity metrics en las señales `M-xxx`), `obviously-awesome`
-(positioning competitivo). Los últimos cinco se usan en `discovery-product`. Están todos localmente — nunca
-sugerir instalarlos. `drizzle-orm`, `prompt-engineering-patterns` y `copywriting` tienen origen sin
-verificar (ver nota en `skills-lock.json`) — evaluar re-sourcing antes de confiar ciegamente en su
-contenido.
+(positioning competitivo) — estos cinco se usan en `discovery-product`. `supabase-postgres-best-practices`
+(schema, RLS, índices, migraciones), `clean-architecture` (Dependency Rule — lógica de negocio separada de
+Drizzle/handler/Vue) y `domain-driven-design` (lenguaje ubicuo, dominio central vs. subdominio genérico) se
+usan en `discovery-engineering`. Están todos localmente — nunca sugerir instalarlos. `drizzle-orm`,
+`prompt-engineering-patterns` y `copywriting` tienen origen sin verificar (ver nota en `skills-lock.json`)
+— evaluar re-sourcing antes de confiar ciegamente en su contenido.
 
 ## Guardrails de trabajo
 

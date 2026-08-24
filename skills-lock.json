@@ -101,6 +101,16 @@
       "source": "wondelai/skills",
       "sourceType": "github",
       "computedHash": "abfb03a452f964cfdd06a8ee11d51a541894778c2d4013c15b16dd1718002af6"
+    },
+    "clean-architecture": {
+      "source": "wondelai/skills",
+      "sourceType": "github",
+      "computedHash": "fc9fe201ae040df80164bc7a407507882783e2c8cdbc0379a1fbdcf3719e4446"
+    },
+    "domain-driven-design": {
+      "source": "wondelai/skills",
+      "sourceType": "github",
+      "computedHash": "14f80bc0c209e8500f52813158afb8b6b819b47a54b92576f0c0586acac38668"
     }
   }
 }
