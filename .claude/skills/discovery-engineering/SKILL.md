@@ -29,6 +29,11 @@ entidad — así producto e ingeniería hablan de lo mismo aunque el schema habl
 | verificado          | `professionals.status = 'active'`          |
 ```
 
+Esta tabla es lenguaje ubicuo, aunque no se le llame así — usar el skill `domain-driven-design` para
+mantenerlo consistente y para decidir qué se construye a medida (el ranking de búsqueda, las reglas de
+verificación) versus qué se compra hecho (Supabase Auth, Resend): esa distinción entre dominio central y
+subdominio genérico evita sobre-diseñar lo que ya resuelve un proveedor.
+
 Invariante de diseño que viene de los guardrails de `CLAUDE.md`: el contacto sale directo hacia el
 profesional. Un diseño que introduce una bandeja intermedia, una cola de solicitudes o un paso de pago
 contradice una decisión vigente de producto y vuelve primero a `producto.md`.
@@ -161,6 +166,13 @@ inyecta. Su valor real no es elegancia: es que vuelve cortable la sustitución (
 No aplicar a CRUD simple ni a features de presentación — la abstracción tiene costo real y no hay
 beneficio si la lógica no cambia de forma.
 
+Este principio es un caso particular de la Dependency Rule del skill `clean-architecture`: la lógica de
+negocio nunca importa Drizzle, `event` ni la reactividad de Vue — son detalles que la envuelven, no al
+revés. Usarlo para revisar el diseño antes de que llegue a slicing: lógica de negocio metida en un
+handler, un modelo de Drizzle que se filtra como si fuera la entidad de dominio, o un "Use Case" de mil
+líneas son exactamente el tipo de hallazgo que hoy solo aparece en code review — el objetivo es que
+`ingenieria.md` los prevenga antes de que se escriba una línea de código.
+
 ## RLS no es un paso posterior, y tampoco es la autorización
 
 Toda tabla con datos de usuario nace con su política. `ingenieria.md` resuelve, para cada cambio de schema:
@@ -176,6 +188,11 @@ dueño y se salta RLS: la autorización real vive en el código de `server/api/`
 completo cuando nombra la policy — tiene que nombrar además **en qué endpoint se verifica la pertenencia**.
 Un `ingenieria.md` que solo dice "RLS: lectura pública, escritura del dueño" describe una defensa que no
 corre.
+
+Antes de escribir o cambiar cualquier tabla, policy, índice o migración, usar el skill
+`supabase-postgres-best-practices` — cubre desde ahí mismo cosas que hoy solo se atrapan en review: tipos
+de dato mal elegidos, falta de índice en una FK, RLS sin índice de soporte (la policy funciona pero cada
+query la paga en el plan), o una migración sin estrategia para las filas existentes.
 
 ## Preguntas para evaluar la factibilidad en discovery
 
@@ -216,4 +233,5 @@ alcance con su trade-off, y luego se actualiza `ingenieria.md`.
 
 Para patrones de Nuxt y Nitro, ver `.claude/skills/nuxt/`. Para schemas y queries, ver
 `.claude/skills/drizzle-orm/`. Para extraer composables y componentes al implementar, ver el skill
-`vue-composition`.
+`vue-composition`. Para el diseño de contratos y separación lógica/infraestructura, ver `clean-architecture`
+y `domain-driven-design`. Para schema, RLS, índices y migraciones, ver `supabase-postgres-best-practices`.
