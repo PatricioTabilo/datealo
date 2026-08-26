@@ -9,12 +9,8 @@
 Cuarta de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
 [misión 04](../04-registro-perfil-profesional/): sin perfiles de profesional reales, no hay qué mostrar.
 
-| Documento     | Estado    | Qué falta para su gate              |
-| ------------- | --------- | ------------------------------------ |
-| Investigación | pendiente | discovery completo — hoy solo existe la carpeta |
-| Producto      | pendiente | —                                     |
-| Experiencia   | pendiente | —                                     |
-| Ingeniería    | pendiente | —                                     |
+**Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
+[Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
 **Próximo hito:** ninguno todavía — esta misión no se ha empezado a trabajar.
 

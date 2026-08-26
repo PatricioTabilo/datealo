@@ -40,7 +40,8 @@ importancia de la columna "límite de la evidencia".
 2. Empezar por el problema y la evidencia en `investigacion.md`.
 3. Abrir `producto.md` cuando la investigación sostenga al menos una conclusión.
 4. Abrir `experiencia.md` e `ingenieria.md` cuando producto cumpla su gate de salida.
-5. Mantener este README como mapa de estado y decisiones bloqueantes.
+5. Mantener este README como mapa de dependencias, hito y decisiones bloqueantes — el estado de cada
+   documento se mantiene en su propio encabezado, no acá.
 
 ## Estado y ciclo de aprobación
 
@@ -52,19 +53,11 @@ en validación · cerrada · pausada
 
 **Última actualización:** AAAA-MM-DD
 
-| Documento     | Estado    | Qué falta para su gate              |
-| ------------- | --------- | ----------------------------------- |
-| Investigación | activo    | <conclusión o evidencia faltante>   |
-| Producto      | pendiente | <funcionalidad o decisión faltante> |
-| Experiencia   | pendiente | <flujo o estado faltante>           |
-| Ingeniería    | pendiente | <contrato o riesgo faltante>        |
+<!-- El estado de cada documento va en su propio encabezado, no acá — ver docs/missions/README.md
+para la convención completa (estados, quién marca vigente, gates). No la repitas en esta lista. -->
 
-Estados por documento: `pendiente`, `activo`, `en revisión`, `vigente`.
-
-- Claude puede proponer contenido y marcar `en revisión`. Nunca marca `vigente`.
-- `vigente` lo otorga solo el dueño de producto, y queda registrado: "aprobado por <nombre> el AAAA-MM-DD".
-- Los gates de cada documento están definidos en su propio archivo. Un documento no pasa a `en revisión`
-  sin cumplirlos.
+**Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
+[Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
 **Próximo hito:** <resultado verificable> — fecha límite AAAA-MM-DD.
 
