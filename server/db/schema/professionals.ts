@@ -5,8 +5,8 @@ import { comunas } from './comunas'
 export const professionals = pgTable(
   'professionals',
   {
-    // id propio, distinto de userId: evita exponer el id de auth.users en una URL pública futura
-    // (perfil público, misión 05).
+    // id propio, distinto de userId: evita exponer el id de auth.users en la URL pública futura
+    // del perfil.
     id: uuid('id').primaryKey().defaultRandom(),
     // Sin foreign key formal a auth.users: esa tabla la gestiona Supabase, no Drizzle.
     userId: uuid('user_id').notNull().unique(),
@@ -29,7 +29,7 @@ export const professionals = pgTable(
   },
   (table) => [
     // Postgres no indexa una FK automáticamente — son las dos columnas por las que la búsqueda
-    // de las misiones 05/06 va a filtrar y hacer join.
+    // va a filtrar y hacer join.
     index('professionals_categoria_slug_idx').on(table.categoriaSlug),
     index('professionals_comuna_codigo_idx').on(table.comunaCodigo),
   ],

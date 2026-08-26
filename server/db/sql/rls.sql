@@ -37,8 +37,8 @@ revoke all on public.comunas from anon, authenticated;
 
 alter table professionals enable row level security;
 
--- Si algún día se revierte el revoke de abajo para servir esta tabla por PostgREST (ej. misión 05,
--- perfil público), esta policy tiene que ajustarse en el mismo cambio: hoy es `using (true)` porque
+-- Si algún día se revierte el revoke de abajo para servir esta tabla por PostgREST (ej. un perfil
+-- público futuro), esta policy tiene que ajustarse en el mismo cambio: hoy es `using (true)` porque
 -- nada la evalúa, pero expone `user_id` (el id de auth.users, que no debería quedar público) y las
 -- filas con `active = false`. Acotarla a columnas públicas y a `using (active)` antes de reabrir el grant.
 drop policy if exists professionals_select_public on professionals;
