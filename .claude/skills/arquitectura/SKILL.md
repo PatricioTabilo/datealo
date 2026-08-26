@@ -109,11 +109,9 @@ no aparece en desarrollo local contra una base directa.
 
 **`DATABASE_URL_DIRECT` no es la conexión directa de Supabase, a pesar del nombre.** La conexión directa
 real (`db.<ref>.supabase.co:5432`) es **IPv6-only sin el add-on pagado** — falla (a veces con un error
-inmediato, a veces colgada varios segundos hasta el timeout) en cualquier red sin salida IPv6 funcional,
-que es la mayoría de las residenciales y buena parte de las corporativas. Verificado en la misión 04:
-`db:migrate` fallaba tanto en un entorno de agente sin IPv6 como en la máquina de un desarrollador con la
-misma limitación, sin ningún error de credenciales de por medio — solo DNS resolviendo a una sola dirección
-IPv6.
+inmediato, a veces colgada varios segundos hasta el timeout, sin ningún error de credenciales de por medio)
+en cualquier red sin salida IPv6 funcional, que es la mayoría de las residenciales y buena parte de las
+corporativas.
 
 Supavisor en **modo sesión** (mismo host que la app, puerto `5432` en vez de `6543`) sí tiene IPv4 y
 soporta prepared statements y el resto de lo que `drizzle-kit` necesita para migrar — es el destino real
