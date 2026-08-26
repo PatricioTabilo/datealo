@@ -1,8 +1,8 @@
 # Misión 04: registro y perfil de profesional — Producto
 
-**Estado:** borrador
+**Estado:** vigente — aprobado por Patricio el 2026-08-22
 
-**Última actualización:** 2026-08-22
+**Última actualización:** 2026-08-24
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -138,9 +138,9 @@ investigación. **Éxito:** [M-001](#m-001) (mismo indicador que F-001 — es pa
 **Reglas:**
 
 - Al crear el perfil (F-001), Datealo envía un correo a don Héctor confirmando que su perfil ya está
-  publicado — no "en revisión", porque no hay revisión (D-002).
-- Si don Héctor no subió ninguna foto ni definió precio al momento del registro (se fue de la pantalla de
-  F-002 sin completarla), el correo incluye una invitación a hacerlo, con un enlace directo a esa pantalla.
+  publicado — no "en revisión", porque no hay revisión (D-002). El correo se dispara en el mismo instante
+  en que el perfil se crea, así que siempre lo encuentra recién publicado, sin fotos ni precio todavía — el
+  correo incluye una invitación a agregarlos, con un enlace directo a esa pantalla.
 - Si el correo no llega (falla de Resend), Datealo no bloquea ni deshace el registro — el perfil ya existe
   igual, el correo es una confirmación, no una condición.
 
@@ -248,7 +248,11 @@ desaparezca sin explicación.
   de seguridad (proteger plata) que Datealo no tiene. OTP por SMS/WhatsApp (como WhatsApp mismo) — el
   precedente más parecido al público de Datealo de los tres, descartado igual por el costo real de
   contratar Twilio antes de tener un solo profesional registrado, no por dudas sobre si funcionaría — queda
-  como el candidato más fuerte para reabrir esta decisión, no descartado por mérito.
+  como el candidato más fuerte para reabrir esta decisión, no descartado por mérito. Código OTP por email (6
+  dígitos, tecleado en la app) — mismo Resend/Supabase Auth que el enlace mágico, sin el costo de Twilio de
+  la opción anterior; se descarta igual, porque cambia tocar un enlace (cero tecleo) por leer un código y
+  volver a escribirlo a mano, más fricción para el mismo perfil de usuario (E-006, poca familiaridad con
+  apps, una mano) que ya descartó la contraseña por el mismo motivo.
 - **Decisión y consecuencia:** el profesional entra con su email; Supabase Auth le manda un enlace mágico
   vía el mismo SMTP custom (Resend) que misión 02 ya configuró. No hay campo de contraseña en ningún
   formulario de esta misión. El riesgo de deliverability se mitiga con la guía oficial de Resend para
@@ -266,7 +270,7 @@ desaparezca sin explicación.
 
 ### D-002 — El perfil nace activo (`activa = true`) al registrarse, sin revisión previa de nadie
 
-- **Estado:** propuesta. **Fecha:** 2026-08-22.
+- **Estado:** aceptada. **Fecha:** 2026-08-22.
 - **Sustento:** [C-002](./investigacion.md#c-002).
 - **Tensión:** partir sin ningún filtro humano arriesga que un perfil de mala calidad (o falso) quede
   visible antes de que nadie lo note — pero exigir que Patricio revise cada registro a mano antes de
@@ -289,7 +293,7 @@ desaparezca sin explicación.
 
 ### D-003 — Registrarse y completar el perfil son dos momentos distintos, no un solo formulario largo
 
-- **Estado:** propuesta. **Fecha:** 2026-08-22.
+- **Estado:** aceptada. **Fecha:** 2026-08-22.
 - **Sustento:** [C-001](./investigacion.md#c-001), [C-002](./investigacion.md#c-002).
 - **Tensión:** un formulario único (email + nombre + categoría + comuna + contacto + fotos + precio) da
   perfiles más completos desde el día uno, pero cada campo extra en el camino de "quiero registrarme" es
@@ -327,6 +331,29 @@ desaparezca sin explicación.
   ni genere comisión.
 - **Reapertura:** ninguna prevista — es un guardrail de identidad del producto (la principal diferencia con
   otras plataformas del rubro, según Patricio), no una restricción temporal de este MVP.
+
+<a id="d-005"></a>
+
+### D-005 — El CTA "Quiero unirme" de la landing deja de capturar email de lista de espera y navega a iniciar sesión
+
+- **Estado:** aceptada. **Fecha:** 2026-08-24.
+- **Sustento:** brief de esta misión — sin este cambio no existe ningún camino real hacia F-001; el botón
+  hoy solo guarda el email en una lista de espera (`useWaitlist('profesional')` en
+  `LandingForProfessionals.vue`) y no navega a ninguna parte.
+- **Tensión:** mantener la captura de waitlist conserva una métrica de interés temprano que la landing ya
+  viene juntando, pero bloquea por completo el flujo real de registro — nadie puede llegar a F-001 sin
+  este cambio, y no hay ninguna misión futura planificada que lo resuelva por su cuenta.
+- **Alternativas descartadas:** agregar un segundo botón nuevo junto al actual ("Ya soy profesional") en
+  vez de cambiar el que ya existe — se descarta porque duplica la intención en la misma pantalla sin
+  necesidad; "Quiero unirme" ya es la única puerta de entrada que la landing ofrece a un profesional, no
+  hay volumen de waitlist acumulado que proteger dejándolo como está.
+- **Decisión y consecuencia:** `LandingForProfessionals.vue` deja de mostrar el formulario de captura de
+  email al tocar "Quiero unirme" y navega directo a [V-001](./experiencia.md) (iniciar sesión con enlace
+  mágico, D-001) — igual sea la primera vez de don Héctor o ya tenga cuenta, UXF-001 no distingue el caso
+  hasta que toca el enlace. El texto del botón y su contexto ("Gratis · Menos de 1 minuto") siguen siendo
+  ciertos, no cambian. Este cambio se libera junto con el resto de esta misión — antes de eso, `V-001` no
+  existe todavía y el botón no tendría a dónde navegar.
+- **Reapertura:** ninguna prevista.
 
 ## Preguntas
 
