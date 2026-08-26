@@ -3,9 +3,8 @@
 El código concreto de cada operación que toca servidor, datos, interfaz o despliegue. Las decisiones que lo
 sustentan están en el [SKILL.md](../SKILL.md); acá está el cómo.
 
-De servidor y datos (A-001 a A-003), nada existe todavía en el repo: no hay `server/`, ni Supabase, ni
-Drizzle instalados. La primera misión que necesite datos crea la base, y esas recetas son su forma. De
-interfaz (A-004), la migración está en curso — ver la [misión 01](../../../../docs/missions/01-migracion-nuxt-ui/).
+`server/`, Supabase, Drizzle y Nuxt UI (A-004) ya están instalados y en uso desde las misiones 01 y 02 —
+estas recetas son la forma en que se usan, no una previsión de cómo se instalarían.
 
 ## Contenido
 
@@ -330,8 +329,10 @@ revoke all on public.professionals from anon, authenticated;
 **3. La verificación en el endpoint**, como en la receta anterior. Sin esto, los archivos anteriores no
 protegen nada por A-002 — y sin el `revoke` de arriba, tampoco protegen nada por A-007.
 
-Las migraciones se generan con `drizzle-kit` contra la **conexión directa** (puerto `5432`), no contra el
-pooler. El `drizzle.config.ts` lleva esa URL, distinta de la que usa la app.
+Las migraciones se generan con `drizzle-kit` contra Supavisor en **modo sesión** (`DATABASE_URL_SESSION`,
+puerto `5432`), no contra el modo transacción que usa la app (A-003). `rls.sql`, en cambio, no se aplica
+solo: `npm run db:rls` lo corre contra la misma URL — hay que ejecutarlo a mano después de cada
+`db:migrate` que toque tablas o buckets nuevos, porque ninguna migración lo incluye.
 
 ## Desplegar a Vercel
 

@@ -5,15 +5,15 @@ import { comunas } from './comunas'
 export const professionals = pgTable(
   'professionals',
   {
-    // id propio, distinto de userId: para no exponer el id de auth.users en una URL pública
-    // futura (perfil público, misión 05) — ver T-004 en ingenieria.md de la misión 04.
+    // id propio, distinto de userId: evita exponer el id de auth.users en una URL pública futura
+    // (perfil público, misión 05).
     id: uuid('id').primaryKey().defaultRandom(),
     // Sin foreign key formal a auth.users: esa tabla la gestiona Supabase, no Drizzle.
     userId: uuid('user_id').notNull().unique(),
     displayName: text('display_name').notNull(),
     categoriaSlug: text('categoria_slug')
       .notNull()
-      .references(() => categorias.slug),
+      .references(() => categorias.slug, { onUpdate: 'cascade' }),
     comunaCodigo: text('comuna_codigo')
       .notNull()
       .references(() => comunas.codigo),
@@ -21,7 +21,7 @@ export const professionals = pgTable(
     description: text('description'),
     priceFrom: integer('price_from'),
     // Paths dentro del bucket professional-photos, nunca URLs completas — la URL pública se
-    // calcula al responder (server/utils/professionals.ts).
+    // calcula al responder, no se guarda.
     photoPaths: text('photo_paths').array().notNull().default([]),
     active: boolean('active').notNull().default(true),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
