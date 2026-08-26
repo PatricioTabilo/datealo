@@ -1,8 +1,8 @@
 import { defineConfig } from 'drizzle-kit'
 
-// Supavisor en modo sesión (puerto 5432), distinto del modo transacción que usa la app (A-003).
-// drizzle-kit no soporta el modo transacción del pooler para migraciones, y la conexión directa
-// real de Supabase es IPv6-only sin el add-on pagado — este modo tiene IPv4 y no cuesta nada.
+// Supavisor en modo sesión (puerto 5432, DATABASE_URL_SESSION) — drizzle-kit necesita prepared
+// statements para migrar, y el modo transacción que usa la app no los soporta. Detalle completo
+// de por qué este modo y no la conexión directa real de Supabase en .env.example y recetas.md.
 const databaseUrlSession = process.env.DATABASE_URL_SESSION
 if (!databaseUrlSession) {
   throw new Error('Falta DATABASE_URL_SESSION en el entorno — ver .env.example')

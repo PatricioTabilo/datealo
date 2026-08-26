@@ -11,13 +11,13 @@ export default defineNuxtConfig({
   nitro: { preset: 'vercel' },
 
   runtimeConfig: {
-    // Privado: solo servidor. Nunca llega al bundle del cliente (A-001).
+    // Nuxt solo expone al bundle del cliente lo que está bajo `public` — el resto queda en el servidor.
     databaseUrl: '',
     resendApiKey: '',
     emailFrom: '',
 
     public: {
-      // Público por diseño: la publishable key no es un secreto (A-001).
+      // Público por diseño: la publishable key no es un secreto.
       supabaseUrl: '',
       supabaseKey: '',
     },
