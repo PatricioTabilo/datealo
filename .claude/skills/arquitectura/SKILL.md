@@ -142,7 +142,7 @@ DaisyUI original.
 
 ## A-005 — Un endpoint nunca devuelve una fila cruda de Drizzle
 
-**Estado:** propuesta. **Fecha:** 2026-08-13.
+**Estado:** aceptada (primer uso real: misión 04, `professionals`). **Fecha:** 2026-08-13.
 
 `select().from(professionals)` devuelve todas las columnas que la tabla tenga, incluida cualquiera que se
 agregue después sin pensar en quién la lee. Nada en TypeScript distingue "columna que el schema tiene" de
@@ -219,6 +219,46 @@ un segundo archivo que la justifique. Reabrir esto cuando un dominio necesite m�
 
 **Reapertura:** si `server/utils/` vuelve a mezclar infraestructura y dominio a pesar de esta regla —
 señal de que la regla no bastó y hace falta la subcarpeta.
+
+## A-007 — Toda tabla y bucket con datos de usuario se cierra a `anon`/`authenticated` en Postgres, no solo se protege con RLS
+
+**Estado:** aceptada (misión 04, 2026-08-24). **Fecha:** 2026-08-24.
+
+A-001 exceptúa a Auth de "el browser solo habla con `/api/*`" porque la sesión tiene que vivir ahí
+(`createBrowserClient`). Pero ese mismo objeto cliente no sabe que "solo lo usamos para Auth": también
+expone `.from()` (PostgREST) y `.storage` (Storage), llamables desde la consola del navegador por
+cualquiera, sin pasar por `server/api/` en absoluto. Cualquier tabla o bucket con una policy "de respaldo"
+(A-002) queda, en la práctica, con esa policy como la **única** puerta si no se revocan además los grants
+por default de Postgres a `anon`/`authenticated`. Esto lo descubrió la misión 04 auditando su propio diseño
+antes de aprobarlo, no en producción — el detalle completo vive en su `ingenieria.md` (Impacto en RLS).
+
+**La distinción que A-002 no hacía explícita:** "RLS es respaldo, no el mecanismo" es cierto para la
+conexión de Drizzle (rol dueño, la salta por completo) y **falso** para PostgREST y para Storage cuando se
+llama con el cliente de sesión del propio usuario (rol `authenticated` + JWT) — ahí la policy sí se evalúa
+y es la barrera real, no un respaldo de nada.
+
+**Al construir:**
+
+- Toda tabla nueva con datos de usuario lleva, en `server/db/sql/rls.sql`, además de sus policies:
+  `revoke all on public.<tabla> from anon, authenticated;` — salvo que el diseño necesite lectura pública
+  real vía PostgREST, que en Datealo no debería pasar nunca (A-001: todo se lee vía Drizzle).
+- Todo bucket de Storage que la app solo debería tocar a través de `server/api/` necesita sus policies de
+  `insert`/`update`/`delete` escritas y probadas con cuidado real — para Storage, la policy **es** la
+  defensa, no la de respaldo.
+- Nunca `force row level security` en una tabla que Drizzle escribe — forzaría RLS también sobre el rol
+  dueño, donde `auth.uid()` es `NULL`, y rompería todo insert/update de `server/api/`.
+- Antes de aprobar el `ingenieria.md` de una misión que agregue una tabla o un bucket nuevo, verificar
+  explícitamente cuál de los dos regímenes aplica a cada camino de acceso que el diseño use — no asumir que
+  "ya hay una policy" alcanza.
+
+**Alternativas descartadas:** confiar en que "nadie va a intentar pegarle directo a Supabase" — la
+publishable key ya está en el bundle del cliente por diseño (A-001), así que no es una defensa, es un
+supuesto sin verificar. No exponer nunca un cliente de Supabase real al browser — inviable mientras D-001
+de la misión 04 (y cualquier auth futura) dependa de `signInWithOtp` desde el cliente.
+
+**Reapertura:** si algún día Datealo deja de exponer un cliente de Supabase real al browser (todo el flujo
+de auth detrás de un proxy del servidor, por ejemplo), esta regla deja de ser necesaria y se puede
+simplificar.
 
 ## Dónde va cada cosa
 

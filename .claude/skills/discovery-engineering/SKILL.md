@@ -63,7 +63,10 @@ en revisión se paga dos veces.
 
 - los contratos entre capas están definidos (qué entra, qué sale, qué invariantes se mantienen)
 - el modelo de datos soporta los casos límite de `producto.md` sin workarounds
-- el impacto en RLS está resuelto explícitamente: qué policy se crea o cambia, o por qué ninguna
+- el impacto en RLS está resuelto explícitamente: qué policy se crea o cambia, o por qué ninguna, y pasó el
+  checklist del skill `seguridad-datos` — "hay una policy" no es lo mismo que "esa policy es la que
+  protege", y confundirlo es exactamente el tipo de hallazgo que ese skill existe para atrapar antes de
+  construir, no en producción
 - cada dato de usuario nombra **dónde se verifica la pertenencia en el servidor**, no solo su policy
 - el diseño respeta las decisiones del skill `arquitectura`, o nombra cuál contradice y por qué
 - la migración de datos existentes tiene estrategia concreta o está explícitamente fuera del alcance
@@ -200,7 +203,8 @@ query la paga en el plan), o una migración sin estrategia para las filas existe
 - ¿Los contratos de datos entre capas están definidos antes de la implementación?
 - ¿El diseño de datos soporta los casos límite de `producto.md`, empezando por "no hay resultados"?
 - ¿Qué pasa si Supabase responde lento o falla? ¿La pantalla degrada con gracia?
-- ¿Qué policy RLS toca este cambio?
+- ¿Qué policy RLS toca este cambio, y esa policy es respaldo o es la barrera real para la conexión que la
+  evalúa? (ver el skill `seguridad-datos` si hay dudas)
 - ¿La consulta escala más allá de una comuna, o asume que caben todos los perfiles en memoria?
 - ¿Hay decisiones de arquitectura que podrían invalidar el alcance de la entrega?
 - ¿El diseño encaja con las decisiones vigentes de producto y experiencia, o solo se adapta lo mínimo para
@@ -214,6 +218,14 @@ ordenada de slices donde cada slice es un cambio funcional atómico — un Issue
 
 Cortar recién cuando el gate de salida se cumple y ninguna pregunta bloqueante sigue abierta: slicing sobre
 decisiones abiertas produce issues que mueren.
+
+**Si el diseño cambia después de cortar en slices — una auditoría de seguridad, un hallazgo tardío, una
+corrección de `ingenieria.md`—, el plan de construcción se revisa contra el diseño actualizado antes de
+darlo por vigente de nuevo.** Corregir "Modelo de datos" o "Impacto en RLS" y no tocar "Plan de
+construcción" dos secciones más abajo dice, en la práctica, que el corte de esas dos filas era correcto —
+aunque ya no lo sea. Concreto: si el diseño ahora exige un `revoke`, una policy nueva, o un límite de
+tamaño en un bucket, el criterio de aceptación del slice que crea esa tabla o ese bucket tiene que probar
+exactamente eso — no solo el camino feliz que tenía antes del cambio.
 
 **El método completo vive en [`references/slicing.md`](./references/slicing.md)** — cómo encontrar los
 slices desde las costuras del diseño, qué eje de corte usar según dónde está la incertidumbre, cómo cortar
