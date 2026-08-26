@@ -25,9 +25,9 @@ import { comunas } from '../schema/comunas'
 
 process.loadEnvFile('.env')
 
-const databaseUrlDirect = process.env.DATABASE_URL_DIRECT
-if (!databaseUrlDirect) {
-  throw new Error('Falta DATABASE_URL_DIRECT en el entorno — ver .env.example')
+const databaseUrlSession = process.env.DATABASE_URL_SESSION
+if (!databaseUrlSession) {
+  throw new Error('Falta DATABASE_URL_SESSION en el entorno — ver .env.example')
 }
 
 const categoriasSeed = [
@@ -392,7 +392,7 @@ const comunasSeed = [
 ]
 
 async function main() {
-  const client = postgres(databaseUrlDirect!, { prepare: false })
+  const client = postgres(databaseUrlSession!, { prepare: false })
   const db = drizzle({ client, schema: { categorias, comunas } })
 
   await db.insert(categorias).values(categoriasSeed).onConflictDoNothing()
