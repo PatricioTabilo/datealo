@@ -314,11 +314,11 @@ alter table professionals enable row level security;
 -- El perfil es el producto: lo lee cualquiera — pero solo vía Drizzle/server/api, nunca por PostgREST
 -- directo (ver el revoke más abajo). La policy queda escrita igual, por si algún día se revierte el revoke.
 create policy professionals_select_public on professionals
-  to authenticated, anon for select using (true);
+  for select to authenticated, anon using (true);
 
 -- Lo edita solo su dueño.
 create policy professionals_update_own on professionals
-  to authenticated for update using ((select auth.uid()) = user_id)
+  for update to authenticated using ((select auth.uid()) = user_id)
   with check ((select auth.uid()) = user_id);
 
 -- A-007: sin este revoke, las dos policies de arriba son la única puerta de esta tabla, alcanzable
