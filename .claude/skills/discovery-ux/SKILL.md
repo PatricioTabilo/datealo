@@ -106,13 +106,51 @@ desde producto — no en paralelo a una revisión de `producto.md` "para mantene
 - los casos límite de `producto.md` tienen flujo mapeado, empezando por "no hay resultados"
 - cada flujo crítico está mockeado en móvil, y en desktop si también vive ahí
 - no quedan pantallas descritas como "similar a X" sin especificar qué cambia
-- los flujos críticos pasaron una evaluación heurística y sus hallazgos bloqueantes están resueltos
+- cada `UXF-xxx` no trivial pasó por "Divergencia antes de converger" antes de fijar su enfoque
+- los flujos críticos pasaron una evaluación heurística y sus hallazgos bloqueantes están resueltos, y todo
+  hallazgo de enfoque volvió a divergencia en vez de parcharse
+- cada string de contenido (Estados por superficie, columnas "Información visible" de las secuencias,
+  mockups) pasó el "Barrido de copy" contra `ux-writing` — la evaluación heurística general no lo reemplaza
 
 **Evaluar antes de cerrar:** proponer y juzgar son actos distintos, y hacerlos en la misma pasada produce
 ceguera — el flujo recién escrito parece bueno porque uno acaba de convencerse a sí mismo. Antes de marcar
 `en revisión`, contrastar los flujos críticos contra heurísticas de usabilidad usando los skills instalados
 en `.claude/skills/`: `ui-ux-pro-max` y `web-design-guidelines` para el juicio, `frontend-design` para la
-propuesta visual, `ux-writing` para el texto de cada estado (labels, errores, empty states, CTAs).
+propuesta visual. Para un flujo crítico esa evaluación se delega a un subagente nuevo, sin el contexto de
+por qué se eligió ese enfoque, en vez de hacerse en la misma sesión: una segunda lectura propia sigue
+anclada en el razonamiento que ya se convenció a sí mismo; un subagente sin ese historial juzga el
+resultado, no la justificación.
+
+Todo hallazgo de esa evaluación se clasifica antes de resolverlo, porque las dos cosas se corrigen distinto:
+
+- **De ejecución** — falta un estado, un touch target, un indicador de posición. Se corrige en el lugar.
+- **De enfoque** — el problema está en cómo el flujo resuelve el JTBD, no en un detalle suyo. Ese hallazgo
+  no se parcha: vuelve a "Divergencia antes de converger" y se regeneran enfoques. Parchar un enfoque roto
+  produce un flujo que pasa la heurística puntual y sigue mal resuelto de fondo — el síntoma desaparece, la
+  causa queda.
+
+**Barrido de copy, texto por texto:** `ux-writing` no es una entrada más de la lista de arriba — es su
+propio paso, y es bloqueante. La evaluación heurística general lee el flujo; el barrido de copy lee cada
+string. Son cosas distintas y una no cubre a la otra — "el documento ya pasó por evaluación heurística" no
+es lo mismo que "cada texto se leyó contra `ux-writing`", y tratarlas como intercambiables es cómo un texto
+con un dato falso (una restricción que otra sección del mismo documento contradice, un campo que promete
+algo que la pantalla no tiene) llega a `en revisión` sin que nadie lo note.
+
+Antes de marcar el documento `en revisión`, recorrer uno por uno — no leer el documento buscando si "suena
+bien" — cada string de "Estados por superficie", cada columna "Información visible" de las secuencias, y
+cada frame de los mockups, contra los cuatro estándares de `ux-writing` (propósito, concisión,
+conversacional, claridad). Dos preguntas puntuales que ese barrido tiene que hacerse en cada string, porque
+son las que se saltan cuando se lee rápido:
+
+- **¿Este texto afirma algo que otra parte del documento contradice?** — una restricción, un requisito, un
+  comportamiento que el propio flujo dice que no aplica.
+- **¿Este texto repite algo que ya es visible sin él?** — si la información está a la vista dos líneas más
+  abajo, el texto no necesita listarla; solo necesita decir por qué importa.
+
+Un hallazgo de este barrido se corrige igual que cualquier otro: si el texto miente o es redundante, es de
+ejecución, se corrige en el lugar; si el problema es que el mensaje completo no cumple su propósito (el
+usuario no entiende qué hacer con él), es de enfoque y se vuelve a escribir desde cero, no se le agregan
+palabras encima.
 
 **Loop de vuelta:** si al diseñar un flujo se descubre que una regla de producto no funciona, registrar la
 contradicción en `producto.md` antes de simplificar el flujo aquí.
@@ -153,6 +191,38 @@ Un empty state que solo dice "sin resultados" convierte el arranque en frío en 
 - ¿El estado resultante es visible sin necesitar texto de confirmación?
 - ¿El flujo es completable sin haber leído nada?
 - ¿Qué hace el usuario si comete un error? ¿Puede deshacerlo?
+
+## Divergencia antes de converger
+
+"Lo que existe se audita, no se hereda" cubre el riesgo de anclarse en una pantalla ya construida. Hay un
+segundo anclaje, más difícil de ver porque no deja rastro: quedarse pegado al primer enfoque que uno mismo
+propuso hace diez minutos, en la misma sesión. La primera idea rara vez es la mejor, y evaluarla contra sí
+misma no lo detecta — la investigación sobre fijación de diseño muestra que comprometerse temprano con un
+concepto degrada la calidad de las ideas que siguen, porque se juzgan relativas a ese ancla y no desde el
+problema. El Double Diamond resuelve esto separando una fase que diverge (explorar varios caminos) de una
+que converge (elegir uno) — nunca mezclándolas en la misma pasada.
+
+Antes de escribir la Secuencia principal de un `UXF-xxx` no trivial — cualquiera que no sea una extensión
+directa de un patrón ya decidido en "Patrones de interacción que ya están decididos" — nombrar 2-3 enfoques
+genuinamente distintos para resolver el mismo JTBD, no variantes de layout del mismo enfoque:
+
+```
+❌ "Enfoque A: lista de resultados. Enfoque B: la misma lista con otro orden de columnas."
+   (es un layout, no un enfoque distinto)
+
+✅ Para F-001 (ver un gasfiter disponible hoy, cerca):
+   - Enfoque A: lista ordenada por distancia, filtro de categoría arriba.
+   - Enfoque B: mapa como vista principal, lista como panel secundario.
+   - Enfoque C: buscador conversacional ("¿qué necesitas?") que arma la lista al confirmar.
+   Elegido: A — compite con el grupo de WhatsApp del vecino, no con Yelp, y es el que se completa
+   sin leer nada. B pierde ese mismo criterio en 390px con pocos resultados; C agrega un paso al
+   flujo core, que CLAUDE.md declara sagrado.
+```
+
+No hace falta documentar la exploración completa; lo que se conserva es el resultado. El enfoque elegido
+baja al `UXF-xxx`, y los descartados con su porqué alimentan la `UX-xxx` correspondiente — "Alternativas
+descartadas" ya es un campo del template; este paso solo asegura que lo que queda ahí es una generación
+real hecha antes de decidir, no una lista escrita después para justificar lo que ya se dibujó.
 
 ## Estructura de `experiencia.md`
 
@@ -296,6 +366,9 @@ del stack:
 - **Transiciones de 200ms o menos.** Las acciones destructivas piden confirmación; nunca `alert()` nativo.
 - **Optimistic UI** donde el resultado es predecible: se actualiza local y se revierte si falla.
 - **Empty states que invitan**, con sugerencias de categorías o comunas cercanas.
+- **Errores de campo enlazados por accesibilidad.** Todo error de validación inline lleva
+  `aria-describedby` apuntando al mensaje de error, para que un lector de pantalla lo lea junto al campo —
+  nunca solo color o posición visual como señal.
 
 ## Relación entre `experiencia.md` y `producto.md`
 

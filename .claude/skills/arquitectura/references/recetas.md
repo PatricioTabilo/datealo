@@ -288,7 +288,9 @@ ninguna herramienta la responde por ti.
 
 ## Agregar una tabla
 
-Tres archivos cambian juntos, y el tercero es el que se olvida.
+Tres archivos cambian juntos, y el tercero es el que se olvida — y hay un cuarto paso, en el mismo
+archivo que el segundo, que también se olvida (A-007): sin él, la policy de abajo no es respaldo, es la
+única puerta, alcanzable directo desde el browser con la publishable key que ya está en el bundle.
 
 **1. El schema** en `server/db/schema/<entidad>.ts`:
 
@@ -303,23 +305,30 @@ export const professionals = pgTable('professionals', {
 })
 ```
 
-**2. La policy** en `server/db/sql/rls.sql`, con los dos ejes separados:
+**2. La policy y el cierre de grants** en `server/db/sql/rls.sql`, con los dos ejes de policy separados más
+el `revoke` que A-007 exige:
 
 ```sql
 alter table professionals enable row level security;
 
--- El perfil es el producto: lo lee cualquiera.
+-- El perfil es el producto: lo lee cualquiera — pero solo vía Drizzle/server/api, nunca por PostgREST
+-- directo (ver el revoke más abajo). La policy queda escrita igual, por si algún día se revierte el revoke.
 create policy professionals_select_public on professionals
-  for select using (true);
+  to authenticated, anon for select using (true);
 
 -- Lo edita solo su dueño.
 create policy professionals_update_own on professionals
-  for update using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
+  to authenticated for update using ((select auth.uid()) = user_id)
+  with check ((select auth.uid()) = user_id);
+
+-- A-007: sin este revoke, las dos policies de arriba son la única puerta de esta tabla, alcanzable
+-- directo desde el browser con la publishable key (que ya es pública por diseño, A-001) — no un respaldo
+-- del código de server/api/. Drizzle usa el rol dueño y no le afecta.
+revoke all on public.professionals from anon, authenticated;
 ```
 
-**3. La verificación en el endpoint**, como en la receta anterior. Sin esto, los dos archivos anteriores no
-protegen nada por A-002.
+**3. La verificación en el endpoint**, como en la receta anterior. Sin esto, los archivos anteriores no
+protegen nada por A-002 — y sin el `revoke` de arriba, tampoco protegen nada por A-007.
 
 Las migraciones se generan con `drizzle-kit` contra la **conexión directa** (puerto `5432`), no contra el
 pooler. El `drizzle.config.ts` lleva esa URL, distinta de la que usa la app.

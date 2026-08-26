@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>V-003 Editar perfil — misión 04</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+    <style>
+      .field-shell {
+        border: 1px solid var(--ui-border);
+        border-radius: var(--ui-radius, 0.5rem);
+        background: var(--ui-bg);
+      }
+      .section-card {
+        border: 1px solid var(--ui-border);
+        border-radius: 0.875rem;
+        background: var(--ui-bg);
+      }
+      .photo-slot {
+        aspect-ratio: 1;
+        border-radius: 0.625rem;
+        background: var(--ui-bg-accented);
+      }
+      .add-photo {
+        aspect-ratio: 1;
+        border-radius: 0.625rem;
+        border: 1.5px dashed var(--ui-border-accented);
+        color: var(--ui-text-muted);
+      }
+      .check-badge {
+        color: var(--ui-success);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+      <!-- 1. vacío -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 · modo vacío
+          <small>recién publicado desde UXF-002 — invita a completar, nunca bloquea (CL-001, CL-002)</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="h-full overflow-y-auto p-5 pb-10">
+            <div
+              class="mb-4 rounded-lg p-3 text-sm"
+              style="background: color-mix(in oklab, var(--ui-success) 12%, transparent); color: var(--ui-success)"
+            >
+              ¡Listo! Tu perfil ya es visible. Complétalo para que la gente confíe más en ti.
+            </div>
+
+            <h1 class="text-xl font-extrabold" style="color: var(--ui-text-highlighted)">Héctor Silva</h1>
+            <p class="mt-0.5 text-sm" style="color: var(--ui-text-muted)">Electricidad · Ñuñoa</p>
+
+            <div class="section-card mt-5 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Fotos de tus trabajos</p>
+              <div class="mt-3 grid grid-cols-3 gap-2">
+                <div class="add-photo flex items-center justify-center text-2xl">+</div>
+                <div class="add-photo flex items-center justify-center text-2xl">+</div>
+                <div class="add-photo flex items-center justify-center text-2xl">+</div>
+              </div>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Descripción</p>
+              <p class="mt-1 text-sm italic" style="color: var(--ui-text-dimmed)">Ej: "Electricista con 10 años de experiencia en Ñuñoa"</p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Precio</p>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-dimmed)">
+                <span style="color: var(--ui-text-muted)">Desde $</span>
+                <span class="italic">Ej: 10.000</span>
+              </p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="mb-2 text-sm font-semibold" style="color: var(--ui-text-highlighted)">Tus datos</p>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Nombre</span>
+                <span style="color: var(--ui-text-highlighted)">Héctor Silva</span>
+              </div>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Categoría</span>
+                <span style="color: var(--ui-text-highlighted)">Electricidad</span>
+              </div>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Comuna</span>
+                <span style="color: var(--ui-text-highlighted)">Ñuñoa</span>
+              </div>
+              <div class="flex justify-between py-3 text-sm">
+                <span style="color: var(--ui-text-muted)">Contacto</span>
+                <span style="color: var(--ui-text-highlighted)">+56 9 1234 5678</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. con datos -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 · modo con datos
+          <small>vuelve semanas después (UXF-001 → V-003) — todo editable in-place, sin pantalla aparte</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="h-full overflow-y-auto p-5 pb-10">
+            <h1 class="text-xl font-extrabold" style="color: var(--ui-text-highlighted)">Héctor Silva</h1>
+            <p class="mt-0.5 text-sm" style="color: var(--ui-text-muted)">Electricidad · Ñuñoa</p>
+
+            <div class="section-card mt-5 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Fotos de tus trabajos</p>
+              <div class="mt-3 grid grid-cols-3 gap-2">
+                <div class="photo-slot"></div>
+                <div class="photo-slot"></div>
+                <div class="add-photo flex items-center justify-center text-2xl">+</div>
+              </div>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Descripción</p>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-highlighted)">
+                Electricista con 10 años de experiencia en Ñuñoa y alrededores.
+              </p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Precio</p>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-highlighted)">Desde $10.000</p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="mb-2 text-sm font-semibold" style="color: var(--ui-text-highlighted)">Tus datos</p>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Nombre</span>
+                <span style="color: var(--ui-text-highlighted)">Héctor Silva</span>
+              </div>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Categoría</span>
+                <span style="color: var(--ui-text-highlighted)">Electricidad</span>
+              </div>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Comuna</span>
+                <span style="color: var(--ui-text-highlighted)">Ñuñoa</span>
+              </div>
+              <div class="flex justify-between py-3 text-sm">
+                <span style="color: var(--ui-text-muted)">Contacto</span>
+                <span style="color: var(--ui-text-highlighted)">+56 9 1234 5678</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. editando un campo -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 · modo editando un campo
+          <small>tocó "Contacto" en Tus datos — el campo se vuelve input in-place, con el valor actual precargado</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="h-full overflow-y-auto p-5 pb-10">
+            <h1 class="text-xl font-extrabold" style="color: var(--ui-text-highlighted)">Héctor Silva</h1>
+            <p class="mt-0.5 text-sm" style="color: var(--ui-text-muted)">Electricidad · Ñuñoa</p>
+
+            <div class="section-card mt-5 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Fotos de tus trabajos</p>
+              <div class="mt-3 grid grid-cols-3 gap-2">
+                <div class="photo-slot"></div>
+                <div class="photo-slot"></div>
+                <div class="add-photo flex items-center justify-center text-2xl">+</div>
+              </div>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Descripción</p>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-highlighted)">
+                Electricista con 10 años de experiencia en Ñuñoa y alrededores.
+              </p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Precio</p>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-highlighted)">Desde $10.000</p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="mb-2 text-sm font-semibold" style="color: var(--ui-text-highlighted)">Tus datos</p>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Nombre</span>
+                <span style="color: var(--ui-text-highlighted)">Héctor Silva</span>
+              </div>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Categoría</span>
+                <span style="color: var(--ui-text-highlighted)">Electricidad</span>
+              </div>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Comuna</span>
+                <span style="color: var(--ui-text-highlighted)">Ñuñoa</span>
+              </div>
+              <div class="flex items-center justify-between py-3 text-sm">
+                <span style="color: var(--ui-text-muted)">Contacto</span>
+                <input
+                  type="tel"
+                  value="+56 9 1234 5678"
+                  class="w-36 rounded-md border px-2 py-1 text-right text-sm outline-none"
+                  style="border-color: var(--ui-primary); color: var(--ui-text-highlighted)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. formato inválido al escribir -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 · modo formato inválido al escribir
+          <small>escribió el Contacto sin formato de teléfono válido — no deja guardar hasta corregir</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="h-full overflow-y-auto p-5 pb-10">
+            <h1 class="text-xl font-extrabold" style="color: var(--ui-text-highlighted)">Héctor Silva</h1>
+            <p class="mt-0.5 text-sm" style="color: var(--ui-text-muted)">Electricidad · Ñuñoa</p>
+
+            <div class="section-card mt-5 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Fotos de tus trabajos</p>
+              <div class="mt-3 grid grid-cols-3 gap-2">
+                <div class="photo-slot"></div>
+                <div class="photo-slot"></div>
+                <div class="add-photo flex items-center justify-center text-2xl">+</div>
+              </div>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Descripción</p>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-highlighted)">
+                Electricista con 10 años de experiencia en Ñuñoa y alrededores.
+              </p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Precio</p>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-highlighted)">Desde $10.000</p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="mb-2 text-sm font-semibold" style="color: var(--ui-text-highlighted)">Tus datos</p>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Nombre</span>
+                <span style="color: var(--ui-text-highlighted)">Héctor Silva</span>
+              </div>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Categoría</span>
+                <span style="color: var(--ui-text-highlighted)">Electricidad</span>
+              </div>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Comuna</span>
+                <span style="color: var(--ui-text-highlighted)">Ñuñoa</span>
+              </div>
+              <div class="py-3 text-sm">
+                <div class="flex items-center justify-between">
+                  <span style="color: var(--ui-text-muted)">Contacto</span>
+                  <input
+                    type="tel"
+                    value="+56 9 12"
+                    class="w-36 rounded-md border px-2 py-1 text-right text-sm outline-none"
+                    style="border-color: var(--ui-error); color: var(--ui-text-highlighted)"
+                  />
+                </div>
+                <p class="mt-1 text-right text-xs font-semibold" style="color: var(--ui-error)">
+                  Ese número no parece válido. Debe ser un WhatsApp o teléfono chileno, ej: +56 9 1234 5678.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. guardando un campo -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 · modo guardando
+          <small>editó el precio y salió del campo — guardado automático, sin botón aparte</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="h-full overflow-y-auto p-5 pb-10">
+            <h1 class="text-xl font-extrabold" style="color: var(--ui-text-highlighted)">Héctor Silva</h1>
+            <p class="mt-0.5 text-sm" style="color: var(--ui-text-muted)">Electricidad · Ñuñoa</p>
+
+            <div class="section-card mt-5 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Fotos de tus trabajos</p>
+              <div class="mt-3 grid grid-cols-3 gap-2">
+                <div class="photo-slot"></div>
+                <div class="photo-slot"></div>
+                <div class="add-photo flex items-center justify-center text-2xl">+</div>
+              </div>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Descripción</p>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-highlighted)">
+                Electricista con 10 años de experiencia en Ñuñoa y alrededores.
+              </p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <div class="flex items-center justify-between">
+                <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Precio</p>
+                <span class="h-3.5 w-3.5 animate-spin rounded-full border-2" style="border-color: var(--ui-border); border-top-color: var(--ui-primary)"></span>
+              </div>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-highlighted)">Desde $12.000</p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="mb-2 text-sm font-semibold" style="color: var(--ui-text-highlighted)">Tus datos</p>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Nombre</span>
+                <span style="color: var(--ui-text-highlighted)">Héctor Silva</span>
+              </div>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Categoría</span>
+                <span style="color: var(--ui-text-highlighted)">Electricidad</span>
+              </div>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Comuna</span>
+                <span style="color: var(--ui-text-highlighted)">Ñuñoa</span>
+              </div>
+              <div class="flex justify-between py-3 text-sm">
+                <span style="color: var(--ui-text-muted)">Contacto</span>
+                <span style="color: var(--ui-text-highlighted)">+56 9 1234 5678</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. error al guardar -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 · modo error al guardar
+          <small>falló ese campo puntual — el valor anterior se mantiene, el resto del perfil no se afecta</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="h-full overflow-y-auto p-5 pb-10">
+            <h1 class="text-xl font-extrabold" style="color: var(--ui-text-highlighted)">Héctor Silva</h1>
+            <p class="mt-0.5 text-sm" style="color: var(--ui-text-muted)">Electricidad · Ñuñoa</p>
+
+            <div class="section-card mt-5 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Fotos de tus trabajos</p>
+              <div class="mt-3 grid grid-cols-3 gap-2">
+                <div class="photo-slot"></div>
+                <div class="photo-slot"></div>
+                <div class="add-photo flex items-center justify-center text-2xl">+</div>
+              </div>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Descripción</p>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-highlighted)">
+                Electricista con 10 años de experiencia en Ñuñoa y alrededores.
+              </p>
+            </div>
+
+            <div class="section-card mt-3 p-4" style="border-color: var(--ui-error)">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Precio</p>
+              <p class="mt-1 text-sm" style="color: var(--ui-text-highlighted)">Desde $10.000</p>
+              <p class="mt-2 flex items-center gap-1 text-xs font-semibold" style="color: var(--ui-error)">
+                ⚠️ No se pudo guardar, toca para reintentar
+              </p>
+            </div>
+
+            <div class="section-card mt-3 p-4">
+              <p class="mb-2 text-sm font-semibold" style="color: var(--ui-text-highlighted)">Tus datos</p>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Nombre</span>
+                <span style="color: var(--ui-text-highlighted)">Héctor Silva</span>
+              </div>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Categoría</span>
+                <span style="color: var(--ui-text-highlighted)">Electricidad</span>
+              </div>
+              <div class="flex justify-between border-b py-3 text-sm" style="border-color: var(--ui-border-muted)">
+                <span style="color: var(--ui-text-muted)">Comuna</span>
+                <span style="color: var(--ui-text-highlighted)">Ñuñoa</span>
+              </div>
+              <div class="flex justify-between py-3 text-sm">
+                <span style="color: var(--ui-text-muted)">Contacto</span>
+                <span style="color: var(--ui-text-highlighted)">+56 9 1234 5678</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

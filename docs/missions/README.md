@@ -12,7 +12,7 @@ abrieron y de dónde salió cada una.
 | 01  | [migración a Nuxt UI](./01-migracion-nuxt-ui/) | técnica | 2026-08-11 | cerrada 2026-08-13 | — | A-004 |
 | 02  | [base de datos, Auth y correo (config)](./02-base-de-datos-y-auth/) | técnica | 2026-08-13 | cerrada 2026-08-17 | — | A-001, A-002, A-003 |
 | 03  | [taxonomía: categorías y comunas](./03-taxonomia-categorias-y-comunas/) | producto | 2026-08-13 | cerrada 2026-08-20 | — | — |
-| 04  | [registro y perfil de profesional](./04-registro-perfil-profesional/) | producto | 2026-08-13 | exploración | — | — |
+| 04  | [registro y perfil de profesional](./04-registro-perfil-profesional/) | producto | 2026-08-13 | lista para construir | — | — |
 | 05  | [perfil público de profesional](./05-perfil-publico-profesional/) | producto | 2026-08-13 | exploración | — | — |
 | 06  | [búsqueda y resultados](./06-busqueda-resultados/) | producto | 2026-08-13 | exploración | — | — |
 | 07  | [reseñas verificadas por contacto](./07-resenas-verificadas-por-contacto/) | producto | 2026-08-13 | exploración | — | — |
@@ -25,6 +25,14 @@ una).
 Estados: `exploración`, `definición`, `lista para construir`, `en construcción`, `en validación`,
 `cerrada`, `pausada`. Al cerrar, el estado lleva su fecha (`cerrada 2026-09-30`). **En foco** es el único
 documento que se está trabajando; el detalle de por qué vive en el README de la misión, no acá.
+
+Los cuatro documentos de una misión (`investigacion.md`, `producto.md`, `experiencia.md`, `ingenieria.md`)
+tienen su propio estado, independiente del de la misión: `pendiente`, `activo`, `en revisión`, `vigente`.
+Vive en el encabezado de cada documento, no se repite en ningún README. Claude puede proponer contenido y
+marcar `en revisión`; nunca marca `vigente` — eso lo otorga solo el dueño de producto, y el documento lo
+registra ahí mismo: `**Estado:** vigente — aprobado por <nombre> el AAAA-MM-DD`. Los gates de cada
+documento están definidos en su propio archivo (`discovery-product`, `discovery-ux`,
+`discovery-engineering`); uno no pasa a `en revisión` sin cumplirlos.
 
 ## Candidatas
 

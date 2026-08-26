@@ -226,6 +226,8 @@ Skills propios del repo, escritos para las convenciones de Datealo:
 | `comentarios`                | Antes de escribir o revisar cualquier comentario de código           |
 | `nuxt-server-endpoints`      | Implementar endpoints en `server/api`/`server/utils` con Drizzle     |
 | `supabase-functions-logic`   | Lógica de negocio en Supabase Edge Functions (`supabase/functions/**`) |
+| `seguridad-datos`            | Auditar RLS/Storage/claves de un `ingenieria.md` o un cambio de schema real, antes de aprobarlo |
+| `audit-security`             | Comando `/audit-security <misión>` — corre `seguridad-datos` más una auditoría del slicing        |
 
 Skills de terceros, pre-instalados y trackeados en `skills-lock.json` (con su fuente exacta): `nuxt`,
 `vue`, `drizzle-orm`, `frontend-design`, `ui-ux-pro-max`, `web-design-guidelines`, `marketing-psychology`,

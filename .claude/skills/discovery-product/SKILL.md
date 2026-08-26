@@ -109,6 +109,8 @@ observables. El único documento que el dueño de producto aprueba es `producto.
 - cada funcionalidad enlaza una conclusión de `investigacion.md` y una señal de éxito
 - cada funcionalidad declara su lado del marketplace y qué necesita del otro lado
 - no hay decisiones de producto delegadas a diseño o ingeniería
+- toda `D-xxx` con tensión real trae al menos una alternativa genuina en "Alternativas descartadas", no
+  solo el statu quo
 - las decisiones propuestas tienen fecha límite en el README de la misión
 
 **Aprobación:** Claude propone y marca `en revisión`; `vigente` lo otorga solo el dueño de producto. Toda
@@ -193,6 +195,12 @@ vale si es un ratio (no un total acumulado que solo sube) y si cambia lo que Dat
 profesionales registrados" no es una señal — "3 de 10 tocan WhatsApp" sí lo es.
 
 ### Cómo se redacta una decisión (D-xxx)
+
+**"Alternativas descartadas" se llena antes de decidir, no después.** Si al escribirla no aparece al menos
+una alternativa real —no el statu quo disfrazado de opción—, la decisión no divergió: se auto-confirmó.
+Nombrar 2-3 opciones genuinas primero, aunque no todas terminen documentadas, es lo que distingue una
+decisión de una ratificación. El skill `discovery-ux` aplica el mismo mecanismo a flujos en "Divergencia
+antes de converger" — ahí está el porqué con más detalle.
 
 - **Título = la decisión en una frase que se entiende sola**, no una etiqueta abstracta.
   ❌ "Modelo de contacto y trazabilidad de la conversación"

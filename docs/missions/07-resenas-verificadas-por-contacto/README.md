@@ -11,12 +11,8 @@ Sexta y última misión hacia el MVP (registrarse, mostrarse, buscar, reseñar).
 esa misión ratifique, y el `sendEmail()` para notificar al profesional) y de
 [misión 05](../05-perfil-publico-profesional/) (el evento de contacto al que se ata cada reseña).
 
-| Documento     | Estado    | Qué falta para su gate              |
-| ------------- | --------- | ------------------------------------ |
-| Investigación | pendiente | discovery completo — hoy solo existe la carpeta |
-| Producto      | pendiente | —                                     |
-| Experiencia   | pendiente | —                                     |
-| Ingeniería    | pendiente | —                                     |
+**Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
+[Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
 **Próximo hito:** ninguno todavía — esta misión no se ha empezado a trabajar.
 
