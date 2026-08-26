@@ -179,7 +179,7 @@ describe('CatalogSelect', () => {
     }
   })
 
-  it('salir sin elegir descarta el texto a medio escribir y restaura el label elegido (D-004)', async () => {
+  it('salir sin elegir descarta el texto a medio escribir y restaura el label elegido', async () => {
     const wrapper = mountCatalogSelect({ modelValue: 'electricidad' })
     await wrapper.find('input').trigger('focusin')
     await wrapper.find('input').setValue('texto suelto')

@@ -99,7 +99,7 @@ límite apenas hay tráfico paralelo.
 | Uso                       | Destino                                        |
 | ------------------------- | ---------------------------------------------- |
 | Conexión de la app        | Supavisor transacción, `...pooler.supabase.com:6543` |
-| Migraciones de drizzle-kit| Conexión directa, puerto `5432`                |
+| Migraciones y scripts de seed | Supavisor **modo sesión** (`DATABASE_URL_SESSION`), mismo host que la app, puerto `5432` |
 | Driver                    | `postgres.js` — el que documenta Drizzle para Supabase |
 | Preset de Nitro           | `vercel` (no `vercel-edge`: no tiene APIs de Node) |
 
@@ -107,8 +107,13 @@ El modo transacción no soporta prepared statements y Drizzle los usa por defect
 abre con `prepare: false`. Sin ese flag la app compila y falla en runtime contra el pooler — un error que
 no aparece en desarrollo local contra una base directa.
 
-Supavisor es además el único con IPv4 en todos los planes. La conexión directa es IPv6-only sin el add-on
-pagado.
+**`DATABASE_URL_SESSION` no es la conexión directa de Supabase (`db.<ref>.supabase.co`), y no debe
+serlo.** Esa conexión directa es **IPv6-only sin el add-on pagado** — falla (a veces con un error
+inmediato, a veces colgada varios segundos hasta el timeout, sin ningún error de credenciales de por medio)
+en cualquier red sin salida IPv6 funcional, que es la mayoría de las residenciales y buena parte de las
+corporativas. Supavisor en **modo sesión** (mismo host que la app, puerto `5432` en vez de `6543`) sí tiene
+IPv4 y soporta prepared statements y el resto de lo que `drizzle-kit` y los scripts de seed necesitan —
+por eso es el destino correcto para ambos, no la conexión directa verdadera.
 
 ## A-004 — Nuxt UI v4 es la base de interfaz
 

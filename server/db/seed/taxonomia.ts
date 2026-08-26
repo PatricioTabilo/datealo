@@ -1,7 +1,7 @@
 // Seed de categorias y comunas. Se corre una vez por entorno: `npm run db:seed:taxonomia`.
 //
-// Conexión directa (puerto 5432), no el pooler de la app (que usa el modo transacción de Supavisor,
-// sin prepared statements) — drizzle-kit necesita la conexión directa por el mismo motivo.
+// Supavisor en modo sesión (puerto 5432, DATABASE_URL_SESSION), no el modo transacción que usa
+// la app — mismo motivo que drizzle-kit (ver drizzle.config.ts).
 //
 // Las 8 categorías son las que Patricio aprobó como catálogo del lanzamiento: Gasfitería,
 // Electricidad, Peluquería, Limpieza, Mudanzas, Pintura, Cerrajería, Jardinería — ver el array
@@ -25,9 +25,9 @@ import { comunas } from '../schema/comunas'
 
 process.loadEnvFile('.env')
 
-const databaseUrlDirect = process.env.DATABASE_URL_DIRECT
-if (!databaseUrlDirect) {
-  throw new Error('Falta DATABASE_URL_DIRECT en el entorno — ver .env.example')
+const databaseUrlSession = process.env.DATABASE_URL_SESSION
+if (!databaseUrlSession) {
+  throw new Error('Falta DATABASE_URL_SESSION en el entorno — ver .env.example')
 }
 
 const categoriasSeed = [
@@ -392,7 +392,7 @@ const comunasSeed = [
 ]
 
 async function main() {
-  const client = postgres(databaseUrlDirect!, { prepare: false })
+  const client = postgres(databaseUrlSession!, { prepare: false })
   const db = drizzle({ client, schema: { categorias, comunas } })
 
   await db.insert(categorias).values(categoriasSeed).onConflictDoNothing()
