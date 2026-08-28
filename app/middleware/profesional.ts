@@ -4,7 +4,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (to.path === '/profesional/ingresar') return
 
   try {
-    await $fetch('/api/auth/me')
+    // $fetch a secas no reenvía las cookies de la request original durante SSR — justo el caso de
+    // seguir el enlace del correo, una navegación completa. useRequestFetch() sí las reenvía.
+    await useRequestFetch()('/api/auth/me')
   } catch {
     return navigateTo('/profesional/ingresar')
   }

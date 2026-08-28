@@ -15,7 +15,11 @@ export function useMagicLink() {
     route.query.error === 'enlace_invalido' ? 'enlace-invalido' : 'email',
   )
   const email = useState('magic-link-email', () => '')
+  // emailError es del formato de lo que se escribió (pinta el input en rojo); sendError es de la
+  // acción de enviar el enlace (falla de red o del servidor) — un typo y una falla de Supabase no son
+  // lo mismo, y el input no debería marcarse inválido por algo que no tiene que ver con su contenido.
   const emailError = useState<string | null>('magic-link-email-error', () => null)
+  const sendError = useState<string | null>('magic-link-send-error', () => null)
   const loading = useState('magic-link-loading', () => false)
   const resendHintVisible = useState('magic-link-resend-hint', () => false)
 
@@ -34,6 +38,7 @@ export function useMagicLink() {
     }
 
     emailError.value = null
+    sendError.value = null
     loading.value = true
 
     try {
@@ -43,7 +48,7 @@ export function useMagicLink() {
       })
 
       if (error) {
-        emailError.value = 'No pudimos enviar el enlace. Intenta de nuevo.'
+        sendError.value = 'No pudimos enviar el enlace. Intenta de nuevo.'
         return
       }
 
@@ -63,10 +68,11 @@ export function useMagicLink() {
     step.value = 'email'
     email.value = ''
     emailError.value = null
+    sendError.value = null
     resendHintVisible.value = false
   }
 
   onUnmounted(clearResendHintTimer)
 
-  return { step, email, emailError, loading, resendHintVisible, sendLink, startOver }
+  return { step, email, emailError, sendError, loading, resendHintVisible, sendLink, startOver }
 }
