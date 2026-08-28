@@ -9,7 +9,9 @@ export type AuthUser = {
   email: string | null
 }
 
-function serverSupabase(event: H3Event) {
+// Exportado: server/routes/auth/confirm.get.ts (TC-006) necesita el mismo cliente para que
+// verifyOtp() deje la sesión en la misma cookie que requireUser() sabe leer.
+export function serverSupabase(event: H3Event) {
   const { public: pub } = useRuntimeConfig()
   // La publishable key, no la secret key: este cliente representa al usuario de la sesión, no un
   // acceso admin. Con la secret key cualquier query por este cliente saltaría RLS por completo.
