@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { Star, Loader2, CheckCircle, Check } from '@lucide/vue'
+import { Star, Check } from '@lucide/vue'
 import { LANDING_FOR_PROFESSIONALS } from '~/constants/landing'
-
-const { email, loading, submitted, error, submit } = useWaitlist('profesional')
 </script>
 
 <template>
@@ -45,47 +43,19 @@ const { email, loading, submitted, error, submit } = useWaitlist('profesional')
             </ul>
           </div>
 
-          <!-- Inline form -->
+          <!-- CTA: navega directo a iniciar sesión, sin capturar nada acá -->
           <div class="rounded-2xl bg-white p-3 shadow-2xl shadow-black/20">
             <p class="text-datealo-text/60 text-sm mb-3 px-2 font-medium">{{ LANDING_FOR_PROFESSIONALS.ctaContext }}</p>
 
-            <Transition name="fade" mode="out-in">
-              <div
-                v-if="submitted"
-                class="flex items-center gap-3 rounded-xl bg-success/10 border border-success/20 p-5"
-              >
-                <CheckCircle class="h-6 w-6 text-success shrink-0" />
-                <p class="text-success font-bold">¡Registrado! Te contactaremos pronto.</p>
-              </div>
-
-              <form v-else class="flex flex-col sm:flex-row gap-2" @submit.prevent="submit">
-                <div class="flex-1 min-w-0 relative">
-                  <label for="pro-email" class="sr-only">Email profesional</label>
-                  <UInput
-                    id="pro-email"
-                    v-model="email"
-                    type="email"
-                    autocomplete="email"
-                    placeholder="Tu email"
-                    :disabled="loading"
-                    variant="none"
-                    class="w-full"
-                    :ui="{ base: 'h-14 rounded-xl bg-datealo-surface/50 px-4 text-base text-datealo-text placeholder:text-datealo-text/40 focus:ring-2 focus:ring-primary/20 focus:bg-datealo-surface transition-all' }"
-                  />
-                  <p v-if="error" class="absolute -bottom-6 left-2 text-xs text-error font-medium">{{ error }}</p>
-                </div>
-                <UButton
-                  type="submit"
-                  variant="link"
-                  color="neutral"
-                  class="h-14 rounded-xl px-6 text-sm font-bold bg-secondary text-white hover:bg-secondary/90 hover:text-white active:text-white shadow-lg shadow-secondary/20 transition-all shrink-0"
-                  :disabled="loading"
-                >
-                  <Loader2 v-if="loading" class="h-5 w-5 animate-spin" />
-                  <template v-else>{{ LANDING_FOR_PROFESSIONALS.cta }}</template>
-                </UButton>
-              </form>
-            </Transition>
+            <UButton
+              to="/profesional/ingresar"
+              block
+              variant="link"
+              color="neutral"
+              class="h-14 rounded-xl text-sm font-bold bg-secondary text-white hover:bg-secondary/90 hover:text-white active:text-white shadow-lg shadow-secondary/20 transition-all"
+            >
+              {{ LANDING_FOR_PROFESSIONALS.cta }}
+            </UButton>
           </div>
         </div>
 
