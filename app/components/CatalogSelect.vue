@@ -12,6 +12,7 @@ import { computed, ref, watch } from 'vue'
 export type CatalogOption = { value: string, label: string }
 
 const props = defineProps<{
+  id?: string
   items: CatalogOption[]
   pending: boolean
   error: boolean
@@ -125,6 +126,7 @@ function retry() {
 <template>
   <div ref="containerRef" class="relative" @focusin="handleFocusIn" @focusout="handleFocusOut">
     <UInput
+      :id="id"
       ref="uInputRef"
       :model-value="searchTerm"
       :placeholder="placeholder"
