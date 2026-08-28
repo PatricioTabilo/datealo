@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { existsActiveCategoria } from './categorias'
 import { existsActiveComuna } from './comunas'
 import { professionals } from '../db/schema/professionals'
@@ -131,6 +131,34 @@ export async function updateProfessional(
     .where(eq(professionals.userId, userId))
     .returning(publicColumns)
   return updated ? toPublicProfessional(updated) : null
+}
+
+export async function addProfessionalPhoto(userId: string, path: string): Promise<Professional | null> {
+  const [updated] = await useDb()
+    .update(professionals)
+    .set({ photoPaths: sql`array_append(${professionals.photoPaths}, ${path})`, updatedAt: new Date() })
+    .where(eq(professionals.userId, userId))
+    .returning(publicColumns)
+  return updated ? toPublicProfessional(updated) : null
+}
+
+export async function removeProfessionalPhoto(userId: string, path: string): Promise<Professional | null> {
+  const [updated] = await useDb()
+    .update(professionals)
+    .set({ photoPaths: sql`array_remove(${professionals.photoPaths}, ${path})`, updatedAt: new Date() })
+    .where(eq(professionals.userId, userId))
+    .returning(publicColumns)
+  return updated ? toPublicProfessional(updated) : null
+}
+
+// Chequea existencia del perfil y pertenencia de la foto en una sola query — evita reconstruir "no
+// existe" a partir de dos casos distintos (perfil ausente vs. path que no está en photoPaths).
+export async function professionalHasPhotoPath(userId: string, path: string): Promise<boolean> {
+  const [row] = await useDb()
+    .select({ id: professionals.id })
+    .from(professionals)
+    .where(sql`${professionals.userId} = ${userId} and ${path} = any(${professionals.photoPaths})`)
+  return Boolean(row)
 }
 
 function escapeHtml(value: string): string {
