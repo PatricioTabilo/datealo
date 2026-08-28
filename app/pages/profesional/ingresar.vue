@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Mail, TriangleAlert } from '@lucide/vue'
+
 definePageMeta({ middleware: 'profesional' })
 
 useSeoMeta({ title: 'Entra a Datealo', robots: 'noindex' })
@@ -48,8 +50,8 @@ const { step, email, emailError, loading, resendHintVisible, sendLink, startOver
 
     <template v-else-if="step === 'revisa-correo'">
       <div class="flex flex-col items-center text-center">
-        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-datealo-surface text-2xl">
-          ✉️
+        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-datealo-surface">
+          <Mail class="h-7 w-7 text-primary" />
         </div>
         <h1 class="mt-6 text-xl font-extrabold text-datealo-text">Revisa tu correo</h1>
         <p class="mt-3 text-sm text-datealo-muted">
@@ -67,8 +69,8 @@ const { step, email, emailError, loading, resendHintVisible, sendLink, startOver
 
     <template v-else>
       <div class="flex flex-col items-center text-center">
-        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-datealo-surface text-2xl">
-          ⚠️
+        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-datealo-surface">
+          <TriangleAlert class="h-7 w-7 text-error" />
         </div>
         <h1 class="mt-6 text-xl font-extrabold text-datealo-text">Este enlace ya no funciona</h1>
         <p class="mt-3 text-sm text-datealo-muted">
