@@ -107,19 +107,32 @@ desde producto — no en paralelo a una revisión de `producto.md` "para mantene
 - cada flujo crítico está mockeado en móvil, y en desktop si también vive ahí
 - no quedan pantallas descritas como "similar a X" sin especificar qué cambia
 - cada `UXF-xxx` no trivial pasó por "Divergencia antes de converger" antes de fijar su enfoque
-- los flujos críticos pasaron una evaluación heurística y sus hallazgos bloqueantes están resueltos, y todo
-  hallazgo de enfoque volvió a divergencia en vez de parcharse
+- los flujos críticos pasaron una evaluación heurística en un contexto separado (ver "Evaluar antes de
+  cerrar, en un contexto separado" más abajo) y sus hallazgos bloqueantes están resueltos, y todo hallazgo
+  de enfoque volvió a divergencia en vez de parcharse
 - cada string de contenido (Estados por superficie, columnas "Información visible" de las secuencias,
   mockups) pasó el "Barrido de copy" contra `ux-writing` — la evaluación heurística general no lo reemplaza
 
-**Evaluar antes de cerrar:** proponer y juzgar son actos distintos, y hacerlos en la misma pasada produce
-ceguera — el flujo recién escrito parece bueno porque uno acaba de convencerse a sí mismo. Antes de marcar
-`en revisión`, contrastar los flujos críticos contra heurísticas de usabilidad usando los skills instalados
-en `.claude/skills/`: `ui-ux-pro-max` y `web-design-guidelines` para el juicio, `frontend-design` para la
-propuesta visual. Para un flujo crítico esa evaluación se delega a un subagente nuevo, sin el contexto de
-por qué se eligió ese enfoque, en vez de hacerse en la misma sesión: una segunda lectura propia sigue
-anclada en el razonamiento que ya se convenció a sí mismo; un subagente sin ese historial juzga el
-resultado, no la justificación.
+**Evaluar antes de cerrar, en un contexto separado:** proponer y juzgar son actos distintos, y hacerlos en
+la misma pasada produce ceguera — el flujo recién escrito parece bueno porque uno acaba de convencerse a sí
+mismo de por qué cada decisión tiene sentido. Esa ceguera no se resuelve "prestando más atención": la
+conversación que escribió el flujo ya tiene la narrativa de por qué está bien, y esa narrativa contamina
+cualquier juicio hecho ahí mismo.
+
+- **La evaluación corre en un agente sin memoria de haber escrito el documento** — recibe solo
+  `experiencia.md` terminado, `producto.md`, los mockups, y la lista de skills a aplicar; nunca el
+  razonamiento de cómo se llegó ahí. Un fork **no sirve para esto**: hereda toda la conversación, incluida
+  la justificación de cada decisión, así que carga el mismo sesgo que se busca evitar. Un agente nuevo
+  (`Agent` con un `subagent_type` que no sea `fork`, o una sesión distinta) sí aísla el sesgo.
+- **Cada skill se invoca de verdad**, con la tool `Skill`, uno por uno — `ui-ux-pro-max` y
+  `web-design-guidelines` para el juicio de usabilidad, `frontend-design` para la propuesta visual. Un
+  hallazgo que no cita qué dijo el skill invocado es una aplicación de memoria, no una evaluación — no
+  cuenta para el gate.
+- **La evaluación cuestiona decisiones, no solo redacción.** Pulir un mensaje de error es más fácil que
+  objetar por qué el flujo tiene tres pantallas en vez de una, y esa facilidad sesga hacia encontrar solo lo
+  fácil. Antes de cerrar, la evaluación tiene que intentar tumbar al menos una decisión ya tomada (una
+  `UX-xxx`, un modo, un orden de pasos) citando por qué — si ninguna sobrevive el intento, recién ahí se
+  confirma el diseño; si nunca se intenta, la evaluación fue cosmética.
 
 Todo hallazgo de esa evaluación se clasifica antes de resolverlo, porque las dos cosas se corrigen distinto:
 
