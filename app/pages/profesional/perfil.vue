@@ -72,7 +72,9 @@ function commitPrice() {
       <h1 class="text-xl font-extrabold text-datealo-text">{{ professional.displayName }}</h1>
       <p class="mt-0.5 text-sm text-datealo-muted">{{ categoriaNombre }} · {{ comunaNombre }}</p>
 
-      <div class="mt-5 rounded-2xl border border-datealo-surface p-4">
+      <ProfessionalPhotos class="mt-5" />
+
+      <div class="mt-3 rounded-2xl border border-datealo-surface p-4">
         <div class="flex items-center justify-between">
           <p class="text-sm font-semibold text-datealo-text">Descripción</p>
           <Loader2 v-if="isSavingDescription" class="h-3.5 w-3.5 animate-spin text-primary" />

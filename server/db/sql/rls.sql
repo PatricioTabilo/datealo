@@ -62,3 +62,41 @@ create policy professionals_update_own on professionals
 -- `force row level security` queda deliberadamente sin usar: forzarlo aplicaría RLS también al
 -- rol dueño de Drizzle, donde auth.uid() es NULL, y rompería todo insert/update del servidor.
 revoke all on public.professionals from anon, authenticated;
+
+-- professional-photos: acá la policy es la barrera real, no un respaldo — las fotos se suben con el
+-- cliente de sesión del propio usuario (mismo publishable key + JWT que arma requireUser()), que sí
+-- evalúa storage.objects. file_size_limit y allowed_mime_types quedan fijados en el propio bucket:
+-- son la única capa que sobrevive si alguien sube directo desde la consola del navegador, saltándose
+-- la validación de server/api/.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('professional-photos', 'professional-photos', true, 4194304, array['image/jpeg', 'image/png', 'image/webp'])
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
+-- Las tres llevan bucket_id explícito: sin esa condición, `using (true)` aplicaría a toda la tabla
+-- storage.objects, no solo a este bucket, y expondría cualquier otro bucket que se agregue después.
+drop policy if exists professional_photos_select_own on storage.objects;
+create policy professional_photos_select_own on storage.objects
+  for select to authenticated using (
+    bucket_id = 'professional-photos'
+    and (storage.foldername(name))[1] = (select auth.uid())::text
+  );
+
+drop policy if exists professional_photos_insert_own on storage.objects;
+create policy professional_photos_insert_own on storage.objects
+  for insert to authenticated with check (
+    bucket_id = 'professional-photos'
+    and (storage.foldername(name))[1] = (select auth.uid())::text
+  );
+
+drop policy if exists professional_photos_delete_own on storage.objects;
+create policy professional_photos_delete_own on storage.objects
+  for delete to authenticated using (
+    bucket_id = 'professional-photos'
+    and (storage.foldername(name))[1] = (select auth.uid())::text
+  );
+
+-- Sin policy de update: cada foto sube con un uuid nuevo, el código nunca llama upload() con
+-- upsert: true.
