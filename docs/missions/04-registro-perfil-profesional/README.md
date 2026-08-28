@@ -2,9 +2,9 @@
 
 **Tipo:** producto. **Abierta el** 2026-08-13. **Nace de:** ninguna.
 
-**Estado de la misión:** lista para construir
+**Estado de la misión:** cerrada 2026-08-28
 
-**Última actualización:** 2026-08-24
+**Última actualización:** 2026-08-28
 
 Tercera de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
 [misión 02](../02-base-de-datos-y-auth/) (login del profesional, y el `sendEmail()` que esta misión usa
@@ -14,7 +14,11 @@ qué categorías y comunas se registra).
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** cortar el Plan de construcción de `ingenieria.md` en issues de GitHub y empezar S-001.
+Plan de construcción completo: S-001 a S-006 (issues [#73](https://github.com/PatricioTabilo/datealo/issues/73),
+[#74](https://github.com/PatricioTabilo/datealo/issues/74), [#75](https://github.com/PatricioTabilo/datealo/issues/75),
+[#76](https://github.com/PatricioTabilo/datealo/issues/76), [#77](https://github.com/PatricioTabilo/datealo/issues/77),
+[#78](https://github.com/PatricioTabilo/datealo/issues/78)) mergeados. El profesional puede registrarse con
+enlace mágico, quedar publicado de inmediato, y editar cualquier campo de su perfil incluidas las fotos.
 
 ## Brief
 
