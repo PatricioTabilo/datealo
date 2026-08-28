@@ -5,11 +5,16 @@ import { professionals } from '../db/schema/professionals'
 
 const CONTACT_REGEX = /^\+56\d{9}$/
 
-export type ProfessionalFieldsInput = {
-  displayName?: string
-  categoriaSlug?: string
-  comunaCodigo?: string
-  contact?: string
+export type ProfessionalCoreFields = {
+  displayName: string
+  categoriaSlug: string
+  comunaCodigo: string
+  contact: string
+}
+
+export type ProfessionalFieldsInput = Partial<ProfessionalCoreFields> & {
+  description?: string | null
+  priceFrom?: number | null
 }
 
 export type ProfessionalFieldError = { error: string }
@@ -68,6 +73,9 @@ export async function validateProfessionalFields(
   if (fields.contact !== undefined && !CONTACT_REGEX.test(fields.contact)) {
     return { error: 'invalid_contact' }
   }
+  if (fields.priceFrom != null && (!Number.isInteger(fields.priceFrom) || fields.priceFrom <= 0)) {
+    return { error: 'invalid_price' }
+  }
   return null
 }
 
@@ -95,7 +103,7 @@ export async function findProfessionalByUserId(userId: string): Promise<Professi
 
 export async function createProfessional(
   userId: string,
-  fields: Required<ProfessionalFieldsInput>,
+  fields: ProfessionalCoreFields,
 ): Promise<{ professional: Professional, created: boolean }> {
   const [inserted] = await useDb()
     .insert(professionals)
@@ -111,6 +119,18 @@ export async function createProfessional(
   // falló en silencio.
   const existing = await findProfessionalByUserId(userId)
   return { professional: existing!, created: false }
+}
+
+export async function updateProfessional(
+  userId: string,
+  patch: ProfessionalFieldsInput,
+): Promise<Professional | null> {
+  const [updated] = await useDb()
+    .update(professionals)
+    .set({ ...patch, updatedAt: new Date() })
+    .where(eq(professionals.userId, userId))
+    .returning(publicColumns)
+  return updated ? toPublicProfessional(updated) : null
 }
 
 function escapeHtml(value: string): string {
