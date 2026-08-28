@@ -2,7 +2,7 @@
 
 **Estado:** vigente — aprobado por Patricio el 2026-08-24
 
-**Última actualización:** 2026-08-24
+**Última actualización:** 2026-08-28
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -391,22 +391,31 @@ puesta?) y los siguientes lo engrosan sin volver a tocar ese contrato.
 
 ### T-005 — Un middleware de página, no cada página por separado, decide a dónde redirige según sesión + existencia de perfil
 
-- **Estado:** aceptada. **Fecha:** 2026-08-24.
+- **Estado:** aceptada. **Fecha:** 2026-08-24, revisada 2026-08-28.
 - **Contratos:** UXF-001, UXF-002, UXF-003.
 - **Alternativas descartadas:** cada página (`ingresar.vue`, `registro.vue`, `perfil.vue`) resuelve su
   propia redirección en el `<script setup>` — funciona, pero repite la misma llamada a
   `GET /api/auth/me` (misión 02) y a `GET /api/professionals/me` tres veces, una por archivo, con el riesgo
-  real de que la regla de una diverja de las otras dos con el tiempo.
+  real de que la regla de una diverja de las otras dos con el tiempo. Dejar `/profesional/ingresar` sin
+  redirigir nunca, aunque ya haya sesión — la versión original de esta decisión, descartada en la revisión
+  del 2026-08-28: el único motivo que daba (dejar espacio a un futuro botón de "cambiar de cuenta") no
+  corresponde a nada que esta misión construya, y el resultado observable es que alguien ya autenticado
+  vuelve a ver el formulario pidiéndole el email — la referencia de productos comparables con login sin
+  contraseña (Notion, Slack, Linear, GitHub) es unánime: si ya hay sesión, saltar la pantalla de login por
+  completo es el default, no la excepción.
 - **Decisión y consecuencia:** `app/middleware/profesional.ts`, aplicado con `definePageMeta({ middleware:
-  'profesional' })` en las tres páginas. Sin sesión → `/profesional/ingresar`. Con sesión y sin perfil,
-  parado en `/profesional/perfil` → `/profesional/registro`. Con sesión y con perfil, parado en
-  `/profesional/registro` → `/profesional/perfil`. `/profesional/ingresar` nunca redirige desde acá — si ya
-  hay sesión y llega ahí, se deja entrar (puede querer cerrar sesión y entrar con otra cuenta más adelante,
-  aunque esta misión no construye ese botón). Costo aceptado: un fetch extra a `/api/professionals/me` en
-  cada navegación entre estas tres páginas — sin caché de cliente todavía, aceptable al volumen de esta
-  entrega.
+  'profesional' })` en las tres páginas, con la misma regla para las tres — ninguna es un caso especial.
+  Sin sesión → `/profesional/ingresar`. Con sesión y sin perfil, parado en `/profesional/perfil` o en
+  `/profesional/ingresar` → `/profesional/registro`. Con sesión y con perfil, parado en
+  `/profesional/registro` o en `/profesional/ingresar` → `/profesional/perfil`. Es la misma pregunta que ya
+  resuelve `GET /auth/confirm` (TC-006) al terminar el enlace mágico — acá se repite porque alguien puede
+  llegar a `/profesional/ingresar` con sesión ya armada sin pasar por ese endpoint (un bookmark, la URL
+  escrita a mano). Costo aceptado: un fetch extra a `/api/professionals/me` en cada navegación entre estas
+  tres páginas — sin caché de cliente todavía, aceptable al volumen de esta entrega.
 - **Reapertura:** si el fetch repetido se vuelve un costo real medible, ahí conviene cachear el resultado en
-  estado de cliente en vez de repetirlo por navegación.
+  estado de cliente en vez de repetirlo por navegación. Si alguna vez se construye un flujo real de "cambiar
+  de cuenta", `/profesional/ingresar` necesita una forma explícita de pedirlo (ej. `?cambiar_cuenta=1`) en
+  vez de volver a ser el default.
 
 ## Preguntas
 
