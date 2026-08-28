@@ -9,8 +9,8 @@ export type AuthUser = {
   email: string | null
 }
 
-// Exportado: server/routes/auth/confirm.get.ts (TC-006) necesita el mismo cliente para que
-// verifyOtp() deje la sesión en la misma cookie que requireUser() sabe leer.
+// Exportado: server/routes/auth/confirm.get.ts necesita el mismo cliente para que verifyOtp() deje la
+// sesión en la misma cookie que requireUser() sabe leer.
 export function serverSupabase(event: H3Event) {
   const { public: pub } = useRuntimeConfig()
   // La publishable key, no la secret key: este cliente representa al usuario de la sesión, no un

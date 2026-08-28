@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-// Nombres exactos que arma el template "Magic Link" de Supabase Auth (TR-001) — no un contrato propio.
+// Nombres exactos que arma el template "Magic Link" configurado en Supabase Auth — no un contrato propio.
 const querySchema = z.object({
   token_hash: z.string().min(1),
   type: z.literal('email'),
@@ -12,8 +12,9 @@ export default defineEventHandler(async (event) => {
     return sendRedirect(event, '/profesional/ingresar?error=enlace_invalido', 302)
   }
 
-  // T-001: verifyOtp con token_hash, no el flujo PKCE — así el enlace funciona abierto desde otro
-  // navegador o dispositivo del que lo pidió.
+  // verifyOtp con token_hash, no el flujo PKCE (exchangeCodeForSession): PKCE exige que el mismo
+  // navegador que pidió el enlace sea el que lo completa, y acá el enlace se toca a menudo desde la
+  // app de correo, en otro navegador o dispositivo.
   const { data, error } = await serverSupabase(event).auth.verifyOtp(query.data)
   if (error || !data.user) {
     return sendRedirect(event, '/profesional/ingresar?error=enlace_invalido', 302)

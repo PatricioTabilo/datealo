@@ -1,9 +1,10 @@
-// UXF-001: las tres pantallas de V-001 son estados de un solo flujo, no rutas separadas — así el email
-// ya escrito sobrevive a un error de formato o a un reenvío sin que el usuario lo vuelva a tipear.
+// Las tres pantallas del login son estados de un mismo flujo, no rutas separadas — así el email ya
+// escrito sobrevive a un error de formato o a un reenvío sin que el usuario lo vuelva a tipear.
 export type MagicLinkStep = 'email' | 'revisa-correo' | 'enlace-invalido'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-// "Después de un minuto sin nada" — experiencia.md, UXF-001, Variantes y recuperación.
+// No hay forma de saber si el correo llegó o no, así que el hint de reenvío aparece recién después de
+// esperar un minuto, no de inmediato.
 const RESEND_HINT_DELAY_MS = 60_000
 
 export function useMagicLink() {
