@@ -5,7 +5,7 @@ definePageMeta({ middleware: 'profesional' })
 
 useSeoMeta({ title: 'Entra a Datealo', robots: 'noindex' })
 
-const { step, email, emailError, loading, resendHintVisible, sendLink, startOver } = useMagicLink()
+const { step, email, emailError, sendError, loading, resendHintVisible, sendLink, startOver } = useMagicLink()
 </script>
 
 <template>
@@ -16,7 +16,7 @@ const { step, email, emailError, loading, resendHintVisible, sendLink, startOver
         Te mandamos un enlace a tu correo, sin contraseña que recordar.
       </p>
 
-      <form class="mt-8" @submit.prevent="sendLink">
+      <form class="mt-8" novalidate @submit.prevent="sendLink">
         <label for="magic-link-email" class="mb-2 block text-sm font-semibold text-datealo-text">
           Tu email
         </label>
@@ -45,6 +45,9 @@ const { step, email, emailError, loading, resendHintVisible, sendLink, startOver
         <UButton type="submit" block size="lg" class="mt-6 font-bold" :loading="loading" :disabled="loading">
           <template v-if="!loading">Enviar enlace</template>
         </UButton>
+        <p v-if="sendError" class="mt-2 text-xs font-semibold text-error" aria-live="polite">
+          {{ sendError }}
+        </p>
       </form>
     </template>
 
@@ -60,9 +63,17 @@ const { step, email, emailError, loading, resendHintVisible, sendLink, startOver
         </p>
         <p v-if="resendHintVisible" class="mt-10 text-xs text-datealo-muted" aria-live="polite">
           ¿No te llegó? Revisa spam o
-          <button type="button" class="font-semibold text-primary underline" @click="sendLink">
-            pide otro enlace
+          <button
+            type="button"
+            class="font-semibold text-primary underline disabled:opacity-50"
+            :disabled="loading"
+            @click="sendLink"
+          >
+            {{ loading ? 'enviando…' : 'pide otro enlace' }}
           </button>
+        </p>
+        <p v-if="sendError" class="mt-2 text-xs font-semibold text-error" aria-live="polite">
+          {{ sendError }}
         </p>
       </div>
     </template>

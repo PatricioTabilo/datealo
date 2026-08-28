@@ -49,7 +49,7 @@ const completedCount = computed(() =>
       {{ submitError }}
     </p>
 
-    <form class="mt-6 flex-1" @submit.prevent="submit">
+    <form class="mt-6 flex-1" novalidate @submit.prevent="submit">
       <label for="registro-nombre" class="mb-2 block text-sm font-semibold text-datealo-text">Tu nombre</label>
       <UInput
         id="registro-nombre"
