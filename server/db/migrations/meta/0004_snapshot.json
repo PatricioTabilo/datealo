@@ -1,0 +1,362 @@
+{
+  "id": "ca8d2025-02fa-48a1-8d6e-a00b2601b0ff",
+  "prevId": "2479850c-7667-4db9-9b20-c1b3c3e0e0cc",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.categorias": {
+      "name": "categorias",
+      "schema": "",
+      "columns": {
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "activa": {
+          "name": "activa",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.comuna_vecinas": {
+      "name": "comuna_vecinas",
+      "schema": "",
+      "columns": {
+        "comuna_codigo": {
+          "name": "comuna_codigo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vecina_codigo": {
+          "name": "vecina_codigo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "comuna_vecinas_comuna_codigo_comunas_codigo_fk": {
+          "name": "comuna_vecinas_comuna_codigo_comunas_codigo_fk",
+          "tableFrom": "comuna_vecinas",
+          "tableTo": "comunas",
+          "columnsFrom": [
+            "comuna_codigo"
+          ],
+          "columnsTo": [
+            "codigo"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "comuna_vecinas_vecina_codigo_comunas_codigo_fk": {
+          "name": "comuna_vecinas_vecina_codigo_comunas_codigo_fk",
+          "tableFrom": "comuna_vecinas",
+          "tableTo": "comunas",
+          "columnsFrom": [
+            "vecina_codigo"
+          ],
+          "columnsTo": [
+            "codigo"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "comuna_vecinas_comuna_codigo_vecina_codigo_pk": {
+          "name": "comuna_vecinas_comuna_codigo_vecina_codigo_pk",
+          "columns": [
+            "comuna_codigo",
+            "vecina_codigo"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.comunas": {
+      "name": "comunas",
+      "schema": "",
+      "columns": {
+        "codigo": {
+          "name": "codigo",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nombre": {
+          "name": "nombre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "activa": {
+          "name": "activa",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.professional_contact_events": {
+      "name": "professional_contact_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "professional_id": {
+          "name": "professional_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "professional_contact_events_professional_id_idx": {
+          "name": "professional_contact_events_professional_id_idx",
+          "columns": [
+            {
+              "expression": "professional_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "professional_contact_events_professional_id_professionals_id_fk": {
+          "name": "professional_contact_events_professional_id_professionals_id_fk",
+          "tableFrom": "professional_contact_events",
+          "tableTo": "professionals",
+          "columnsFrom": [
+            "professional_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.professionals": {
+      "name": "professionals",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "categoria_slug": {
+          "name": "categoria_slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "comuna_codigo": {
+          "name": "comuna_codigo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contact": {
+          "name": "contact",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price_from": {
+          "name": "price_from",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "photo_paths": {
+          "name": "photo_paths",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'"
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "professionals_categoria_slug_idx": {
+          "name": "professionals_categoria_slug_idx",
+          "columns": [
+            {
+              "expression": "categoria_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "professionals_comuna_codigo_idx": {
+          "name": "professionals_comuna_codigo_idx",
+          "columns": [
+            {
+              "expression": "comuna_codigo",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "professionals_categoria_slug_categorias_slug_fk": {
+          "name": "professionals_categoria_slug_categorias_slug_fk",
+          "tableFrom": "professionals",
+          "tableTo": "categorias",
+          "columnsFrom": [
+            "categoria_slug"
+          ],
+          "columnsTo": [
+            "slug"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        },
+        "professionals_comuna_codigo_comunas_codigo_fk": {
+          "name": "professionals_comuna_codigo_comunas_codigo_fk",
+          "tableFrom": "professionals",
+          "tableTo": "comunas",
+          "columnsFrom": [
+            "comuna_codigo"
+          ],
+          "columnsTo": [
+            "codigo"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "professionals_user_id_unique": {
+          "name": "professionals_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
