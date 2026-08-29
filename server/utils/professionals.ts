@@ -1,9 +1,18 @@
-import { eq, sql } from 'drizzle-orm'
+import { and, eq, sql } from 'drizzle-orm'
 import { existsActiveCategoria } from './categorias'
 import { existsActiveComuna } from './comunas'
+import { categorias } from '../db/schema/categorias'
+import { comunas } from '../db/schema/comunas'
 import { professionals } from '../db/schema/professionals'
 
 const CONTACT_REGEX = /^\+56\d{9}$/
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+// professionals.id es uuid en el schema — sin este chequeo, un id mal formado llega a Postgres y falla
+// con 22P02 (tipo inválido) en vez de devolver simplemente ninguna fila.
+function isUuid(value: string): boolean {
+  return UUID_REGEX.test(value)
+}
 
 export type ProfessionalCoreFields = {
   displayName: string
@@ -29,6 +38,20 @@ export type Professional = {
   priceFrom: number | null
   photoUrls: string[]
   active: boolean
+}
+
+// Forma que ve un buscador sin sesión (misión 05): categoría/comuna ya resueltas a su nombre (nunca el
+// slug/código, que no significa nada para quien mira el perfil) y createdAt, que Professional no expone.
+export type PublicProfessionalProfile = {
+  id: string
+  displayName: string
+  categoriaNombre: string
+  comunaNombre: string
+  contact: string
+  description: string | null
+  priceFrom: number | null
+  photoUrls: string[]
+  createdAt: string
 }
 
 type ProfessionalRow = {
@@ -79,8 +102,14 @@ export async function validateProfessionalFields(
   return null
 }
 
-function toPublicProfessional(row: ProfessionalRow): Professional {
+// Compartido entre Professional (esta forma) y PublicProfessionalProfile (misión 05) — las dos guardan
+// solo el path del bucket y calculan la URL pública recién al responder.
+function buildPhotoUrls(photoPaths: string[]): string[] {
   const { public: pub } = useRuntimeConfig()
+  return photoPaths.map(path => `${pub.supabaseUrl}/storage/v1/object/public/professional-photos/${path}`)
+}
+
+function toPublicProfessional(row: ProfessionalRow): Professional {
   return {
     id: row.id,
     displayName: row.displayName,
@@ -89,10 +118,50 @@ function toPublicProfessional(row: ProfessionalRow): Professional {
     contact: row.contact,
     description: row.description,
     priceFrom: row.priceFrom,
-    photoUrls: row.photoPaths.map(
-      path => `${pub.supabaseUrl}/storage/v1/object/public/professional-photos/${path}`,
-    ),
+    photoUrls: buildPhotoUrls(row.photoPaths),
     active: row.active,
+  }
+}
+
+// Sin sesión, para cualquiera (misión 05). categoriaNombre/comunaNombre se resuelven en la misma consulta
+// (leftJoin) en vez de con findCategoriaNombre()/findComunaNombre() por separado — este endpoint es el
+// de más tráfico esperado del diseño (destino de las cards de la futura misión 06), a diferencia del
+// correo de bienvenida (buildProfessionalWelcomeEmail más abajo), que corre una vez por registro y sí
+// puede pagar dos queries encadenadas.
+export async function findPublicProfessionalProfile(id: string): Promise<PublicProfessionalProfile | null> {
+  if (!isUuid(id)) return null
+
+  const [row] = await useDb()
+    .select({
+      id: professionals.id,
+      displayName: professionals.displayName,
+      categoriaSlug: professionals.categoriaSlug,
+      categoriaNombre: categorias.nombre,
+      comunaCodigo: professionals.comunaCodigo,
+      comunaNombre: comunas.nombre,
+      contact: professionals.contact,
+      description: professionals.description,
+      priceFrom: professionals.priceFrom,
+      photoPaths: professionals.photoPaths,
+      createdAt: professionals.createdAt,
+    })
+    .from(professionals)
+    .leftJoin(categorias, eq(professionals.categoriaSlug, categorias.slug))
+    .leftJoin(comunas, eq(professionals.comunaCodigo, comunas.codigo))
+    .where(and(eq(professionals.id, id), eq(professionals.active, true)))
+
+  if (!row) return null
+
+  return {
+    id: row.id,
+    displayName: row.displayName,
+    categoriaNombre: row.categoriaNombre ?? row.categoriaSlug,
+    comunaNombre: row.comunaNombre ?? row.comunaCodigo,
+    contact: row.contact,
+    description: row.description,
+    priceFrom: row.priceFrom,
+    photoUrls: buildPhotoUrls(row.photoPaths),
+    createdAt: row.createdAt.toISOString(),
   }
 }
 
