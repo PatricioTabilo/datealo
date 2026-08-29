@@ -2,9 +2,9 @@
 
 **Tipo:** producto. **Abierta el** 2026-08-13. **Nace de:** ninguna.
 
-**Estado de la misión:** lista para construir
+**Estado de la misión:** cerrada 2026-08-29
 
-**Última actualización:** 2026-08-28
+**Última actualización:** 2026-08-29
 
 Cuarta de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar). Depende de
 [misión 04](../04-registro-perfil-profesional/): sin perfiles de profesional reales, no hay qué mostrar.
@@ -12,8 +12,11 @@ Cuarta de seis misiones hacia el MVP (registrarse, mostrarse, buscar, reseñar).
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** crear los issues de S-001 a S-003 (`ingenieria.md#plan-de-construcción`) y empezar a
-construir.
+**Construida:** [#90](https://github.com/PatricioTabilo/datealo/pull/90) (perfil público,
+`GET /api/professionals/[id]`), [#91](https://github.com/PatricioTabilo/datealo/pull/91) (evento de
+contacto, tabla y `POST /contacts`), [#92](https://github.com/PatricioTabilo/datealo/pull/92) (vista
+`/profesionales/[id]`, con el refinamiento de desktop del 2026-08-29). El perfil público de un profesional
+ya es alcanzable en producción con su `id` real.
 
 ## Brief
 
