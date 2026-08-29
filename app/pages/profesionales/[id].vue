@@ -27,7 +27,9 @@ useSeoMeta({
     <!-- cargando -->
     <div v-else-if="pending" class="mx-auto max-w-5xl lg:flex lg:gap-8 lg:px-8 lg:py-8" aria-busy="true">
       <div class="aspect-4/3 w-full animate-pulse bg-datealo-surface lg:w-[55%] lg:rounded-2xl" />
-      <div class="space-y-3 px-5 pt-5 lg:flex-1 lg:px-0 lg:pt-0">
+      <div
+        class="space-y-3 px-5 pt-5 lg:flex-1 lg:rounded-2xl lg:border lg:border-datealo-surface lg:px-6 lg:py-6"
+      >
         <div class="h-6 w-48 animate-pulse rounded bg-datealo-surface" />
         <div class="h-4 w-32 animate-pulse rounded bg-datealo-surface" />
         <div class="h-4 w-full animate-pulse rounded bg-datealo-surface" />
@@ -50,10 +52,12 @@ useSeoMeta({
       <ProfessionalPublicPhotos
         :photo-urls="professional.photoUrls"
         :display-name="professional.displayName"
-        class="lg:w-[55%] lg:overflow-hidden lg:rounded-2xl"
+        class="lg:w-[55%]"
       />
 
-      <div class="px-5 pb-28 pt-5 lg:flex-1 lg:sticky lg:top-8 lg:self-start lg:px-0 lg:pb-0 lg:pt-0">
+      <div
+        class="px-5 pb-28 pt-5 lg:flex-1 lg:sticky lg:top-8 lg:self-start lg:rounded-2xl lg:border lg:border-datealo-surface lg:p-6"
+      >
         <h1 class="text-xl font-extrabold text-datealo-text lg:text-2xl">{{ professional.displayName }}</h1>
         <p class="mt-0.5 text-sm text-datealo-muted">{{ professional.categoriaNombre }} · {{ professional.comunaNombre }}</p>
 
