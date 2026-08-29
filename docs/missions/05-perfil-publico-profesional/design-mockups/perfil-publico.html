@@ -86,6 +86,21 @@
       .hero-scrim {
         background: linear-gradient(to top, rgba(0, 0, 0, 0.45), transparent);
       }
+      .section-card {
+        border: 1px solid var(--ui-border);
+        border-radius: 0.875rem;
+        background: var(--ui-bg);
+      }
+      .thumb {
+        width: 4rem;
+        aspect-ratio: 1;
+        border-radius: 0.5rem;
+        background: var(--ui-bg-accented);
+        box-shadow: 0 0 0 2px transparent;
+      }
+      .thumb-active {
+        box-shadow: 0 0 0 2px var(--ui-primary);
+      }
     </style>
   </head>
 
@@ -234,21 +249,28 @@
       <section class="frame frame-desktop">
         <div class="frame-label">
           V-001 · modo encontrado — perfil completo, desktop
-          <small>dos columnas: fotos a la izquierda; a la derecha, datos y el bloque de contacto en
-            `position: sticky` dentro de la columna (no fijo a toda la pantalla) — la columna de fotos
-            suele ser más alta que el texto</small>
+          <small>dos columnas: fotos a la izquierda con miniaturas debajo; a la derecha, una tarjeta con
+            borde con los datos y el contacto en `position: sticky` dentro de la columna — sin la tarjeta,
+            la columna de texto quedaba flotando sin ningún límite visual (revisión 2026-08-29)</small>
         </div>
         <div class="frame-viewport">
-          <div class="flex h-full">
-            <div class="hero-photo" style="width: 55%; aspect-ratio: auto;">
-              <div class="hero-scrim absolute inset-x-0 bottom-0 h-20"></div>
-              <div class="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-1.5">
-                <div class="dot active"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
+          <div class="flex h-full gap-8 p-8" style="background: var(--ui-bg-muted)">
+            <div style="width: 55%;">
+              <div class="hero-photo" style="aspect-ratio: 4 / 3;">
+                <div class="hero-scrim absolute inset-x-0 bottom-0 h-20"></div>
+                <div class="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-1.5">
+                  <div class="dot active"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+              </div>
+              <div class="mt-2 flex gap-2">
+                <div class="thumb thumb-active"></div>
+                <div class="thumb"></div>
+                <div class="thumb"></div>
               </div>
             </div>
-            <div class="flex-1 p-10" style="position: sticky; top: 0; align-self: flex-start;">
+            <div class="section-card flex-1 p-6" style="position: sticky; top: 0; align-self: flex-start;">
               <h1 class="text-2xl font-extrabold" style="color: var(--ui-text-highlighted)">Marcelo Rojas</h1>
               <p class="mt-1 text-sm" style="color: var(--ui-text-muted)">Electricidad · Ñuñoa</p>
 

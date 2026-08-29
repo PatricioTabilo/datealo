@@ -2,7 +2,7 @@
 
 **Estado:** vigente — aprobado por Patricio el 2026-08-28
 
-**Última actualización:** 2026-08-28
+**Última actualización:** 2026-08-29
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -146,6 +146,14 @@ orden es:
   toda la pantalla — la columna de fotos suele ser más alta que el bloque de texto, así que "fijo abajo" de
   móvil se traduce a "pegado arriba de su columna mientras se hace scroll" en desktop, no al mismo mecanismo
   literal.
+- En desktop, el bloque de datos y contacto va encerrado en una tarjeta con borde (mismo patrón que ya usan
+  las secciones de "Editar perfil" de misión 04) — sin eso, la columna de texto queda flotando sobre el
+  fondo de la página sin ningún límite visual, y se siente incompleta frente a la foto grande de al lado.
+- Cuando el perfil tiene más de una foto, en desktop aparece además una fila de miniaturas debajo de la
+  foto principal — tocar una mueve el carrusel a esa foto, con un aro de color marcando cuál se está
+  viendo. Es un atajo de navegación sobre el mismo carrusel, no un segundo estado ni una fuente de verdad
+  aparte: si se toca una miniatura o se hace swipe en la foto grande, ambos quedan sincronizados al mismo
+  índice. En móvil no aparece — ahí ya alcanza con el swipe y los puntos del carrusel.
 
 ## UXF-002 — Contactar al profesional desde el perfil
 
@@ -243,6 +251,10 @@ volver de WhatsApp o de la llamada, la pantalla está exactamente donde la dejó
   adentro, en vez de una composición aparte — ya corregido en el mockup y en "Decisiones que no deben
   quedar implícitas" de UXF-001.
 - **Impacto en producto:** ninguno.
+- **Revisión (2026-08-29):** al probar la vista real, la columna de datos en desktop se sentía incompleta
+  sin ningún límite visual propio — se le agregó una tarjeta con borde (mismo patrón que misión 04), y una
+  fila de miniaturas debajo de la foto principal cuando hay más de una, sincronizada con el mismo carrusel.
+  Ninguna de las dos cosas cambia el layout de móvil ni la elección de Enfoque A sobre B o C.
 
 <a id="ux-002"></a>
 
