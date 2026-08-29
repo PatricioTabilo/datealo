@@ -5,13 +5,15 @@ const SLOW_LOAD_MS = 10_000
 // Estado local, no useState: cada visita a /profesionales/[id] es un profesional distinto, no algo que
 // deba compartirse entre páginas como useProfessionalProfile() (el propio perfil del dueño).
 export function usePublicProfessionalProfile(id: string) {
+  const validId = isUuid(id)
+
   const { data, pending, error, refresh } = useFetch<{ professional: PublicProfessionalProfile }>(
     `/api/professionals/${id}`,
-    { key: `public-professional-${id}` },
+    { key: `public-professional-${id}`, immediate: validId },
   )
 
   const professional = computed(() => data.value?.professional ?? null)
-  const notFound = computed(() => Boolean(error.value))
+  const notFound = computed(() => !validId || Boolean(error.value))
 
   // "Tardando": sigue pending pasados los 10s, sin haber resuelto ni a encontrado ni a 404.
   const slow = ref(false)
