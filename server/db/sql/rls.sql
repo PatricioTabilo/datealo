@@ -100,3 +100,13 @@ create policy professional_photos_delete_own on storage.objects
 
 -- Sin policy de update: cada foto sube con un uuid nuevo, el código nunca llama upload() con
 -- upsert: true.
+
+-- professional_contact_events: el evento de contacto (misión 05) nunca identifica a quien contacta
+-- (decisión de producto), así que nada en el diseño necesita que ningún rol lo lea ni lo escriba vía
+-- PostgREST — solo Drizzle (rol dueño) lo toca, desde el endpoint público de contacto. Por eso va sin
+-- ninguna policy: el revoke ya cierra el camino, y sin policy Postgres deniega por default para
+-- anon/authenticated de todas formas.
+
+alter table professional_contact_events enable row level security;
+
+revoke all on public.professional_contact_events from anon, authenticated;

@@ -1,18 +1,12 @@
 import { and, eq, sql } from 'drizzle-orm'
 import { existsActiveCategoria } from './categorias'
 import { existsActiveComuna } from './comunas'
+import { isUuid } from './validation'
 import { categorias } from '../db/schema/categorias'
 import { comunas } from '../db/schema/comunas'
 import { professionals } from '../db/schema/professionals'
 
 const CONTACT_REGEX = /^\+56\d{9}$/
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-
-// professionals.id es uuid en el schema — sin este chequeo, un id mal formado llega a Postgres y falla
-// con 22P02 (tipo inválido) en vez de devolver simplemente ninguna fila.
-function isUuid(value: string): boolean {
-  return UUID_REGEX.test(value)
-}
 
 export type ProfessionalCoreFields = {
   displayName: string

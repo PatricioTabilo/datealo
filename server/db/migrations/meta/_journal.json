@@ -22,6 +22,13 @@
       "when": 1787716231842,
       "tag": "0002_charming_micromax",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1787964351415,
+      "tag": "0003_demonic_rockslide",
+      "breakpoints": true
     }
   ]
 }
