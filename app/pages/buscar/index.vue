@@ -70,7 +70,7 @@ useSeoMeta({
 
     <!-- cargando -->
     <div v-else-if="pending" class="flex flex-col gap-3 p-4" aria-busy="true">
-      <div v-for="n in 4" :key="n" class="flex gap-3 rounded-2xl border border-datealo-surface p-3.5">
+      <div v-for="n in 4" :key="n" class="flex gap-3 rounded-2xl border border-datealo-surface bg-white p-3.5">
         <div class="h-12 w-12 shrink-0 animate-pulse rounded-full bg-datealo-surface" />
         <div class="flex-1 space-y-2">
           <div class="h-4 w-32 animate-pulse rounded bg-datealo-surface" />

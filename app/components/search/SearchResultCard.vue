@@ -12,7 +12,7 @@ const memberSince = computed(() => formatMemberSince(props.professional.createdA
 <template>
   <NuxtLink
     :to="`/profesionales/${professional.id}`"
-    class="flex gap-3 rounded-2xl border border-datealo-surface p-3.5"
+    class="flex gap-3 rounded-2xl border border-datealo-surface bg-white p-3.5"
   >
     <div
       class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-[0.9375rem] font-extrabold text-white"
