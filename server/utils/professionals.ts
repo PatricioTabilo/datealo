@@ -173,6 +173,18 @@ export async function findProfessionalByUserId(userId: string): Promise<Professi
   return row ? toPublicProfessional(row) : null
 }
 
+// Lo único que necesita el correo de aviso de reseña nueva (misión 07) — nunca active, que ya decidió
+// professionalExists() que no aplica acá, y nunca ninguna otra columna.
+export async function findProfessionalNotificationInfo(
+  id: string,
+): Promise<{ displayName: string, email: string | null } | null> {
+  const [row] = await useDb()
+    .select({ displayName: professionals.displayName, email: professionals.email })
+    .from(professionals)
+    .where(eq(professionals.id, id))
+  return row ?? null
+}
+
 export async function createProfessional(
   userId: string,
   fields: ProfessionalCoreFields,
@@ -234,7 +246,7 @@ export async function professionalHasPhotoPath(userId: string, path: string): Pr
   return Boolean(row)
 }
 
-function escapeHtml(value: string): string {
+export function escapeHtml(value: string): string {
   const entities: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
   return value.replace(/[&<>"']/g, char => entities[char]!)
 }
