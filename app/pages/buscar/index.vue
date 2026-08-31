@@ -39,8 +39,18 @@ useSeoMeta({
 <template>
   <div class="flex min-h-screen flex-col">
     <div class="sticky top-0 z-10 flex gap-2 border-b border-datealo-surface bg-datealo-bg p-3.5">
-      <CategoriaSelect v-model="categoriaSlug" class="flex-1" />
-      <ComunaSelect ref="comunaSelect" v-model="comunaCodigo" class="flex-1" />
+      <div class="flex-1">
+        <label for="buscar-categoria" class="mb-1 block text-[0.625rem] font-bold uppercase tracking-wide text-datealo-muted">
+          Categoría
+        </label>
+        <CategoriaSelect id="buscar-categoria" v-model="categoriaSlug" />
+      </div>
+      <div class="flex-1">
+        <label for="buscar-comuna" class="mb-1 block text-[0.625rem] font-bold uppercase tracking-wide text-datealo-muted">
+          Comuna
+        </label>
+        <ComunaSelect id="buscar-comuna" ref="comunaSelect" v-model="comunaCodigo" />
+      </div>
     </div>
 
     <SearchEmptyState
