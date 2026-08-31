@@ -1,12 +1,6 @@
 <script setup lang="ts">
-import { Loader2, CheckCircle } from '@lucide/vue'
+import { CheckCircle } from '@lucide/vue'
 import { LANDING_FINAL_CTA } from '~/constants/landing'
-
-const { email, loading, submitted, error, submit } = useWaitlist('buscador')
-
-const scrollToHero = () => {
-  document.querySelector('#hero-form')?.scrollIntoView({ behavior: 'smooth' })
-}
 </script>
 
 <template>
@@ -23,10 +17,10 @@ const scrollToHero = () => {
         </p>
 
         <UButton
+          to="/buscar"
           variant="solid"
           color="primary"
           class="h-14 rounded-xl px-10 text-base font-bold shadow-lg shadow-primary/20 hover:bg-primary active:bg-primary hover:shadow-xl hover:shadow-primary/30 transition-all"
-          @click="scrollToHero"
         >
           {{ LANDING_FINAL_CTA.cta }}
         </UButton>

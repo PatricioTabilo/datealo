@@ -1,8 +1,16 @@
 <script setup lang="ts">
-import { Loader2, CheckCircle, Star } from '@lucide/vue'
+import { CheckCircle, Star } from '@lucide/vue'
 import { LANDING_HERO } from '~/constants/landing'
 
-const { email, loading, submitted, error, submit } = useWaitlist('buscador')
+const categoriaSlug = ref<string | null>(null)
+const comunaCodigo = ref<string | null>(null)
+
+const searchQuery = computed(() => {
+  const query: Record<string, string> = {}
+  if (categoriaSlug.value) query.categoria = categoriaSlug.value
+  if (comunaCodigo.value) query.comuna = comunaCodigo.value
+  return query
+})
 </script>
 
 <template>
@@ -28,46 +36,31 @@ const { email, loading, submitted, error, submit } = useWaitlist('buscador')
             {{ LANDING_HERO.subheadline }}
           </p>
 
-          <!-- Email form -->
-          <Transition name="fade" mode="out-in">
-            <div
-              v-if="submitted"
-              class="flex items-center gap-3 rounded-2xl bg-success/20 border border-success/30 p-6 backdrop-blur-sm"
-            >
-              <CheckCircle class="h-8 w-8 text-success shrink-0" />
-              <p class="text-white font-bold text-lg">¡Listo! Te avisaremos antes que a todos.</p>
+          <!-- Buscador -->
+          <div class="bg-white p-3 rounded-2xl shadow-2xl shadow-black/20 max-w-lg relative z-20">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
+              <div class="flex-1">
+                <label for="hero-categoria" class="mb-1 block text-[0.625rem] font-bold uppercase tracking-wide text-datealo-text/50">
+                  Categoría
+                </label>
+                <CategoriaSelect id="hero-categoria" v-model="categoriaSlug" />
+              </div>
+              <div class="flex-1">
+                <label for="hero-comuna" class="mb-1 block text-[0.625rem] font-bold uppercase tracking-wide text-datealo-text/50">
+                  Comuna
+                </label>
+                <ComunaSelect id="hero-comuna" v-model="comunaCodigo" />
+              </div>
+              <UButton
+                :to="{ path: '/buscar', query: searchQuery }"
+                variant="link"
+                color="neutral"
+                class="h-14 rounded-xl px-7 text-sm font-bold bg-secondary text-white hover:bg-secondary/90 hover:text-white active:text-white hover:scale-[1.02] shadow-lg shadow-secondary/20 transition-all"
+              >
+                {{ LANDING_HERO.cta }}
+              </UButton>
             </div>
-
-            <div v-else id="hero-form" class="bg-white p-2.5 rounded-2xl shadow-2xl shadow-black/20 max-w-lg relative z-20">
-              <form class="flex flex-col sm:flex-row gap-2" @submit.prevent="submit">
-                <div class="flex-1 relative">
-                  <label for="hero-email" class="sr-only">Email</label>
-                  <UInput
-                    id="hero-email"
-                    v-model="email"
-                    type="email"
-                    autocomplete="email"
-                    :placeholder="LANDING_HERO.emailPlaceholder"
-                    :disabled="loading"
-                    variant="none"
-                    class="w-full"
-                    :ui="{ base: 'h-14 rounded-xl bg-datealo-surface/50 px-4 text-base text-datealo-text placeholder:text-datealo-text/40 focus:ring-2 focus:ring-primary/20 focus:bg-datealo-surface transition-all' }"
-                  />
-                  <p v-if="error" class="absolute -bottom-6 left-2 text-xs text-white bg-error/90 px-2 py-1 rounded">{{ error }}</p>
-                </div>
-                <UButton
-                  type="submit"
-                  variant="link"
-                  color="neutral"
-                  class="h-14 rounded-xl px-7 text-sm font-bold bg-secondary text-white hover:bg-secondary/90 hover:text-white active:text-white hover:scale-[1.02] shadow-lg shadow-secondary/20 transition-all"
-                  :disabled="loading"
-                >
-                  <Loader2 v-if="loading" class="h-5 w-5 animate-spin" />
-                  <template v-else>{{ LANDING_HERO.cta }}</template>
-                </UButton>
-              </form>
-            </div>
-          </Transition>
+          </div>
 
           <ul class="flex flex-wrap items-center gap-x-6 gap-y-3 mt-8 text-sm text-white/80 font-semibold">
             <li v-for="item in LANDING_HERO.trust" :key="item" class="flex items-center gap-2">
@@ -101,14 +94,3 @@ const { email, loading, submitted, error, submit } = useWaitlist('buscador')
     </div>
   </section>
 </template>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

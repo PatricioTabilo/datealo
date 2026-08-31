@@ -2,10 +2,9 @@ export const LANDING_HERO = {
   tagline: 'lo bueno se recomienda',
   headline: 'Deja de buscar en grupos de Facebook.',
   headlineAccent: 'Encuentra profesionales reales, cerca de ti.',
-  subheadline: 'datealo conecta a personas con profesionales verificados de su zona. Gasfiter, electricista, peluquera — a un click. Estamos por lanzar.',
-  cta: 'Quiero acceso anticipado',
-  emailPlaceholder: 'Tu email',
-  trust: ['Gratis', 'Sin spam', 'Te avisamos cuando lancemos'],
+  subheadline: 'datealo conecta a personas con profesionales verificados de su zona. Gasfiter, electricista, peluquera — a un click.',
+  cta: 'Buscar',
+  trust: ['Gratis', 'Sin registro', 'Contacto directo'],
   heroImage: {
     src: 'https://images.pexels.com/photos/5493672/pexels-photo-5493672.jpeg?auto=compress&cs=tinysrgb&w=1600&h=1100&fit=crop',
     alt: 'Trabajador sonriendo mientras usa un taladro en renovación de hogar',
@@ -102,8 +101,7 @@ export const LANDING_FOR_PROFESSIONALS = {
 export const LANDING_FINAL_CTA = {
   headline: 'No te lo cuenten —',
   headlineAccent: 'datealo',
-  subheadline: 'Estamos sumando los mejores profesionales de Chile. Sé de los primeros en probar la plataforma.',
-  cta: 'Reservar mi lugar',
-  goalGradient: 'Ya estás aquí — solo falta tu email',
-  trust: ['Gratis', 'Sin spam', 'Acceso antes que todos'],
+  subheadline: 'Ya podés buscar profesionales verificados en tu zona. Sin registro, sin esperar.',
+  cta: 'Buscar profesionales',
+  trust: ['Gratis', 'Sin registro', 'Contacto directo'],
 } as const
