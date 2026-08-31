@@ -29,4 +29,31 @@ describe('useReviewToken', () => {
 
     expect(tokenA).not.toBe(tokenB)
   })
+
+  it('getToken nunca genera uno nuevo, solo lee', () => {
+    const { getToken } = useReviewToken('profesional-1')
+
+    expect(getToken()).toBeNull()
+    expect(window.localStorage.getItem('datealo:review-token:profesional-1')).toBeNull()
+  })
+
+  it('getToken devuelve el token ya guardado por ensureToken', () => {
+    const { ensureToken, getToken } = useReviewToken('profesional-1')
+    const token = ensureToken()
+
+    expect(getToken()).toBe(token)
+  })
+
+  it('getMyReview sin nada guardado devuelve null', () => {
+    expect(useReviewToken('profesional-1').getMyReview()).toBeNull()
+  })
+
+  it('saveMyReview + getMyReview redondean el viaje completo', () => {
+    const { saveMyReview, getMyReview } = useReviewToken('profesional-1')
+    const draft = { rating: 4, comment: 'Buena atención', name: 'Carmen' }
+
+    saveMyReview(draft)
+
+    expect(getMyReview()).toEqual(draft)
+  })
 })

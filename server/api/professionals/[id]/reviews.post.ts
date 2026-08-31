@@ -1,16 +1,18 @@
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id') ?? ''
 
-  if (!(await professionalExists(id))) {
+  const body = await readBody(event).catch(() => null)
+  const token = typeof body?.token === 'string' ? body.token : ''
+
+  const [exists, verified] = await Promise.all([professionalExists(id), hasContactToken(id, token)])
+
+  if (!exists) {
     setResponseStatus(event, 404)
     return { error: 'not_found' }
   }
 
-  const body = await readBody(event).catch(() => null)
-  const token = typeof body?.token === 'string' ? body.token : ''
-
   // Nunca se publica una reseña sin verificar primero que el token corresponde a un contacto real.
-  if (!(await hasContactToken(id, token))) {
+  if (!verified) {
     setResponseStatus(event, 403)
     return { error: 'not_verified' }
   }

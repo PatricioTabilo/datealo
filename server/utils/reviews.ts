@@ -9,7 +9,6 @@ export type PublicReview = {
   name: string
   rating: number
   comment: string | null
-  verified: true
   updatedAt: string
 }
 
@@ -61,7 +60,6 @@ function toPublicReview(row: {
     name: resolveReviewerName(row.name),
     rating: row.rating,
     comment: row.comment,
-    verified: true,
     updatedAt: row.updatedAt.toISOString(),
   }
 }
