@@ -3,27 +3,15 @@ export default defineEventHandler(async (event) => {
   const categoriaSlug = typeof query.categoria === 'string' ? query.categoria : ''
   const comunaCodigo = typeof query.comuna === 'string' ? query.comuna : ''
 
-  if (!categoriaSlug) {
-    setResponseStatus(event, 400)
-    return { error: 'categoria_required' }
-  }
-  if (!comunaCodigo) {
-    setResponseStatus(event, 400)
-    return { error: 'comuna_required' }
-  }
+  if (!categoriaSlug) return badRequest(event, 'categoria_required')
+  if (!comunaCodigo) return badRequest(event, 'comuna_required')
 
   const [categoriaValid, comunaValid] = await Promise.all([
     existsActiveCategoria(categoriaSlug),
     existsActiveComuna(comunaCodigo),
   ])
-  if (!categoriaValid) {
-    setResponseStatus(event, 400)
-    return { error: 'invalid_categoria' }
-  }
-  if (!comunaValid) {
-    setResponseStatus(event, 400)
-    return { error: 'invalid_comuna' }
-  }
+  if (!categoriaValid) return badRequest(event, 'invalid_categoria')
+  if (!comunaValid) return badRequest(event, 'invalid_comuna')
 
   return findSearchResults(categoriaSlug, comunaCodigo)
 })
