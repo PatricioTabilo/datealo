@@ -44,7 +44,7 @@ useSeoMeta({
         <h1 class="text-lg font-extrabold text-datealo-text">No encontramos este perfil</h1>
         <p class="mt-2 text-sm text-datealo-muted">Puede que ya no esté disponible o que el link esté mal escrito.</p>
       </div>
-      <UButton to="/" size="lg">Buscar profesionales</UButton>
+      <UButton to="/buscar" size="lg">Buscar profesionales</UButton>
     </div>
 
     <!-- encontrado -->

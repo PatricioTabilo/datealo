@@ -2,10 +2,9 @@ export const LANDING_HERO = {
   tagline: 'lo bueno se recomienda',
   headline: 'Deja de buscar en grupos de Facebook.',
   headlineAccent: 'Encuentra profesionales reales, cerca de ti.',
-  subheadline: 'datealo conecta a personas con profesionales verificados de su zona. Gasfiter, electricista, peluquera — a un click. Estamos por lanzar.',
-  cta: 'Quiero acceso anticipado',
-  emailPlaceholder: 'Tu email',
-  trust: ['Gratis', 'Sin spam', 'Te avisamos cuando lancemos'],
+  subheadline: 'datealo conecta a personas con profesionales verificados de su zona. Gasfiter, electricista, peluquera — a un click.',
+  cta: 'Buscar',
+  trust: ['Gratis', 'Sin registro', 'Contacto directo'],
   heroImage: {
     src: 'https://images.pexels.com/photos/5493672/pexels-photo-5493672.jpeg?auto=compress&cs=tinysrgb&w=1600&h=1100&fit=crop',
     alt: 'Trabajador sonriendo mientras usa un taladro en renovación de hogar',
@@ -74,14 +73,14 @@ export const LANDING_CATEGORIES = {
   title: '¿Qué estás buscando?',
   subtitle: 'Y muchos más — estamos sumando profesionales cada día',
   items: [
-    { icon: 'Wrench' as const, name: 'Gasfitería', query: 'Gasfiter en Providencia', image: 'https://images.pexels.com/photos/6419128/pexels-photo-6419128.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'Zap' as const, name: 'Electricidad', query: 'Electricista para mi depa', image: 'https://images.pexels.com/photos/7859953/pexels-photo-7859953.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'Scissors' as const, name: 'Peluquería', query: 'Peluquera a domicilio', image: 'https://images.pexels.com/photos/3992875/pexels-photo-3992875.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'Sparkles' as const, name: 'Limpieza', query: 'Aseo profundo departamento', image: 'https://images.pexels.com/photos/6195273/pexels-photo-6195273.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'Truck' as const, name: 'Mudanzas', query: 'Mudanza dentro de Santiago', image: 'https://images.pexels.com/photos/7464244/pexels-photo-7464244.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'Paintbrush' as const, name: 'Pintura', query: 'Pintar living y dormitorio', image: 'https://images.pexels.com/photos/5691597/pexels-photo-5691597.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'KeyRound' as const, name: 'Cerrajería', query: 'Cerrajero urgente en Ñuñoa', image: 'https://images.pexels.com/photos/792034/pexels-photo-792034.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'Flower2' as const, name: 'Jardinería', query: 'Mantención de jardín', image: 'https://images.pexels.com/photos/5231048/pexels-photo-5231048.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'gasfiteria', icon: 'Wrench' as const, name: 'Gasfitería', query: 'Gasfiter en Providencia', image: 'https://images.pexels.com/photos/6419128/pexels-photo-6419128.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'electricidad', icon: 'Zap' as const, name: 'Electricidad', query: 'Electricista para mi depa', image: 'https://images.pexels.com/photos/7859953/pexels-photo-7859953.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'peluqueria', icon: 'Scissors' as const, name: 'Peluquería', query: 'Peluquera a domicilio', image: 'https://images.pexels.com/photos/3992875/pexels-photo-3992875.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'limpieza', icon: 'Sparkles' as const, name: 'Limpieza', query: 'Aseo profundo departamento', image: 'https://images.pexels.com/photos/6195273/pexels-photo-6195273.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'mudanzas', icon: 'Truck' as const, name: 'Mudanzas', query: 'Mudanza dentro de Santiago', image: 'https://images.pexels.com/photos/7464244/pexels-photo-7464244.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'pintura', icon: 'Paintbrush' as const, name: 'Pintura', query: 'Pintar living y dormitorio', image: 'https://images.pexels.com/photos/5691597/pexels-photo-5691597.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'cerrajeria', icon: 'KeyRound' as const, name: 'Cerrajería', query: 'Cerrajero urgente en Ñuñoa', image: 'https://images.pexels.com/photos/792034/pexels-photo-792034.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'jardineria', icon: 'Flower2' as const, name: 'Jardinería', query: 'Mantención de jardín', image: 'https://images.pexels.com/photos/5231048/pexels-photo-5231048.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
   ],
 } as const
 
@@ -102,8 +101,7 @@ export const LANDING_FOR_PROFESSIONALS = {
 export const LANDING_FINAL_CTA = {
   headline: 'No te lo cuenten —',
   headlineAccent: 'datealo',
-  subheadline: 'Estamos sumando los mejores profesionales de Chile. Sé de los primeros en probar la plataforma.',
-  cta: 'Reservar mi lugar',
-  goalGradient: 'Ya estás aquí — solo falta tu email',
-  trust: ['Gratis', 'Sin spam', 'Acceso antes que todos'],
+  subheadline: 'Ya podés buscar profesionales verificados en tu zona. Sin registro, sin esperar.',
+  cta: 'Buscar profesionales',
+  trust: ['Gratis', 'Sin registro', 'Contacto directo'],
 } as const

@@ -62,12 +62,12 @@ const goToTop = () => {
 
         <!-- CTA -->
         <UButton
+          to="/buscar"
           variant="link"
           color="neutral"
           class="inline-flex items-center h-10 px-5 rounded-xl text-sm font-bold text-primary hover:text-primary active:text-primary bg-white hover:bg-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
-          @click="scrollToSection('#hero-form')"
         >
-          Acceso anticipado
+          Buscar
         </UButton>
       </div>
     </div>
