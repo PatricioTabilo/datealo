@@ -159,6 +159,15 @@ export async function findPublicProfessionalProfile(id: string): Promise<PublicP
   }
 }
 
+// No exige active — a diferencia de findPublicProfessionalProfile, esto lo usan flujos donde el
+// profesional pudo haberse desactivado después de que el hecho que importa ya ocurrió (ej. publicar una
+// reseña de un contacto real, misión 07), mismo criterio que ya usa registerProfessionalContact.
+export async function professionalExists(id: string): Promise<boolean> {
+  if (!isUuid(id)) return false
+  const [row] = await useDb().select({ id: professionals.id }).from(professionals).where(eq(professionals.id, id))
+  return Boolean(row)
+}
+
 export async function findProfessionalByUserId(userId: string): Promise<Professional | null> {
   const [row] = await useDb().select(publicColumns).from(professionals).where(eq(professionals.userId, userId))
   return row ? toPublicProfessional(row) : null

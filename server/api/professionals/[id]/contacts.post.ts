@@ -1,5 +1,5 @@
-// El body es opcional y lleva como máximo un token opaco (misión 07, D-002 de misión 05 sigue vigente:
-// nada que identifique a la persona) — nunca bloquea el registro del contacto si falta o llega roto.
+// El body es opcional y lleva como máximo un token opaco, sin ningún dato que identifique a la persona —
+// nunca bloquea el registro del contacto si falta o llega roto.
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id') ?? ''
   const registered = await registerProfessionalContact(id)
