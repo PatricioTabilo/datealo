@@ -1,4 +1,5 @@
-import { sql } from 'drizzle-orm'
+import { desc, eq, sql } from 'drizzle-orm'
+import { isUuid } from './validation'
 import { reviews } from '../db/schema/reviews'
 
 export type PublicReview = {
@@ -8,6 +9,12 @@ export type PublicReview = {
   comment: string | null
   verified: true
   createdAt: string
+}
+
+export type ReviewsSummary = {
+  reviews: PublicReview[]
+  ratingAverage: number | null
+  reviewCount: number
 }
 
 const MAX_COMMENT_LENGTH = 500
@@ -81,4 +88,37 @@ export async function upsertReview(
   // onConflictDoUpdate (a diferencia de onConflictDoNothing) siempre afecta exactamente una fila —
   // inserta o actualiza, nunca devuelve vacío.
   return toPublicReview(row!)
+}
+
+// Corre en paralelo con la lectura del perfil (Promise.all en el handler), incluso antes de saber si el
+// profesional existe — por eso guarda el mismo chequeo de forma de id que ya hace findPublicProfessionalProfile,
+// para no romper con un 22P02 de Postgres cuando el id ni siquiera tiene forma de uuid.
+export async function findReviewsForProfessional(professionalId: string): Promise<ReviewsSummary> {
+  if (!isUuid(professionalId)) {
+    return { reviews: [], ratingAverage: null, reviewCount: 0 }
+  }
+
+  const rows = await useDb()
+    .select({
+      id: reviews.id,
+      name: reviews.name,
+      rating: reviews.rating,
+      comment: reviews.comment,
+      createdAt: reviews.createdAt,
+    })
+    .from(reviews)
+    .where(eq(reviews.professionalId, professionalId))
+    .orderBy(desc(reviews.updatedAt))
+
+  if (rows.length === 0) {
+    return { reviews: [], ratingAverage: null, reviewCount: 0 }
+  }
+
+  const average = rows.reduce((sum, row) => sum + row.rating, 0) / rows.length
+
+  return {
+    reviews: rows.map(toPublicReview),
+    ratingAverage: Math.round(average * 10) / 10,
+    reviewCount: rows.length,
+  }
 }
