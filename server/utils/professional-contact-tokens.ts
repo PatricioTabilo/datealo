@@ -1,3 +1,4 @@
+import { and, eq } from 'drizzle-orm'
 import { isUuid } from './validation'
 import { professionalContactTokens } from '../db/schema/professional-contact-tokens'
 
@@ -11,4 +12,22 @@ export async function registerContactToken(professionalId: string, token: string
     .insert(professionalContactTokens)
     .values({ professionalId, token })
     .onConflictDoNothing({ target: [professionalContactTokens.professionalId, professionalContactTokens.token] })
+}
+
+// La verificación real de F-001: una reseña solo se publica si existe un contacto real detrás de este
+// token para este profesional.
+export async function hasContactToken(professionalId: string, token: string): Promise<boolean> {
+  if (!isUuid(token)) return false
+
+  const [row] = await useDb()
+    .select({ token: professionalContactTokens.token })
+    .from(professionalContactTokens)
+    .where(
+      and(
+        eq(professionalContactTokens.professionalId, professionalId),
+        eq(professionalContactTokens.token, token),
+      ),
+    )
+
+  return Boolean(row)
 }

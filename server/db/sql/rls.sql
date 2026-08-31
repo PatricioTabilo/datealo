@@ -128,3 +128,11 @@ revoke all on public.professional_contact_events from anon, authenticated;
 alter table professional_contact_tokens enable row level security;
 
 revoke all on public.professional_contact_tokens from anon, authenticated;
+
+-- reviews (misión 07): la lectura pública de reseñas pasa por GET /api/professionals/[id] (Drizzle, rol
+-- dueño), nunca por PostgREST directo — igual que professionals. La escritura (POST /reviews) verifica el
+-- token en el código (F-001); la policy de acá es respaldo, no el mecanismo (A-002).
+
+alter table reviews enable row level security;
+
+revoke all on public.reviews from anon, authenticated;
