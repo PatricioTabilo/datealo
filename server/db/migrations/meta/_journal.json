@@ -50,6 +50,13 @@
       "when": 1788159404881,
       "tag": "0006_numerous_shen",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1788192040483,
+      "tag": "0007_salty_medusa",
+      "breakpoints": true
     }
   ]
 }

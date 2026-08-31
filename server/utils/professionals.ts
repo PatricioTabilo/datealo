@@ -176,10 +176,11 @@ export async function findProfessionalByUserId(userId: string): Promise<Professi
 export async function createProfessional(
   userId: string,
   fields: ProfessionalCoreFields,
+  email: string | null,
 ): Promise<{ professional: Professional, created: boolean }> {
   const [inserted] = await useDb()
     .insert(professionals)
-    .values({ userId, ...fields })
+    .values({ userId, ...fields, email })
     .onConflictDoNothing({ target: professionals.userId })
     .returning(publicColumns)
 
