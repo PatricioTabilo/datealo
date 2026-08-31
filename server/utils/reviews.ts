@@ -2,13 +2,15 @@ import { desc, eq, sql } from 'drizzle-orm'
 import { isUuid } from './validation'
 import { reviews } from '../db/schema/reviews'
 
+// updatedAt, no createdAt: un reemplazo cambia lo que la reseña dice, y la fecha que se muestra tiene
+// que reflejar eso — la misma columna por la que ya se ordena la lista.
 export type PublicReview = {
   id: string
   name: string
   rating: number
   comment: string | null
   verified: true
-  createdAt: string
+  updatedAt: string
 }
 
 export type ReviewsSummary = {
@@ -42,12 +44,17 @@ function normalizeReviewerName(name: string | undefined): string | null {
   return trimmed ? trimmed : null
 }
 
+export function computeRatingAverage(ratings: number[]): number {
+  const sum = ratings.reduce((total, rating) => total + rating, 0)
+  return Math.round((sum / ratings.length) * 10) / 10
+}
+
 function toPublicReview(row: {
   id: string
   name: string | null
   rating: number
   comment: string | null
-  createdAt: Date
+  updatedAt: Date
 }): PublicReview {
   return {
     id: row.id,
@@ -55,7 +62,7 @@ function toPublicReview(row: {
     rating: row.rating,
     comment: row.comment,
     verified: true,
-    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
   }
 }
 
@@ -82,7 +89,7 @@ export async function upsertReview(
       name: reviews.name,
       rating: reviews.rating,
       comment: reviews.comment,
-      createdAt: reviews.createdAt,
+      updatedAt: reviews.updatedAt,
     })
 
   // onConflictDoUpdate (a diferencia de onConflictDoNothing) siempre afecta exactamente una fila —
@@ -104,7 +111,7 @@ export async function findReviewsForProfessional(professionalId: string): Promis
       name: reviews.name,
       rating: reviews.rating,
       comment: reviews.comment,
-      createdAt: reviews.createdAt,
+      updatedAt: reviews.updatedAt,
     })
     .from(reviews)
     .where(eq(reviews.professionalId, professionalId))
@@ -114,11 +121,9 @@ export async function findReviewsForProfessional(professionalId: string): Promis
     return { reviews: [], ratingAverage: null, reviewCount: 0 }
   }
 
-  const average = rows.reduce((sum, row) => sum + row.rating, 0) / rows.length
-
   return {
     reviews: rows.map(toPublicReview),
-    ratingAverage: Math.round(average * 10) / 10,
+    ratingAverage: computeRatingAverage(rows.map(row => row.rating)),
     reviewCount: rows.length,
   }
 }

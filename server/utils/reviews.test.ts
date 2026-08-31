@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { isValidComment, isValidRating, resolveReviewerName } from './reviews'
+import { computeRatingAverage, isValidComment, isValidRating, resolveReviewerName } from './reviews'
 
 describe('isValidRating', () => {
   it('acepta enteros de 1 a 5', () => {
@@ -31,6 +31,17 @@ describe('isValidComment', () => {
     // constraint de la base (que cuenta puntos de código) acepta sin problema.
     expect(isValidComment('🎉'.repeat(500))).toBe(true)
     expect(isValidComment('🎉'.repeat(501))).toBe(false)
+  })
+})
+
+describe('computeRatingAverage', () => {
+  it('redondea a un decimal', () => {
+    expect(computeRatingAverage([5, 4])).toBe(4.5)
+    expect(computeRatingAverage([5, 5, 4])).toBe(4.7)
+  })
+
+  it('devuelve el rating tal cual con una sola reseña', () => {
+    expect(computeRatingAverage([3])).toBe(3)
   })
 })
 

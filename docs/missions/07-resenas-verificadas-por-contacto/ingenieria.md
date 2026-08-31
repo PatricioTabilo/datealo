@@ -130,7 +130,10 @@ edite sin ver el efecto sobre el token, o viceversa.
   (spinner mientras espera, mensaje de error si falla, cierre del sheet solo si el servidor confirma —
   UXF-001 de `experiencia.md`).
 - **Salida:** `200 { review: PublicReview }`. `PublicReview = { id, name: string, rating: number, comment:
-  string | null, verified: true, createdAt: string }` — `name` ya resuelto ("un cliente de Datealo" si
+  string | null, verified: true, updatedAt: string }` — `updatedAt`, no `createdAt`: un reemplazo cambia
+  lo que la reseña dice, y la fecha que se expone tiene que reflejar eso, la misma columna por la que se
+  ordena la lista en TC-003 (corregido en revisión de PR, el diseño original tenía `createdAt` acá, un
+  desajuste real con la propia regla de "Invariantes de datos" de este documento). `name` ya resuelto ("un cliente de Datealo" si
   llegó vacío, D-002).
 - **Invariantes:**
   - El `token` debe corresponder a una fila en `professional_contact_tokens` para ese `professionalId` — si
