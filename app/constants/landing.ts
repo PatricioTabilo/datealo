@@ -74,14 +74,14 @@ export const LANDING_CATEGORIES = {
   title: '¿Qué estás buscando?',
   subtitle: 'Y muchos más — estamos sumando profesionales cada día',
   items: [
-    { icon: 'Wrench' as const, name: 'Gasfitería', query: 'Gasfiter en Providencia', image: 'https://images.pexels.com/photos/6419128/pexels-photo-6419128.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'Zap' as const, name: 'Electricidad', query: 'Electricista para mi depa', image: 'https://images.pexels.com/photos/7859953/pexels-photo-7859953.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'Scissors' as const, name: 'Peluquería', query: 'Peluquera a domicilio', image: 'https://images.pexels.com/photos/3992875/pexels-photo-3992875.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'Sparkles' as const, name: 'Limpieza', query: 'Aseo profundo departamento', image: 'https://images.pexels.com/photos/6195273/pexels-photo-6195273.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'Truck' as const, name: 'Mudanzas', query: 'Mudanza dentro de Santiago', image: 'https://images.pexels.com/photos/7464244/pexels-photo-7464244.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'Paintbrush' as const, name: 'Pintura', query: 'Pintar living y dormitorio', image: 'https://images.pexels.com/photos/5691597/pexels-photo-5691597.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'KeyRound' as const, name: 'Cerrajería', query: 'Cerrajero urgente en Ñuñoa', image: 'https://images.pexels.com/photos/792034/pexels-photo-792034.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
-    { icon: 'Flower2' as const, name: 'Jardinería', query: 'Mantención de jardín', image: 'https://images.pexels.com/photos/5231048/pexels-photo-5231048.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'gasfiteria', icon: 'Wrench' as const, name: 'Gasfitería', query: 'Gasfiter en Providencia', image: 'https://images.pexels.com/photos/6419128/pexels-photo-6419128.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'electricidad', icon: 'Zap' as const, name: 'Electricidad', query: 'Electricista para mi depa', image: 'https://images.pexels.com/photos/7859953/pexels-photo-7859953.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'peluqueria', icon: 'Scissors' as const, name: 'Peluquería', query: 'Peluquera a domicilio', image: 'https://images.pexels.com/photos/3992875/pexels-photo-3992875.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'limpieza', icon: 'Sparkles' as const, name: 'Limpieza', query: 'Aseo profundo departamento', image: 'https://images.pexels.com/photos/6195273/pexels-photo-6195273.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'mudanzas', icon: 'Truck' as const, name: 'Mudanzas', query: 'Mudanza dentro de Santiago', image: 'https://images.pexels.com/photos/7464244/pexels-photo-7464244.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'pintura', icon: 'Paintbrush' as const, name: 'Pintura', query: 'Pintar living y dormitorio', image: 'https://images.pexels.com/photos/5691597/pexels-photo-5691597.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'cerrajeria', icon: 'KeyRound' as const, name: 'Cerrajería', query: 'Cerrajero urgente en Ñuñoa', image: 'https://images.pexels.com/photos/792034/pexels-photo-792034.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
+    { slug: 'jardineria', icon: 'Flower2' as const, name: 'Jardinería', query: 'Mantención de jardín', image: 'https://images.pexels.com/photos/5231048/pexels-photo-5231048.jpeg?auto=compress&cs=tinysrgb&w=640&h=480&fit=crop' },
   ],
 } as const
 

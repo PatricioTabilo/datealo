@@ -21,7 +21,7 @@ useHead({
         description: 'Buscador de profesionales verificados para el hogar y la vida diaria.',
         potentialAction: {
           '@type': 'SearchAction',
-          target: 'https://datealo.cl/buscar?q={search_term_string}',
+          target: 'https://datealo.cl/buscar?categoria={search_term_string}',
           'query-input': 'required name=search_term_string',
         },
       }),

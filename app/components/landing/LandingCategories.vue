@@ -79,10 +79,10 @@ onUnmounted(() => {
         ref="scrollContainer"
         class="flex gap-5 sm:gap-7 overflow-x-auto scroll-smooth pb-5 pr-5 sm:pr-8 snap-x snap-mandatory scrollbar-hide"
       >
-        <a
+        <NuxtLink
           v-for="cat in LANDING_CATEGORIES.items"
           :key="cat.name"
-          href="#hero-form"
+          :to="`/buscar?categoria=${cat.slug}`"
           class="carousel-card group relative shrink-0 w-[300px] sm:w-[410px] rounded-[2.2rem] overflow-hidden aspect-[3/4] snap-start shadow-sm shadow-datealo-text/[0.08] text-left"
           :aria-label="cat.query"
         >
@@ -98,7 +98,7 @@ onUnmounted(() => {
             <p class="text-white/75 text-[0.95rem] font-medium mb-2.5 tracking-tight">{{ cat.name }}</p>
             <h3 class="text-white text-[2rem] sm:text-[2.2rem] leading-[1.06] font-semibold tracking-[-0.02em]">{{ cat.query }}</h3>
           </div>
-        </a>
+        </NuxtLink>
       </div>
     </div>
 
