@@ -1,13 +1,22 @@
-import { sql } from 'drizzle-orm'
+import { desc, eq, sql } from 'drizzle-orm'
+import { isUuid } from './validation'
 import { reviews } from '../db/schema/reviews'
 
+// updatedAt, no createdAt: un reemplazo cambia lo que la reseña dice, y la fecha que se muestra tiene
+// que reflejar eso — la misma columna por la que ya se ordena la lista.
 export type PublicReview = {
   id: string
   name: string
   rating: number
   comment: string | null
   verified: true
-  createdAt: string
+  updatedAt: string
+}
+
+export type ReviewsSummary = {
+  reviews: PublicReview[]
+  ratingAverage: number | null
+  reviewCount: number
 }
 
 const MAX_COMMENT_LENGTH = 500
@@ -35,12 +44,17 @@ function normalizeReviewerName(name: string | undefined): string | null {
   return trimmed ? trimmed : null
 }
 
+export function computeRatingAverage(ratings: number[]): number {
+  const sum = ratings.reduce((total, rating) => total + rating, 0)
+  return Math.round((sum / ratings.length) * 10) / 10
+}
+
 function toPublicReview(row: {
   id: string
   name: string | null
   rating: number
   comment: string | null
-  createdAt: Date
+  updatedAt: Date
 }): PublicReview {
   return {
     id: row.id,
@@ -48,7 +62,7 @@ function toPublicReview(row: {
     rating: row.rating,
     comment: row.comment,
     verified: true,
-    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
   }
 }
 
@@ -75,10 +89,41 @@ export async function upsertReview(
       name: reviews.name,
       rating: reviews.rating,
       comment: reviews.comment,
-      createdAt: reviews.createdAt,
+      updatedAt: reviews.updatedAt,
     })
 
   // onConflictDoUpdate (a diferencia de onConflictDoNothing) siempre afecta exactamente una fila —
   // inserta o actualiza, nunca devuelve vacío.
   return toPublicReview(row!)
+}
+
+// Corre en paralelo con la lectura del perfil (Promise.all en el handler), incluso antes de saber si el
+// profesional existe — por eso guarda el mismo chequeo de forma de id que ya hace findPublicProfessionalProfile,
+// para no romper con un 22P02 de Postgres cuando el id ni siquiera tiene forma de uuid.
+export async function findReviewsForProfessional(professionalId: string): Promise<ReviewsSummary> {
+  if (!isUuid(professionalId)) {
+    return { reviews: [], ratingAverage: null, reviewCount: 0 }
+  }
+
+  const rows = await useDb()
+    .select({
+      id: reviews.id,
+      name: reviews.name,
+      rating: reviews.rating,
+      comment: reviews.comment,
+      updatedAt: reviews.updatedAt,
+    })
+    .from(reviews)
+    .where(eq(reviews.professionalId, professionalId))
+    .orderBy(desc(reviews.updatedAt))
+
+  if (rows.length === 0) {
+    return { reviews: [], ratingAverage: null, reviewCount: 0 }
+  }
+
+  return {
+    reviews: rows.map(toPublicReview),
+    ratingAverage: computeRatingAverage(rows.map(row => row.rating)),
+    reviewCount: rows.length,
+  }
 }
