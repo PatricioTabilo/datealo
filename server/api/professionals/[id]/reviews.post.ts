@@ -29,6 +29,24 @@ export default defineEventHandler(async (event) => {
 
   const name = typeof body?.name === 'string' ? body.name : undefined
 
-  const review = await upsertReview(id, token, { rating, comment, name })
+  const [review, professional] = await Promise.all([
+    upsertReview(id, token, { rating, comment, name }),
+    findProfessionalNotificationInfo(id),
+  ])
+
+  // Sin email guardado (perfiles de antes de esta columna) o si sendEmail() falla, la reseña ya quedó
+  // publicada igual — event.waitUntil evita que el aviso demore la respuesta, y el catch evita que un
+  // fallo de Resend la haga fallar.
+  if (professional?.email) {
+    const { subject, html } = buildReviewNotificationEmail({
+      displayName: professional.displayName,
+      reviewerName: name,
+      rating: review.rating,
+      comment: review.comment,
+      profileUrl: `${getRequestURL(event).origin}/profesionales/${id}`,
+    })
+    event.waitUntil(sendEmail({ to: professional.email, subject, html }).catch(() => {}))
+  }
+
   return { review }
 })

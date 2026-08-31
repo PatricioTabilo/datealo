@@ -1,4 +1,5 @@
 import { desc, eq, sql } from 'drizzle-orm'
+import { escapeHtml } from './professionals'
 import { isUuid } from './validation'
 import { reviews } from '../db/schema/reviews'
 
@@ -122,5 +123,40 @@ export async function findReviewsForProfessional(professionalId: string): Promis
     reviews: rows.map(toPublicReview),
     ratingAverage: computeRatingAverage(rows.map(row => row.rating)),
     reviewCount: rows.length,
+  }
+}
+
+// El asunto nunca adelanta el rating (ni número ni estrellas): una reseña de 1 estrella con eso en el
+// asunto se leería duro antes de que el profesional tenga cualquier contexto. Mismo asunto para las
+// cinco notas posibles.
+export function buildReviewNotificationEmail({
+  displayName,
+  reviewerName,
+  rating,
+  comment,
+  profileUrl,
+}: {
+  displayName: string
+  reviewerName: string | undefined
+  rating: number
+  comment: string | null
+  profileUrl: string
+}): { subject: string, html: string } {
+  const firstName = escapeHtml(displayName.trim().split(/\s+/)[0] ?? displayName)
+  const name = normalizeReviewerName(reviewerName)
+  const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating)
+
+  const intro = name
+    ? `${escapeHtml(name)} te dejó una reseña en Datealo:`
+    : `Te llegó una reseña de ${GENERIC_REVIEWER_NAME}:`
+
+  return {
+    subject: `${firstName}, te llegó una reseña nueva`,
+    html: `
+      <p>${intro}</p>
+      <p style="font-size: 20px; letter-spacing: 2px;">${stars}</p>
+      ${comment ? `<p>${escapeHtml(comment)}</p>` : ''}
+      <p><a href="${profileUrl}">Ver mi perfil</a></p>
+    `.trim(),
   }
 }
