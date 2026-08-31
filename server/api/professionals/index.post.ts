@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     return fieldError
   }
 
-  const { professional, created } = await createProfessional(user.id, fields)
+  const { professional, created } = await createProfessional(user.id, fields, user.email ?? null)
 
   // El correo solo se dispara al crear de verdad — si el usuario ya tenía perfil, no se reenvía.
   if (created && user.email) {

@@ -18,6 +18,9 @@ export const professionals = pgTable(
       .notNull()
       .references(() => comunas.codigo),
     contact: text('contact').notNull(),
+    // Copia de auth.users.email al momento del registro, nunca leída en vivo desde ahí — dato interno
+    // para el correo de aviso de reseña nueva, jamás parte de la forma pública del profesional.
+    email: text('email'),
     description: text('description'),
     priceFrom: integer('price_from'),
     // Paths dentro del bucket professional-photos, nunca URLs completas — la URL pública se
