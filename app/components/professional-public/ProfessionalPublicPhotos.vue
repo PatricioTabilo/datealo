@@ -4,10 +4,6 @@ defineProps<{
   displayName: string
 }>()
 
-function initials(name: string): string {
-  return name.trim().split(/\s+/).slice(0, 2).map(part => part[0]?.toUpperCase() ?? '').join('')
-}
-
 // La tira de miniaturas es solo un atajo de navegación sobre el mismo carrusel — activeIndex refleja
 // el slide actual (evento select de UCarousel) para resaltar cuál mira el visitante, y clickear una
 // miniatura mueve ese mismo carrusel en vez de duplicar su estado.
