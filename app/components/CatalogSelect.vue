@@ -121,6 +121,8 @@ function selectItem(item: CatalogOption) {
 function retry() {
   emit('retry')
 }
+
+defineExpose({ focus: () => uInputRef.value?.inputRef?.focus() })
 </script>
 
 <template>
