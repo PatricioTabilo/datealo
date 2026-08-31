@@ -119,3 +119,12 @@ create policy professional_photos_delete_own on storage.objects
 alter table professional_contact_events enable row level security;
 
 revoke all on public.professional_contact_events from anon, authenticated;
+
+-- professional_contact_tokens (misión 07): el token es opaco y nace siempre en la misma request que un
+-- professional_contact_events real — no identifica a nadie, pero funciona como credencial de verificación
+-- de reseñas, así que cierra igual de estricto: solo Drizzle (rol dueño) lo toca, desde el mismo endpoint
+-- de contacto. Sin ninguna policy: el revoke ya cierra el camino.
+
+alter table professional_contact_tokens enable row level security;
+
+revoke all on public.professional_contact_tokens from anon, authenticated;

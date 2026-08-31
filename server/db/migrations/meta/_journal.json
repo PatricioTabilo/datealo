@@ -36,6 +36,13 @@
       "when": 1787985515700,
       "tag": "0004_comuna_vecinas",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1788158736898,
+      "tag": "0005_nervous_ezekiel_stane",
+      "breakpoints": true
     }
   ]
 }
