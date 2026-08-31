@@ -1,6 +1,11 @@
 const STORAGE_KEY_PREFIX = 'datealo:review-token:'
 const MY_REVIEW_KEY_PREFIX = 'datealo:my-review:'
 
+// Si localStorage falla (modo privado estricto, cuota agotada), este token de repuesto vive acá en vez
+// de generarse de nuevo en cada llamada — sin esto, registrar el contacto y publicar la reseña
+// terminarían mandando dos tokens distintos al servidor y la reseña nunca pasaría la verificación.
+const fallbackTokens = new Map<string, string>()
+
 export type MyReviewDraft = {
   rating: number
   comment: string
@@ -25,12 +30,17 @@ export function useReviewToken(professionalId: string) {
       window.localStorage.setItem(tokenKey, token)
       return token
     } catch {
-      return crypto.randomUUID()
+      const cached = fallbackTokens.get(tokenKey)
+      if (cached) return cached
+
+      const token = crypto.randomUUID()
+      fallbackTokens.set(tokenKey, token)
+      return token
     }
   }
 
   // Nunca genera un token — a diferencia de ensureToken, esto solo pregunta "¿este navegador ya
-  // contactó?" para decidir si mostrar la opción de reseñar (UX-001). Generar uno acá inventaría un
+  // contactó?" para decidir si mostrar la opción de reseñar. Generar uno acá inventaría un
   // token sin que haya ocurrido ningún contacto real.
   function getToken(): string | null {
     if (typeof window === 'undefined') return null
@@ -43,7 +53,7 @@ export function useReviewToken(professionalId: string) {
   }
 
   // La única forma de saber qué escribió este navegador la última vez, para prellenar el sheet al
-  // editar (CL-003) — el servidor nunca devuelve el token asociado a una reseña, así que no hay ningún
+  // editar — el servidor nunca devuelve el token asociado a una reseña, así que no hay ningún
   // endpoint del que leerlo de vuelta.
   function getMyReview(): MyReviewDraft | null {
     if (typeof window === 'undefined') return null

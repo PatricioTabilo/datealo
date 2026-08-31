@@ -3,7 +3,7 @@ import { averageRating, upsertLocalReview } from './professional-reviews'
 import type { PublicReview } from '~/types/review'
 
 function review(id: string, rating: number): PublicReview {
-  return { id, name: 'Carmen', rating, comment: null, verified: true, updatedAt: '2026-08-31T00:00:00.000Z' }
+  return { id, name: 'Carmen', rating, comment: null, updatedAt: '2026-08-31T00:00:00.000Z' }
 }
 
 describe('upsertLocalReview', () => {

@@ -16,7 +16,7 @@ export async function registerContactToken(professionalId: string, token: string
 
 // Una reseña solo se publica si existe un contacto real detrás de este token para este profesional.
 export async function hasContactToken(professionalId: string, token: string): Promise<boolean> {
-  if (!isUuid(token)) return false
+  if (!isUuid(professionalId) || !isUuid(token)) return false
 
   const [row] = await useDb()
     .select({ token: professionalContactTokens.token })

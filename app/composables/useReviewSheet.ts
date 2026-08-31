@@ -4,7 +4,7 @@ import type { PublicReview } from '~/types/review'
 export type ReviewSheetMode = 'new' | 'editing'
 
 // Publicar y reemplazar son la misma acción del lado del servidor (upsert) — acá solo cambia qué
-// título y qué valores iniciales ve quien reseña, según si ya tenía un borrador guardado (CL-003).
+// título y qué valores iniciales ve quien reseña, según si ya tenía un borrador guardado.
 export function useReviewSheet(professionalId: string) {
   const { ensureToken, getMyReview, saveMyReview } = useReviewToken(professionalId)
 
@@ -57,7 +57,8 @@ export function useReviewSheet(professionalId: string) {
       return review
     } catch {
       // El mismo mensaje genérico cubre una falla de red y un rechazo del servidor — nunca menciona el
-      // token ni la verificación, para no convertir el error en un mapa de cómo funciona D-001.
+      // token ni la verificación, para no darle a quien prueba el flujo una pista de cómo distinguir
+      // un rechazo por falta de contacto real de cualquier otro error.
       errorMessage.value = 'No pudimos publicar tu reseña. Inténtalo de nuevo.'
       return null
     } finally {

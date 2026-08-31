@@ -1,6 +1,6 @@
 import type { PublicReview } from '~/types/review'
 
-// La reseña publicada va primero — si ya existía una del mismo id (reemplazo, D-003), la vieja
+// La reseña publicada va primero — si ya existía una del mismo id (reemplazo), la vieja
 // desaparece de la lista en vez de quedar duplicada.
 export function upsertLocalReview(reviews: PublicReview[], published: PublicReview): PublicReview[] {
   return [published, ...reviews.filter(review => review.id !== published.id)]

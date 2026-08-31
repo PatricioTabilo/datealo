@@ -11,8 +11,8 @@ const emit = defineEmits<{ 'update:modelValue': [value: number] }>()
 
 const STARS = [1, 2, 3, 4, 5]
 const iconClass = computed(() => props.size === 'lg' ? 'h-7 w-7' : 'h-3 w-3')
-// El botón, no el ícono, define el objetivo táctil — 44×44px en el sheet interactivo (UX-001 de
-// experiencia.md); el tamaño chico de la card de lectura no necesita ese mínimo, no es interactivo.
+// El botón, no el ícono, define el objetivo táctil — 44×44px en el sheet interactivo; el tamaño
+// chico de la card de lectura no necesita ese mínimo, no es interactivo.
 const targetClass = computed(() => props.size === 'lg' ? 'h-11 w-11' : 'h-4 w-4')
 </script>
 
