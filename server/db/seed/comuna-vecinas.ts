@@ -1,5 +1,5 @@
-// Adyacencia geográfica real entre comunas: se corre una vez por entorno, `npm run
-// db:seed:comuna-vecinas`.
+// Adyacencia geográfica real entre comunas: segundo paso de `npm run db:seed`, después de
+// `taxonomia.ts`.
 //
 // Los pares salen de `scripts/compute-comuna-vecinas.ts`, que cruza el catálogo de comunas contra un
 // dataset público de límites geográficos (ver ese script para la fuente y el detalle del cálculo) y

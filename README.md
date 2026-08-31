@@ -4,20 +4,20 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 
 ## Setup
 
-Make sure to install dependencies:
+Instalar dependencias:
 
 ```bash
-# npm
 npm install
+```
 
-# pnpm
-pnpm install
+Copiar `.env.example` a `.env` y completar las credenciales de Supabase y Resend (el detalle de cada
+variable está en los comentarios del propio archivo).
 
-# yarn
-yarn install
+Levantar la base de datos — aplica las migraciones, las políticas RLS y siembra taxonomía y comuna-vecinas,
+en ese orden, con un solo comando:
 
-# bun
-bun install
+```bash
+npm run db:setup
 ```
 
 ## Development Server
