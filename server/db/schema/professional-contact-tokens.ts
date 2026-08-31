@@ -1,9 +1,9 @@
 import { pgTable, primaryKey, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { professionals } from './professionals'
 
-// Nace siempre en la misma request que un professional_contact_events (T-001, misión 07) — nunca se
-// escribe por separado, así un token solo existe atado a un contacto real. (professionalId, token) como
-// PK compuesta: es la única unicidad real de esta tabla, no hace falta un id propio.
+// Nace siempre en la misma request que un professional_contact_events — nunca se escribe por separado,
+// así un token solo existe atado a un contacto real. (professionalId, token) como PK compuesta: es la
+// única unicidad real de esta tabla, no hace falta un id propio.
 export const professionalContactTokens = pgTable(
   'professional_contact_tokens',
   {

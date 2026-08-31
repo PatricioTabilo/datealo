@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event).catch(() => null)
   const token = typeof body?.token === 'string' ? body.token : ''
 
-  // F-001: nunca se publica una reseña sin verificar primero que el token corresponde a un contacto real.
+  // Nunca se publica una reseña sin verificar primero que el token corresponde a un contacto real.
   if (!(await hasContactToken(id, token))) {
     setResponseStatus(event, 403)
     return { error: 'not_verified' }

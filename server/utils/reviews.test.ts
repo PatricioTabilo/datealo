@@ -25,6 +25,13 @@ describe('isValidComment', () => {
   it('rechaza más de 500 caracteres', () => {
     expect(isValidComment('a'.repeat(501))).toBe(false)
   })
+
+  it('cuenta emoji como un caracter, igual que char_length() de Postgres', () => {
+    // '🎉'.length en JS es 2 (par subrogado UTF-16) — contarlo así rechazaría comentarios que el check
+    // constraint de la base (que cuenta puntos de código) acepta sin problema.
+    expect(isValidComment('🎉'.repeat(500))).toBe(true)
+    expect(isValidComment('🎉'.repeat(501))).toBe(false)
+  })
 })
 
 describe('resolveReviewerName', () => {

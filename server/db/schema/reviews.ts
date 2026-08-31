@@ -22,7 +22,7 @@ export const reviews = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   },
   table => [
-    // Un dispositivo (token) mantiene como máximo una reseña vigente por profesional — D-003, CL-003.
+    // Un dispositivo (token) mantiene como máximo una reseña vigente por profesional.
     unique('reviews_professional_id_token_key').on(table.professionalId, table.token),
     // Sin esto, una reseña podría sobrevivir a un token que ya no existe en ningún lado y seguir
     // mostrándose "verificada por contacto" con la prueba ya desaparecida.

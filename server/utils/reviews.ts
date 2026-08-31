@@ -17,12 +17,15 @@ export function isValidRating(rating: unknown): rating is number {
   return typeof rating === 'number' && Number.isInteger(rating) && rating >= 1 && rating <= 5
 }
 
+// [...comment].length cuenta puntos de código, no unidades UTF-16 — para texto con emoji u otros
+// caracteres fuera del plano básico, `.length` a secas cuenta el doble de lo que cuenta char_length()
+// de Postgres (el check constraint de la tabla), rechazando comentarios que la base aceptaría igual.
 export function isValidComment(comment: string | undefined): boolean {
-  return comment === undefined || comment.length <= MAX_COMMENT_LENGTH
+  return comment === undefined || [...comment].length <= MAX_COMMENT_LENGTH
 }
 
-// D-002: el reemplazo por el nombre genérico ocurre al leer, no al guardar — así un cambio de copy no
-// necesita backfill de filas ya escritas.
+// El reemplazo por el nombre genérico ocurre al leer, no al guardar — así un cambio de copy no necesita
+// backfill de filas ya escritas.
 export function resolveReviewerName(name: string | null): string {
   return name ?? GENERIC_REVIEWER_NAME
 }
@@ -49,9 +52,9 @@ function toPublicReview(row: {
   }
 }
 
-// Upsert atómico por (professionalId, token) a nivel de base (T-003) — una segunda reseña del mismo
-// token reemplaza a la primera, nunca inserta una fila nueva (D-003, CL-003). createdAt no se toca en
-// el conflicto: es la fecha de la primera publicación, no la del reemplazo.
+// Upsert atómico por (professionalId, token) a nivel de base — una segunda reseña del mismo token
+// reemplaza a la primera, nunca inserta una fila nueva. createdAt no se toca en el conflicto: es la
+// fecha de la primera publicación, no la del reemplazo.
 export async function upsertReview(
   professionalId: string,
   token: string,
