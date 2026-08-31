@@ -15,7 +15,7 @@ abrieron y de dónde salió cada una.
 | 04  | [registro y perfil de profesional](./04-registro-perfil-profesional/) | producto | 2026-08-13 | cerrada 2026-08-28 | — | — |
 | 05  | [perfil público de profesional](./05-perfil-publico-profesional/) | producto | 2026-08-13 | cerrada 2026-08-29 | — | — |
 | 06  | [búsqueda y resultados](./06-busqueda-resultados/) | producto | 2026-08-13 | exploración | — | — |
-| 07  | [reseñas verificadas por contacto](./07-resenas-verificadas-por-contacto/) | producto | 2026-08-13 | exploración | — | — |
+| 07  | [reseñas verificadas por contacto](./07-resenas-verificadas-por-contacto/) | producto | 2026-08-13 | en construcción | — | — |
 
 Misiones 02 a 07 son las seis que llevan al MVP (registrarse, mostrarse, buscar, reseñar), en el orden de
 dependencia definido en la conversación de roadmap del 2026-08-13 — el número no es prioridad, pero acá sí

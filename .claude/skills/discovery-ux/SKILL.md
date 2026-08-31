@@ -382,6 +382,22 @@ del stack:
 - **Errores de campo enlazados por accesibilidad.** Todo error de validación inline lleva
   `aria-describedby` apuntando al mensaje de error, para que un lector de pantalla lo lea junto al campo —
   nunca solo color o posición visual como señal.
+- **Toast en `bottom-right`, sin variar por dispositivo.** Una sola posición para toda la app, mobile y
+  desktop — no hay una posición distinta por breakpoint (Nuxt UI no lo soporta de forma nativa, ver
+  [issue #4370](https://github.com/nuxt/ui/issues/4370) sin resolver). `bottom-right` es el default real de
+  `useToast()` de Nuxt UI, coincide con la convención de notificaciones de Windows, y con la esquina
+  derecha en la que Windows y macOS igual convergen aunque difieran en arriba/abajo. La razón de fondo para
+  elegir abajo y no arriba: casi toda acción que dispara un toast en Datealo ocurre abajo de la pantalla
+  (un bottom sheet, el CTA de contacto fijo, un submit dentro del scroll) — el toast confirma cerca de
+  donde el usuario ya estaba mirando, sin que el ojo salte lejos de la acción que lo causó. Duración: los
+  5000ms por defecto de Nuxt UI, sin sobreescribir por flujo salvo una razón real (`duration: 0` para el
+  caso puntual que necesite cierre manual). Cierre con botón + swipe-to-dismiss en mobile (nativos del
+  componente), `aria-live="polite"`, y un `toaster.max` bajo (2-3) como resguardo barato si alguna vez se
+  disparan varios a la vez — sin lógica de cola custom. En mobile, si hay una barra fija abajo (el CTA de
+  contacto de un perfil, por ejemplo), el toast se desplaza por encima de ella con un offset de espaciado,
+  nunca cambia de posición. Un toast es solo para confirmación no crítica y transitoria — un error
+  bloqueante o cualquier información que el usuario no puede permitirse perder va inline, en un banner o en
+  un modal, nunca en un toast.
 
 ## Relación entre `experiencia.md` y `producto.md`
 
