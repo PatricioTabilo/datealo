@@ -2,7 +2,11 @@
 </script>
 
 <template>
-  <div class="min-h-screen bg-datealo-bg">
-    <slot />
+  <div class="flex min-h-screen flex-col bg-datealo-bg">
+    <AppHeader />
+    <div class="flex-1">
+      <slot />
+    </div>
+    <AppFooter />
   </div>
 </template>

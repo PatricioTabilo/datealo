@@ -1,4 +1,8 @@
 <script setup lang="ts">
+// La landing arma su propio header/footer (LandingNavbar/AppFooter) — layout blank para no duplicar
+// el header/footer que el resto de la app sí trae del layout default.
+definePageMeta({ layout: 'blank' })
+
 useSeoMeta({
   title: 'datealo — Encuentra al profesional que necesitas, cerca de ti',
   description: 'Conectamos personas con profesionales verificados de su zona. Gasfitería, electricidad, peluquería, limpieza y más. Regístrate para acceso anticipado.',
@@ -39,6 +43,6 @@ useHead({
     <LandingCategories />
     <LandingForProfessionals />
     <LandingFinalCta />
-    <LandingFooter />
+    <AppFooter />
   </div>
 </template>
