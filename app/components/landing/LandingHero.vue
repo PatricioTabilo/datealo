@@ -37,18 +37,14 @@ const searchQuery = computed(() => {
           </p>
 
           <!-- Buscador -->
-          <div class="bg-white p-3 rounded-2xl shadow-2xl shadow-black/20 max-w-lg relative z-20">
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
+          <div class="bg-white p-3 rounded-2xl shadow-2xl shadow-black/20 max-w-xl relative z-20">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div class="flex-1">
-                <label for="hero-categoria" class="mb-1 block text-[0.625rem] font-bold uppercase tracking-wide text-datealo-text/50">
-                  Categoría
-                </label>
+                <label for="hero-categoria" class="sr-only">Categoría</label>
                 <CategoriaSelect id="hero-categoria" v-model="categoriaSlug" />
               </div>
               <div class="flex-1">
-                <label for="hero-comuna" class="mb-1 block text-[0.625rem] font-bold uppercase tracking-wide text-datealo-text/50">
-                  Comuna
-                </label>
+                <label for="hero-comuna" class="sr-only">Comuna</label>
                 <ComunaSelect id="hero-comuna" v-model="comunaCodigo" />
               </div>
               <UButton
