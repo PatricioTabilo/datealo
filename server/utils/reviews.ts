@@ -95,9 +95,8 @@ export async function upsertReview(
   return toPublicReview(row!)
 }
 
-// Corre en paralelo con la lectura del perfil (Promise.all en el handler), incluso antes de saber si el
-// profesional existe — por eso guarda el mismo chequeo de forma de id que ya hace findPublicProfessionalProfile,
-// para no romper con un 22P02 de Postgres cuando el id ni siquiera tiene forma de uuid.
+// Guarda el mismo chequeo de forma de id que ya hace findPublicProfessionalProfile, para no romper con
+// un 22P02 de Postgres cuando el id ni siquiera tiene forma de uuid.
 export async function findReviewsForProfessional(professionalId: string): Promise<ReviewsSummary> {
   if (!isUuid(professionalId)) {
     return { reviews: [], ratingAverage: null, reviewCount: 0 }

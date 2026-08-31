@@ -174,9 +174,9 @@ edite sin ver el efecto sobre el token, o viceversa.
   aditiva.
 - **Invariantes:** sin reseñas, `reviews: []`, `ratingAverage: null`, `reviewCount: 0` — F-002 hereda el
   comportamiento sin reseñas de misión 05 (CL-003 de esa misión: la sección de reseñas ni siquiera aparece).
-  El handler compone dos queries independientes (`findPublicProfessionalProfile` de `professionals.ts` y
-  una nueva de `reviews.ts`) con `Promise.all`, nunca encadenadas — misión 05 ya identificó este endpoint
-  como el de mayor tráfico esperado del diseño. No hace falta un índice adicional para el `order by
+  El handler pide primero `findPublicProfessionalProfile` de `professionals.ts` y solo si existe pide la
+  de `reviews.ts` — encadenadas, no con `Promise.all`: un id que no corresponde a ningún profesional (o
+  uno inactivo) nunca debe pagar la segunda consulta. No hace falta un índice adicional para el `order by
   updated_at`: `experiencia.md` ya fija sin paginación ni "ver más" en esta entrega, porque con la oferta y
   el volumen esperados ningún perfil va a acumular reseñas suficientes para que un `sort` sobre unas pocas
   filas importe.

@@ -12,18 +12,18 @@ const emit = defineEmits<{
   published: [review: PublicReview]
 }>()
 
-const { getToken, getMyReview } = useReviewToken(props.professionalId)
+const { hasToken, getToken, getMyReview } = useReviewToken(props.professionalId)
 const sheet = useReviewSheet(props.professionalId)
 const toast = useToast()
 
-// El token y el borrador solo existen en el navegador — en SSR no hay forma de saberlo, así que arrancan
-// en false y se corrigen apenas monta. El "pop-in" de la card es aceptable: es la misma personalización
-// que cualquier dato que solo vive en localStorage.
-const hasToken = ref(false)
+// El borrador de reseña solo existe en el navegador — en SSR no hay forma de saberlo, así que arranca
+// en false y se corrige apenas monta. El "pop-in" de la card es aceptable: es la misma personalización
+// que cualquier dato que solo vive en localStorage. hasToken es estado compartido (useReviewToken) y no
+// necesita este mismo tratamiento acá — se actualiza solo, incluso si el contacto ocurre después de montar.
 const hasMyReview = ref(false)
 
 onMounted(() => {
-  hasToken.value = Boolean(getToken())
+  getToken()
   hasMyReview.value = Boolean(getMyReview())
 })
 

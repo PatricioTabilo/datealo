@@ -1,3 +1,6 @@
+import { ref } from 'vue'
+import type { Ref } from 'vue'
+
 const STORAGE_KEY_PREFIX = 'datealo:review-token:'
 const MY_REVIEW_KEY_PREFIX = 'datealo:my-review:'
 
@@ -5,6 +8,23 @@ const MY_REVIEW_KEY_PREFIX = 'datealo:my-review:'
 // de generarse de nuevo en cada llamada — sin esto, registrar el contacto y publicar la reseña
 // terminarían mandando dos tokens distintos al servidor y la reseña nunca pasaría la verificación.
 const fallbackTokens = new Map<string, string>()
+
+// Compartido por clave entre la barra de contacto y la sección de reseñas, dos componentes hermanos en
+// la misma página — sin este estado en común, tocar "Escribir por WhatsApp"/"Llamar" y mirar la sección
+// de reseñas en la misma visita no mostraría la opción de reseñar hasta recargar la página. No usa
+// useState() de Nuxt: nunca se muta durante SSR (todo camino que lo toca empieza con el guard de
+// `window`), así que no hay riesgo de que este módulo filtre estado entre requests distintos, y queda
+// testeable con Vitest a secas, igual que el resto de este archivo.
+const hasTokenRefs = new Map<string, Ref<boolean>>()
+
+function getHasTokenRef(tokenKey: string): Ref<boolean> {
+  let existing = hasTokenRefs.get(tokenKey)
+  if (!existing) {
+    existing = ref(false)
+    hasTokenRefs.set(tokenKey, existing)
+  }
+  return existing
+}
 
 export type MyReviewDraft = {
   rating: number
@@ -19,22 +39,32 @@ export function useReviewToken(professionalId: string) {
   const tokenKey = STORAGE_KEY_PREFIX + professionalId
   const myReviewKey = MY_REVIEW_KEY_PREFIX + professionalId
 
+  const hasToken = getHasTokenRef(tokenKey)
+
   function ensureToken(): string {
     if (typeof window === 'undefined') return crypto.randomUUID()
 
     try {
       const existing = window.localStorage.getItem(tokenKey)
-      if (existing) return existing
+      if (existing) {
+        hasToken.value = true
+        return existing
+      }
 
       const token = crypto.randomUUID()
       window.localStorage.setItem(tokenKey, token)
+      hasToken.value = true
       return token
     } catch {
       const cached = fallbackTokens.get(tokenKey)
-      if (cached) return cached
+      if (cached) {
+        hasToken.value = true
+        return cached
+      }
 
       const token = crypto.randomUUID()
       fallbackTokens.set(tokenKey, token)
+      hasToken.value = true
       return token
     }
   }
@@ -46,7 +76,9 @@ export function useReviewToken(professionalId: string) {
     if (typeof window === 'undefined') return null
 
     try {
-      return window.localStorage.getItem(tokenKey)
+      const token = window.localStorage.getItem(tokenKey)
+      if (token) hasToken.value = true
+      return token
     } catch {
       return null
     }
@@ -77,5 +109,5 @@ export function useReviewToken(professionalId: string) {
     }
   }
 
-  return { ensureToken, getToken, getMyReview, saveMyReview }
+  return { hasToken, ensureToken, getToken, getMyReview, saveMyReview }
 }
