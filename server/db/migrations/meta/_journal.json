@@ -29,6 +29,13 @@
       "when": 1787964351415,
       "tag": "0003_demonic_rockslide",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1787985515700,
+      "tag": "0004_comuna_vecinas",
+      "breakpoints": true
     }
   ]
 }

@@ -13,7 +13,9 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:rls": "tsx server/db/scripts/apply-rls.ts",
-    "db:seed:taxonomia": "tsx server/db/seed/taxonomia.ts"
+    "db:seed": "tsx server/db/seed/taxonomia.ts && tsx server/db/seed/comuna-vecinas.ts",
+    "db:compute-comuna-vecinas": "tsx scripts/compute-comuna-vecinas.ts",
+    "db:setup": "npm run db:migrate && npm run db:rls && npm run db:seed"
   },
   "dependencies": {
     "@lucide/vue": "^1.31.0",
@@ -29,6 +31,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@turf/boolean-intersects": "^7.4.0",
     "@types/node": "^26.2.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.11",

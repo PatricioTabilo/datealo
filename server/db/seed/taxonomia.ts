@@ -1,4 +1,5 @@
-// Seed de categorias y comunas. Se corre una vez por entorno: `npm run db:seed:taxonomia`.
+// Seed de categorias y comunas. Primer paso de `npm run db:seed` — comuna-vecinas.ts depende de que
+// esta tabla exista antes de insertar.
 //
 // Supavisor en modo sesión (puerto 5432, DATABASE_URL_SESSION), no el modo transacción que usa
 // la app — mismo motivo que drizzle-kit (ver drizzle.config.ts).

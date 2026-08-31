@@ -4,11 +4,13 @@
 -- Re-ejecutable: cada policy lleva su `drop policy if exists` delante, así que correr este archivo
 -- completo contra un entorno que ya lo tiene aplicado no falla ni deja policies duplicadas.
 
--- categorias, comunas: catálogo de referencia, público por diseño — pero solo vía server/api/
--- (/api/categorias, /api/comunas con Drizzle), nunca por PostgREST directo. Lectura sin restricción
--- para cualquiera, incluida una fila inactiva — el filtro por `activa` vive en server/utils/categorias.ts
--- y comunas.ts, no acá. Sin policy de escritura: nada escribe estas tablas vía server/api/, el seed y
--- los cambios de `activa` van directo a la base a mano (no hay panel de administración todavía).
+-- categorias, comunas, comuna_vecinas: catálogo de referencia, público por diseño — pero solo vía
+-- server/api/ (/api/categorias, /api/comunas con Drizzle), nunca por PostgREST directo. Lectura sin
+-- restricción para cualquiera, incluida una fila inactiva — el filtro por `activa` vive en
+-- server/utils/categorias.ts y comunas.ts, no acá. Sin policy de escritura: nada escribe estas tablas vía
+-- server/api/, el seed y los cambios de `activa` van directo a la base a mano (no hay panel de
+-- administración todavía). `comuna_vecinas` tampoco tiene panel: sus filas se cargan una sola vez desde un
+-- script y no vuelven a tocarse salvo una corrección puntual a mano.
 --
 -- El revoke de abajo es el mecanismo real, igual que en professionals: sin él, el default de
 -- Supabase deja SELECT/INSERT/UPDATE/DELETE/TRUNCATE abiertos a anon/authenticated por PostgREST desde
@@ -27,8 +29,15 @@ drop policy if exists comunas_select_public on comunas;
 create policy comunas_select_public on comunas
   for select using (true);
 
+alter table comuna_vecinas enable row level security;
+
+drop policy if exists comuna_vecinas_select_public on comuna_vecinas;
+create policy comuna_vecinas_select_public on comuna_vecinas
+  for select using (true);
+
 revoke all on public.categorias from anon, authenticated;
 revoke all on public.comunas from anon, authenticated;
+revoke all on public.comuna_vecinas from anon, authenticated;
 
 -- professionals: el perfil es el producto (lectura pública), la escritura es solo del dueño.
 -- La autorización real vive en server/api/ — Drizzle entra como rol dueño y salta RLS por
