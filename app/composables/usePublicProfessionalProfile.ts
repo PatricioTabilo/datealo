@@ -14,5 +14,13 @@ export function usePublicProfessionalProfile(id: string) {
   const notFound = computed(() => !validId || Boolean(error.value))
   const slow = useSlowLoad(pending)
 
-  return { professional, pending, notFound, slow, refresh }
+  // useFetch guarda `data` en un shallowRef — mutar una propiedad anidada (professional.value.reviews =
+  // ...) no dispara ningún re-render, solo reasignar data.value entero lo hace. Esto es lo que permite
+  // que una reseña recién publicada aparezca sin recargar la página, sin pagar un segundo round-trip.
+  function updateProfessional(patch: Partial<PublicProfessionalProfile>) {
+    if (!data.value?.professional) return
+    data.value = { professional: { ...data.value.professional, ...patch } }
+  }
+
+  return { professional, pending, notFound, slow, refresh, updateProfessional }
 }

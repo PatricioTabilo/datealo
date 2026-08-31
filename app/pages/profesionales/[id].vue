@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { Hourglass, SearchX } from '@lucide/vue'
+import { Hourglass, SearchX, Star } from '@lucide/vue'
+import type { PublicReview } from '~/types/review'
 
 const route = useRoute()
 const id = route.params.id as string
 
-const { professional, pending, notFound, slow, refresh } = usePublicProfessionalProfile(id)
+const { professional, pending, notFound, slow, refresh, updateProfessional } = usePublicProfessionalProfile(id)
 
 const memberSince = computed(() => professional.value ? formatMemberSince(professional.value.createdAt) : '')
+
+function onReviewPublished(review: PublicReview) {
+  if (!professional.value) return
+  const reviews = upsertLocalReview(professional.value.reviews, review)
+  updateProfessional({ reviews, ratingAverage: averageRating(reviews), reviewCount: reviews.length })
+}
 
 useSeoMeta({
   title: () => professional.value
@@ -61,6 +68,12 @@ useSeoMeta({
         <h1 class="text-xl font-extrabold text-datealo-text lg:text-2xl">{{ professional.displayName }}</h1>
         <p class="mt-0.5 text-sm text-datealo-muted">{{ professional.categoriaNombre }} · {{ professional.comunaNombre }}</p>
 
+        <div v-if="professional.ratingAverage !== null" class="mt-2 flex items-center gap-1 text-sm">
+          <Star class="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+          <span class="font-bold text-datealo-text">{{ professional.ratingAverage.toFixed(1).replace('.', ',') }}</span>
+          <span class="text-datealo-muted">· {{ professional.reviewCount }} reseñas</span>
+        </div>
+
         <p v-if="professional.description" class="mt-4 text-sm leading-relaxed text-datealo-text">
           {{ professional.description }}
         </p>
@@ -68,6 +81,15 @@ useSeoMeta({
         <p v-if="professional.priceFrom" class="mt-3 text-base font-bold text-datealo-text lg:text-lg">
           Desde ${{ formatPriceFrom(professional.priceFrom) }}
         </p>
+
+        <ProfessionalPublicReviews
+          class="mt-6"
+          :professional-id="professional.id"
+          :display-name="professional.displayName"
+          :categoria-nombre="professional.categoriaNombre"
+          :reviews="professional.reviews"
+          @published="onReviewPublished"
+        />
 
         <p class="mt-3 text-xs text-datealo-muted">En Datealo desde {{ memberSince }}</p>
 

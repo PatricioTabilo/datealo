@@ -1,3 +1,5 @@
+import type { PublicReview } from './review'
+
 export type Professional = {
   id: string
   displayName: string
@@ -30,4 +32,7 @@ export type PublicProfessionalProfile = {
   priceFrom: number | null
   photoUrls: string[]
   createdAt: string
+  reviews: PublicReview[]
+  ratingAverage: number | null
+  reviewCount: number
 }
