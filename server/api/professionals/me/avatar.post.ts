@@ -1,7 +1,5 @@
 import { randomUUID } from 'node:crypto'
 
-const MAX_PHOTOS = 12
-
 export default defineEventHandler(async (event) => {
   const user = await requireUser(event)
 
@@ -9,10 +7,6 @@ export default defineEventHandler(async (event) => {
   if (!professional) {
     setResponseStatus(event, 404)
     return { error: 'not_found' }
-  }
-  if (professional.photoUrls.length >= MAX_PHOTOS) {
-    setResponseStatus(event, 400)
-    return { error: 'too_many_photos' }
   }
 
   const formData = await readMultipartFormData(event)
@@ -36,12 +30,19 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 502, statusMessage: 'upload_failed' })
   }
 
-  const updated = await addProfessionalPhoto(user.id, path)
+  const previousPath = await findProfessionalAvatarPath(user.id)
+  const updated = await setProfessionalAvatar(user.id, path)
   if (!updated) {
     setResponseStatus(event, 404)
     return { error: 'not_found' }
   }
 
-  setResponseStatus(event, 201)
-  return { path, photoUrls: updated.photoUrls }
+  // El archivo nuevo ya quedó como el vigente en la columna — si el borrado del viejo falla acá, la
+  // respuesta igual es éxito; el viejo queda huérfano en el bucket, un costo de storage, no de
+  // correctitud.
+  if (previousPath) {
+    await serverSupabase(event).storage.from('professional-photos').remove([previousPath])
+  }
+
+  return { avatarUrl: updated.avatarUrl }
 })
