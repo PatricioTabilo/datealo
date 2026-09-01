@@ -26,6 +26,9 @@ export const professionals = pgTable(
     // Paths dentro del bucket professional-photos, nunca URLs completas — la URL pública se
     // calcula al responder, no se guarda.
     photoPaths: text('photo_paths').array().notNull().default([]),
+    // Un solo path, a diferencia de photoPaths: nunca hay más de una foto de perfil vigente.
+    // Mismo bucket y patrón de path que las fotos de trabajo (misión 08).
+    avatarPath: text('avatar_path'),
     active: boolean('active').notNull().default(true),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
