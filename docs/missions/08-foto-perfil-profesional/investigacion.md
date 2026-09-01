@@ -40,20 +40,6 @@ muestre su cara.
 | E-001 | código      | `server/db/schema/professionals.ts`                                     | El perfil solo guarda `photoPaths` (fotos de trabajo) — no existe ningún campo que distinga una foto de la persona de una foto de un trabajo | Dice qué existe hoy, no qué debería agregarse |
 | E-002 | observación | `docs/missions/05-perfil-publico-profesional/design-mockups/perfil-publico.html`, `docs/missions/06-busqueda-resultados/design-mockups/resultados-busqueda.html` | Ambos mockups usan siempre el círculo de iniciales para el avatar chico, incluso en el modo de perfil completo con 3 fotos cargadas — ninguna foto de trabajo se reusa nunca como avatar | Es una decisión de diseño ya tomada bajo el supuesto de que ninguna foto de trabajo es confiablemente una cara; no viene de evidencia externa |
 | E-003 | benchmark   | Doctoralia, Airbnb, Yelp                                                 | Los tres muestran siempre una foto de la persona o el negocio junto al nombre en resultados, nunca solo iniciales, incluso con perfiles recién creados y poca información cargada | Son marketplaces maduros con moderación de contenido activa; no dice qué pasa en un marketplace recién lanzado donde nadie ha subido nada todavía |
-| E-004 | código      | worktree de la misión 06, sin commitear (`server/db/schema/professionals.ts`, migración `0004_acoustic_kree.sql`) | Ya se agregó una columna `avatarPath` a `professionals`, con el comentario "nunca se completa con la primera foto de `photoPaths`" — indica que alguien ya evaluó y descartó usar automáticamente la primera foto de trabajo como avatar | Es trabajo de ingeniería adelantado a cualquier decisión de producto, no evidencia externa por sí solo — pero es la razón concreta por la que existe esta misión |
-
-<a id="e-004"></a>
-
-### E-004 — el código ya descartó la alternativa obvia antes de que exista la decisión
-
-El comentario en `professionals.ts` no dice "avatar opcional del profesional" — dice explícitamente que
-nunca se completa con la primera foto de `photoPaths`. Esa es una decisión con alternativa descartada
-(usar la primera foto de trabajo como avatar automático), tomada en algún punto de una conversación que no
-quedó en ningún `producto.md`.
-
-Esto permite afirmar que la alternativa "avatar automático desde la primera foto de trabajo" ya fue
-considerada y rechazada, pero no demuestra que un campo de foto de perfil separado sea la respuesta
-correcta — solo que el fallback automático no lo es.
 
 ## Conclusiones
 
@@ -61,16 +47,15 @@ correcta — solo que el fallback automático no lo es.
 
 ### C-001 — Una foto de trabajo no sirve como avatar de confianza
 
-- **Sustento:** [E-002](#e-002), [E-004](#e-004).
+- **Sustento:** [E-002](#e-002).
 - **Razonamiento:** nada garantiza que la primera foto que un profesional suba a `photoPaths` muestre su
   cara — puede ser una herramienta, un tablero, un antes/después del trabajo. Mostrarla como avatar
-  circular junto al nombre puede generar más confusión que confianza, y esa fue exactamente la razón por
-  la que dos personas distintas (quien diseñó los mockups de la 05/06, y quien escribió el comentario de
-  `avatarPath`) llegaron a la misma conclusión sin coordinarse.
+  circular junto al nombre puede generar más confusión que confianza; los mockups de las misiones 05 y 06
+  ya evitan esto por diseño, sin necesitar ningún fallback automático desde las fotos de trabajo.
 - **Implicación:** si se agrega una foto de perfil, tiene que ser un campo que el profesional suba a
   propósito como "esta es mi cara", nunca algo inferido de las fotos de trabajo.
-- **Confianza:** media, porque el sustento es razonamiento interno convergente (E-004) más un patrón de
-  diseño ya aplicado (E-002), no evidencia de usuarios reales.
+- **Confianza:** media, porque el sustento es un patrón de diseño ya aplicado (E-002) más razonamiento
+  directo, no evidencia de usuarios reales.
 
 <a id="c-002"></a>
 

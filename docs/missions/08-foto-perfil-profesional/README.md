@@ -41,10 +41,6 @@ profesional, nunca una de sus fotos de trabajo, incluso cuando cargó varias. Es
 tomada en ambos mockups, pero nunca declarada como decisión de producto — no hay ningún `D-xxx` en la 05 ni
 en la 06 que la sostenga.
 
-Esta misión existe porque esa decisión ya empezó a moverse en código sin pasar por acá: en el worktree de
-la misión 06 apareció, sin commitear y sin documentar, una columna `avatarPath` en `professionals`, con un
-comentario que dice explícitamente que nunca se completa con la primera foto de trabajo. Alguien ya
-evaluó y descartó la alternativa obvia (usar la primera foto de `photoPaths` como avatar automático) en una
-conversación que no quedó registrada. El trabajo de esta misión es reconstruir esa evidencia, decidir con
-Patricio si de verdad conviene un campo separado, y si la respuesta es sí, dejar `producto.md` y
-`experiencia.md` al día antes de que el código siga adelante del discovery.
+Esta misión existe para llenar ese vacío: investigar si el problema es real, decidir con Patricio si vale
+la pena un campo de foto de perfil separado, y si la respuesta es sí, dejar `producto.md` y
+`experiencia.md` listos antes de que se construya.

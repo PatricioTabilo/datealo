@@ -162,10 +162,10 @@ la foto real si ya subió una — nunca un estado intermedio ambiguo entre los d
   fijo — descartada porque cambia el layout ya construido y aprobado de la misión 05 para un caso que el
   círculo chico ya resuelve sin tocarlo.
 - **Decisión y consecuencia:** el círculo chico junto al nombre (V-001 de la misión 05) se dibuja solo
-  cuando `photoPaths` no está vacío (el carrusel de trabajos está activo) **y** existe `avatarPath`. Lleva
-  un anillo claro alrededor (contraste contra `--ui-bg`, luego el borde) porque el fondo detrás es la foto
-  de trabajo del carrusel, no un color plano — sin el anillo, un avatar claro sobre una foto clara se
-  pierde. En cualquier otro caso, el comportamiento de hoy no cambia.
+  cuando `photoPaths` no está vacío (el carrusel de trabajos está activo) **y** el profesional tiene foto
+  de perfil. Lleva un anillo claro alrededor (contraste contra `--ui-bg`, luego el borde) porque el fondo
+  detrás es la foto de trabajo del carrusel, no un color plano — sin el anillo, un avatar claro sobre una
+  foto clara se pierde. En cualquier otro caso, el comportamiento de hoy no cambia.
 - **Impacto en producto:** ninguno — es una precisión de dónde vive el elemento que F-002 ya describe, no
   un cambio de qué se muestra.
 

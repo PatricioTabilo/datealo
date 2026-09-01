@@ -143,10 +143,9 @@ respectivamente y ya están cubiertos en sus reglas.
   marque cuál de sus fotos de trabajo ya cargadas "es su cara" — descartada porque mezcla dos propósitos
   distintos en el mismo campo (mostrar el trabajo vs. mostrar a la persona) y complica que cambie una sin
   afectar la otra, además de que casi ninguna foto de trabajo real muestra efectivamente una cara.
-- **Decisión y consecuencia:** se agrega un campo `avatarPath` separado y opcional en `professionals` —ya
-  iniciado sin documentar en el worktree de la misión 06, ver el brief del README de esta misión—; misión
-  04 gana un paso opcional de subida, y misión 05 y 06 lo consumen para reemplazar el círculo de iniciales
-  cuando exista.
+- **Decisión y consecuencia:** se agrega un campo separado y opcional en `professionals` para la foto de
+  perfil, con nombre y forma exacta a definir en `ingenieria.md`; misión 04 gana un paso opcional de
+  subida, y misión 05 y 06 lo consumen para reemplazar el círculo de iniciales cuando exista.
 - **Reapertura:** si M-001 muestra que casi nadie sube la foto después de varias semanas, se reevalúa si el
   costo del campo se justifica frente a dejar solo iniciales.
 
