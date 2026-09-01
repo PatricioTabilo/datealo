@@ -49,8 +49,9 @@ alter table professionals enable row level security;
 -- Si algún día se revierte el revoke de abajo para servir esta tabla por PostgREST (ej. un perfil
 -- público futuro), esta policy tiene que ajustarse en el mismo cambio: hoy es `using (true)` porque
 -- nada la evalúa, pero expone `user_id` (el id de auth.users, que no debería quedar público), `email`
--- (dato interno, nunca parte de un perfil público) y las filas con `active = false`. Acotarla a
--- columnas públicas y a `using (active)` antes de reabrir el grant.
+-- (dato interno, nunca parte de un perfil público), `avatar_path` (path interno del bucket, no la URL
+-- pública) y las filas con `active = false`. Acotarla a columnas públicas y a `using (active)` antes
+-- de reabrir el grant.
 drop policy if exists professionals_select_public on professionals;
 create policy professionals_select_public on professionals
   for select to authenticated, anon using (true);
