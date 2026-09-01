@@ -60,7 +60,7 @@ tenía cargadas.
 **No incluye:** recortar o editar la foto dentro de Datealo; verificar que la imagen muestre efectivamente
 una cara humana.
 
-**Experiencia:** pendiente. **Ingeniería:** pendiente.
+**Experiencia:** vigente ([experiencia.md](./experiencia.md)). **Ingeniería:** en revisión ([ingenieria.md](./ingenieria.md)).
 
 <a id="f-002"></a>
 
@@ -92,7 +92,7 @@ círculo — igual que hoy.
 **No incluye:** ordenar o priorizar a quienes tienen foto de perfil por sobre quienes no —esta misión no
 toca el orden de resultados, que es una decisión ya cerrada en `producto.md` de la misión 06 (D-001).
 
-**Experiencia:** pendiente. **Ingeniería:** pendiente.
+**Experiencia:** vigente ([experiencia.md](./experiencia.md)). **Ingeniería:** en revisión ([ingenieria.md](./ingenieria.md)).
 
 ## Casos límite que cruzan funcionalidades
 

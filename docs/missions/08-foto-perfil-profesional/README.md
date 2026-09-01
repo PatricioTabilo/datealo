@@ -4,7 +4,7 @@
 
 **Estado de la misión:** definición
 
-**Última actualización:** 2026-08-31
+**Última actualización:** 2026-09-01
 
 No es una de las seis misiones originales hacia el MVP (esas son la 02 a la 07, ver el registro de
 misiones) — nace después, al descubrir que [misión 05](../05-perfil-publico-profesional/) y
@@ -16,7 +16,7 @@ consume en la 05 (perfil público) y la 06 (búsqueda y resultados).
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** Patricio revisa y aprueba `experiencia.md` — sin fecha límite todavía.
+**Próximo hito:** Patricio revisa y aprueba `ingenieria.md` — sin fecha límite todavía.
 
 `investigacion.md` sostiene dos conclusiones: una foto de trabajo no sirve como avatar de confianza
 (C-001), y mostrar siempre iniciales sin excepción deja la lista de resultados sin señal diferenciadora
@@ -26,11 +26,26 @@ consume en la 05 (perfil público) y la 06 (búsqueda y resultados).
 (el buscador la ve en vez de iniciales) quedan confirmadas; D-001 aceptada — la foto de perfil es un campo
 nuevo y opcional, nunca inferido de las fotos de trabajo.
 
-`experiencia.md` en revisión — no crea ninguna vista nueva, modifica una pieza de tres pantallas que ya
-construyeron las misiones 04 (dónde se sube la foto), 05 y 06 (dónde se ve en vez de las iniciales).
-Pasó por evaluación heurística en contexto separado: un hallazgo bloqueante (un ejemplo con los nombres
-invertidos respecto al de `producto.md`) y cinco de ejecución, todos corregidos. Mockup validado en
-`design-mockups/foto-perfil.html` (5 frames, móvil y un desktop del perfil público).
+`experiencia.md` **vigente — aprobado por Patricio el 2026-09-01**. No crea ninguna vista nueva, modifica
+una pieza de tres pantallas que ya construyeron las misiones 04 (dónde se sube la foto), 05 y 06 (dónde se
+ve en vez de las iniciales). Pasó por evaluación heurística en contexto separado (un hallazgo bloqueante y
+cinco de ejecución, todos corregidos) y por una verificación contra el código real: los dos únicos lugares
+del repo que hoy renderizan iniciales (`ProfessionalPublicPhotos.vue` en el perfil público,
+`SearchResultCard.vue` en resultados) coinciden exactamente con las vistas que `experiencia.md` cubre.
+Mockup validado en `design-mockups/foto-perfil.html` (5 frames, móvil y un desktop del perfil público).
+
+`ingenieria.md` en revisión. La foto de perfil es una columna nueva (`professionals.avatarPath`) que
+reutiliza el bucket `professional-photos` ya existente — mismo patrón de path, cero policies de Storage
+nuevas (verificado contra `rls.sql`). Dos endpoints nuevos (`POST`/`DELETE /api/professionals/me/avatar`)
+calcados de los que ya suben/borran fotos de trabajo (misión 04), y dos extensiones de lectura (perfil
+público, resultados de búsqueda). Plan de construcción cortado en 7 slices. Pasó por auditoría en contexto
+separado, con `clean-architecture`, `domain-driven-design` y `supabase-postgres-best-practices` invocados
+de verdad: encontró un hallazgo bloqueante real (el círculo chico junto al nombre se le había asignado a
+`ProfessionalPublicPhotos.vue`, que no tiene acceso al nombre en su template — el bloque vive en
+`[id].vue`) y varios no bloqueantes (un hueco de contrato en el `DELETE` sin perfil, una condición de
+carrera entre subidas simultáneas, la tabla de vocabulario faltante), todos corregidos. Los dos intentos
+explícitos de tumbar las decisiones técnicas centrales (reusar el bucket, reemplazar sin `upsert`) no
+encontraron una alternativa mejor — ambas se confirman.
 
 ## Brief
 

@@ -1,8 +1,8 @@
 # Misión: foto de perfil de profesional — Experiencia
 
-**Estado:** en revisión
+**Estado:** vigente — aprobado por Patricio el 2026-09-01
 
-**Última actualización:** 2026-08-31
+**Última actualización:** 2026-09-01
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -141,8 +141,8 @@ la foto real si ya subió una — nunca un estado intermedio ambiguo entre los d
 
 | Funcionalidad | Flujo   | Estados cubiertos                                                        | Estado    |
 | ------------- | ------- | -------------------------------------------------------------------------- | --------- |
-| F-001         | UXF-001 | sin foto, subiendo, con foto, error                                        | en revisión |
-| F-002         | —       | con foto (con y sin fotos de trabajo, en perfil y resultados), sin foto    | en revisión |
+| F-001         | UXF-001 | sin foto, subiendo, con foto, error                                        | vigente |
+| F-002         | —       | con foto (con y sin fotos de trabajo, en perfil y resultados), sin foto    | vigente |
 
 ## Decisiones de experiencia
 
