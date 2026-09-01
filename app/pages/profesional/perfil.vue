@@ -72,7 +72,9 @@ function commitPrice() {
       <h1 class="text-xl font-extrabold text-datealo-text">{{ professional.displayName }}</h1>
       <p class="mt-0.5 text-sm text-datealo-muted">{{ categoriaNombre }} · {{ comunaNombre }}</p>
 
-      <ProfessionalPhotos class="mt-5" />
+      <ProfessionalAvatar class="mt-5" />
+
+      <ProfessionalPhotos class="mt-3" />
 
       <div class="mt-3 rounded-2xl border border-datealo-surface p-4">
         <div class="flex items-center justify-between">
