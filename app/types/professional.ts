@@ -9,6 +9,7 @@ export type Professional = {
   description: string | null
   priceFrom: number | null
   photoUrls: string[]
+  avatarUrl: string | null
   active: boolean
 }
 
