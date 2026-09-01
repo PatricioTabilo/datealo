@@ -31,6 +31,7 @@ export type Professional = {
   description: string | null
   priceFrom: number | null
   photoUrls: string[]
+  avatarUrl: string | null
   active: boolean
 }
 
@@ -57,6 +58,7 @@ type ProfessionalRow = {
   description: string | null
   priceFrom: number | null
   photoPaths: string[]
+  avatarPath: string | null
   active: boolean
 }
 
@@ -71,6 +73,7 @@ const publicColumns = {
   description: professionals.description,
   priceFrom: professionals.priceFrom,
   photoPaths: professionals.photoPaths,
+  avatarPath: professionals.avatarPath,
   active: professionals.active,
 }
 
@@ -103,6 +106,13 @@ function buildPhotoUrls(photoPaths: string[]): string[] {
   return photoPaths.map(path => `${pub.supabaseUrl}/storage/v1/object/public/professional-photos/${path}`)
 }
 
+// Mismo patrón que buildPhotoUrls, para el único path de la foto de perfil en vez de un array.
+function buildAvatarUrl(avatarPath: string | null): string | null {
+  if (!avatarPath) return null
+  const { public: pub } = useRuntimeConfig()
+  return `${pub.supabaseUrl}/storage/v1/object/public/professional-photos/${avatarPath}`
+}
+
 function toPublicProfessional(row: ProfessionalRow): Professional {
   return {
     id: row.id,
@@ -113,6 +123,7 @@ function toPublicProfessional(row: ProfessionalRow): Professional {
     description: row.description,
     priceFrom: row.priceFrom,
     photoUrls: buildPhotoUrls(row.photoPaths),
+    avatarUrl: buildAvatarUrl(row.avatarPath),
     active: row.active,
   }
 }
@@ -231,6 +242,31 @@ export async function removeProfessionalPhoto(userId: string, path: string): Pro
   const [updated] = await useDb()
     .update(professionals)
     .set({ photoPaths: sql`array_remove(${professionals.photoPaths}, ${path})`, updatedAt: new Date() })
+    .where(eq(professionals.userId, userId))
+    .returning(publicColumns)
+  return updated ? toPublicProfessional(updated) : null
+}
+
+// Path crudo, no la URL pública — lo usan avatar.post.ts y avatar.delete.ts para borrar el archivo
+// viejo de Storage. El cliente solo ve avatarUrl, calculado por buildAvatarUrl.
+export async function findProfessionalAvatarPath(userId: string): Promise<string | null> {
+  const [row] = await useDb().select({ avatarPath: professionals.avatarPath }).from(professionals).where(eq(professionals.userId, userId))
+  return row?.avatarPath ?? null
+}
+
+export async function setProfessionalAvatar(userId: string, path: string): Promise<Professional | null> {
+  const [updated] = await useDb()
+    .update(professionals)
+    .set({ avatarPath: path, updatedAt: new Date() })
+    .where(eq(professionals.userId, userId))
+    .returning(publicColumns)
+  return updated ? toPublicProfessional(updated) : null
+}
+
+export async function clearProfessionalAvatar(userId: string): Promise<Professional | null> {
+  const [updated] = await useDb()
+    .update(professionals)
+    .set({ avatarPath: null, updatedAt: new Date() })
     .where(eq(professionals.userId, userId))
     .returning(publicColumns)
   return updated ? toPublicProfessional(updated) : null
