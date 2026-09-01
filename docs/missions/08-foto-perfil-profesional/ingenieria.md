@@ -1,6 +1,6 @@
 # Misión: foto de perfil de profesional — Ingeniería
 
-**Estado:** en revisión
+**Estado:** vigente — aprobado por Patricio el 2026-09-01
 
 **Última actualización:** 2026-09-01
 

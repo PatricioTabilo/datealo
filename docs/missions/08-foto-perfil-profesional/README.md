@@ -2,7 +2,7 @@
 
 **Tipo:** producto. **Abierta el** 2026-08-29. **Nace de:** ninguna.
 
-**Estado de la misión:** definición
+**Estado de la misión:** lista para construir
 
 **Última actualización:** 2026-09-01
 
@@ -16,7 +16,7 @@ consume en la 05 (perfil público) y la 06 (búsqueda y resultados).
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** Patricio revisa y aprueba `ingenieria.md` — sin fecha límite todavía.
+**Próximo hito:** crear los issues del Plan de construcción (S-001 a S-007) y empezar a construir.
 
 `investigacion.md` sostiene dos conclusiones: una foto de trabajo no sirve como avatar de confianza
 (C-001), y mostrar siempre iniciales sin excepción deja la lista de resultados sin señal diferenciadora
@@ -34,7 +34,7 @@ del repo que hoy renderizan iniciales (`ProfessionalPublicPhotos.vue` en el perf
 `SearchResultCard.vue` en resultados) coinciden exactamente con las vistas que `experiencia.md` cubre.
 Mockup validado en `design-mockups/foto-perfil.html` (5 frames, móvil y un desktop del perfil público).
 
-`ingenieria.md` en revisión. La foto de perfil es una columna nueva (`professionals.avatarPath`) que
+`ingenieria.md` **vigente — aprobado por Patricio el 2026-09-01**. La foto de perfil es una columna nueva (`professionals.avatarPath`) que
 reutiliza el bucket `professional-photos` ya existente — mismo patrón de path, cero policies de Storage
 nuevas (verificado contra `rls.sql`). Dos endpoints nuevos (`POST`/`DELETE /api/professionals/me/avatar`)
 calcados de los que ya suben/borran fotos de trabajo (misión 04), y dos extensiones de lectura (perfil
