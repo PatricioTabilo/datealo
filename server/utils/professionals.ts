@@ -46,6 +46,7 @@ export type PublicProfessionalProfile = {
   description: string | null
   priceFrom: number | null
   photoUrls: string[]
+  avatarUrl: string | null
   createdAt: string
 }
 
@@ -148,6 +149,7 @@ export async function findPublicProfessionalProfile(id: string): Promise<PublicP
       description: professionals.description,
       priceFrom: professionals.priceFrom,
       photoPaths: professionals.photoPaths,
+      avatarPath: professionals.avatarPath,
       createdAt: professionals.createdAt,
     })
     .from(professionals)
@@ -166,6 +168,7 @@ export async function findPublicProfessionalProfile(id: string): Promise<PublicP
     description: row.description,
     priceFrom: row.priceFrom,
     photoUrls: buildPhotoUrls(row.photoPaths),
+    avatarUrl: buildAvatarUrl(row.avatarPath),
     createdAt: row.createdAt.toISOString(),
   }
 }
