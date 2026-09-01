@@ -14,7 +14,7 @@ abrieron y de dónde salió cada una.
 | 03  | [taxonomía: categorías y comunas](./03-taxonomia-categorias-y-comunas/) | producto | 2026-08-13 | cerrada 2026-08-20 | — | — |
 | 04  | [registro y perfil de profesional](./04-registro-perfil-profesional/) | producto | 2026-08-13 | cerrada 2026-08-28 | — | — |
 | 05  | [perfil público de profesional](./05-perfil-publico-profesional/) | producto | 2026-08-13 | cerrada 2026-08-29 | — | — |
-| 06  | [búsqueda y resultados](./06-busqueda-resultados/) | producto | 2026-08-13 | exploración | — | — |
+| 06  | [búsqueda y resultados](./06-busqueda-resultados/) | producto | 2026-08-13 | cerrada 2026-08-31 | — | — |
 | 07  | [reseñas verificadas por contacto](./07-resenas-verificadas-por-contacto/) | producto | 2026-08-13 | cerrada 2026-08-31 | — | — |
 | 08  | [foto de perfil de profesional](./08-foto-perfil-profesional/) | producto | 2026-08-29 | lista para construir | — | — |
 

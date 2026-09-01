@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>V-001 Resultados de búsqueda — misión 06</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+    <style>
+      .search-bar {
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.875rem 1.25rem;
+        background: var(--ui-bg);
+        border-bottom: 1px solid var(--ui-border);
+        /* sticky durante el scroll de la lista — ver "Decisiones que no deben quedar implícitas" de
+           UXF-001 en experiencia.md: por esto la card no repite la categoría, ya está siempre a la vista */
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .select-field {
+        flex: 1;
+        min-width: 0;
+        border: 1.5px solid var(--ui-border-accented);
+        border-radius: var(--ui-radius, 0.5rem);
+        padding: 0.625rem 0.75rem;
+        font-size: 0.8125rem;
+        color: var(--ui-text-highlighted);
+      }
+      .select-field.is-focused {
+        border-color: var(--ui-primary);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--ui-primary) 15%, transparent);
+      }
+      .select-field .field-label {
+        display: block;
+        font-size: 0.625rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--ui-text-muted);
+        margin-bottom: 0.125rem;
+      }
+      .select-field.is-empty .field-value {
+        color: var(--ui-text-dimmed);
+      }
+      .result-count {
+        font-size: 0.75rem;
+        color: var(--ui-text-muted);
+        padding: 0 0.125rem;
+      }
+      .result-card {
+        display: flex;
+        gap: 0.75rem;
+        padding: 0.875rem;
+        background: var(--ui-bg);
+        border: 1px solid var(--ui-border);
+        border-radius: 0.875rem;
+        min-width: 0;
+      }
+      .avatar-initials {
+        flex-shrink: 0;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 999px;
+        background: var(--ui-primary);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.9375rem;
+      }
+      .comuna-line {
+        color: var(--ui-text-muted);
+      }
+      /* modo comunas vecinas: mismo tamaño, más peso — el guardrail de M-002 (producto.md) exige que el
+         fallback nunca se vea igual de "normal" que un resultado de la comuna exacta */
+      .comuna-line.is-vecina {
+        color: var(--ui-text-highlighted);
+        font-weight: 700;
+      }
+      .since-pill {
+        display: inline-block;
+        color: var(--ui-text-muted);
+      }
+      .section-label {
+        font-family: var(--font-heading);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--ui-text-muted);
+        padding: 0 0.125rem;
+      }
+      .empty-banner {
+        background: var(--ui-bg-muted);
+        border-radius: 0.75rem;
+        padding: 0.875rem 1rem;
+        font-size: 0.8125rem;
+        color: var(--ui-text-toned);
+      }
+      .skeleton-card {
+        display: flex;
+        gap: 0.75rem;
+        padding: 0.875rem;
+        border: 1px solid var(--ui-border);
+        border-radius: 0.875rem;
+      }
+      .skeleton-block {
+        background: var(--ui-bg-accented);
+        border-radius: 0.375rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .skeleton-block::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          100deg,
+          transparent 30%,
+          var(--ui-bg-muted) 50%,
+          transparent 70%
+        );
+        animation: shimmer 1.4s infinite;
+      }
+      @keyframes shimmer {
+        from {
+          transform: translateX(-100%);
+        }
+        to {
+          transform: translateX(100%);
+        }
+      }
+      .btn-primary {
+        background: var(--ui-primary);
+        color: #fff;
+        font-weight: 700;
+        border-radius: var(--ui-radius, 0.5rem);
+      }
+      .icon-muted {
+        color: var(--ui-text-dimmed);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+      <!-- 1. eligiendo -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo eligiendo
+          <small>llega directo a "Buscar", sin categoría pre-elegida — los dos campos vacíos</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="search-bar">
+            <div class="select-field is-empty">
+              <span class="field-label">Categoría</span>
+              <span class="field-value">Elige una categoría</span>
+            </div>
+            <div class="select-field is-empty">
+              <span class="field-label">Comuna</span>
+              <span class="field-value">Elige tu comuna</span>
+            </div>
+          </div>
+          <div class="flex h-full flex-col items-center justify-center p-8 text-center" style="height: calc(100% - 76px)">
+            <svg class="icon-muted" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <h1 class="mt-4 text-base font-extrabold" style="color: var(--ui-text-highlighted)">
+              Elige una categoría y tu comuna
+            </h1>
+            <p class="mt-2 text-sm" style="color: var(--ui-text-muted)">
+              para ver profesionales disponibles
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. cargando -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo cargando
+          <small>categoría y comuna ya elegidas — esperando la respuesta del servidor; 4 skeletons, no 3</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="search-bar">
+            <div class="select-field">
+              <span class="field-label">Categoría</span>
+              <span class="field-value">Gasfitería</span>
+            </div>
+            <div class="select-field">
+              <span class="field-label">Comuna</span>
+              <span class="field-value">Puente Alto</span>
+            </div>
+          </div>
+          <div class="flex flex-col gap-3 p-4">
+            <div class="skeleton-card">
+              <div class="skeleton-block" style="width: 3rem; height: 3rem; border-radius: 999px; flex-shrink: 0"></div>
+              <div class="flex-1">
+                <div class="skeleton-block h-4 w-32"></div>
+                <div class="skeleton-block mt-2 h-3 w-20"></div>
+                <div class="skeleton-block mt-2 h-3 w-24"></div>
+              </div>
+            </div>
+            <div class="skeleton-card">
+              <div class="skeleton-block" style="width: 3rem; height: 3rem; border-radius: 999px; flex-shrink: 0"></div>
+              <div class="flex-1">
+                <div class="skeleton-block h-4 w-32"></div>
+                <div class="skeleton-block mt-2 h-3 w-20"></div>
+                <div class="skeleton-block mt-2 h-3 w-24"></div>
+              </div>
+            </div>
+            <div class="skeleton-card">
+              <div class="skeleton-block" style="width: 3rem; height: 3rem; border-radius: 999px; flex-shrink: 0"></div>
+              <div class="flex-1">
+                <div class="skeleton-block h-4 w-32"></div>
+                <div class="skeleton-block mt-2 h-3 w-20"></div>
+                <div class="skeleton-block mt-2 h-3 w-24"></div>
+              </div>
+            </div>
+            <div class="skeleton-card">
+              <div class="skeleton-block" style="width: 3rem; height: 3rem; border-radius: 999px; flex-shrink: 0"></div>
+              <div class="flex-1">
+                <div class="skeleton-block h-4 w-32"></div>
+                <div class="skeleton-block mt-2 h-3 w-20"></div>
+                <div class="skeleton-block mt-2 h-3 w-24"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. con resultados -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo con resultados
+          <small>orden por completitud + antigüedad (D-001): Marcelo y Jorge (perfil completo) antes que Héctor (sin precio) — nunca al revés</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="search-bar">
+            <div class="select-field">
+              <span class="field-label">Categoría</span>
+              <span class="field-value">Electricidad</span>
+            </div>
+            <div class="select-field">
+              <span class="field-label">Comuna</span>
+              <span class="field-value">Ñuñoa</span>
+            </div>
+          </div>
+          <div class="flex flex-col gap-3 p-4">
+            <p class="result-count">3 resultados</p>
+            <div class="result-card">
+              <div class="avatar-initials">MR</div>
+              <div class="flex-1 min-w-0">
+                <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Marcelo Rojas</p>
+                <p class="comuna-line truncate text-xs">Ñuñoa</p>
+                <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $15.000</p>
+                <p class="since-pill mt-0.5 text-[0.6875rem]">En Datealo desde julio de 2026</p>
+              </div>
+            </div>
+            <div class="result-card">
+              <div class="avatar-initials">JP</div>
+              <div class="flex-1 min-w-0">
+                <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Jorge Pizarro</p>
+                <p class="comuna-line truncate text-xs">Ñuñoa</p>
+                <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $12.000</p>
+                <p class="since-pill mt-0.5 text-[0.6875rem]">En Datealo desde agosto de 2026</p>
+              </div>
+            </div>
+            <div class="result-card">
+              <div class="avatar-initials">HS</div>
+              <div class="flex-1 min-w-0">
+                <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Héctor Silva</p>
+                <p class="comuna-line truncate text-xs">Ñuñoa</p>
+                <p class="since-pill mt-1 text-[0.6875rem]">En Datealo desde agosto de 2026</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. un solo resultado -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo con resultados — un solo profesional (CL-003)
+          <small>"1 resultado" da contexto real al espacio — nunca un elemento fabricado tipo "más opciones cerca"</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="search-bar">
+            <div class="select-field">
+              <span class="field-label">Categoría</span>
+              <span class="field-value">Jardinería</span>
+            </div>
+            <div class="select-field">
+              <span class="field-label">Comuna</span>
+              <span class="field-value">Providencia</span>
+            </div>
+          </div>
+          <div class="flex flex-col gap-3 p-4">
+            <p class="result-count">1 resultado</p>
+            <div class="result-card">
+              <div class="avatar-initials">CV</div>
+              <div class="flex-1 min-w-0">
+                <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Carlos Vera</p>
+                <p class="comuna-line truncate text-xs">Providencia</p>
+                <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $20.000</p>
+                <p class="since-pill mt-0.5 text-[0.6875rem]">En Datealo desde agosto de 2026</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. comunas vecinas -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo comunas vecinas
+          <small>Puente Alto no tiene gasfiteres activos — La Florida y San Bernardo comparten límite real (D-002 de producto.md); comuna en negrita, nunca con el mismo peso que un resultado de la comuna exacta (M-002)</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="search-bar">
+            <div class="select-field">
+              <span class="field-label">Categoría</span>
+              <span class="field-value">Gasfitería</span>
+            </div>
+            <div class="select-field">
+              <span class="field-label">Comuna</span>
+              <span class="field-value">Puente Alto</span>
+            </div>
+          </div>
+          <div class="flex flex-col gap-3 p-4">
+            <div class="empty-banner">
+              Todavía no hay profesionales de Gasfitería en Puente Alto.
+            </div>
+            <p class="section-label">Cerca de Puente Alto</p>
+            <div class="result-card">
+              <div class="avatar-initials">RM</div>
+              <div class="flex-1 min-w-0">
+                <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Raúl Muñoz</p>
+                <p class="comuna-line is-vecina truncate text-xs">La Florida</p>
+                <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $10.000</p>
+                <p class="since-pill mt-0.5 text-[0.6875rem]">En Datealo desde agosto de 2026</p>
+              </div>
+            </div>
+            <div class="result-card">
+              <div class="avatar-initials">PA</div>
+              <div class="flex-1 min-w-0">
+                <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Patricia Aros</p>
+                <p class="comuna-line is-vecina truncate text-xs">San Bernardo</p>
+                <p class="since-pill mt-1 text-[0.6875rem]">En Datealo desde agosto de 2026</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. sin resultados — CL-001, la comuna y sus vecinas no tienen nada -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo sin resultados — comuna sin oferta (CL-001)
+          <small>ni Puente Alto ni sus comunas vecinas tienen jardineros activos, pero Jardinería sí existe en otras comunas — el texto enmarca el problema como geográfico, porque lo es</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="search-bar">
+            <div class="select-field">
+              <span class="field-label">Categoría</span>
+              <span class="field-value">Jardinería</span>
+            </div>
+            <div class="select-field">
+              <span class="field-label">Comuna</span>
+              <span class="field-value">Puente Alto</span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center p-8 text-center" style="height: calc(100% - 76px)">
+            <svg class="icon-muted" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <h1 class="mt-4 text-base font-extrabold" style="color: var(--ui-text-highlighted)">
+              Todavía no hay profesionales de Jardinería cerca de Puente Alto
+            </h1>
+            <p class="mt-2 text-sm" style="color: var(--ui-text-muted)">
+              Prueba con otra comuna.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. sin resultados — CL-002, la categoría no existe en ninguna comuna activa -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo sin resultados — categoría sin oferta en todo el país (CL-002)
+          <small>Jardinería no tiene ningún profesional en ninguna comuna activa — el texto nunca dice "cerca de", porque cambiar de comuna acá no ayudaría (distinto de CL-001)</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="search-bar">
+            <div class="select-field">
+              <span class="field-label">Categoría</span>
+              <span class="field-value">Jardinería</span>
+            </div>
+            <div class="select-field">
+              <span class="field-label">Comuna</span>
+              <span class="field-value">Vitacura</span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center p-8 text-center" style="height: calc(100% - 76px)">
+            <svg class="icon-muted" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <h1 class="mt-4 text-base font-extrabold" style="color: var(--ui-text-highlighted)">
+              Todavía no hay profesionales de Jardinería en Datealo
+            </h1>
+            <p class="mt-2 text-sm" style="color: var(--ui-text-muted)">
+              Prueba con otra categoría.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. tardando -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo tardando (&gt;10s)
+          <small>la búsqueda superó los 10s — deja de mostrarse como skeleton y pasa a un mensaje explícito, mismo patrón que el perfil (misión 05)</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="search-bar">
+            <div class="select-field">
+              <span class="field-label">Categoría</span>
+              <span class="field-value">Gasfitería</span>
+            </div>
+            <div class="select-field">
+              <span class="field-label">Comuna</span>
+              <span class="field-value">Puente Alto</span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center p-8 text-center" style="height: calc(100% - 76px)">
+            <svg class="icon-muted" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14.5"/></svg>
+            <h1 class="mt-4 text-base font-extrabold" style="color: var(--ui-text-highlighted)">
+              Esto está tardando más de lo normal
+            </h1>
+            <button class="btn-primary mt-6 px-6 py-3 text-[0.9375rem]">Reintentar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. con resultados — desktop -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">
+          V-001 · modo con resultados — desktop
+          <small>selectores en la misma barra horizontal; cards en grilla de 3 columnas. Los demás modos
+            (eligiendo, comunas vecinas, sin resultados) reusan el mismo layout centrado de móvil, solo más
+            ancho — no llevan frame propio (ver "Decisiones que no deben quedar implícitas" en experiencia.md)</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="flex h-full flex-col">
+            <div class="search-bar" style="max-width: 480px">
+              <div class="select-field">
+                <span class="field-label">Categoría</span>
+                <span class="field-value">Electricidad</span>
+              </div>
+              <div class="select-field">
+                <span class="field-label">Comuna</span>
+                <span class="field-value">Ñuñoa</span>
+              </div>
+            </div>
+            <p class="result-count px-8 pt-4">3 resultados</p>
+            <div class="grid flex-1 grid-cols-3 gap-4 p-8 pt-3" style="align-content: start">
+              <div class="result-card">
+                <div class="avatar-initials">MR</div>
+                <div class="flex-1 min-w-0">
+                  <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Marcelo Rojas</p>
+                  <p class="comuna-line truncate text-xs">Ñuñoa</p>
+                  <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $15.000</p>
+                  <p class="since-pill mt-0.5 text-[0.6875rem]">En Datealo desde julio de 2026</p>
+                </div>
+              </div>
+              <div class="result-card">
+                <div class="avatar-initials">JP</div>
+                <div class="flex-1 min-w-0">
+                  <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Jorge Pizarro</p>
+                  <p class="comuna-line truncate text-xs">Ñuñoa</p>
+                  <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $12.000</p>
+                  <p class="since-pill mt-0.5 text-[0.6875rem]">En Datealo desde agosto de 2026</p>
+                </div>
+              </div>
+              <div class="result-card">
+                <div class="avatar-initials">HS</div>
+                <div class="flex-1 min-w-0">
+                  <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Héctor Silva</p>
+                  <p class="comuna-line truncate text-xs">Ñuñoa</p>
+                  <p class="since-pill mt-1 text-[0.6875rem]">En Datealo desde agosto de 2026</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
