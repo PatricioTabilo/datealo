@@ -1,0 +1,50 @@
+# Misión 08 — Foto de perfil de profesional
+
+**Tipo:** producto. **Abierta el** 2026-08-29. **Nace de:** ninguna.
+
+**Estado de la misión:** definición
+
+**Última actualización:** 2026-08-31
+
+No es una de las seis misiones originales hacia el MVP (esas son la 02 a la 07, ver el registro de
+misiones) — nace después, al descubrir que [misión 05](../05-perfil-publico-profesional/) y
+[misión 06](../06-busqueda-resultados/) usan hoy el mismo círculo de iniciales para todo profesional,
+tenga o no fotos de trabajo cargadas. Depende de [misión 04](../04-registro-perfil-profesional/) (donde el
+profesional carga sus fotos hoy y donde tendría que subir esta si se decide agregarla), y su resultado se
+consume en la 05 (perfil público) y la 06 (búsqueda y resultados).
+
+**Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
+[Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
+
+**Próximo hito:** Patricio revisa y aprueba `experiencia.md` — sin fecha límite todavía.
+
+`investigacion.md` sostiene dos conclusiones: una foto de trabajo no sirve como avatar de confianza
+(C-001), y mostrar siempre iniciales sin excepción deja la lista de resultados sin señal diferenciadora
+(C-002).
+
+`producto.md` vigente — aprobado por Patricio el 2026-08-31. F-001 (el profesional sube su foto) y F-002
+(el buscador la ve en vez de iniciales) quedan confirmadas; D-001 aceptada — la foto de perfil es un campo
+nuevo y opcional, nunca inferido de las fotos de trabajo.
+
+`experiencia.md` en revisión — no crea ninguna vista nueva, modifica una pieza de tres pantallas que ya
+construyeron las misiones 04 (dónde se sube la foto), 05 y 06 (dónde se ve en vez de las iniciales).
+Pasó por evaluación heurística en contexto separado: un hallazgo bloqueante (un ejemplo con los nombres
+invertidos respecto al de `producto.md`) y cinco de ejecución, todos corregidos. Mockup validado en
+`design-mockups/foto-perfil.html` (5 frames, móvil y un desktop del perfil público).
+
+## Brief
+
+Hoy un profesional sube fotos de trabajos terminados (misión 04) — un tablero eléctrico, una cañería
+reparada — y ninguna de esas fotos es necesariamente una foto de su cara. El perfil público (misión 05) y
+los resultados de búsqueda (misión 06) resuelven esto mostrando siempre un círculo con las iniciales del
+profesional, nunca una de sus fotos de trabajo, incluso cuando cargó varias. Es una decisión de diseño ya
+tomada en ambos mockups, pero nunca declarada como decisión de producto — no hay ningún `D-xxx` en la 05 ni
+en la 06 que la sostenga.
+
+Esta misión existe porque esa decisión ya empezó a moverse en código sin pasar por acá: en el worktree de
+la misión 06 apareció, sin commitear y sin documentar, una columna `avatarPath` en `professionals`, con un
+comentario que dice explícitamente que nunca se completa con la primera foto de trabajo. Alguien ya
+evaluó y descartó la alternativa obvia (usar la primera foto de `photoPaths` como avatar automático) en una
+conversación que no quedó registrada. El trabajo de esta misión es reconstruir esa evidencia, decidir con
+Patricio si de verdad conviene un campo separado, y si la respuesta es sí, dejar `producto.md` y
+`experiencia.md` al día antes de que el código siga adelante del discovery.
