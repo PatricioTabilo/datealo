@@ -2,6 +2,7 @@
 defineProps<{
   photoUrls: string[]
   displayName: string
+  avatarUrl: string | null
 }>()
 
 // La tira de miniaturas es solo un atajo de navegación sobre el mismo carrusel — activeIndex refleja
@@ -50,7 +51,8 @@ function selectPhoto(index: number) {
   </div>
 
   <div v-else class="flex aspect-4/3 w-full items-center justify-center bg-datealo-surface lg:rounded-2xl">
-    <div class="flex h-22 w-22 items-center justify-center rounded-full bg-primary text-2xl font-extrabold text-white">
+    <img v-if="avatarUrl" :src="avatarUrl" :alt="displayName" class="h-22 w-22 rounded-full object-cover">
+    <div v-else class="flex h-22 w-22 items-center justify-center rounded-full bg-primary text-2xl font-extrabold text-white">
       {{ initials(displayName) }}
     </div>
   </div>
