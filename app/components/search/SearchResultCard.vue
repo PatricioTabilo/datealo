@@ -14,7 +14,14 @@ const memberSince = computed(() => formatMemberSince(props.professional.createdA
     :to="`/profesionales/${professional.id}`"
     class="flex gap-3 rounded-2xl border border-datealo-surface bg-white p-3.5"
   >
+    <img
+      v-if="professional.avatarUrl"
+      :src="professional.avatarUrl"
+      :alt="professional.displayName"
+      class="h-12 w-12 shrink-0 rounded-full object-cover"
+    >
     <div
+      v-else
       class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-[0.9375rem] font-extrabold text-white"
     >
       {{ initials(professional.displayName) }}

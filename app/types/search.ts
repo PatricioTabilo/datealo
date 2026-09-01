@@ -5,6 +5,7 @@ export type SearchResultProfessional = {
   displayName: string
   comunaNombre: string
   priceFrom: number | null
+  avatarUrl: string | null
   createdAt: string
 }
 
