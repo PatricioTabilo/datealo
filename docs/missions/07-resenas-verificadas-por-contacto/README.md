@@ -2,7 +2,7 @@
 
 **Tipo:** producto. **Abierta el** 2026-08-13. **Nace de:** ninguna.
 
-**Estado de la misión:** en construcción
+**Estado de la misión:** cerrada 2026-08-31
 
 **Última actualización:** 2026-08-31
 
@@ -17,22 +17,28 @@ verificación con un token de navegador, sin cuenta de ningún tipo) y de
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**En foco:** Construcción — los cuatro documentos de discovery están vigentes. `producto.md` con sus tres
-funcionalidades y tres decisiones ([D-001](./producto.md#d-001), [D-002](./producto.md#d-002),
-[D-003](./producto.md#d-003)); `experiencia.md` **vigente — aprobado el 2026-08-30**, tras evaluación
-heurística en un agente aislado; `ingenieria.md` **vigente — aprobado el 2026-08-31**, tras dos auditorías
-independientes (la primera tumbó un diseño del token que no verificaba nada contra un contacto real; la
-segunda encontró que el documento implicaba más protección de la que hay, corregido con TR-003). De paso,
-esta misión dejó un patrón universal nuevo en "Patrones de interacción que ya están decididos" del skill
-`discovery-ux`: todo toast de Datealo va en `bottom-right`, 5000ms, sin variar por dispositivo.
+Los cuatro documentos de discovery quedan vigentes. `producto.md` con sus tres funcionalidades y tres
+decisiones ([D-001](./producto.md#d-001), [D-002](./producto.md#d-002), [D-003](./producto.md#d-003));
+`experiencia.md` **vigente — aprobado el 2026-08-30**, tras evaluación heurística en un agente aislado;
+`ingenieria.md` **vigente — aprobado el 2026-08-31**, tras dos auditorías independientes (la primera tumbó
+un diseño del token que no verificaba nada contra un contacto real; la segunda encontró que el documento
+implicaba más protección de la que hay, corregido con TR-003). De paso, esta misión dejó un patrón
+universal nuevo en "Patrones de interacción que ya están decididos" del skill `discovery-ux`: todo toast de
+Datealo va en `bottom-right`, 5000ms, sin variar por dispositivo.
 
-El plan de construcción quedó cortado en 7 slices (walking skeleton del mecanismo de verificación primero,
-UI después, correo al final — ver "Plan de construcción" de `ingenieria.md`), con sus issues ya creados:
-[#107](https://github.com/PatricioTabilo/datealo/issues/107) a
-[#113](https://github.com/PatricioTabilo/datealo/issues/113).
-
-**Próximo hito:** construir S-001 ([#107](https://github.com/PatricioTabilo/datealo/issues/107)) — extender
-`POST /contacts` con el token opcional, la base de todo lo demás.
+**Construida** en 7 slices (walking skeleton del mecanismo de verificación primero, UI después, correo al
+final — ver "Plan de construcción" de `ingenieria.md`), issues [#107](https://github.com/PatricioTabilo/datealo/issues/107)
+a [#113](https://github.com/PatricioTabilo/datealo/issues/113):
+[#115](https://github.com/PatricioTabilo/datealo/pull/115) (token de reseña en el registro de contacto),
+[#116](https://github.com/PatricioTabilo/datealo/pull/116) (publicar o reemplazar una reseña verificada),
+[#117](https://github.com/PatricioTabilo/datealo/pull/117) (reseñas en `GET /api/professionals/[id]`),
+[#118](https://github.com/PatricioTabilo/datealo/pull/118) (generar y enviar el token al contactar),
+[#119](https://github.com/PatricioTabilo/datealo/pull/119) (sección de reseñas y formulario en el perfil
+público), [#120](https://github.com/PatricioTabilo/datealo/pull/120) (`professionals.email`),
+[#121](https://github.com/PatricioTabilo/datealo/pull/121) (fix: la opción de reseñar no aparecía sin
+recargar tras contactar en la misma visita) y [#122](https://github.com/PatricioTabilo/datealo/pull/122)
+(correo de aviso al profesional). Con esta misión cerrada, las seis del MVP quedan completas: registrarse,
+mostrarse, buscar y reseñar ya son alcanzables de punta a punta en producción.
 
 ## Brief
 
