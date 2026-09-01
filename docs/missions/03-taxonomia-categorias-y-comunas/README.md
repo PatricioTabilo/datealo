@@ -22,11 +22,14 @@ Issues cerrados: [#45](https://github.com/PatricioTabilo/datealo/issues/45) (S-0
 [#48](https://github.com/PatricioTabilo/datealo/issues/48) (S-004, `CatalogSelect`),
 [#49](https://github.com/PatricioTabilo/datealo/issues/49) (S-005, `CategoriaSelect`/`ComunaSelect`).
 También corregido en el camino: [#55](https://github.com/PatricioTabilo/datealo/issues/55) (Puente Alto y
-San Bernardo activados en el catálogo de comunas).
+San Bernardo activados en el catálogo de comunas); y el 2026-08-28, durante el discovery de misión 06,
+Frutillar, Puerto Montt y Llanquihue activadas junto a Puerto Varas (los profesionales de esa zona ya
+atienden cruzando esas comunas) — pendiente de su propio issue/PR, hecho directo en la base por pedido de
+Patricio.
 
 Plan de construcción completo — las 346 comunas y 8 categorías existen desde el día uno (D-002), Gran
-Santiago y Puerto Varas activos, y el componente de selección (`CategoriaSelect`, `ComunaSelect`) listo
-para que lo importen las misiones 04 y 06.
+Santiago y la zona del lago Llanquihue activas, y el componente de selección (`CategoriaSelect`,
+`ComunaSelect`) listo para que lo importen las misiones 04 y 06.
 
 ## Brief
 

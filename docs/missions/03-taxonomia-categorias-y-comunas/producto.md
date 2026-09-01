@@ -98,16 +98,19 @@ qué se ofrece en registro y búsqueda, sin tocar código
   ([E-006](./investigacion.md#e-006) de investigación) desde el día uno, cada una con un campo booleano
   `activa`. Solo las comunas `activa = true` aparecen como opción en el selector de registro y de búsqueda
   — una comuna inactiva no se ofrece, no se muestra como "sin resultados". Al lanzamiento parten activas
-  las comunas de Gran Santiago y Puerto Varas (los dos mercados donde Patricio puede reclutar y verificar
-  profesionales directamente); el resto existe en la tabla pero apagado. "Gran Santiago" acá son 34
-  comunas, no las 32 de la Provincia de Santiago a secas: esa provincia más Puente Alto y San Bernardo,
+  las comunas de Gran Santiago y la zona del lago Llanquihue (los mercados donde Patricio puede reclutar y
+  verificar profesionales directamente); el resto existe en la tabla pero apagado. "Gran Santiago" acá son
+  34 comunas, no las 32 de la Provincia de Santiago a secas: esa provincia más Puente Alto y San Bernardo,
   los dos conurbados que administrativamente caen en otra provincia (Cordillera y Maipo) pero son parte
   del área urbana continua — es la definición que usa el Área Metropolitana de Santiago para "Gran
   Santiago" (32 + Puente Alto + San Bernardo = 34). La primera versión de esta fila activó solo las 32,
   dejando Puente Alto y San Bernardo apagados por una lectura demasiado literal del nombre de la
-  provincia — corregido el 2026-08-19. Activar una comuna nueva es cambiar ese campo, sin deploy — hoy a
-  mano en la base de datos, más adelante quizás desde un panel de administración (fuera de alcance de esta
-  misión).
+  provincia — corregido el 2026-08-19. La zona del lago Llanquihue partió como Puerto Varas sola; el
+  2026-08-28 se sumaron Frutillar, Puerto Montt y Llanquihue, porque un profesional que vive en Puerto
+  Varas normalmente ya atiende esas comunas también, no solo la suya — activarlas solo a ella dejaba a
+  esos profesionales invisibles para quien buscara en la comuna donde de hecho trabajan. Activar una
+  comuna nueva es cambiar ese campo, sin deploy — hoy a mano en la base de datos, más adelante quizás
+  desde un panel de administración (fuera de alcance de esta misión).
 - **Reapertura:** ninguna — el catálogo ya está completo. Lo que se revisa con el tiempo es qué comunas
   están activas, y eso no necesita reabrir esta decisión (ver [M-002](#m-002)).
 
@@ -189,7 +192,7 @@ la misión 06 más adelante define texto libre y necesita un caso límite equiva
 
 <a id="m-002"></a>
 
-### M-002 — Gran Santiago y Puerto Varas tienen tracción antes de activar más comunas
+### M-002 — Gran Santiago y la zona del lago Llanquihue tienen tracción antes de activar más comunas
 
 - **Pregunta:** ¿ya vale la pena activar comunas nuevas fuera de las que se están trabajando hoy?
 - **Señal:** profesionales registrados y verificados en al menos la mitad de las comunas activas, con al
@@ -198,7 +201,8 @@ la misión 06 más adelante define texto libre y necesita un caso límite equiva
   04); sin fecha objetivo todavía. Activar una comuna nueva no requiere esperar esta señal — es solo la
   referencia para decidir cuándo conviene, dado que el campo `activa` no tiene costo de revertir.
 - **Guardrail:** activar comunas nuevas no debe diluir el esfuerzo de reclutamiento en las que ya están
-  activas — no se suma una comuna a costa de dejar de reclutar en Gran Santiago o Puerto Varas.
+  activas — no se suma una comuna a costa de dejar de reclutar en Gran Santiago o la zona del lago
+  Llanquihue.
 
 ## Preguntas
 
