@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Foto de perfil — misión 08</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+    <style>
+      .card {
+        border-radius: 1rem;
+        border: 1px solid var(--ui-border);
+        padding: 1rem;
+      }
+      .avatar-circle {
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        color: #fff;
+        background: var(--ui-primary);
+        flex-shrink: 0;
+      }
+      /* Distingue el avatar chico del fondo de la foto de trabajo detrás — sin el anillo, un avatar
+         claro sobre una foto clara se pierde. */
+      .avatar-ring {
+        box-shadow: 0 0 0 3px var(--ui-bg), 0 0 0 4px var(--ui-border);
+      }
+      /* 24px reales de contenido + padding negativo: el área de toque llega a ~40px sin agrandar el
+         texto visualmente — mismo criterio que el botón "X" de borrar foto de trabajo (24px). */
+      .text-link-tap {
+        display: inline-block;
+        padding: 0.5rem;
+        margin: -0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+      <!-- 1. Editar perfil — sin foto de perfil -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 de la misión 04 (Editar perfil) · sección "Foto de perfil" · sin foto
+          <small>arriba de "Fotos de tus trabajos" — mismo componente de subida, un solo círculo en vez de
+            una grilla (ver "Decisiones que no deben quedar implícitas" en experiencia.md sobre la
+            diferencia con tocar-para-reemplazar)</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-5">
+            <h1 class="text-xl font-extrabold" style="color: var(--ui-text-highlighted)">Marcelo Rojas</h1>
+            <p class="mt-0.5 text-sm" style="color: var(--ui-text-muted)">Electricidad · Ñuñoa</p>
+
+            <div class="card mt-5">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Foto de perfil</p>
+              <div class="mt-3 flex items-center gap-4">
+                <button
+                  type="button"
+                  class="avatar-circle"
+                  style="width: 4.5rem; height: 4.5rem; border: 2px dashed var(--ui-border); background: transparent; color: var(--ui-text-dimmed)"
+                >
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="13" r="4"/><path d="M5 8h2l1.5-2h7L17 8h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z"/></svg>
+                </button>
+                <p class="text-xs" style="color: var(--ui-text-muted)">
+                  Para que te reconozcan antes de escribirte. Opcional.
+                </p>
+              </div>
+            </div>
+
+            <div class="card mt-3">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Fotos de tus trabajos</p>
+              <div class="mt-3 grid grid-cols-3 gap-2">
+                <div class="aspect-square rounded-lg" style="background: var(--ui-bg-muted)"></div>
+                <div class="aspect-square rounded-lg" style="background: var(--ui-bg-muted)"></div>
+                <div
+                  class="aspect-square rounded-lg flex items-center justify-center"
+                  style="border: 2px dashed var(--ui-border); color: var(--ui-text-dimmed)"
+                >
+                  +
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Editar perfil — con foto de perfil -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 de la misión 04 (Editar perfil) · sección "Foto de perfil" · con foto
+          <small>tocar la foto la reemplaza directo (sin pasar por borrar primero); "Quitar foto" tiene
+            ~40px de área de toque real, aunque el texto se vea chico</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-5">
+            <h1 class="text-xl font-extrabold" style="color: var(--ui-text-highlighted)">Marcelo Rojas</h1>
+            <p class="mt-0.5 text-sm" style="color: var(--ui-text-muted)">Electricidad · Ñuñoa</p>
+
+            <div class="card mt-5">
+              <p class="text-sm font-semibold" style="color: var(--ui-text-highlighted)">Foto de perfil</p>
+              <div class="mt-3 flex items-center gap-4">
+                <button type="button" class="relative" style="width: 4.5rem; height: 4.5rem">
+                  <img
+                    src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop"
+                    alt=""
+                    class="h-full w-full rounded-full object-cover"
+                  />
+                </button>
+                <div>
+                  <p class="text-xs font-semibold" style="color: var(--ui-text-highlighted)">Toca la foto para cambiarla</p>
+                  <button type="button" class="text-link-tap mt-1 text-xs font-semibold underline" style="color: var(--ui-error)">
+                    Quitar foto
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Perfil público — con avatar junto al nombre -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 de la misión 05 (Perfil público) · con fotos de trabajo y foto de perfil
+          <small>el avatar chico (con anillo, ver .avatar-ring) solo aparece cuando el carrusel de
+            trabajos ocupa el espacio donde hoy van las iniciales — nunca duplicado con el círculo grande</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="aspect-4/3 w-full" style="background: var(--ui-bg-muted)"></div>
+          <div class="p-5">
+            <div class="flex items-center gap-3">
+              <img
+                src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop"
+                alt=""
+                class="avatar-ring"
+                style="width: 3rem; height: 3rem; border-radius: 999px; object-fit: cover"
+              />
+              <div>
+                <h1 class="text-lg font-extrabold" style="color: var(--ui-text-highlighted)">Marcelo Rojas</h1>
+                <p class="text-sm" style="color: var(--ui-text-muted)">Electricidad · Ñuñoa</p>
+              </div>
+            </div>
+            <p class="mt-3 text-sm" style="color: var(--ui-text-highlighted)">Electricista hace 8 años, atiendo Ñuñoa y Providencia</p>
+            <p class="mt-3 text-base font-bold" style="color: var(--ui-text-highlighted)">Desde $15.000</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3b. Perfil público — desktop -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">
+          V-001 de la misión 05 (Perfil público) · desktop · con fotos de trabajo y foto de perfil
+          <small>el sidebar de info es sticky (ya construido en la misión 05) — el avatar chico va en su
+            mismo lugar, junto al nombre</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="flex gap-8 p-8">
+            <div class="aspect-4/3 flex-1 rounded-2xl" style="background: var(--ui-bg-muted)"></div>
+            <div class="w-[380px] shrink-0 rounded-2xl p-6" style="border: 1px solid var(--ui-border)">
+              <div class="flex items-center gap-3">
+                <img
+                  src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop"
+                  alt=""
+                  class="avatar-ring"
+                  style="width: 3rem; height: 3rem; border-radius: 999px; object-fit: cover"
+                />
+                <div>
+                  <h1 class="text-lg font-extrabold" style="color: var(--ui-text-highlighted)">Marcelo Rojas</h1>
+                  <p class="text-sm" style="color: var(--ui-text-muted)">Electricidad · Ñuñoa</p>
+                </div>
+              </div>
+              <p class="mt-3 text-sm" style="color: var(--ui-text-highlighted)">Electricista hace 8 años, atiendo Ñuñoa y Providencia</p>
+              <p class="mt-3 text-base font-bold" style="color: var(--ui-text-highlighted)">Desde $15.000</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Resultados de búsqueda — foto real vs. iniciales -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 de la misión 06 (Resultados de búsqueda) · una card con foto de perfil, otra sin
+          <small>mismo lugar, mismo tamaño que el círculo de iniciales de hoy — nada más cambia en la
+            card. Marcelo tiene foto de perfil, Héctor no — mismo ejemplo que el de F-002 en producto.md</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="flex flex-col gap-3 p-4">
+            <p class="text-xs" style="color: var(--ui-text-muted)">2 resultados</p>
+            <div class="card flex gap-3">
+              <img
+                src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop"
+                alt=""
+                style="width: 3rem; height: 3rem; border-radius: 999px; object-fit: cover; flex-shrink: 0"
+              />
+              <div>
+                <p class="text-sm font-bold" style="color: var(--ui-text-highlighted)">Marcelo Rojas</p>
+                <p class="text-xs" style="color: var(--ui-text-muted)">Ñuñoa</p>
+                <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $15.000</p>
+              </div>
+            </div>
+            <div class="card flex gap-3">
+              <div class="avatar-circle" style="width: 3rem; height: 3rem; font-size: 0.9375rem">HS</div>
+              <div>
+                <p class="text-sm font-bold" style="color: var(--ui-text-highlighted)">Héctor Silva</p>
+                <p class="text-xs" style="color: var(--ui-text-muted)">Ñuñoa</p>
+                <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $12.000</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
