@@ -15,9 +15,11 @@
 // Activas al sembrar: las 8 categorías, más el Gran Santiago (34 comunas: las 32 de la Provincia de
 // Santiago más Puente Alto y San Bernardo, los dos conurbados que quedan fuera de esa provincia pero
 // son parte del área urbana continua — la definición administrativa "Provincia de Santiago" no
-// alcanza sola) y Puerto Varas — los mercados donde Patricio puede reclutar y verificar profesionales
-// directamente al lanzamiento. El resto de las comunas queda en la tabla pero inactivo, listo para
-// activarse cambiando el campo sin necesitar otro deploy.
+// alcanza sola) y la zona del lago Llanquihue (Puerto Varas, Frutillar, Puerto Montt y Llanquihue) —
+// las tres últimas se sumaron el 2026-08-28 porque un profesional que vive en Puerto Varas
+// normalmente ya atiende ahí también, no solo su propia comuna — los mercados donde Patricio puede
+// reclutar y verificar profesionales directamente al lanzamiento. El resto de las comunas queda en la
+// tabla pero inactivo, listo para activarse cambiando el campo sin necesitar otro deploy.
 
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
@@ -271,13 +273,13 @@ const comunasSeed = [
   { codigo: '9209', nombre: 'Renaico', activa: false },
   { codigo: '9210', nombre: 'Traiguén', activa: false },
   { codigo: '9211', nombre: 'Victoria', activa: false },
-  { codigo: '10101', nombre: 'Puerto Montt', activa: false },
+  { codigo: '10101', nombre: 'Puerto Montt', activa: true },
   { codigo: '10102', nombre: 'Calbuco', activa: false },
   { codigo: '10103', nombre: 'Cochamó', activa: false },
   { codigo: '10104', nombre: 'Fresia', activa: false },
-  { codigo: '10105', nombre: 'Frutillar', activa: false },
+  { codigo: '10105', nombre: 'Frutillar', activa: true },
   { codigo: '10106', nombre: 'Los Muermos', activa: false },
-  { codigo: '10107', nombre: 'Llanquihue', activa: false },
+  { codigo: '10107', nombre: 'Llanquihue', activa: true },
   { codigo: '10108', nombre: 'Maullín', activa: false },
   { codigo: '10109', nombre: 'Puerto Varas', activa: true },
   { codigo: '10201', nombre: 'Castro', activa: false },
