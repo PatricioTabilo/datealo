@@ -59,14 +59,25 @@ useSeoMeta({
       <ProfessionalPublicPhotos
         :photo-urls="professional.photoUrls"
         :display-name="professional.displayName"
+        :avatar-url="professional.avatarUrl"
         class="lg:w-[55%]"
       />
 
       <div
         class="px-5 pb-28 pt-5 lg:flex-1 lg:sticky lg:top-8 lg:self-start lg:rounded-2xl lg:border lg:border-datealo-surface lg:p-6"
       >
-        <h1 class="text-xl font-extrabold text-datealo-text lg:text-2xl">{{ professional.displayName }}</h1>
-        <p class="mt-0.5 text-sm text-datealo-muted">{{ professional.categoriaNombre }} · {{ professional.comunaNombre }}</p>
+        <div class="flex items-center gap-3">
+          <img
+            v-if="professional.photoUrls.length && professional.avatarUrl"
+            :src="professional.avatarUrl"
+            :alt="professional.displayName"
+            class="h-12 w-12 shrink-0 rounded-full object-cover ring-2 ring-datealo-surface ring-offset-2 ring-offset-datealo-bg"
+          >
+          <div>
+            <h1 class="text-xl font-extrabold text-datealo-text lg:text-2xl">{{ professional.displayName }}</h1>
+            <p class="mt-0.5 text-sm text-datealo-muted">{{ professional.categoriaNombre }} · {{ professional.comunaNombre }}</p>
+          </div>
+        </div>
 
         <div v-if="professional.ratingAverage !== null" class="mt-2 flex items-center gap-1 text-sm">
           <Star class="h-3.5 w-3.5 fill-amber-400 text-amber-400" />

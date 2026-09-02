@@ -32,6 +32,7 @@ export type PublicProfessionalProfile = {
   description: string | null
   priceFrom: number | null
   photoUrls: string[]
+  avatarUrl: string | null
   createdAt: string
   reviews: PublicReview[]
   ratingAverage: number | null
