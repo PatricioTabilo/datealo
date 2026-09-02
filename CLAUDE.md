@@ -115,50 +115,11 @@ npm run build           # Compila
 **Verificación visual**: para cambios de UI, levantar `npm run dev` (puerto 3001) y probar en el browser
 antes de dar el cambio por hecho. Móvil primero: 390px de ancho es el caso principal, no una variante.
 
-## Principios de código
+## Escribir código
 
-**YAGNI**: cada línea de código es deuda técnica. Antes de escribir código custom: (1) buscar si ya existe
-en el proyecto, (2) evaluar si una librería establecida lo resuelve, (3) recién entonces escribir lo mínimo.
-Esto **no aplica a la estructura de lo que sí se va a construir**: aislar un dominio, definir un contrato
-entre capas o separar lógica pura de reactividad no son abstracciones especulativas, son la forma de que lo
-pedido quede bien hecho. La pregunta no es "¿sería más simple sin esto?" sino "¿esto existe por algo que ya
-nos pidieron?".
-
-**TypeScript strict**: `type` sobre `interface` para modelos de dominio. `as const` para enums. Derivar
-tipos de las constantes. Sin `any` — usar `unknown` + narrowing. Sin `@ts-ignore`.
-
-**Composables**: `useState()` en vez de `ref()` para compatibilidad SSR. Un composable, un dominio. Return
-como objeto plano de refs, agrupado (estado, computeds, acciones). Cleanup con `onUnmounted` para
-intervals, listeners y subscriptions.
-
-**Componentes**: siempre `<script setup lang="ts">`. `computed()` sobre métodos para estado derivado.
-Presentacionales — la lógica vive en composables. Ver el skill `vue-composition` para umbrales, triggers
-de extracción y patrones.
-
-**Errores**: ningún `catch` vacío. Fallo de red → feedback visible. Fallo de servidor → mensaje legible.
-Sin `console.log` de debug en el código que se mergea.
-
-**Naming**: archivos en kebab-case, componentes en PascalCase, composables `useAlgo`, constantes en
-SCREAMING_SNAKE_CASE, tipos en PascalCase, funciones en camelCase. Named exports sobre default exports.
-
-**Comentarios**: ver el skill `comentarios` — cuándo escribir uno, cómo evitar que se pudra, ejemplos
-reales de este repo. Es la fuente de verdad, no se repite acá.
-
-## Umbrales de salud de archivos
-
-| Recurso                        | Verde     | Amarilla  | Roja      |
-| ------------------------------ | --------- | --------- | --------- |
-| Componente `.vue`              | ≤ 200 LOC | 200–400   | > 400 LOC |
-| Composable `.ts`               | ≤ 150 LOC | 150–300   | > 300 LOC |
-| Función/método                 | ≤ 30 LOC  | 30–60     | > 60 LOC  |
-| Props por componente           | ≤ 5       | 6–8       | > 8       |
-| Funciones en `<script setup>`  | ≤ 5       | 6–10      | > 10      |
-| Miembros en el return          | ≤ 15      | —         | > 15      |
-| Entidades por composable       | 1         | —         | > 1       |
-
-Verde: editar. Amarilla: evaluar extracción si vas a agregar código. Roja: extraer **antes** de agregar
-código — un archivo de 500 LOC con "solo 5 líneas más" sigue siendo un archivo en zona roja. La extracción
-es parte de implementar, no un refactor extra.
+Las convenciones de código (YAGNI, TypeScript strict, errores, naming) viven en el skill `write-code` —
+es la fuente de verdad, no se repite acá. Arquitectura de componentes/composables y sus umbrales de salud
+de archivos viven en `vue-composition`. Comentarios viven en `comentarios`.
 
 ## Seguridad RLS
 
@@ -219,6 +180,7 @@ Skills propios del repo, escritos para las convenciones de Datealo:
 | Skill                       | Cuándo                                                              |
 | ---------------------------- | -------------------------------------------------------------------- |
 | `arquitectura`               | Endpoints, base de datos, RLS, secretos, despliegue, librería de UI |
+| `write-code`                 | Antes de escribir o editar cualquier `.ts`/`.vue` — YAGNI, TS strict, errores, naming |
 | `discovery-product`          | Iterar `investigacion.md` o `producto.md` de una misión              |
 | `discovery-ux`               | Iterar `experiencia.md`: vistas, flujos, estados, mockups            |
 | `discovery-engineering`      | Iterar `ingenieria.md`: contratos, datos, slicing en issues          |
