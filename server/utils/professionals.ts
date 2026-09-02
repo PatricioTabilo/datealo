@@ -108,7 +108,7 @@ function buildPhotoUrls(photoPaths: string[]): string[] {
 }
 
 // Mismo patrón que buildPhotoUrls, para el único path de la foto de perfil en vez de un array.
-function buildAvatarUrl(avatarPath: string | null): string | null {
+export function buildAvatarUrl(avatarPath: string | null): string | null {
   if (!avatarPath) return null
   const { public: pub } = useRuntimeConfig()
   return `${pub.supabaseUrl}/storage/v1/object/public/professional-photos/${avatarPath}`

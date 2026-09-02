@@ -10,6 +10,7 @@ export type SearchResultProfessional = {
   displayName: string
   comunaNombre: string
   priceFrom: number | null
+  avatarUrl: string | null
   createdAt: string
 }
 
@@ -34,6 +35,7 @@ type ProfessionalSearchRow = {
   displayName: string
   comunaNombre: string
   priceFrom: number | null
+  avatarPath: string | null
   createdAt: Date
   photoPaths: string[]
   description: string | null
@@ -71,6 +73,7 @@ function toSearchResult(row: ProfessionalSearchRow): SearchResultProfessional {
     displayName: row.displayName,
     comunaNombre: row.comunaNombre,
     priceFrom: row.priceFrom,
+    avatarUrl: buildAvatarUrl(row.avatarPath),
     createdAt: row.createdAt.toISOString(),
   }
 }
@@ -91,6 +94,7 @@ async function findActiveProfessionals(
       displayName: professionals.displayName,
       comunaNombre: comunas.nombre,
       priceFrom: professionals.priceFrom,
+      avatarPath: professionals.avatarPath,
       createdAt: professionals.createdAt,
       photoPaths: professionals.photoPaths,
       description: professionals.description,
