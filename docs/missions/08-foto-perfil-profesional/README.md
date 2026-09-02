@@ -2,9 +2,9 @@
 
 **Tipo:** producto. **Abierta el** 2026-08-29. **Nace de:** ninguna.
 
-**Estado de la misión:** lista para construir
+**Estado de la misión:** cerrada 2026-09-02
 
-**Última actualización:** 2026-09-01
+**Última actualización:** 2026-09-02
 
 No es una de las seis misiones originales hacia el MVP (esas son la 02 a la 07, ver el registro de
 misiones) — nace después, al descubrir que [misión 05](../05-perfil-publico-profesional/) y
@@ -16,7 +16,9 @@ consume en la 05 (perfil público) y la 06 (búsqueda y resultados).
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** crear los issues del Plan de construcción (S-001 a S-007) y empezar a construir.
+**Próximo hito:** ninguno — los 7 issues del plan de construcción
+([#125](https://github.com/PatricioTabilo/datealo/issues/125)–[#131](https://github.com/PatricioTabilo/datealo/issues/131))
+están cerrados y mergeados. F-001 y F-002 funcionando de punta a punta.
 
 `investigacion.md` sostiene dos conclusiones: una foto de trabajo no sirve como avatar de confianza
 (C-001), y mostrar siempre iniciales sin excepción deja la lista de resultados sin señal diferenciadora
