@@ -25,7 +25,7 @@ export function useCompactSearch() {
   }
 
   // Cerrar (click afuera, la X) solo cierra — lo que ya se eligió, elegido queda; no hay "cancelar" que
-  // lo revierta. Confirmar con "Buscar" es la única acción que navega.
+  // lo revierta.
   function close() {
     isOpen.value = false
   }
@@ -35,13 +35,18 @@ export function useCompactSearch() {
     activeField.value = 'comuna'
   }
 
-  // No cierra el panel: en mobile, "Buscar" vive dentro de la misma hoja que elegir la comuna — cerrar
-  // acá se lo llevaría puesto antes de que se pueda tocar. Se queda abierto, ya habilitado, hasta que el
-  // usuario confirme o cierre a mano.
-  function selectComuna(codigo: string) {
+  // Elegir comuna busca directo, igual que elegir categoría ya avanza sola sin pedir confirmación — es
+  // el mismo tipo de interacción (tocar una fila de una lista corta), así que exigir un tap extra acá
+  // rompería esa misma consistencia. confirm() no navega si todavía falta la categoría (ej. en desktop,
+  // si se abrió el panel de comuna primero), así que queda seguro incluso en ese orden.
+  async function selectComuna(codigo: string) {
     comunaCodigo.value = codigo
+    await confirm()
   }
 
+  // "Buscar" queda además como respaldo manual: cambiar de categoría vuelve a mostrar la comuna ya
+  // elegida sin resaltarla en la lista, así que tocarlo confirma esa misma comuna sin tener que
+  // encontrarla de nuevo entre las opciones.
   async function confirm() {
     if (!ready.value) return
     isOpen.value = false

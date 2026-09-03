@@ -2,7 +2,7 @@
 
 **Estado:** vigente — aprobado por Patricio el 2026-09-02
 
-**Última actualización:** 2026-09-02
+**Última actualización:** 2026-09-03
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -97,21 +97,23 @@ no corresponde llenar queda colapsado más abajo, después de la lista.
 | 1    | Toca el buscador compacto (botón en mobile, campo en desktop) | Se abre el panel — hoja completa en mobile, panel flotante debajo en desktop | Título "¿Qué necesitas?" (mobile); campo "Categoría" expandido primero |
 | 2    | Ve la lista de categorías                            | —                                                                                | Eyebrow "Categorías" + las 8 categorías como filas tocables, con su ícono |
 | 3    | Toca una categoría                                    | El campo categoría queda con esa selección; el campo "Comuna" se expande automáticamente | Título "¿Dónde?" (mobile); comuna: buscador de texto + lista corta de comunas frecuentes |
-| 4    | Escribe, o elige una comuna frecuente de la lista      | El campo comuna queda con esa selección                                       | El botón "Buscar", fijo abajo en mobile, queda resaltado |
-| 5    | Toca "Buscar"                                         | Navega a `/buscar` con los filtros aplicados                                    | Resultados, o el estado vacío correspondiente |
+| 4    | Escribe para filtrar (opcional) y toca una comuna — de las frecuentes o de los resultados filtrados | El campo comuna queda con esa selección y navega directo a `/buscar` con ambos filtros — igual que categoría, sin pedir un tap aparte | Resultados, o el estado vacío correspondiente |
 
 ### Variantes y recuperación
 
 | Condición                                              | Qué cambia                                       | Cómo se entiende                                                          | Cómo se recupera |
 | --------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------- |
-| Categoría elegida, comuna todavía vacía                 | El botón "Buscar" permanece deshabilitado — `/api/search` exige ambas ([C-016](./investigacion.md#c-016)) | El botón se ve atenuado/sin resaltar, no clickeable | Elige una comuna (escrita o de la lista de frecuentes) para habilitarlo |
+| Categoría elegida, comuna todavía vacía                 | El botón "Buscar" permanece deshabilitado — `/api/search` exige ambas ([C-016](./investigacion.md#c-016)) | El botón se ve atenuado/sin resaltar, no clickeable | Elige una comuna (escrita o de la lista de frecuentes) — el mismo tap confirma y navega, sin paso aparte |
 | Ya había categoría/comuna elegidas (viene de `/buscar`) | El panel abre con esos valores ya cargados, no vacío | Los campos muestran el valor ya elegido, no un placeholder                   | Puede cambiarlos igual que si empezara de cero |
+| Cambia de categoría con una comuna ya elegida            | El campo comuna se mantiene, pero su valor previo no queda resaltado en la lista | El botón "Buscar" ya está habilitado apenas se elige la nueva categoría | Toca "Buscar" para confirmar esa misma comuna sin tener que volver a encontrarla en la lista |
 
 ### Decisiones que no deben quedar implícitas
 
 - Cerrar el panel sin confirmar no borra una selección previa que ya existía antes de abrirlo — solo
   descarta lo tocado en esa apertura.
-- El botón "Buscar" en mobile queda fijo abajo (zona de pulgar) durante todo el flujo, no solo al final.
+- El botón "Buscar" en mobile queda fijo abajo (zona de pulgar) durante todo el flujo. Elegir una comuna
+  ya navega directo — el botón queda como respaldo manual para cuando se cambia de categoría y se quiere
+  conservar la comuna que ya estaba elegida, sin tener que volver a tocarla en la lista.
 - Cuando el teclado virtual está abierto (campo de texto de comuna enfocado), el botón "Buscar" fijo tiene
   que seguir visible por encima del teclado, no quedar tapado detrás — es el momento en que más se necesita
   (justo después de escribir la comuna). Una evaluación heurística lo marcó como un caso no cubierto; la
@@ -281,14 +283,25 @@ o ausencia del avatar — no hay otro estado visual permanente para esto.
   filtro que sí tenía bien puesto. Revertir solo lo tocado en la apertura actual, conservando lo que ya
   existía antes de abrir (versión original de esta decisión) — se descarta en la revisión de abajo.
 - **Decisión y consecuencia:** cerrar el panel (click afuera, la X) nunca descarta nada — lo que se haya
-  elegido, elegido queda, se haya tocado recién o ya viniera de antes. Confirmar con "Buscar" es la única
-  acción que navega; cerrar es solo cerrar.
+  elegido, elegido queda, se haya tocado recién o ya viniera de antes. Elegir comuna sí navega
+  ([revisión 2026-09-03](#ux-002-revision-2026-09-03) más abajo); cerrar sin llegar a elegirla es lo único
+  que solo cierra.
 - **Revisión (2026-09-02):** la versión original solo protegía una selección previa a abrir el panel,
   revirtiendo cualquier cambio hecho en esa apertura si se cerraba sin confirmar. Probado en un dispositivo
   real, esto se sintió como perder trabajo: elegir una categoría y cerrar sin querer (o sin haber llegado
   a elegir comuna todavía) borraba la categoría recién elegida — exactamente el caso que el sustento de
   esta misma decisión dice que hay que evitar. Se simplificó a "nunca se pierde nada al cerrar", sin
   distinguir cuándo se eligió.
+- <a id="ux-002-revision-2026-09-03"></a>**Revisión (2026-09-03):**
+  la redacción de arriba ("Confirmar con 'Buscar' es la única acción que navega") quedó inconsistente con
+  el propio [Mapa de estados](#mapa-de-estados) de este documento, que ya decía que tocar una comuna cierra
+  el panel y navega — nadie reconcilió las dos partes cuando se escribió esta decisión. Probado en un
+  dispositivo real: exigir un tap en "Buscar" además de elegir la comuna se sintió como un paso de más,
+  justo porque elegir categoría (la misma clase de interacción — tocar una fila de una lista corta) ya
+  avanza sola, sin pedirlo. Se corrigió para que elegir comuna navegue directo, igual que categoría, y el
+  Mapa de estados quedó como la versión correcta. El botón "Buscar" se mantiene como respaldo manual, para
+  cuando se cambia de categoría pero se quiere conservar la comuna ya elegida sin tener que volver a
+  encontrarla en la lista.
 - **Impacto en producto:** ninguno — es un detalle de estado que no cambia ninguna regla de F-002.
 
 <a id="ux-003"></a>
