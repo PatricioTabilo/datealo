@@ -2,15 +2,18 @@
 
 **Tipo:** producto. **Abierta el** 2026-08-31. **Nace de:** ninguna.
 
-**Estado de la misión:** discovery completo — lista para delivery
+**Estado de la misión:** en construcción
 
 **Última actualización:** 2026-09-02
 
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** abrir los issues del plan de construcción (S-001 a S-008 de `ingenieria.md`) y arrancar
-delivery en la raíz del repo, una tarea a la vez. Sin fecha límite todavía.
+**Próximo hito:** los 8 issues del plan de construcción ya están abiertos
+([#148](https://github.com/PatricioTabilo/datealo/issues/148) a
+[#155](https://github.com/PatricioTabilo/datealo/issues/155), ver tabla en
+[`ingenieria.md`](./ingenieria.md#plan-de-construcción)) — arrancar por S-001, S-003 y S-004 (sin
+dependencias entre sí), en la raíz del repo, un PR chico por issue. Sin fecha límite todavía.
 
 `ingenieria.md` **vigente — aprobado por Patricio el 2026-09-02**: sin tablas nuevas (reutiliza
 `GET /api/professionals/me` y agrega una sola query de solo lectura, comunas frecuentes); layout de Nuxt
