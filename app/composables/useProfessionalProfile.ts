@@ -4,6 +4,10 @@ export function useProfessionalProfile() {
   const professional = useState<Professional | null>('professional-profile', () => null)
   const pending = useState('professional-profile-pending', () => true)
   const loadError = useState<string | null>('professional-profile-load-error', () => null)
+  // useProfessionalSession también lee/escribe estos tres useState (mismas claves) para mostrar el avatar
+  // del header sin sesión propia de edición — este flag evita que dispare su propio fetch si esta página
+  // ya está cargando el perfil.
+  const started = useState('professional-profile-started', () => false)
 
   const editingField = useState<ProfessionalField | null>('professional-profile-editing', () => null)
   const savingField = useState<ProfessionalField | null>('professional-profile-saving', () => null)
@@ -14,6 +18,7 @@ export function useProfessionalProfile() {
   const saveErrorField = useState<ProfessionalField | null>('professional-profile-save-error', () => null)
 
   async function load() {
+    started.value = true
     pending.value = true
     loadError.value = null
     try {
