@@ -107,6 +107,9 @@ resultado") — nunca un espacio vacío sin explicar qué se está viendo, ni un
 
 Nunca aparece un número de distancia, un rating ni un contador de reseñas — ninguno de esos datos existe
 hoy ([C-002](./investigacion.md#c-002) de investigación, [D-001](./producto.md#d-001) de producto).
+**Superado por la misión 10** ([F-001](../10-vista-resultados-busqueda/producto.md#f-001)): una vez que
+existen reseñas (misión 07), la card sí muestra rating y cantidad — la distancia en km sigue sin
+aparecer, eso no cambió.
 
 ### Salidas
 

@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>V-001 Resultados de búsqueda (card enriquecida) — misión 10</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+    <style>
+      .results-container {
+        /* max-w-6xl — subido desde max-w-5xl (el ancho del perfil) tras la evaluación heurística:
+           1024px es un ancho pensado para una columna de texto: en un grid de fotos de 3 columnas
+           dejaba ~47% de un monitor de 1920px en blanco sin agrandar ninguna foto (el tope de la card
+           no crecía con el contenedor). 1152px está dentro del rango de 1140-1440px que la práctica de
+           grids de listados usa, y acá sí se combina con un tope de card más grande (ver .results-grid). */
+        max-width: 72rem;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .search-bar {
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.875rem 1.25rem;
+        background: var(--ui-bg);
+        border-bottom: 1px solid var(--ui-border);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      .select-field {
+        flex: 1;
+        min-width: 0;
+        border: 1.5px solid var(--ui-border-accented);
+        border-radius: var(--ui-radius, 0.5rem);
+        padding: 0.625rem 0.75rem;
+        font-size: 0.8125rem;
+        color: var(--ui-text-highlighted);
+      }
+      .select-field .field-label {
+        display: block;
+        font-size: 0.625rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--ui-text-muted);
+        margin-bottom: 0.125rem;
+      }
+      .result-count {
+        font-size: 0.75rem;
+        color: var(--ui-text-muted);
+        padding: 0 0.125rem;
+      }
+      /* card vertical foto-arriba — mismo slot aspect-4/3 que ProfessionalPublicPhotos.vue (misión 05).
+         Es un <a> real (no un div con click), con hover/focus visibles — hallazgo 6 de la evaluación
+         heurística: un div sin estos estados falla accesibilidad y no se distingue de contenido inerte. */
+      .result-card {
+        display: flex;
+        flex-direction: column;
+        background: var(--ui-bg);
+        border: 1px solid var(--ui-border);
+        border-radius: 1rem;
+        overflow: hidden;
+        min-width: 0;
+        text-decoration: none;
+        color: inherit;
+        transition: box-shadow 0.2s, border-color 0.2s;
+      }
+      .result-card:hover {
+        border-color: var(--ui-border-accented);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      }
+      .result-card:focus-visible {
+        outline: 2px solid var(--ui-primary);
+        outline-offset: 2px;
+      }
+      .result-photo {
+        aspect-ratio: 4 / 3;
+        width: 100%;
+        object-fit: cover;
+        display: block;
+        background: var(--ui-bg-muted);
+      }
+      .result-photo-fallback {
+        /* tinte de --ui-primary en vez de var(--ui-bg-muted) plano — evaluación heurística: el gris
+           genérico se ve "menos terminado" junto a una foto real, justo en el caso más común (CL-001).
+           Un tinte de marca (mismo mecanismo que el ring de foco de .select-field) lee como una decisión
+           de diseño, no como un hueco de contenido faltante. */
+        aspect-ratio: 4 / 3;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: color-mix(in oklab, var(--ui-primary) 10%, var(--ui-bg));
+      }
+      /* 5.5rem/1.5rem — igual a ProfessionalPublicPhotos.vue (h-22 w-22, text-2xl), no un valor
+         inventado. La segunda evaluación heurística encontró que el 5rem original no coincidía ni con
+         el baseline real de SearchResultCard.vue (3rem, h-12 w-12) ni con el del perfil que UX-001 decía
+         reusar — quedaba como un tercer número sin relación con el sistema. */
+      .avatar-initials-lg {
+        width: 5.5rem;
+        height: 5.5rem;
+        border-radius: 999px;
+        background: var(--ui-primary);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.5rem;
+      }
+      .result-body {
+        /* flex: 1 es lo que hace que el align-items:stretch del grid llegue hasta acá — sin esto, el
+           borde de la card se estira parejo pero el contenido interno no, y el "En Datealo desde..."
+           de cada card queda a una altura distinta (hallazgo 1 de la evaluación heurística). */
+        flex: 1;
+        padding: 0.875rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+      }
+      .comuna-line {
+        color: var(--ui-text-muted);
+      }
+      .comuna-line.is-vecina {
+        color: var(--ui-text-highlighted);
+        font-weight: 700;
+      }
+      .rating-line {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.8125rem;
+        margin-top: 0.25rem;
+        color: var(--ui-text-highlighted);
+      }
+      .star-icon {
+        width: 0.8125rem;
+        height: 0.8125rem;
+        fill: #f59e0b;
+        color: #f59e0b;
+      }
+      .since-pill {
+        display: inline-block;
+        color: var(--ui-text-muted);
+        margin-top: auto;
+        padding-top: 0.375rem;
+      }
+      .section-label {
+        font-family: var(--font-heading);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--ui-text-muted);
+        padding: 0 0.125rem;
+      }
+      /* auto-fit + justify-content: center, en vez de grid-cols-3 fijo — con menos de 3 resultados,
+         grid-cols-3 deja columnas vacías a la derecha y la card queda pegada en la esquina (hallazgo 3
+         de la evaluación heurística: max-width sola no lo resuelve). auto-fit colapsa las columnas sin
+         contenido y justify-content centra la fila parcial, sin cambiar el ancho ni el diseño de la card. */
+      .results-grid {
+        display: grid;
+        /* tope subido de 21rem (336px) a 23.75rem (380px) junto con max-w-6xl — así el ancho extra del
+           contenedor se traduce en fotos más grandes, no en más margen en blanco. */
+        grid-template-columns: repeat(auto-fit, minmax(17.5rem, 23.75rem));
+        justify-content: center;
+        gap: 1rem;
+      }
+      .empty-banner {
+        background: var(--ui-bg-muted);
+        border-radius: 0.75rem;
+        padding: 0.875rem 1rem;
+        font-size: 0.8125rem;
+        color: var(--ui-text-toned);
+      }
+      .skeleton-card {
+        border: 1px solid var(--ui-border);
+        border-radius: 1rem;
+        overflow: hidden;
+      }
+      .skeleton-block {
+        background: var(--ui-bg-accented);
+        position: relative;
+        overflow: hidden;
+      }
+      .skeleton-block::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(100deg, transparent 30%, var(--ui-bg-muted) 50%, transparent 70%);
+        animation: shimmer 1.4s infinite;
+      }
+      @keyframes shimmer {
+        from {
+          transform: translateX(-100%);
+        }
+        to {
+          transform: translateX(100%);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+      <!-- 1. cargando -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo cargando
+          <small>skeleton actualizado a la forma de la card vertical — bloque aspect-4/3 arriba, 3 líneas abajo</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="search-bar">
+            <div class="select-field">
+              <span class="field-label">Categoría</span>
+              <span class="field-value">Electricidad</span>
+            </div>
+            <div class="select-field">
+              <span class="field-label">Comuna</span>
+              <span class="field-value">Puerto Varas</span>
+            </div>
+          </div>
+          <div class="results-container flex flex-col gap-3 p-4" aria-busy="true">
+            <div class="skeleton-card">
+              <div class="skeleton-block" style="aspect-ratio: 4/3; width: 100%"></div>
+              <div class="flex flex-col gap-2 p-3.5">
+                <div class="skeleton-block h-4 w-32 rounded"></div>
+                <div class="skeleton-block h-3 w-20 rounded"></div>
+                <div class="skeleton-block h-3 w-24 rounded"></div>
+              </div>
+            </div>
+            <div class="skeleton-card">
+              <div class="skeleton-block" style="aspect-ratio: 4/3; width: 100%"></div>
+              <div class="flex flex-col gap-2 p-3.5">
+                <div class="skeleton-block h-4 w-32 rounded"></div>
+                <div class="skeleton-block h-3 w-20 rounded"></div>
+                <div class="skeleton-block h-3 w-24 rounded"></div>
+              </div>
+            </div>
+            <div class="skeleton-card">
+              <div class="skeleton-block" style="aspect-ratio: 4/3; width: 100%"></div>
+              <div class="flex flex-col gap-2 p-3.5">
+                <div class="skeleton-block h-4 w-32 rounded"></div>
+                <div class="skeleton-block h-3 w-20 rounded"></div>
+                <div class="skeleton-block h-3 w-24 rounded"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. con resultados — con foto y sin foto (CL-001) -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo con resultados
+          <small>Marcela con foto de trabajo y reseñas; Héctor sin ninguna de las dos (CL-001) — mismo alto, mismo slot</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="search-bar">
+            <div class="select-field">
+              <span class="field-label">Categoría</span>
+              <span class="field-value">Electricidad</span>
+            </div>
+            <div class="select-field">
+              <span class="field-label">Comuna</span>
+              <span class="field-value">Puerto Varas</span>
+            </div>
+          </div>
+          <div class="results-container flex flex-col gap-3 p-4">
+            <p class="result-count">2 resultados</p>
+            <a href="#" class="result-card">
+              <img
+                class="result-photo"
+                alt=""
+                loading="lazy"
+                src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=60"
+              />
+              <div class="result-body">
+                <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Marcela Fuentes</p>
+                <p class="comuna-line truncate text-xs">Puerto Varas</p>
+                <div class="rating-line">
+                  <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z"/></svg>
+                  <span class="font-bold">4,8</span>
+                  <span style="color: var(--ui-text-muted)">· 12 reseñas</span>
+                </div>
+                <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $15.000</p>
+                <p class="since-pill text-[0.6875rem]">En Datealo desde julio de 2026</p>
+              </div>
+            </a>
+            <a href="#" class="result-card">
+              <div class="result-photo-fallback">
+                <div class="avatar-initials-lg">HS</div>
+              </div>
+              <div class="result-body">
+                <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Héctor Silva</p>
+                <p class="comuna-line truncate text-xs">Puerto Varas</p>
+                <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $12.000</p>
+                <p class="since-pill text-[0.6875rem]">En Datealo desde agosto de 2026</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. comunas vecinas -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo comunas vecinas
+          <small>card enriquecida + comuna en negrita, mismo criterio que la misión 06</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="search-bar">
+            <div class="select-field">
+              <span class="field-label">Categoría</span>
+              <span class="field-value">Gasfitería</span>
+            </div>
+            <div class="select-field">
+              <span class="field-label">Comuna</span>
+              <span class="field-value">Puente Alto</span>
+            </div>
+          </div>
+          <div class="results-container flex flex-col gap-3 p-4">
+            <div class="empty-banner">Todavía no hay profesionales de Gasfitería en Puente Alto.</div>
+            <p class="section-label">Cerca de Puente Alto</p>
+            <a href="#" class="result-card">
+              <div class="result-photo-fallback">
+                <div class="avatar-initials-lg">RM</div>
+              </div>
+              <div class="result-body">
+                <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Raúl Muñoz</p>
+                <p class="comuna-line is-vecina truncate text-xs">La Florida</p>
+                <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $10.000</p>
+                <p class="since-pill text-[0.6875rem]">En Datealo desde agosto de 2026</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. desktop, con resultados -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">
+          V-001 · modo con resultados — desktop
+          <small>grid auto-fit centrado dentro de max-w-6xl, cards hasta 380px — ya no de borde a borde ni angosto como el perfil</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="flex h-full flex-col">
+            <div class="search-bar">
+              <div class="results-container flex gap-2">
+                <div class="select-field" style="max-width: 220px">
+                  <span class="field-label">Categoría</span>
+                  <span class="field-value">Electricidad</span>
+                </div>
+                <div class="select-field" style="max-width: 220px">
+                  <span class="field-label">Comuna</span>
+                  <span class="field-value">Ñuñoa</span>
+                </div>
+              </div>
+            </div>
+            <div class="results-container p-8 pt-3">
+              <p class="result-count mb-3">3 resultados</p>
+              <div class="results-grid">
+                <a href="#" class="result-card">
+                  <img
+                    class="result-photo"
+                    alt=""
+                    loading="lazy"
+                    src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=60"
+                  />
+                  <div class="result-body">
+                    <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Marcelo Rojas</p>
+                    <p class="comuna-line truncate text-xs">Ñuñoa</p>
+                    <div class="rating-line">
+                      <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z"/></svg>
+                      <span class="font-bold">4,9</span>
+                      <span style="color: var(--ui-text-muted)">· 8 reseñas</span>
+                    </div>
+                    <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $15.000</p>
+                    <p class="since-pill text-[0.6875rem]">En Datealo desde julio de 2026</p>
+                  </div>
+                </a>
+                <a href="#" class="result-card">
+                  <div class="result-photo-fallback">
+                    <div class="avatar-initials-lg">JP</div>
+                  </div>
+                  <div class="result-body">
+                    <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Jorge Pizarro</p>
+                    <p class="comuna-line truncate text-xs">Ñuñoa</p>
+                    <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $12.000</p>
+                    <p class="since-pill text-[0.6875rem]">En Datealo desde agosto de 2026</p>
+                  </div>
+                </a>
+                <a href="#" class="result-card">
+                  <img
+                    class="result-photo"
+                    alt=""
+                    loading="lazy"
+                    src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=600&q=60"
+                  />
+                  <div class="result-body">
+                    <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Héctor Silva</p>
+                    <p class="comuna-line truncate text-xs">Ñuñoa</p>
+                    <div class="rating-line">
+                      <svg class="star-icon" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z"/></svg>
+                      <span class="font-bold">4,6</span>
+                      <span style="color: var(--ui-text-muted)">· 3 reseñas</span>
+                    </div>
+                    <p class="since-pill text-[0.6875rem]">En Datealo desde agosto de 2026</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. desktop, un solo resultado (CL-002) -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">
+          V-001 · modo con resultados — un solo profesional (CL-002) · desktop
+          <small>la captura original del dueño de producto: Electricidad en Puerto Varas, 1 resultado — ahora centrada dentro de max-w-6xl, sin quedar perdida en la esquina</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="flex h-full flex-col">
+            <div class="search-bar">
+              <div class="results-container flex gap-2">
+                <div class="select-field" style="max-width: 220px">
+                  <span class="field-label">Categoría</span>
+                  <span class="field-value">Electricidad</span>
+                </div>
+                <div class="select-field" style="max-width: 220px">
+                  <span class="field-label">Comuna</span>
+                  <span class="field-value">Puerto Varas</span>
+                </div>
+              </div>
+            </div>
+            <div class="results-container p-8 pt-3">
+              <p class="result-count mb-3">1 resultado</p>
+              <div class="results-grid">
+                <a href="#" class="result-card">
+                  <div class="result-photo-fallback">
+                    <div class="avatar-initials-lg">PT</div>
+                  </div>
+                  <div class="result-body">
+                    <p class="truncate text-sm font-bold" style="color: var(--ui-text-highlighted)">Patricio Tabilo</p>
+                    <p class="comuna-line truncate text-xs">Puerto Varas</p>
+                    <p class="mt-1 text-xs font-bold" style="color: var(--ui-text-highlighted)">Desde $15.000</p>
+                    <p class="since-pill text-[0.6875rem]">En Datealo desde agosto de 2026</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
