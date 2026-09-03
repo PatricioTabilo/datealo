@@ -7,6 +7,8 @@ const router = useRouter()
 const categoriaSlug = ref(typeof route.query.categoria === 'string' ? route.query.categoria : null)
 const comunaCodigo = ref(typeof route.query.comuna === 'string' ? route.query.comuna : null)
 
+const lastSearchQuery = useLastSearchQuery()
+
 // Refleja la elección en la URL para que un link de búsqueda ya armado se pueda compartir — replace, no
 // push, así cada cambio de selector no le agrega una entrada nueva al historial.
 watch([categoriaSlug, comunaCodigo], ([categoria, comuna]) => {
@@ -14,7 +16,9 @@ watch([categoriaSlug, comunaCodigo], ([categoria, comuna]) => {
   if (categoria) query.categoria = categoria
   if (comuna) query.comuna = comuna
   router.replace({ query })
+  lastSearchQuery.value = { categoria, comuna }
 })
+lastSearchQuery.value = { categoria: categoriaSlug.value, comuna: comunaCodigo.value }
 
 const { items: categorias } = useCategoriasCatalog()
 const { items: comunas } = useComunasCatalog()
