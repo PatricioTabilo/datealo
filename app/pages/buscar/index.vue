@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Hourglass } from '@lucide/vue'
 
+definePageMeta({ layout: 'general' })
+
 const route = useRoute()
 const router = useRouter()
 

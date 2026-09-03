@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { TriangleAlert } from '@lucide/vue'
 
-definePageMeta({ middleware: 'profesional' })
+definePageMeta({ middleware: 'profesional', layout: 'general' })
 
 useSeoMeta({ title: 'Crea tu perfil', robots: 'noindex' })
 

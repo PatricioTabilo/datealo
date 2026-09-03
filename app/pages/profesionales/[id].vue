@@ -2,6 +2,8 @@
 import { Hourglass, SearchX, Star } from '@lucide/vue'
 import type { PublicReview } from '~/types/review'
 
+definePageMeta({ layout: 'general' })
+
 const route = useRoute()
 const id = route.params.id as string
 
