@@ -35,11 +35,11 @@ export function useCompactSearch() {
     activeField.value = 'comuna'
   }
 
-  // A diferencia de la categoría (que sigue directo al siguiente campo), la comuna es el último paso —
-  // elegirla cierra el panel: no queda nada más por completar antes de poder tocar "Buscar".
+  // No cierra el panel: en mobile, "Buscar" vive dentro de la misma hoja que elegir la comuna — cerrar
+  // acá se lo llevaría puesto antes de que se pueda tocar. Se queda abierto, ya habilitado, hasta que el
+  // usuario confirme o cierre a mano.
   function selectComuna(codigo: string) {
     comunaCodigo.value = codigo
-    isOpen.value = false
   }
 
   async function confirm() {
