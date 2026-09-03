@@ -2,7 +2,7 @@
 
 **Estado:** vigente — aprobado por Patricio el 2026-09-02
 
-**Última actualización:** 2026-09-02
+**Última actualización:** 2026-09-03
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -113,8 +113,8 @@ para no pelear con campos apretados en mobile ni ver un componente desaprovechan
 existen en la comuna buscada — no depende de volumen adicional.
 
 **Sustento:** [C-009](./investigacion.md#c-009), [C-012](./investigacion.md#c-012),
-[C-013](./investigacion.md#c-013), [C-015](./investigacion.md#c-015), [C-016](./investigacion.md#c-016) y
-[D-006](#d-006). **Éxito:** [M-001](#m-001).
+[C-013](./investigacion.md#c-013), [C-015](./investigacion.md#c-015), [C-016](./investigacion.md#c-016),
+[D-006](#d-006) y [D-008](#d-008). **Éxito:** [M-001](#m-001).
 
 **Reglas:**
 
@@ -128,6 +128,11 @@ existen en la comuna buscada — no depende de volumen adicional.
 - En desktop, el buscador se muestra inline, compacto, siempre visible en el header. Al hacer click en un
   campo, se abre un panel flotante debajo (no a pantalla completa) con el mismo contenido que en mobile —
   el resto de la página queda visible atrás.
+- En desktop, el buscador tiene dos densidades — ver [D-008](#d-008): **completa**, con el nombre del
+  campo ("Categoría"/"Comuna") sobre su valor, para el navbar de la landing tras hacer scroll ([F-001](#f-001));
+  y **chica**, solo el valor elegido, sin el nombre del campo encima, para el header general fijo
+  (`/buscar`, perfil, `/profesional/*`) — ahí el buscador está siempre a la vista, así que no necesita
+  ocupar el alto de la versión completa.
 - Al expandirse el campo de categoría (mobile o desktop), Datealo muestra las 8 categorías como filas
   tocables — no hace falta distinguir "sugeridas" de "todas", son pocas.
 - Al expandirse el campo de comuna, Datealo muestra un buscador de texto más una lista corta de comunas
@@ -443,6 +448,31 @@ usa cookies de tracking de terceros hoy; si eso cambia, se revisita.
   [F-001](#f-001). No hay trabajo de bottom nav en esta misión.
 - **Reapertura:** cuando aparezcan secciones reales (ej. favoritos, historial) que un bottom nav resolvería
   mejor que el header actual.
+
+<a id="d-008"></a>
+
+### D-008 — El buscador compacto de desktop tiene una variante chica sin el nombre del campo, para cuando vive fijo en el header general
+
+- **Estado:** aceptada. **Fecha:** 2026-09-03.
+- **Sustento:** [E-022](./investigacion.md#e-022), [E-023](./investigacion.md#e-023).
+- **Tensión:** una sola presentación del buscador de desktop es menos código y más simple de mantener, vs.
+  el header general (`/buscar`, perfil, `/profesional/*`) queda fijo en pantalla todo el tiempo — el
+  dueño de producto lo sintió pesado, con dos filas de texto por campo (nombre + valor) ocupando alto de
+  forma permanente, justo donde antes convivía con la barra de filtros vieja de `/buscar` que
+  [F-002](#f-002) ya decía que había que sacar y nunca se ejecutó.
+- **Alternativas descartadas:** achicar el buscador con scroll (el mismo componente cambia de tamaño según
+  la posición de scroll) — se descartó porque no hay evidencia de que Airbnb lo haga en ningún header que
+  no sea el hero de una landing sin sesión ([E-023](./investigacion.md#e-023)); una sola densidad chica en
+  todos lados, incluida la landing tras scroll — se descartó porque el navbar de la landing es una entrada
+  más prominente al producto (misión 08, [F-001](#f-001)) y no compite por espacio fijo todo el tiempo
+  como el header general.
+- **Decisión y consecuencia:** el mismo componente (`CompactSearchBar`) soporta dos densidades en desktop
+  — completa (nombre del campo sobre el valor) y chica (solo el valor) — elegidas por dónde vive, no por
+  scroll. El header general (`/buscar`, perfil, `/profesional/*`) usa la chica, fija, siempre visible. El
+  navbar de la landing tras hacer scroll (misión 08, todavía sin construir) usa la completa. Mobile no
+  tiene esta distinción — su resumen ya es de una sola línea.
+- **Reapertura:** si al construir la misión 08 el navbar de la landing tras scroll se siente igual de
+  apretado con la versión completa, evaluar la misma variante chica ahí también.
 
 ## Preguntas
 

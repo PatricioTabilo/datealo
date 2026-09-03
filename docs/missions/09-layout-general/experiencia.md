@@ -2,7 +2,7 @@
 
 **Estado:** vigente — aprobado por Patricio el 2026-09-02
 
-**Última actualización:** 2026-09-02
+**Última actualización:** 2026-09-03
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -82,6 +82,13 @@ como resumen; dentro del panel abierto, el campo activo aparece expandido y resa
 de opciones (categorías, o comunas frecuentes) inmediatamente debajo — nunca con el otro campo interpuesto
 entre el campo activo y su lista. El campo ya resuelto queda colapsado arriba, como resumen; el que todavía
 no corresponde llenar queda colapsado más abajo, después de la lista.
+
+**Dos densidades en desktop, mismo componente ([UX-006](#ux-006)):** el header general (`/buscar`, perfil,
+`/profesional/*`) usa la densidad chica — solo el valor elegido ("Electricidad · Puerto Varas"), sin el
+nombre del campo encima — porque ahí el buscador está fijo en pantalla todo el tiempo. El navbar de la
+landing tras hacer scroll (misión 08) usa la densidad completa, con el nombre del campo sobre el valor. En
+`/buscar`, este buscador es el único: reemplaza la barra de filtros de categoría/comuna que existe hoy
+como parte de la página — nunca conviven los dos ([F-002](./producto.md#f-002)).
 
 ### Salidas
 
@@ -360,6 +367,29 @@ o ausencia del avatar — no hay otro estado visual permanente para esto.
   [D-002 en producto.md](./producto.md#d-002).
 - **Impacto en producto:** sí — [D-002](./producto.md#d-002) se revisó para reflejar que header y footer
   ya no comparten el mismo criterio de "diseño propio por superficie".
+
+<a id="ux-006"></a>
+
+### UX-006 — El buscador compacto de desktop tiene una densidad chica (sin nombre de campo) para el header general, y una completa (con nombre de campo) para la landing tras scroll
+
+- **Estado:** aceptada. **Fecha:** 2026-09-03.
+- **Sustento:** hallazgo del dueño de producto probando el header general en vivo — con la barra de
+  filtros vieja de `/buscar` todavía sin sacar ([E-002](./investigacion.md#e-002)), el header se sentía
+  con demasiado alto fijo en pantalla. Ver [D-008 en producto.md](./producto.md#d-008).
+- **Alternativas descartadas:** achicar el header entero al hacer scroll (mismo componente cambia de
+  tamaño según la posición del scroll) — se descartó porque no hay evidencia de que Airbnb lo haga en
+  ningún header que no sea el hero de una landing sin sesión ([E-023](./investigacion.md#e-023)); dejar
+  una sola densidad en todos lados — pierde la ocasión de que la landing tras scroll (una entrada más
+  prominente al producto) siga viéndose completa sin pagar ese mismo alto en el header general, que está
+  fijo todo el tiempo.
+- **Decisión y consecuencia:** en desktop, `CompactSearchBar` recibe qué densidad mostrar según dónde
+  vive — no cambia sola con el scroll. Densidad **chica**: cada campo muestra solo su valor ("Electricidad
+  · Puerto Varas"), sin el nombre del campo encima; la usa el header general (`/buscar`, perfil,
+  `/profesional/*`). Densidad **completa** (la que ya existía): el nombre del campo ("Categoría"/"Comuna")
+  sobre su valor; la usa el navbar de la landing tras hacer scroll (misión 08, todavía sin construir). El
+  panel que se abre al hacer click (categorías o comunas) es igual en ambas densidades — lo que cambia es
+  solo el resumen cerrado. Mobile no tiene esta distinción, su resumen ya es una sola línea.
+- **Impacto en producto:** sí — [D-008](./producto.md#d-008), nueva.
 
 ## Preguntas
 
