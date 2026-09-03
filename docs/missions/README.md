@@ -27,6 +27,11 @@ Estados: `exploración`, `definición`, `lista para construir`, `en construcció
 `cerrada`, `pausada`. Al cerrar, el estado lleva su fecha (`cerrada 2026-09-30`). **En foco** es el único
 documento que se está trabajando; el detalle de por qué vive en el README de la misión, no acá.
 
+Solo una misión puede estar `en construcción` (delivery) a la vez, por foco — ver "Discovery: siempre en
+worktree" y "Delivery: siempre en la raíz" en el `CLAUDE.md` raíz. El discovery previo (hasta `lista para
+construir`) se trabaja en un git worktree y no cuenta para ese límite: varias misiones pueden estar en
+discovery en paralelo, cada una en su propio worktree.
+
 Los cuatro documentos de una misión (`investigacion.md`, `producto.md`, `experiencia.md`, `ingenieria.md`)
 tienen su propio estado, independiente del de la misión: `pendiente`, `activo`, `en revisión`, `vigente`.
 Vive en el encabezado de cada documento, no se repite en ningún README. Claude puede proponer contenido y

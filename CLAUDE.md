@@ -143,6 +143,21 @@ El discovery de una feature vive en `docs/missions/`. El tracking de ejecución 
 los skills `discovery-product`, `discovery-ux` y `discovery-engineering`. El registro de misiones y la
 convención de carpetas están en [`docs/missions/README.md`](docs/missions/README.md).
 
+### Discovery: siempre en worktree
+
+El discovery de una misión se trabaja siempre en un git worktree, nunca en la raíz: usar `EnterWorktree`
+(nombrado como la carpeta de la misión, `NN-slug`) al abrir o retomar una misión en esta fase.
+`investigacion.md` no se aprueba y no dispara PR por sí solo — es registro acumulativo. Cuando
+`producto.md`, `experiencia.md` e `ingenieria.md` (los tres documentos que sí requieren aprobación del
+dueño de producto) están completos y a punto de pasar a `vigente`, abrir el PR con los documentos de la
+misión. Una vez aprobado y mergeado, cerrar el worktree con `ExitWorktree action: "remove"`.
+
+### Delivery: siempre en la raíz, una misión a la vez
+
+La ejecución (issues y PRs de código de una misión ya aprobada) se trabaja siempre en la raíz del repo,
+nunca en un worktree. Por foco, solo una misión puede estar en delivery (estado `en construcción`) a la
+vez — no arrancar la ejecución de una misión nueva mientras otra sigue `en construcción`.
+
 **Una tarea = un Issue = un PR chico y revisable.** No una feature completa punta a punta — un cambio
 funcional atómico. Los issues salen del "Plan de construcción" de `ingenieria.md`, ya cortado en slices.
 
