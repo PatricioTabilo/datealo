@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { professional, pending } = useProfessionalSession()
+const { professional } = await useProfessionalSession()
 
 const professionalLink = computed(() => professional.value ? '/profesional/perfil' : '/profesional/registro')
 const professionalLabel = computed(() => professional.value ? 'Mi perfil' : 'Publícate en Datealo')
@@ -27,9 +27,7 @@ const professionalLabel = computed(() => professional.value ? 'Mi perfil' : 'Pub
 
       <div class="mb-5 border-t border-white/15 pt-5 lg:mb-0 lg:border-t-0 lg:pt-0">
         <p class="mb-2.5 font-heading text-[0.6875rem] font-bold uppercase tracking-wide text-white/80">Profesionales</p>
-        <div v-if="pending" class="h-[1.375rem] w-32 animate-pulse rounded bg-white/15" />
         <NuxtLink
-          v-else
           :to="professionalLink"
           class="block rounded py-1.5 text-sm font-semibold text-white/95 hover:text-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
         >
