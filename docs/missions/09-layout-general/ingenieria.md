@@ -48,9 +48,11 @@ duplicar fetches ni filtrar lógica de edición de perfil hacia un componente qu
 
 ### TC-001 — `useProfessionalSession()` expone si hay un profesional con sesión y perfil completo
 
-- **Entrada:** ninguna — se ejecuta en cliente y SSR, lee la sesión ya presente (misma cookie que usa
-  `app/middleware/profesional.ts`).
-- **Salida:** `{ professional: Ref<{ displayName: string, avatarUrl: string | null } | null>, pending: Ref<boolean> }`.
+- **Entrada:** ninguna — es una función `async`, se llama con `await` desde el `<script setup>` de quien la
+  consume; se resuelve en SSR (vía `useRequestFetch()`, misma cookie que usa
+  `app/middleware/profesional.ts`) para que el HTML que llega al navegador ya traiga el estado de sesión
+  correcto, sin un salto visible de "sin sesión" a "con sesión" tras la hidratación.
+- **Salida:** `{ professional: ComputedRef<{ displayName: string, avatarUrl: string | null } | null>, pending: Ref<boolean> }`.
 - **Invariantes:** `professional.value` es `null` tanto sin sesión como con sesión sin perfil todavía — un
   401 y un 404 de `GET /api/professionals/me` se tratan igual, nunca como error; el avatar del header solo
   aparece cuando hay alguien real a quien enlazar "Mi perfil". Comparte el `useState('professional-profile', ...)`
