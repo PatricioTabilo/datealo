@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Footer (diseño único, compartido) — misión 09</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+    <style>
+      /* Fondo índigo primario (no el gris neutro que tenía el footer viejo) — mismo color que el hero y
+         el header sólido, para que el footer se lea inequívocamente como Datealo, no como un footer
+         genérico. Opacidades calculadas contra ese fondo para mantener 4.5:1 (WCAG AA) en texto chico. */
+      .footer-group-title {
+        font-family: var(--font-heading);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.625rem;
+      }
+      .footer-link {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.95);
+        padding: 0.375rem 0;
+      }
+      .footer-link:hover,
+      .footer-link:focus-visible {
+        color: var(--color-secondary);
+      }
+      .footer-link:focus-visible {
+        outline: 2px solid var(--color-secondary);
+        outline-offset: 2px;
+        border-radius: 0.25rem;
+      }
+      .footer-contact { font-size: 0.875rem; color: rgba(255, 255, 255, 0.85); }
+      .footer-tagline { font-size: 0.875rem; color: rgba(255, 255, 255, 0.78); }
+      .footer-copyright { font-size: 0.75rem; color: rgba(255, 255, 255, 0.75); }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+
+      <!-- ============ Mobile — apilado ============ -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          Footer · mobile
+          <small>4 grupos apilados, sin acordeón (C-014) — mismo diseño que usan LandingFooter y AppFooter (D-002)</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="p-6" style="background: var(--color-primary);">
+            <p class="font-heading text-xl font-extrabold mb-1">
+              <span class="text-white">datea</span><span class="text-secondary">lo</span>
+            </p>
+            <p class="footer-tagline mb-6">Encuentra al profesional que necesitas, cerca de ti.</p>
+
+            <div class="border-t pt-5 mb-5" style="border-color: rgba(255,255,255,.15)">
+              <p class="footer-group-title">Buscador</p>
+              <a href="#" class="footer-link">Buscar profesionales</a>
+            </div>
+
+            <div class="border-t pt-5 mb-5" style="border-color: rgba(255,255,255,.15)">
+              <p class="footer-group-title">Profesionales</p>
+              <a href="#" class="footer-link">Publícate en Datealo</a>
+            </div>
+
+            <div class="border-t pt-5 mb-5" style="border-color: rgba(255,255,255,.15)">
+              <p class="footer-group-title">Contacto</p>
+              <p class="footer-contact">hola@datealo.cl</p>
+              <p class="footer-contact">Santiago, Chile</p>
+            </div>
+
+            <div class="border-t pt-5" style="border-color: rgba(255,255,255,.15)">
+              <p class="footer-group-title">Legal</p>
+              <a href="#" class="footer-link">Términos y Condiciones</a>
+              <a href="#" class="footer-link">Política de Privacidad</a>
+            </div>
+
+            <div class="footer-copyright border-t mt-6 pt-5 text-center" style="border-color: rgba(255,255,255,.15)">
+              &copy; 2026 datealo. Todos los derechos reservados.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Desktop — en fila ============ -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">
+          Footer · desktop — en fila
+          <small>mismo diseño que la versión mobile, mismo componente en landing y en el resto de la app</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="px-16 py-12" style="background: var(--color-primary);">
+            <div class="grid grid-cols-5 gap-8">
+              <div>
+                <p class="font-heading text-2xl font-extrabold mb-2">
+                  <span class="text-white">datea</span><span class="text-secondary">lo</span>
+                </p>
+                <p class="footer-tagline">Encuentra al profesional que necesitas, cerca de ti.</p>
+              </div>
+              <div>
+                <p class="footer-group-title">Buscador</p>
+                <a href="#" class="footer-link">Buscar profesionales</a>
+              </div>
+              <div>
+                <p class="footer-group-title">Profesionales</p>
+                <a href="#" class="footer-link">Publícate en Datealo</a>
+              </div>
+              <div>
+                <p class="footer-group-title">Contacto</p>
+                <p class="footer-contact">hola@datealo.cl</p>
+                <p class="footer-contact">Santiago, Chile</p>
+              </div>
+              <div>
+                <p class="footer-group-title">Legal</p>
+                <a href="#" class="footer-link">Términos y Condiciones</a>
+                <a href="#" class="footer-link">Política de Privacidad</a>
+              </div>
+            </div>
+            <div class="footer-copyright border-t mt-10 pt-6 text-center" style="border-color: rgba(255,255,255,.15)">
+              &copy; 2026 datealo. Todos los derechos reservados.
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </body>
+</html>
