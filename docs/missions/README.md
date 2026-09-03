@@ -17,6 +17,7 @@ abrieron y de dónde salió cada una.
 | 06  | [búsqueda y resultados](./06-busqueda-resultados/) | producto | 2026-08-13 | cerrada 2026-08-31 | — | — |
 | 07  | [reseñas verificadas por contacto](./07-resenas-verificadas-por-contacto/) | producto | 2026-08-13 | cerrada 2026-08-31 | — | — |
 | 08  | [foto de perfil de profesional](./08-foto-perfil-profesional/) | producto | 2026-08-29 | cerrada 2026-09-02 | — | — |
+| 10  | [vista de resultados de búsqueda](./10-vista-resultados-busqueda/) | producto | 2026-09-01 | lista para construir | — | — |
 
 Misiones 02 a 07 son las seis que llevan al MVP (registrarse, mostrarse, buscar, reseñar), en el orden de
 dependencia definido en la conversación de roadmap del 2026-08-13 — el número no es prioridad, pero acá sí
