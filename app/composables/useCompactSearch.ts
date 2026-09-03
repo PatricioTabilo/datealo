@@ -15,21 +15,14 @@ export function useCompactSearch() {
 
   const ready = computed(() => Boolean(categoriaSlug.value) && Boolean(comunaCodigo.value))
 
-  // Snapshot al abrir, restaurado si se cierra sin confirmar — una selección que ya existía antes de
-  // abrir el panel nunca se pierde, solo se descarta lo tocado en esta apertura.
-  let snapshot: { categoriaSlug: string | null, comunaCodigo: string | null } | null = null
-
   function open(field?: CompactSearchField) {
-    snapshot = { categoriaSlug: categoriaSlug.value, comunaCodigo: comunaCodigo.value }
     activeField.value = field ?? (categoriaSlug.value ? 'comuna' : 'categoria')
     isOpen.value = true
   }
 
+  // Cerrar (click afuera, la X) solo cierra — lo que ya se eligió, elegido queda; no hay "cancelar" que
+  // lo revierta. Confirmar con "Buscar" es la única acción que navega.
   function close() {
-    if (snapshot) {
-      categoriaSlug.value = snapshot.categoriaSlug
-      comunaCodigo.value = snapshot.comunaCodigo
-    }
     isOpen.value = false
   }
 
@@ -38,13 +31,15 @@ export function useCompactSearch() {
     activeField.value = 'comuna'
   }
 
+  // A diferencia de la categoría (que sigue directo al siguiente campo), la comuna es el último paso —
+  // elegirla cierra el panel: no queda nada más por completar antes de poder tocar "Buscar".
   function selectComuna(codigo: string) {
     comunaCodigo.value = codigo
+    isOpen.value = false
   }
 
   async function confirm() {
     if (!ready.value) return
-    snapshot = null
     isOpen.value = false
     await navigateTo({ path: '/buscar', query: { categoria: categoriaSlug.value, comuna: comunaCodigo.value } })
   }

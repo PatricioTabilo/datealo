@@ -88,7 +88,7 @@ no corresponde llenar queda colapsado más abajo, después de la lista.
 | Salida                        | Cómo se ejecuta                                          | Qué queda del trabajo |
 | ------------------------------- | ----------------------------------------------------------- | ------------------------ |
 | Busca con categoría y comuna   | toca una comuna (escrita o de la lista de frecuentes) tras elegir categoría | navega a `/buscar` con ambos filtros aplicados |
-| Cierra sin buscar              | toca la X (mobile) o hace click fuera del panel (desktop) | se descarta lo tocado en esta apertura; si ya había categoría/comuna previas (ej. viene de `/buscar`), esas siguen en el resumen |
+| Cierra sin buscar              | toca la X (mobile) o hace click fuera del panel (desktop) | nada se pierde — lo que se haya elegido (recién o de antes) sigue en el resumen ([UX-002](#ux-002)) |
 
 ### Secuencia principal
 
@@ -271,16 +271,24 @@ o ausencia del avatar — no hay otro estado visual permanente para esto.
 
 <a id="ux-002"></a>
 
-### UX-002 — Cerrar el buscador sin confirmar nunca borra una selección que ya existía antes de abrirlo
+### UX-002 — Cerrar el buscador sin confirmar nunca borra una selección, elegida ahora o antes de abrirlo
 
 - **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Sustento:** hallazgo propio al escribir UXF-001 — el gate de experiencia pide que ninguna salida
   pierda trabajo sin avisar.
 - **Alternativas descartadas:** limpiar todo al cerrar sin confirmar — se descarta porque castiga a
   alguien que solo quería revisar o ajustar un filtro y se arrepiente a mitad de camino, perdiendo el
-  filtro que sí tenía bien puesto.
-- **Decisión y consecuencia:** el estado del buscador compacto distingue "lo que ya estaba" de "lo que se
-  tocó en esta apertura" — solo lo segundo se descarta al cerrar sin confirmar.
+  filtro que sí tenía bien puesto. Revertir solo lo tocado en la apertura actual, conservando lo que ya
+  existía antes de abrir (versión original de esta decisión) — se descarta en la revisión de abajo.
+- **Decisión y consecuencia:** cerrar el panel (click afuera, la X) nunca descarta nada — lo que se haya
+  elegido, elegido queda, se haya tocado recién o ya viniera de antes. Confirmar con "Buscar" es la única
+  acción que navega; cerrar es solo cerrar.
+- **Revisión (2026-09-02):** la versión original solo protegía una selección previa a abrir el panel,
+  revirtiendo cualquier cambio hecho en esa apertura si se cerraba sin confirmar. Probado en un dispositivo
+  real, esto se sintió como perder trabajo: elegir una categoría y cerrar sin querer (o sin haber llegado
+  a elegir comuna todavía) borraba la categoría recién elegida — exactamente el caso que el sustento de
+  esta misma decisión dice que hay que evitar. Se simplificó a "nunca se pierde nada al cerrar", sin
+  distinguir cuándo se eligió.
 - **Impacto en producto:** ninguno — es un detalle de estado que no cambia ninguna regla de F-002.
 
 <a id="ux-003"></a>

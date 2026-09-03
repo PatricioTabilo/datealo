@@ -42,7 +42,7 @@ function iconFor(slug: string) {
           v-for="item in categoriaItems"
           :key="item.value"
           type="button"
-          class="flex w-full items-center gap-3 px-4 py-3.5 text-left"
+          class="flex w-full items-center gap-3 rounded-lg px-4 py-3.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
           @click="emit('select-categoria', item.value)"
         >
           <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-datealo-surface text-primary">
@@ -63,7 +63,7 @@ function iconFor(slug: string) {
           v-for="item in comunaResults"
           :key="item.value"
           type="button"
-          class="flex w-full items-center gap-3 px-4 py-3 text-left"
+          class="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
           @click="emit('select-comuna', item.value)"
         >
           <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-datealo-surface text-primary">

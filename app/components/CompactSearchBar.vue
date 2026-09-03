@@ -38,36 +38,37 @@ const summary = computed(() => {
       <span v-else class="text-sm font-medium text-datealo-muted">¿Qué profesional buscas?</span>
     </button>
 
-    <div class="hidden items-stretch overflow-hidden rounded-full bg-white shadow-[0_6px_18px_-8px_rgba(31,41,55,0.18)] lg:flex">
+    <div class="relative z-40 hidden items-center gap-1 rounded-full bg-white p-1.5 shadow-[0_6px_18px_-8px_rgba(31,41,55,0.18)] lg:flex">
       <button
         type="button"
-        class="flex min-w-36 flex-col justify-center border-r border-datealo-surface px-5 py-2 text-left"
+        class="flex min-w-48 flex-col justify-center rounded-full px-6 py-3 text-left hover:bg-datealo-surface"
         @click="open('categoria')"
       >
-        <span class="text-[0.625rem] font-bold uppercase tracking-wide text-datealo-muted">Categoría</span>
-        <span class="text-[0.8125rem] font-bold" :class="categoriaLabel ? 'text-datealo-text' : 'font-medium text-datealo-muted'">
+        <span class="text-xs font-bold uppercase tracking-wide text-datealo-muted">Categoría</span>
+        <span class="text-sm font-bold" :class="categoriaLabel ? 'text-datealo-text' : 'font-medium text-datealo-muted'">
           {{ categoriaLabel ?? 'Elige categoría' }}
         </span>
       </button>
+      <div class="h-8 w-px shrink-0 bg-datealo-surface" />
       <button
         type="button"
-        class="flex min-w-36 flex-col justify-center px-5 py-2 text-left"
+        class="flex min-w-48 flex-col justify-center rounded-full px-6 py-3 text-left hover:bg-datealo-surface"
         @click="open('comuna')"
       >
-        <span class="text-[0.625rem] font-bold uppercase tracking-wide text-datealo-muted">Comuna</span>
-        <span class="text-[0.8125rem] font-bold" :class="comunaLabel ? 'text-datealo-text' : 'font-medium text-datealo-muted'">
+        <span class="text-xs font-bold uppercase tracking-wide text-datealo-muted">Comuna</span>
+        <span class="text-sm font-bold" :class="comunaLabel ? 'text-datealo-text' : 'font-medium text-datealo-muted'">
           {{ comunaLabel ?? 'Elige comuna' }}
         </span>
       </button>
       <button
         type="button"
+        aria-label="Buscar"
         :disabled="!ready"
-        class="flex items-center gap-2 px-6 text-sm font-bold text-white disabled:cursor-not-allowed"
+        class="ml-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white disabled:cursor-not-allowed"
         :class="ready ? 'bg-secondary' : 'bg-secondary/50'"
         @click="confirm"
       >
-        <Search class="h-4 w-4" />
-        Buscar
+        <Search class="h-5 w-5" />
       </button>
     </div>
 
@@ -105,7 +106,7 @@ const summary = computed(() => {
 
     <div
       v-if="isOpen"
-      class="absolute left-0 top-full z-40 mt-2 hidden w-96 rounded-2xl border border-datealo-surface bg-white p-3 shadow-[0_24px_48px_-16px_rgba(31,41,55,0.3)] lg:block"
+      class="absolute left-0 top-full z-40 mt-3 hidden w-96 rounded-2xl border border-datealo-surface bg-white p-4 shadow-[0_24px_48px_-16px_rgba(31,41,55,0.3)] lg:block"
     >
       <CompactSearchBarPanel :active-field="activeField" @select-categoria="selectCategoria" @select-comuna="selectComuna" />
     </div>
