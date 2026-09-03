@@ -22,6 +22,17 @@ watch([categoriaSlug, comunaCodigo], ([categoria, comuna]) => {
 })
 lastSearchQuery.value = { categoria: categoriaSlug.value, comuna: comunaCodigo.value }
 
+// CompactSearchBar (en AppHeader) navega a /buscar con una nueva query estando ya en /buscar — misma
+// ruta, así que el componente no se remonta y el seed inicial de arriba no vuelve a correr. Sin este
+// watch, la URL cambia pero categoriaSlug/comunaCodigo (lo que de verdad dispara la búsqueda) quedan
+// pegados en el valor viejo.
+watch(() => route.query, (query) => {
+  const categoria = typeof query.categoria === 'string' ? query.categoria : null
+  const comuna = typeof query.comuna === 'string' ? query.comuna : null
+  if (categoria !== categoriaSlug.value) categoriaSlug.value = categoria
+  if (comuna !== comunaCodigo.value) comunaCodigo.value = comuna
+})
+
 const { items: categorias } = useCategoriasCatalog()
 const { items: comunas } = useComunasCatalog()
 const categoriaNombre = computed(() => categorias.value.find(item => item.value === categoriaSlug.value)?.label ?? '')

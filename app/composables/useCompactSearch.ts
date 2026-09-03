@@ -15,8 +15,12 @@ export function useCompactSearch() {
 
   const ready = computed(() => Boolean(categoriaSlug.value) && Boolean(comunaCodigo.value))
 
-  function open(field?: CompactSearchField) {
-    activeField.value = field ?? (categoriaSlug.value ? 'comuna' : 'categoria')
+  // El botón compacto de mobile llama open() sin argumento — siempre parte en categoría, incluso si ya
+  // hay una elegida (ej. en /buscar): es el único campo con lista corta y sin buscador de texto, así que
+  // reelegirla de paso no cuesta un tap extra. Desktop siempre pasa el field explícito y nunca pasa por
+  // este default.
+  function open(field: CompactSearchField = 'categoria') {
+    activeField.value = field
     isOpen.value = true
   }
 
