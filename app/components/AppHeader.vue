@@ -52,7 +52,7 @@ const { professional } = await useProfessionalSession()
         Volver
       </NuxtLink>
 
-      <CompactSearchBar v-if="isBuscar" />
+      <CompactSearchBar v-if="isBuscar" dense />
       <span v-else />
 
       <NuxtLink

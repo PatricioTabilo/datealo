@@ -41,11 +41,6 @@ const comunaNombre = computed(() => comunas.value.find(item => item.value === co
 const { ready, pending, error, slow, results, matchType, categoryHasResultsInChile, refresh } =
   useSearchResults(categoriaSlug, comunaCodigo)
 
-const comunaSelect = useTemplateRef('comunaSelect')
-watch(categoriaSlug, (value) => {
-  if (value && !comunaCodigo.value) comunaSelect.value?.focus()
-})
-
 useSeoMeta({
   title: () => categoriaNombre.value && comunaNombre.value
     ? `${categoriaNombre.value} en ${comunaNombre.value}`
@@ -55,21 +50,6 @@ useSeoMeta({
 
 <template>
   <div class="flex min-h-screen flex-col">
-    <div class="sticky top-0 z-10 flex gap-2 border-b border-datealo-surface bg-datealo-bg p-3.5">
-      <div class="flex-1">
-        <label for="buscar-categoria" class="mb-1 block text-[0.625rem] font-bold uppercase tracking-wide text-datealo-muted">
-          Categoría
-        </label>
-        <CategoriaSelect id="buscar-categoria" v-model="categoriaSlug" />
-      </div>
-      <div class="flex-1">
-        <label for="buscar-comuna" class="mb-1 block text-[0.625rem] font-bold uppercase tracking-wide text-datealo-muted">
-          Comuna
-        </label>
-        <ComunaSelect id="buscar-comuna" ref="comunaSelect" v-model="comunaCodigo" />
-      </div>
-    </div>
-
     <SearchEmptyState
       v-if="!ready"
       :title="categoriaSlug && !comunaCodigo ? 'Elige tu comuna' : 'Elige una categoría y tu comuna'"
