@@ -1,6 +1,7 @@
-import { and, asc, eq } from 'drizzle-orm'
-import { comunas } from '../db/schema/comunas'
+import { and, asc, count, desc, eq } from 'drizzle-orm'
 import { comunaVecinas } from '../db/schema/comuna-vecinas'
+import { comunas } from '../db/schema/comunas'
+import { professionals } from '../db/schema/professionals'
 
 export async function findActiveComunas() {
   return useDb()
@@ -32,4 +33,18 @@ export async function findVecinasActivas(comunaCodigo: string): Promise<{ codigo
     .innerJoin(comunas, eq(comunaVecinas.vecinaCodigo, comunas.codigo))
     .where(and(eq(comunaVecinas.comunaCodigo, comunaCodigo), eq(comunas.activa, true)))
     .orderBy(asc(comunas.nombre))
+}
+
+export async function findComunasFrecuentes(limit = 3): Promise<{ codigo: string, nombre: string }[]> {
+  return useDb()
+    .select({ codigo: comunas.codigo, nombre: comunas.nombre })
+    .from(comunas)
+    .innerJoin(
+      professionals,
+      and(eq(professionals.comunaCodigo, comunas.codigo), eq(professionals.active, true)),
+    )
+    .where(eq(comunas.activa, true))
+    .groupBy(comunas.codigo, comunas.nombre)
+    .orderBy(desc(count(professionals.id)))
+    .limit(limit)
 }
