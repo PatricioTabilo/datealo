@@ -174,7 +174,7 @@ hace falta tocar `server/db/sql/rls.sql` en esta misión.
 
 ### T-001 — Un layout de Nuxt nuevo (`general.vue`) en vez de repetir `AppHeader`+`AppFooter` en cada página
 
-- **Estado:** propuesta. **Fecha:** 2026-09-02.
+- **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Contratos:** F-001, F-003.
 - **Alternativas descartadas:** poner `AppHeader`+`AppFooter` directo en el template de cada una de las
   cinco páginas afectadas — funciona, pero duplica el mismo wrapper cinco veces y diverge la primera vez
@@ -188,7 +188,7 @@ hace falta tocar `server/db/sql/rls.sql` en esta misión.
 
 ### T-002 — `LandingFooter` es un wrapper delgado sobre `AppFooter`, no un componente con el mismo contenido copiado
 
-- **Estado:** propuesta. **Fecha:** 2026-09-02.
+- **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Contratos:** F-003, D-002.
 - **Alternativas descartadas:** copiar el markup de los cinco grupos en los dos archivos (lo que existía
   hasta ahora entre `LandingFooter` y la ausencia de un footer general) — diverge en el primer cambio de
@@ -206,7 +206,7 @@ hace falta tocar `server/db/sql/rls.sql` en esta misión.
 
 ### T-003 — `useProfessionalSession()` comparte el `useState` de `useProfessionalProfile` en vez de duplicar el fetch
 
-- **Estado:** propuesta. **Fecha:** 2026-09-02.
+- **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Contratos:** TC-001, D-005.
 - **Alternativas descartadas:** un composable totalmente independiente con su propio `useState` — en
   `/profesional/perfil`, donde `AppHeader` y la página de edición conviven, esto dispararía dos fetches del
@@ -224,7 +224,7 @@ hace falta tocar `server/db/sql/rls.sql` en esta misión.
 
 ### T-004 — El botón de volver nunca usa `router.back()`, calcula el destino por ruta
 
-- **Estado:** propuesta. **Fecha:** 2026-09-02.
+- **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Contratos:** TC-004, UXF-002.
 - **Alternativas descartadas:** `router.back()` — se rompe exactamente en el caso que
   [F-001](./producto.md#f-001) nombra como ejemplo verificable: alguien que entra directo a un perfil desde
@@ -241,7 +241,7 @@ hace falta tocar `server/db/sql/rls.sql` en esta misión.
 
 ### T-005 — Términos y Privacidad usan un header propio y chico, no el layout `general` ni `AppHeader`
 
-- **Estado:** propuesta. **Fecha:** 2026-09-02.
+- **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Contratos:** F-004.
 - **Alternativas descartadas:** meterlas en el layout `general.vue` junto con `/buscar` y el perfil — le
   agregaría un buscador y una zona de avatar irrelevantes a dos páginas de puro texto legal; los mockups ya

@@ -306,7 +306,7 @@ usa cookies de tracking de terceros hoy; si eso cambia, se revisita.
 
 ### D-001 — El header sigue un patrón de profundidad, no una estructura fija idéntica en toda página
 
-- **Estado:** propuesta. **Fecha:** 2026-09-08.
+- **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Sustento:** [C-001](./investigacion.md#c-001), [C-002](./investigacion.md#c-002),
   [C-005](./investigacion.md#c-005), [C-011](./investigacion.md#c-011).
 - **Tensión:** consistencia y simplicidad de un solo diseño fijo vs. utilidad contextual real, respaldada
@@ -330,7 +330,7 @@ usa cookies de tracking de terceros hoy; si eso cambia, se revisita.
 
 ### D-002 — La landing mantiene su propio header, separado del header general de la app; el footer usa el mismo diseño en ambos
 
-- **Estado:** propuesta. **Fecha:** 2026-09-08.
+- **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Sustento:** [C-001](./investigacion.md#c-001), [C-006](./investigacion.md#c-006).
 - **Tensión:** reducir duplicación de componentes vs. la landing tiene necesidades propias en el header
   (buscador grande en el hero, nav con anclas a secciones propias) que el footer no tiene.
@@ -358,7 +358,7 @@ usa cookies de tracking de terceros hoy; si eso cambia, se revisita.
 
 ### D-003 — Las referencias de benchmark se adoptan solo para pulido visual y estructura de header/footer; sus secciones y funcionalidades adicionales quedan fuera de alcance
 
-- **Estado:** propuesta. **Fecha:** 2026-09-08.
+- **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Sustento:** [C-003](./investigacion.md#c-003), [C-004](./investigacion.md#c-004).
 - **Tensión:** la "robustez" que pidió el dueño de producto vs. los guardrails de no agregar pasos al
   flujo core ni features/contenido antes de tener tracción.
@@ -373,7 +373,7 @@ usa cookies de tracking de terceros hoy; si eso cambia, se revisita.
 
 ### D-004 — El contenido de cada footer se organiza en cuatro columnas: lado buscador, lado profesional, contacto y legal — la legal apunta a las páginas simples que esta misión construye
 
-- **Estado:** propuesta. **Fecha:** 2026-09-08.
+- **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Sustento:** [C-004](./investigacion.md#c-004), [C-006](./investigacion.md#c-006),
   [E-010](./investigacion.md#e-010), [E-018](./investigacion.md#e-018).
 - **Tensión:** el footer de referencia (benchmark) incluye legal, pero Datealo no tenía páginas de destino
@@ -392,7 +392,7 @@ usa cookies de tracking de terceros hoy; si eso cambia, se revisita.
 
 ### D-005 — El header general muestra el avatar del profesional (link a "Mi perfil") cuando hay sesión activa; sin sesión, no muestra ningún acceso al lado profesional fuera de la landing
 
-- **Estado:** propuesta. **Fecha:** 2026-09-08.
+- **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Sustento:** [C-008](./investigacion.md#c-008).
 - **Tensión:** mostrar siempre el mismo CTA de registro a alguien que ya tiene perfil es lo más simple de
   implementar, pero le habla mal justo al lado más caro de conseguir y retener — y en mobile, agregar un
@@ -416,7 +416,7 @@ usa cookies de tracking de terceros hoy; si eso cambia, se revisita.
 
 ### D-006 — El buscador es un patrón "expandible" en mobile (botón/resumen que abre una vista completa), no los mismos campos inline achicados
 
-- **Estado:** propuesta. **Fecha:** 2026-09-08.
+- **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Sustento:** [C-009](./investigacion.md#c-009).
 - **Tensión:** reusar el mismo componente de campos en mobile y desktop (menos código) vs. la evidencia de
   que en mobile esos campos se sienten apretados y compiten con el teclado.
@@ -432,7 +432,7 @@ usa cookies de tracking de terceros hoy; si eso cambia, se revisita.
 
 ### D-007 — Datealo no implementa un bottom nav en esta misión
 
-- **Estado:** propuesta. **Fecha:** 2026-09-08.
+- **Estado:** aceptada. **Fecha:** 2026-09-02.
 - **Sustento:** [C-010](./investigacion.md#c-010).
 - **Tensión:** las guías de UX mobile recomiendan bottom nav para apps donde buscar es la acción principal
   vs. Datealo no tiene suficientes destinos reales y distintos para llenarlo con sentido.
