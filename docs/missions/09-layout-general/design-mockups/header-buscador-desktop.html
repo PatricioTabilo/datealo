@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Header y buscador — desktop — misión 09</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+    <style>
+      .nav-bar-d {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        padding: 1rem 3rem;
+      }
+      .logo-mark { font-family: var(--font-heading); font-weight: 800; font-size: 1.5rem; letter-spacing: -0.02em; }
+      .compact-search {
+        display: flex;
+        align-items: stretch;
+        background: var(--ui-bg);
+        border-radius: 999px;
+        box-shadow: 0 6px 18px -8px rgb(31 41 55 / 0.18);
+        overflow: hidden;
+      }
+      .compact-search .seg {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0.5rem 1.25rem;
+        min-width: 9rem;
+      }
+      .compact-search .seg + .seg { border-left: 1px solid var(--ui-border); }
+      .compact-search .seg-label { font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ui-text-muted); }
+      .compact-search .seg-value { font-size: 0.8125rem; font-weight: 700; color: var(--ui-text-highlighted); }
+      .compact-search .seg-value.is-empty { color: var(--ui-text-dimmed); font-weight: 500; }
+      .compact-search .go-btn { display:flex; align-items:center; justify-content:center; gap:.5rem; background: var(--color-secondary); color:#fff; font-weight:700; font-size:.8125rem; padding: 0 1.5rem; }
+      .pill-btn { border-radius: 999px; font-weight: 700; font-size: .8125rem; padding: .625rem 1.25rem; }
+      .dropdown-panel {
+        position: absolute;
+        top: 4.75rem;
+        left: 3rem;
+        width: 24rem;
+        background: var(--ui-bg);
+        border-radius: 1rem;
+        border: 1px solid var(--ui-border);
+        box-shadow: 0 24px 48px -16px rgb(31 41 55 / 0.3);
+        overflow: hidden;
+        z-index: 20;
+      }
+      .category-row-d { display:flex; align-items:center; gap:.75rem; padding: .75rem 1.125rem; }
+      .category-row-d:hover { background: var(--ui-bg-muted); }
+      .category-icon-d { width: 2rem; height: 2rem; border-radius: .5rem; background: var(--ui-bg-muted); display:flex; align-items:center; justify-content:center; flex-shrink:0; color: var(--ui-primary); }
+      .back-btn-d {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.875rem 0.5rem 0.625rem;
+        border-radius: 999px;
+        color: var(--ui-text-highlighted);
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+      .back-btn-d:hover { background: var(--ui-bg-muted); }
+      a:focus-visible,
+      button:focus-visible,
+      .back-btn-d:focus-visible {
+        outline: 2px solid var(--ui-primary);
+        outline-offset: 2px;
+      }
+      /* 3 zonas: volver | buscador centrado respecto al ancho total | avatar (o vacío). Grid en vez de
+         flex — con flex el buscador quedaba agrupado junto al botón de volver, no centrado de verdad
+         (hallazgo del dueño de producto). Las columnas 1fr son iguales en ancho aunque la derecha esté
+         vacía, así el buscador del medio queda centrado igual. */
+      .nav-bar-d-3col {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1rem 3rem;
+      }
+      .nav-bar-d-3col .zone-left { justify-self: start; }
+      .nav-bar-d-3col .zone-right { justify-self: end; }
+      .avatar-btn-d {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 999px;
+        background: var(--ui-primary);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+
+      <!-- ============ Landing, antes de scroll ============ -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">Landing · header antes de scroll (desktop)</div>
+        <div class="frame-viewport">
+          <div class="nav-bar-d" style="background: var(--ui-primary);">
+            <span class="logo-mark"><span class="text-white">datea</span><span class="text-secondary">lo</span></span>
+            <div class="flex items-center gap-3">
+              <a href="#categorias" class="rounded-lg px-2.5 py-2.5 text-sm font-semibold text-white/85">Categorías</a>
+              <a href="#" class="pill-btn bg-white text-primary">Publícate</a>
+            </div>
+          </div>
+          <div class="p-12">
+            <p class="font-heading text-4xl font-extrabold leading-tight text-datealo-text max-w-lg">Deja de buscar en grupos de Facebook.</p>
+            <p class="mt-4 text-sm text-datealo-muted">↓ Buscador grande del hero acá abajo (ver misión 12)</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Landing tras scroll — buscador inline ============ -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">Landing · header tras scroll — buscador compacto inline</div>
+        <div class="frame-viewport" style="position:relative;">
+          <div class="nav-bar-d" style="background: color-mix(in oklab, var(--ui-primary) 96%, black);">
+            <span class="logo-mark text-lg"><span class="text-white">datea</span><span class="text-secondary">lo</span></span>
+            <div class="compact-search">
+              <div class="seg"><span class="seg-label">Categoría</span><span class="seg-value is-empty">Elige categoría</span></div>
+              <div class="seg"><span class="seg-label">Comuna</span><span class="seg-value is-empty">Elige comuna</span></div>
+              <div class="go-btn" style="opacity:.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Buscar</div>
+            </div>
+            <span class="pill-btn bg-white text-primary">Publícate</span>
+          </div>
+          <div class="p-10 grid grid-cols-3 gap-4">
+            <div class="h-40 rounded-2xl" style="background:var(--ui-bg-muted)"></div>
+            <div class="h-40 rounded-2xl" style="background:var(--ui-bg-muted)"></div>
+            <div class="h-40 rounded-2xl" style="background:var(--ui-bg-muted)"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ /buscar — sin sesión ============ -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">/buscar · header, sin sesión — buscador centrado respecto al ancho total, nada a la derecha</div>
+        <div class="frame-viewport">
+          <div class="nav-bar-d-3col" style="border-bottom: 1px solid var(--ui-border);">
+            <button class="back-btn-d zone-left" aria-label="Volver al inicio">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>Volver</span>
+            </button>
+            <div class="compact-search">
+              <div class="seg"><span class="seg-label">Categoría</span><span class="seg-value">Gasfitería</span></div>
+              <div class="seg"><span class="seg-label">Comuna</span><span class="seg-value">Ñuñoa</span></div>
+              <div class="go-btn"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Buscar</div>
+            </div>
+            <span class="zone-right"></span>
+          </div>
+          <div class="p-10">
+            <p class="text-xs text-datealo-muted mb-4">6 resultados</p>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="rounded-2xl border p-4" style="border-color:var(--ui-border)">
+                <div class="w-11 h-11 rounded-full flex items-center justify-center text-white font-extrabold text-sm mb-3" style="background:var(--ui-primary)">MF</div>
+                <p class="text-sm font-extrabold text-datealo-text">Marcela Fuentes</p>
+                <p class="text-xs text-datealo-muted mt-1">Gasfitería · Ñuñoa · 4,8 (23)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ /buscar — con sesión ============ -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">/buscar · header, con sesión (UXF-003) — avatar a la derecha, buscador se sigue centrando</div>
+        <div class="frame-viewport">
+          <div class="nav-bar-d-3col" style="border-bottom: 1px solid var(--ui-border);">
+            <button class="back-btn-d zone-left" aria-label="Volver al inicio">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>Volver</span>
+            </button>
+            <div class="compact-search">
+              <div class="seg"><span class="seg-label">Categoría</span><span class="seg-value">Gasfitería</span></div>
+              <div class="seg"><span class="seg-label">Comuna</span><span class="seg-value">Ñuñoa</span></div>
+              <div class="go-btn"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Buscar</div>
+            </div>
+            <a href="#" class="avatar-btn-d zone-right" aria-label="Mi perfil">RM</a>
+          </div>
+          <div class="p-10">
+            <p class="text-xs text-datealo-muted mb-4">6 resultados</p>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="rounded-2xl border p-4" style="border-color:var(--ui-border)">
+                <div class="w-11 h-11 rounded-full flex items-center justify-center text-white font-extrabold text-sm mb-3" style="background:var(--ui-primary)">MF</div>
+                <p class="text-sm font-extrabold text-datealo-text">Marcela Fuentes</p>
+                <p class="text-xs text-datealo-muted mt-1">Gasfitería · Ñuñoa · 4,8 (23)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Perfil — sin sesión ============ -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">Perfil público · header, sin sesión — solo volver</div>
+        <div class="frame-viewport">
+          <div class="nav-bar-d">
+            <button class="back-btn-d" aria-label="Volver a la búsqueda">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>Volver</span>
+            </button>
+            <span></span>
+          </div>
+          <div class="px-10 pb-10 flex gap-8">
+            <div class="w-[55%] aspect-4/3 rounded-2xl" style="background:var(--ui-bg-muted)"></div>
+            <div class="flex-1 space-y-2 pt-2">
+              <p class="text-xl font-extrabold text-datealo-text">Marcela Fuentes</p>
+              <p class="text-sm text-datealo-muted">Gasfitería · Ñuñoa</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Perfil — con sesión ============ -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">Perfil público · header, con sesión (UXF-003) — avatar a la derecha</div>
+        <div class="frame-viewport">
+          <div class="nav-bar-d">
+            <button class="back-btn-d" aria-label="Volver a la búsqueda">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>Volver</span>
+            </button>
+            <a href="#" class="avatar-btn-d" aria-label="Mi perfil">RM</a>
+          </div>
+          <div class="px-10 pb-10 flex gap-8">
+            <div class="w-[55%] aspect-4/3 rounded-2xl" style="background:var(--ui-bg-muted)"></div>
+            <div class="flex-1 space-y-2 pt-2">
+              <p class="text-xl font-extrabold text-datealo-text">Marcela Fuentes</p>
+              <p class="text-sm text-datealo-muted">Gasfitería · Ñuñoa</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Buscador desplegado — categoría ============ -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">Buscador compacto · panel flotante, campo categoría</div>
+        <div class="frame-viewport" style="position:relative;">
+          <div class="nav-bar-d" style="border-bottom: 1px solid var(--ui-border);">
+            <span class="logo-mark text-lg"><span style="color:var(--ui-primary)">datea</span><span class="text-secondary">lo</span></span>
+            <div class="compact-search" style="box-shadow:0 0 0 3px color-mix(in oklab, var(--ui-primary) 15%, transparent);">
+              <div class="seg"><span class="seg-label">Categoría</span><span class="seg-value is-empty">Elige categoría</span></div>
+              <div class="seg"><span class="seg-label">Comuna</span><span class="seg-value is-empty">Elige comuna</span></div>
+              <div class="go-btn" style="opacity:.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Buscar</div>
+            </div>
+            <span class="pill-btn" style="background:var(--ui-bg-muted)">Publícate</span>
+          </div>
+          <div class="dropdown-panel" style="left:9.5rem;">
+            <p class="px-4 pt-3 pb-1 text-[0.6875rem] font-bold uppercase tracking-wide text-datealo-muted">Categorías</p>
+            <div class="divide-y" style="border-color:var(--ui-border)">
+              <div class="category-row-d"><div class="category-icon-d"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94z"/></svg></div><span class="text-sm font-semibold text-datealo-text">Gasfitería</span></div>
+              <div class="category-row-d"><div class="category-icon-d"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><span class="text-sm font-semibold text-datealo-text">Electricidad</span></div>
+              <div class="category-row-d"><div class="category-icon-d"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></div><span class="text-sm font-semibold text-datealo-text">Peluquería</span></div>
+              <div class="category-row-d"><div class="category-icon-d"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.9 15.5A2 2 0 008.5 14L2 12l6.5-2a2 2 0 001.4-1.5L11.5 2l1.6 6.5A2 2 0 0014.5 10L21 12l-6.5 2a2 2 0 00-1.5 1.5z"/></svg></div><span class="text-sm font-semibold text-datealo-text">Limpieza</span></div>
+            </div>
+          </div>
+          <div class="px-10 pt-24 pb-10 opacity-40">
+            <div class="grid grid-cols-3 gap-4">
+              <div class="h-32 rounded-2xl" style="background:var(--ui-bg-muted)"></div>
+              <div class="h-32 rounded-2xl" style="background:var(--ui-bg-muted)"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Buscador desplegado — comuna ============ -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">Buscador compacto · panel flotante, campo comuna</div>
+        <div class="frame-viewport" style="position:relative;">
+          <div class="nav-bar-d" style="border-bottom: 1px solid var(--ui-border);">
+            <span class="logo-mark text-lg"><span style="color:var(--ui-primary)">datea</span><span class="text-secondary">lo</span></span>
+            <div class="compact-search" style="box-shadow:0 0 0 3px color-mix(in oklab, var(--ui-primary) 15%, transparent);">
+              <div class="seg"><span class="seg-label">Categoría</span><span class="seg-value">Gasfitería</span></div>
+              <div class="seg"><span class="seg-label">Comuna</span><span class="seg-value is-empty">Elige comuna</span></div>
+              <div class="go-btn" style="opacity:.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Buscar</div>
+            </div>
+            <span class="pill-btn" style="background:var(--ui-bg-muted)">Publícate</span>
+          </div>
+          <div class="dropdown-panel" style="left:15.5rem;">
+            <div class="p-3">
+              <input class="w-full rounded-lg px-3 py-2 text-sm" style="border:1.5px solid var(--ui-border-accented)" placeholder="Escribe tu comuna…" />
+            </div>
+            <p class="px-4 pt-1 pb-1 text-[0.6875rem] font-bold uppercase tracking-wide text-datealo-muted">Comunas frecuentes</p>
+            <div class="divide-y" style="border-color:var(--ui-border)">
+              <div class="category-row-d"><div class="category-icon-d"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div><span class="text-sm font-semibold text-datealo-text">Ñuñoa</span></div>
+              <div class="category-row-d"><div class="category-icon-d"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div><span class="text-sm font-semibold text-datealo-text">Providencia</span></div>
+              <div class="category-row-d"><div class="category-icon-d"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div><span class="text-sm font-semibold text-datealo-text">Santiago</span></div>
+            </div>
+          </div>
+          <div class="px-10 pt-24 pb-10 opacity-40">
+            <div class="grid grid-cols-3 gap-4">
+              <div class="h-32 rounded-2xl" style="background:var(--ui-bg-muted)"></div>
+              <div class="h-32 rounded-2xl" style="background:var(--ui-bg-muted)"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Header con sesión de profesional activa ============ -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">Landing · header con sesión activa (UXF-003) — "Mi perfil" reemplaza a "Publícate"</div>
+        <div class="frame-viewport">
+          <div class="nav-bar-d" style="background: var(--ui-primary);">
+            <span class="logo-mark"><span class="text-white">datea</span><span class="text-secondary">lo</span></span>
+            <div class="flex items-center gap-3">
+              <a href="#categorias" class="rounded-lg px-2.5 py-2.5 text-sm font-semibold text-white/85">Categorías</a>
+              <a href="#" class="pill-btn bg-white text-primary">Mi perfil</a>
+            </div>
+          </div>
+          <div class="p-12">
+            <p class="font-heading text-4xl font-extrabold leading-tight text-datealo-text max-w-lg">Deja de buscar en grupos de Facebook.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ /buscar — sin resultados (CL-002) ============ -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">/buscar · sin resultados (CL-002) — el resumen del buscador se mantiene visible</div>
+        <div class="frame-viewport">
+          <div class="nav-bar-d-3col" style="border-bottom: 1px solid var(--ui-border);">
+            <button class="back-btn-d zone-left" aria-label="Volver al inicio">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.25" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>Volver</span>
+            </button>
+            <div class="compact-search">
+              <div class="seg"><span class="seg-label">Categoría</span><span class="seg-value">Jardinería</span></div>
+              <div class="seg"><span class="seg-label">Comuna</span><span class="seg-value">Ñuñoa</span></div>
+              <div class="go-btn"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Buscar</div>
+            </div>
+            <span class="zone-right"></span>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-3 text-center" style="height: 500px;">
+            <svg class="w-10 h-10" style="color:var(--ui-text-dimmed)" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><line x1="8" y1="8" x2="14" y2="14"/></svg>
+            <p class="text-base font-extrabold text-datealo-text">Todavía no hay jardineros en Ñuñoa</p>
+            <p class="text-sm text-datealo-muted">Usa el buscador de arriba para probar con otra comuna.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </body>
+</html>
