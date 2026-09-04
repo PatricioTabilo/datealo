@@ -102,7 +102,7 @@ export async function validateProfessionalFields(
 
 // Compartido entre Professional (esta forma) y PublicProfessionalProfile (misión 05) — las dos guardan
 // solo el path del bucket y calculan la URL pública recién al responder.
-function buildPhotoUrls(photoPaths: string[]): string[] {
+export function buildPhotoUrls(photoPaths: string[]): string[] {
   const { public: pub } = useRuntimeConfig()
   return photoPaths.map(path => `${pub.supabaseUrl}/storage/v1/object/public/professional-photos/${path}`)
 }
