@@ -2,7 +2,7 @@
 
 **Estado:** activo
 
-**Última actualización:** 2026-09-02
+**Última actualización:** 2026-09-03
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -86,6 +86,8 @@ una entrevista, la columna "límite" es lo que impide que se lea como dato duro.
 | E-019 | investigación | búsqueda sobre diseño de footer, mobile vs. desktop | En desktop, 4-6 columnas es el máximo recomendado — Datealo ya está en 4. En mobile, la práctica estándar es apilar todo en una sola columna, o usar acordeón cuando hay muchos links (algunos footers de referencia manejan 50-75). | Guía general — no dice qué hacer cuando, como Datealo, el footer es intencionalmente chico (~5 links reales); esa lectura es propia (ver [C-014](#c-014)). |
 | E-020 | código      | búsqueda de `geolocation`/`getCurrentPosition` en todo `app/` y `server/` | No existe ningún uso de la API de geolocalización del navegador en el código hoy — cero resultados. | Confirma que "Cerca de ti" (tomado literal de la referencia de Airbnb, [E-017](#e-017)) describía una funcionalidad nueva que nadie pidió, colada por copiar el detalle visual de la referencia sin auditarlo — el dueño de producto lo detectó y pidió sacarlo (ver [C-015](#c-015)). |
 | E-021 | código      | `server/api/search.get.ts`, `app/pages/buscar/index.vue` (misión 06, ya construido) | `/api/search` exige `categoria` **y** `comuna` — responde `400 comuna_required` si falta la comuna. `/buscar` refleja lo mismo: sin comuna elegida muestra el estado "Elige tu comuna" y nunca dispara la búsqueda (`ready` en `useSearchResults` requiere ambos valores). El fallback "vecina" que sí existe busca en comunas cercanas **a la comuna elegida**, no reemplaza el requisito de elegir una. | Al escribir esta misión se documentó un camino "buscar solo con categoría" que ninguna parte del código soportaba — se detectó auditando el código antes de armar `ingenieria.md` (ver [C-016](#c-016)). |
+| E-022 | benchmark   | `airbnb.cl` (sitio desktop, sesión real del dueño de producto) navegado en vivo el 2026-09-03 | En resultados de búsqueda (`/s/Providencia--Chile/homes`) y en el detalle de una propiedad, el header muestra el logo completo ("airbnb", texto + isotipo) junto al buscador compacto y el avatar — nunca una flecha "volver", ni siquiera en el detalle de una propiedad específica. En "Configuración de la cuenta" (equivalente más cercano a `/profesional/perfil`: fila por campo con su link "Edita"/"Agregar"), el header cambia a un patrón distinto — solo el isotipo (sin el texto "airbnb") y un botón "Listo" arriba a la derecha; "Listo" no vuelve a la página anterior, navega directo a la home (`/`). | Es el sitio desktop, no la app mobile de [E-013](#e-013) — son productos con comportamiento distinto. La cuenta de prueba tenía sesión activa y contenido personalizado ("Vistos recientemente"), no se probó el estado sin sesión. |
+| E-023 | benchmark   | mismas páginas de `airbnb.cl`, scrolleadas hasta el final de los resultados y del home con sesión | El header no cambia de alto ni de contenido al hacer scroll, en ninguna de las dos superficies — se mantiene fijo (sticky) con el mismo tamaño de principio a fin. No se pudo probar el hero de la landing de primera visita (marketing, sin sesión) porque la cuenta usada ya tenía sesión activa y no muestra ese estado. | No confirma ni descarta comportamiento de scroll en el hero sin sesión — solo cubre resultados y home-con-sesión, las dos superficies con equivalente directo hoy en Datealo (`/buscar` y el perfil, no la landing). |
 
 ## Conclusiones
 
@@ -222,7 +224,9 @@ una entrevista, la columna "límite" es lo que impide que se lea como dato duro.
 
 ### C-011 — El header debe seguir un patrón de profundidad: mientras más adentro del flujo está la pantalla, menos elementos de navegación superior y más foco en volver atrás
 
-- **Sustento:** [E-013](#e-013), [E-016](#e-016).
+- **Estado:** revisada 2026-09-03 — la flecha "volver" en vez de logo aplica en mobile; en desktop, la
+  evidencia real dice lo contrario. Ver revisión abajo.
+- **Sustento:** [E-013](#e-013), [E-016](#e-016), [E-022](#e-022), [E-023](#e-023).
 - **Razonamiento:** en el caso real de Airbnb, ni el logo ni el buscador editable aparecen en toda
   pantalla — el logo se reemplaza por una flecha atrás en resultados y detalle, y el buscador se reemplaza
   primero por su resumen compacto (resultados) y después desaparece del todo (detalle), porque ya no hace
@@ -233,7 +237,20 @@ una entrevista, la columna "límite" es lo que impide que se lea como dato duro.
   en el hero), `/buscar` (flecha atrás + resumen compacto de la búsqueda), perfil (solo flecha atrás) —
   sin que esto contradiga la intención original de "un componente, sin variantes ad-hoc" ([D-001](./producto.md#d-001)):
   es un patrón deliberado y respaldado por evidencia, no una variante inventada por conveniencia.
-- **Confianza:** alta — patrón consistente en un caso real bien documentado, más la guía de branding.
+- **Confianza:** alta para mobile (patrón consistente en la app de Airbnb, más la guía de branding); baja
+  para desktop tras la revisión de abajo — el propio caso real la contradice ahí.
+- **Revisión (2026-09-03):** el sustento original ([E-013](#e-013)) son capturas de la **app mobile** de
+  Airbnb — la conclusión se aplicó por igual a mobile y desktop sin evidencia propia de desktop. Navegando
+  el sitio desktop real ([E-022](#e-022)), el patrón es el opuesto: ni en resultados ni en el detalle de
+  una propiedad aparece una flecha "volver" — el logo completo está siempre presente, incluso en el
+  detalle de una propiedad específica (el caso que más se parece a `/profesionales/[id]`). El patrón de
+  profundidad de C-011 es real, pero es un patrón de **app mobile con bottom nav**, no de sitio web
+  desktop — en desktop, Airbnb no tiene el mismo problema de espacio que resuelve la flecha en mobile, así
+  que mantiene el logo (que además funciona como "ir a inicio", algo que un bottom nav ya resuelve en la
+  app y que un sitio desktop sin bottom nav no tiene por otro lado). El caso de `/profesional/perfil` no
+  tiene un equivalente limpio: la página de cuenta de Airbnb usa un tercer patrón (solo isotipo + "Listo"
+  que va a home, no "volver" a la página anterior) — queda para resolver en `producto.md`, no lo resuelve
+  esta conclusión por sí sola.
 
 <a id="c-012"></a>
 
@@ -339,11 +356,19 @@ en una fila angosta. Si busca y llega a resultados, la fila de arriba cambia: fl
 de lo que está buscando, tocable para ajustarlo — ya no hace falta el buscador completo ni el logo, hace
 falta volver o refinar.
 
+En desktop el mismo recorrido no repite la flecha: la restricción de espacio que la justifica en mobile
+(volver + buscador + avatar compitiendo en 390px) no existe con el ancho completo de una pantalla grande,
+y el caso real de Airbnb en desktop lo confirma — el logo (que lleva a la landing) está siempre presente
+en resultados y en el detalle de un profesional, nunca una flecha. Qué le pasa al header de
+`/profesional/perfil` en desktop queda abierto — el caso real más parecido (la cuenta de Airbnb) usa un
+tercer patrón, ni logo-a-home ni flecha-atrás, que todavía no se tradujo a una decisión de Datealo.
+
 ### Capacidades del ideal
 
 | Capacidad                       | Acción habilitada                                                    | Respuesta esperada                                                                          | Conclusión que la justifica |
 | -------------------------------- | ---------------------------------------------------------------------| --------------------------------------------------------------------------------------------- | ---------------------------- |
-| Header con profundidad           | cualquier página de la app                                           | landing: logo + nav + buscador grande. `/buscar`: flecha atrás + resumen compacto de búsqueda. Perfil: solo flecha atrás. | [C-002](#c-002), [C-005](#c-005), [C-011](#c-011) |
+| Header con profundidad, mobile   | cualquier página de la app, en mobile                                | landing: logo + nav + buscador grande. `/buscar`: flecha atrás + resumen compacto de búsqueda. Perfil: solo flecha atrás. | [C-002](#c-002), [C-005](#c-005), [C-011](#c-011) |
+| Header con logo persistente, desktop | `/buscar` y `/profesionales/[id]` en desktop                    | el logo reemplaza a la flecha atrás — lleva a la landing. `/profesional/perfil` en desktop queda sin resolver (ver revisión de [C-011](#c-011)). | [C-011](#c-011) |
 | Buscador adaptado a mobile/desktop | cualquiera que busque desde cualquier pantalla                     | mobile: botón/resumen compacto que expande a vista completa. Desktop: inline compacto, siempre visible. Al tocar cada campo, un panel con las categorías completas o comunas frecuentes — sin búsquedas recientes, sin geolocalización. | [C-009](#c-009), [C-012](#c-012), [C-013](#c-013), [C-015](#c-015) |
 | Footer con navegación real, en la landing y fuera de ella | cualquier página de la app, landing incluida | footer que cubre los tres pilares: lado buscador (categorías), lado profesional (registro), contacto/legal | [C-001](#c-001), [C-004](#c-004), [C-006](#c-006) |
 | Sesión de profesional reconocida en el header | un profesional con sesión activa                              | "Mi perfil" en vez del CTA de registro | [C-008](#c-008) |

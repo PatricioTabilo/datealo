@@ -2,7 +2,7 @@
 
 **Estado:** vigente — aprobado por Patricio el 2026-09-02
 
-**Última actualización:** 2026-09-02
+**Última actualización:** 2026-09-03
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -60,22 +60,31 @@ de navegación, no depende de volumen de perfiles ni de reseñas.
 
 **Sustento:** [C-001](./investigacion.md#c-001), [C-002](./investigacion.md#c-002),
 [C-005](./investigacion.md#c-005), [C-008](./investigacion.md#c-008), [C-011](./investigacion.md#c-011) y
-[D-001](#d-001), [D-002](#d-002), [D-005](#d-005). **Éxito:** [M-001](#m-001).
+[D-001](#d-001), [D-002](#d-002), [D-005](#d-005), [D-009](#d-009). **Éxito:** [M-001](#m-001).
 
 **Reglas:**
 
 - En la landing (`/`), Datealo muestra `LandingNavbar`: logo, un link a categorías (ancla a la sección),
   un link al lado profesional — "Publícate" si no hay sesión, "Mi perfil" si la hay — y el buscador grande
   vive en el hero, no en el nav.
-- En `/buscar`, Datealo reemplaza el logo por un botón de volver (vuelve a la landing) y muestra el
-  [buscador compacto](#f-002) en modo resumen — nunca ambos (logo y buscador completo) a la vez.
-- En `/profesionales/[id]` y `/profesional/*`, Datealo muestra solo el botón de volver — a `/buscar`
-  conservando los filtros elegidos, o a donde corresponda — sin logo, sin buscador.
-- **Layout en desktop:** tres zonas — botón de volver (con ícono y el texto "Volver") a la izquierda, el
-  buscador compacto centrado en medio (cuando la página lo tiene), y el acceso al lado profesional a la
-  derecha. El buscador se centra respecto al ancho completo del header, no pegado al botón de volver.
-- **Layout en mobile:** el botón de volver es solo el ícono, sin texto "Volver" — 390px no alcanza para
-  dos íconos, texto y el buscador a la vez. El buscador ocupa el espacio restante.
+- En `/buscar`, Datealo muestra el [buscador compacto](#f-002) en modo resumen — nunca junto al buscador
+  completo. En mobile, el logo se reemplaza por un botón de volver (vuelve a la landing); en desktop, el
+  logo se mantiene (lleva a la landing) — ver [C-011 revisada](./investigacion.md#c-011).
+- En `/profesionales/[id]`, en mobile Datealo muestra solo el botón de volver — a `/buscar` conservando
+  los filtros elegidos, o a donde corresponda — sin logo, sin buscador; en desktop muestra el logo (lleva
+  a la landing) en su lugar — ver [C-011 revisada](./investigacion.md#c-011).
+- En `/profesional/*`, Datealo muestra solo el botón de volver, en mobile y en desktop — a `/buscar`
+  conservando los filtros elegidos, o a donde corresponda — sin logo, sin buscador. La página de cuenta de
+  Airbnb (el caso real más parecido) tampoco usa "volver" ahí, pero su patrón — solo el isotipo más un
+  botón "Listo" que sale a home, no una acción de volver — no tiene un equivalente limpio en Datealo hoy;
+  se mantiene "volver" hasta que haya evidencia propia de qué lo reemplazaría.
+- **Layout en desktop:** tres zonas — logo o botón de volver, lo que corresponda a la página (con ícono y
+  el texto "Volver" cuando es volver) a la izquierda, el buscador compacto centrado en medio (cuando la
+  página lo tiene), y el acceso al lado profesional a la derecha. El buscador se centra respecto al ancho
+  completo del header, no pegado a la zona izquierda.
+- **Layout en mobile:** siempre el botón de volver (nunca el logo, en ninguna página fuera de la landing),
+  solo el ícono, sin texto "Volver" — 390px no alcanza para dos íconos, texto y el buscador a la vez. El
+  buscador ocupa el espacio restante.
 - Si hay una sesión de profesional activa, el acceso al lado profesional se muestra como el avatar del
   profesional (a la derecha), que lleva a `/profesional/perfil` — ver [D-005](#d-005). Usa el mismo campo
   y el mismo fallback a iniciales que ya definió la misión 08 (`avatarPath`) — nada nuevo, mismo patrón
@@ -89,10 +98,12 @@ de navegación, no depende de volumen de perfiles ni de reseñas.
   encontrado) — no solo en el estado con datos.
 
 **Ejemplo verificable:** dado que alguien abre `/profesionales/casa-del-gasfiter-nunoa` directo desde un
-link de WhatsApp, cuando la página carga, entonces ve solo el ícono de volver arriba a la izquierda — sin
-logo, sin buscador, sin nada a la derecha — que lo devuelve a `/buscar` con los filtros que hubiera
-elegido antes, o vacíos si no venía de ahí. Dado que quien abre ese mismo link es un profesional con
-sesión activa, ve además su avatar arriba a la derecha.
+link de WhatsApp **en su celular**, cuando la página carga, entonces ve solo el ícono de volver arriba a
+la izquierda — sin logo, sin buscador, sin nada a la derecha — que lo devuelve a `/buscar` con los filtros
+que hubiera elegido antes, o vacíos si no venía de ahí. Dado que quien abre ese mismo link es un
+profesional con sesión activa, ve además su avatar arriba a la derecha. Dado que alguien abre ese mismo
+link **en desktop**, ve el logo de Datealo en su lugar — clickeable, lleva a la landing — en vez del ícono
+de volver.
 
 **No incluye:** un menú de cuenta completo (nombre, cerrar sesión, configuración) — el avatar es un solo
 link directo a "Mi perfil", sin desplegable, para esta misión. Tampoco incluye el footer — ver
@@ -113,8 +124,8 @@ para no pelear con campos apretados en mobile ni ver un componente desaprovechan
 existen en la comuna buscada — no depende de volumen adicional.
 
 **Sustento:** [C-009](./investigacion.md#c-009), [C-012](./investigacion.md#c-012),
-[C-013](./investigacion.md#c-013), [C-015](./investigacion.md#c-015), [C-016](./investigacion.md#c-016) y
-[D-006](#d-006). **Éxito:** [M-001](#m-001).
+[C-013](./investigacion.md#c-013), [C-015](./investigacion.md#c-015), [C-016](./investigacion.md#c-016),
+[D-006](#d-006) y [D-008](#d-008). **Éxito:** [M-001](#m-001).
 
 **Reglas:**
 
@@ -128,6 +139,11 @@ existen en la comuna buscada — no depende de volumen adicional.
 - En desktop, el buscador se muestra inline, compacto, siempre visible en el header. Al hacer click en un
   campo, se abre un panel flotante debajo (no a pantalla completa) con el mismo contenido que en mobile —
   el resto de la página queda visible atrás.
+- En desktop, el buscador tiene dos densidades — ver [D-008](#d-008): **completa**, con el nombre del
+  campo ("Categoría"/"Comuna") sobre su valor, para el navbar de la landing tras hacer scroll ([F-001](#f-001));
+  y **chica**, solo el valor elegido, sin el nombre del campo encima, para el header general fijo
+  (`/buscar`, perfil, `/profesional/*`) — ahí el buscador está siempre a la vista, así que no necesita
+  ocupar el alto de la versión completa.
 - Al expandirse el campo de categoría (mobile o desktop), Datealo muestra las 8 categorías como filas
   tocables — no hace falta distinguir "sugeridas" de "todas", son pocas.
 - Al expandirse el campo de comuna, Datealo muestra un buscador de texto más una lista corta de comunas
@@ -443,6 +459,57 @@ usa cookies de tracking de terceros hoy; si eso cambia, se revisita.
   [F-001](#f-001). No hay trabajo de bottom nav en esta misión.
 - **Reapertura:** cuando aparezcan secciones reales (ej. favoritos, historial) que un bottom nav resolvería
   mejor que el header actual.
+
+<a id="d-008"></a>
+
+### D-008 — El buscador compacto de desktop tiene una variante chica sin el nombre del campo, para cuando vive fijo en el header general
+
+- **Estado:** aceptada. **Fecha:** 2026-09-03.
+- **Sustento:** [E-022](./investigacion.md#e-022), [E-023](./investigacion.md#e-023).
+- **Tensión:** una sola presentación del buscador de desktop es menos código y más simple de mantener, vs.
+  el header general (`/buscar`, perfil, `/profesional/*`) queda fijo en pantalla todo el tiempo — el
+  dueño de producto lo sintió pesado, con dos filas de texto por campo (nombre + valor) ocupando alto de
+  forma permanente, justo donde antes convivía con la barra de filtros vieja de `/buscar` que
+  [F-002](#f-002) ya decía que había que sacar y nunca se ejecutó.
+- **Alternativas descartadas:** achicar el buscador con scroll (el mismo componente cambia de tamaño según
+  la posición de scroll) — se descartó porque no hay evidencia de que Airbnb lo haga en ningún header que
+  no sea el hero de una landing sin sesión ([E-023](./investigacion.md#e-023)); una sola densidad chica en
+  todos lados, incluida la landing tras scroll — se descartó porque el navbar de la landing es una entrada
+  más prominente al producto (misión 08, [F-001](#f-001)) y no compite por espacio fijo todo el tiempo
+  como el header general.
+- **Decisión y consecuencia:** el mismo componente (`CompactSearchBar`) soporta dos densidades en desktop
+  — completa (nombre del campo sobre el valor) y chica (solo el valor) — elegidas por dónde vive, no por
+  scroll. El header general (`/buscar`, perfil, `/profesional/*`) usa la chica, fija, siempre visible. El
+  navbar de la landing tras hacer scroll (misión 08, todavía sin construir) usa la completa. Mobile no
+  tiene esta distinción — su resumen ya es de una sola línea.
+- **Reapertura:** si al construir la misión 08 el navbar de la landing tras scroll se siente igual de
+  apretado con la versión completa, evaluar la misma variante chica ahí también.
+
+<a id="d-009"></a>
+
+### D-009 — En desktop, el logo reemplaza a "volver" en `/buscar` y `/profesionales/[id]`; `/profesional/*` mantiene "volver" en todo tamaño
+
+- **Estado:** aceptada. **Fecha:** 2026-09-03.
+- **Sustento:** [C-011 revisada](./investigacion.md#c-011), [E-022](./investigacion.md#e-022).
+- **Tensión:** la versión original de esta misión aplicó "flecha en vez de logo" por igual a mobile y
+  desktop, apoyada en capturas de la app **mobile** de Airbnb ([E-013](./investigacion.md#e-013)) — nunca
+  se verificó si el sitio **desktop** de Airbnb hace lo mismo. Cambiar el patrón en desktop toca una
+  decisión ya aprobada ([F-001](#f-001)), no un detalle suelto.
+- **Alternativas descartadas:** mantener "volver" en desktop por consistencia con mobile — se descarta
+  porque la restricción de espacio que justifica la flecha en mobile (volver + buscador + avatar
+  compitiendo en 390px) no existe en desktop, y el caso real de Airbnb desktop la contradice directamente:
+  ni en resultados ni en el detalle de una propiedad usa flecha, siempre logo ([E-022](./investigacion.md#e-022));
+  aplicar el mismo cambio a `/profesional/*` — se descarta porque esa página es más parecida a la cuenta
+  de Airbnb (edición de datos propios) que a contenido público, y la cuenta de Airbnb no usa ni logo
+  simple ni "volver" — usa un tercer patrón (isotipo + "Listo" que sale a home) sin equivalente limpio en
+  Datealo hoy; cambiarla ahora sería una decisión sin evidencia propia.
+- **Decisión y consecuencia:** en desktop, `/buscar` y `/profesionales/[id]` muestran el logo de Datealo
+  (clickeable, lleva a la landing) donde antes mostraban el botón de volver. `/profesional/*` (ingresar,
+  perfil, registro) mantiene "volver" en desktop y en mobile — sin cambios ahí. Mobile no cambia en
+  ninguna página — sigue siendo siempre "volver", nunca el logo, fuera de la landing.
+- **Reapertura:** si aparece evidencia propia (no de Airbnb) de qué patrón le sirve a
+  `/profesional/perfil` en desktop — hoy es la única superficie de la misión sin resolver con este mismo
+  nivel de confianza.
 
 ## Preguntas
 
