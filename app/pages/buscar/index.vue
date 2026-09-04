@@ -97,7 +97,7 @@ useSeoMeta({
           {{ results.length }} {{ results.length === 1 ? 'resultado' : 'resultados' }}
         </p>
 
-        <div class="grid gap-4 lg:[grid-template-columns:repeat(auto-fit,minmax(17.5rem,23.75rem))] lg:justify-center">
+        <div class="grid gap-4 lg:[grid-template-columns:repeat(auto-fit,minmax(17.5rem,23.75rem))]">
           <SearchResultCard
             v-for="professional in results"
             :key="professional.id"
