@@ -2,18 +2,19 @@
 
 **Tipo:** producto. **Abierta el** 2026-08-31. **Nace de:** ninguna.
 
-**Estado de la misión:** en construcción
+**Estado de la misión:** cerrada 2026-09-04
 
-**Última actualización:** 2026-09-02
+**Última actualización:** 2026-09-04
 
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** los 8 issues del plan de construcción ya están abiertos
-([#148](https://github.com/PatricioTabilo/datealo/issues/148) a
-[#155](https://github.com/PatricioTabilo/datealo/issues/155), ver tabla en
-[`ingenieria.md`](./ingenieria.md#plan-de-construcción)) — arrancar por S-001, S-003 y S-004 (sin
-dependencias entre sí), en la raíz del repo, un PR chico por issue. Sin fecha límite todavía.
+S-001 a S-007 del plan de construcción están mergeados. **S-008 se retiró del plan a propósito** (no
+quedó sin hacer) — al ejecutarlo, tocaba una decisión que en realidad es de la
+[misión 12](../12-hero-y-copy-landing/) (si el hero necesita su propio buscador una vez que el nav ya
+tiene uno). El issue [#155](https://github.com/PatricioTabilo/datealo/issues/155) quedó cerrado con esa
+nota; se retoma junto con la misión 12, no como parte de esta. Detalle en
+[`ingenieria.md`](./ingenieria.md#plan-de-construcción).
 
 `ingenieria.md` **vigente — aprobado por Patricio el 2026-09-02**: sin tablas nuevas (reutiliza
 `GET /api/professionals/me` y agrega una sola query de solo lectura, comunas frecuentes); layout de Nuxt
