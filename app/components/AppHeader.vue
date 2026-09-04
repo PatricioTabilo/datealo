@@ -51,7 +51,7 @@ const { professional } = await useProfessionalSession()
       <NuxtLink
         v-if="showLogoInDesktop"
         to="/"
-        class="w-fit justify-self-start font-heading text-lg font-extrabold text-primary"
+        class="w-fit justify-self-start font-heading text-3xl font-extrabold text-primary"
       >
         datea<span class="text-secondary">lo</span>
       </NuxtLink>
