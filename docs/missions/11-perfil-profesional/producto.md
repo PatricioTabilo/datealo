@@ -1,149 +1,187 @@
-# Misión: <nombre> — Producto
+# Misión 11: vista de detalle de perfil de profesional — Producto
 
-**Estado:** borrador
+**Estado:** vigente — aprobado por Patricio el 2026-09-03
 
-**Última actualización:** AAAA-MM-DD
+**Última actualización:** 2026-09-03
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-<!--
-Este documento es la spec viva del resultado: qué construimos ahora y bajo qué reglas. El porqué vive en
-investigacion.md — aquí solo se enlaza. Se reescribe cuando el alcance cambia; no acumula historia.
+## Qué construimos: la vista de detalle se lee de un vistazo, sin agregar contenido nuevo
 
-Gate de salida — producto.md está listo para experiencia.md cuando:
-- cada funcionalidad tiene formato JTBD, reglas y al menos un caso límite con comportamiento definido
-- cada funcionalidad enlaza una conclusión de investigacion.md y una señal de éxito
-- cada funcionalidad declara a qué lado del marketplace sirve, y qué necesita del otro lado para funcionar
-- no hay decisiones de producto delegadas a diseño o ingeniería
-- las decisiones propuestas tienen fecha límite en el README
--->
+**Resultado:** al terminar esta entrega, cualquier persona que abra `/profesionales/[id]` ve foto,
+identidad (nombre, categoría, comuna) y precio agrupados junto a la galería, un botón de contacto que
+nunca queda tapado por otro elemento de la página, y las reseñas como su propia sección — en vez de una
+sola columna donde todo pesa igual.
 
-## Qué construimos: <resultado en una frase>
+**Recorte respecto del ideal:** [el ideal](./investigacion.md) es una vista que se lee de un vistazo con
+cualquier cantidad de datos; esta entrega reorganiza y prioriza la información que el perfil **ya
+muestra hoy** (fotos, nombre, categoría, comuna, rating, descripción, precio, reseñas, contacto) — no
+agrega campos nuevos al schema ni funcionalidad nueva (tags de atributos, mapa, disponibilidad). Sigue
+siendo el mismo resultado central del ideal (evaluar y contactar sin fricción) con menos superficie de
+cambio.
 
-<!--
-El recorte vigente del ideal y por qué sigue entregando el resultado central. Máximo cuatro párrafos
-cortos. El ideal completo vive en investigacion.md.
--->
-
-**Resultado:** <qué podrá lograr una persona al finalizar esta entrega>.
-
-**Recorte respecto del ideal:** <qué dimensión se reduce y por qué sigue siendo suficiente>
-(ver [el ideal](./investigacion.md)).
-
-**Restricciones aceptadas:** <plataforma, cobertura geográfica, categorías, volumen inicial de
-profesionales>.
+**Restricciones aceptadas:** mobile 390px sigue siendo el caso principal; desktop reutiliza el layout de
+dos columnas que ya existe (`lg:flex`), reorganizando su contenido, no reemplazándolo por un layout
+distinto; sin nueva funcionalidad de datos (ver "Fuera de alcance").
 
 ## Funcionalidades
 
-| ID    | Funcionalidad                  | Lado         | Sustento     | Éxito |
-| ----- | ------------------------------ | ------------ | ------------ | ----- |
-| F-001 | <verbo + resultado observable> | buscador     | C-001, D-001 | M-001 |
+| ID    | Funcionalidad                                          | Lado  | Sustento                        | Éxito |
+| ----- | -------------------------------------------------------- | ----- | ---------------------------------- | ----- |
+| F-001 | Vista de detalle reorganizada por jerarquía de decisión | ambos | C-001, C-002, C-003, C-004, D-001, D-002, D-003 | M-001 |
 
 <a id="f-001"></a>
 
-### F-001 — <verbo + resultado observable>
+### F-001 — Vista de detalle reorganizada por jerarquía de decisión
 
-<!--
-Duplica este bloque por funcionalidad. Se escribe desde el resultado del usuario (working backwards):
-primero el JTBD, después las reglas. Si la respuesta de Datealo no se puede describir sin hablar de tablas
-o componentes, falta cerrar la decisión de producto.
--->
+Cuando entro al perfil de un profesional que me interesó en los resultados de búsqueda,
+quiero confirmar rápido que es alguien de fiar, cuánto cobra y cómo contactarlo,
+para decidir por mi cuenta si me arriesgo con un desconocido, sin tener que preguntarle a nadie más
+si conviene.
 
-Cuando <usuario en contexto concreto>,
-quiero <acción>,
-para <resultado observable>.
+**Dimensiones del job** (framework `jobs-to-be-done`): funcional — ver identidad, precio y contacto sin
+leer toda la pantalla; emocional — sentir que puede confiar en dejar entrar a un desconocido a resolver
+algo en su casa; social — decidir sin depender de la validación de un tercero (pareja, vecino, el grupo de
+WhatsApp del edificio), que es la competencia real de esta pantalla, no otro marketplace.
 
-**Lado del marketplace:** buscador, profesional o ambos. **Qué necesita del otro lado:** <volumen mínimo
-de perfiles, reseñas o cobertura sin el cual esta funcionalidad no entrega su resultado>.
+**Lado del marketplace:** ambos — el buscador evalúa más rápido y con más confianza; el profesional se
+beneficia de que su foto, precio y reseñas se noten en vez de perderse en una columna plana. **Qué necesita
+del otro lado:** nada — es una reorganización de datos que el perfil ya tiene, no depende de volumen de
+profesionales ni de reseñas.
 
-**Sustento:** [C-001](./investigacion.md#c-001) y [D-001](#d-001). **Éxito:** [M-001](#m-001).
+**Sustento:** [C-001](./investigacion.md#c-001), [C-002](./investigacion.md#c-002),
+[C-003](./investigacion.md#c-003), [C-004](./investigacion.md#c-004) y [D-001](#d-001), [D-002](#d-002),
+[D-003](#d-003). **Éxito:** [M-001](#m-001).
 
 **Reglas:**
 
-- Si <condición>, Datealo <comportamiento esperado>.
-- Si <caso límite>, Datealo <comportamiento seguro y qué información muestra>.
-- Datealo nunca <comportamiento que rompería el significado o la confianza>.
+- Nombre, categoría, comuna y precio orientativo se agrupan junto a la galería (no dentro de la tarjeta de
+  contacto), en el mismo bloque visual que la foto — son lo primero que se lee después de la imagen.
+- El botón de contacto (WhatsApp y teléfono) queda visible y clickeable en todo momento del scroll, sin que
+  el footer general ni ningún otro elemento de la página lo tape, en cualquier tamaño de pantalla y
+  cualquier largo de contenido (ver [D-003](#d-003)).
+- Las reseñas viven en su propia sección, separadas del bloque de contacto — ni la tarjeta de contacto ni
+  el bloque de identidad las contienen.
+- Si el profesional no tiene fotos, Datealo muestra su avatar o iniciales en el mismo espacio que ocuparía
+  la galería, sin dejar un hueco vacío ni reducir el tamaño del bloque de identidad.
+- Si el profesional no tiene precio orientativo cargado, Datealo omite esa línea sin dejar un espacio en
+  blanco ni un placeholder tipo "Precio no disponible".
+- Si el profesional no tiene reseñas, la sección de reseñas muestra la invitación a dejar la primera (ya
+  construida en la misión 07) en el mismo lugar donde irían las reseñas reales.
 
-**Ejemplo verificable:** dado <estado con datos concretos>, cuando <acción>, entonces <resultado
-observable>.
+**Ejemplo verificable:** dado el perfil de Patricio Tabilo (electricista en Puerto Varas, con 3 fotos,
+precio "Desde $15.000" y cero reseñas), cuando alguien lo abre desde el celular, entonces ve la foto,
+debajo su nombre + "Electricidad · Puerto Varas" + el precio, el botón "Escribir por WhatsApp" fijo y
+visible en todo momento, y al bajar la invitación a dejar la primera reseña como su propia sección — el
+footer general nunca cubre el botón, sin importar cuánto se desplace la página.
 
-**No incluye:** <variante del ideal excluida de esta funcionalidad>.
+**No incluye:** tags de atributos, mapa o ubicación exacta, disponibilidad por horario, ni ningún dato que
+el schema no tenga hoy (ver "Fuera de alcance"). No rediseña los estados de cargando/tardando/no encontrado
+más allá de que el esqueleto de carga refleje las nuevas proporciones para no saltar al cargar el contenido
+real.
 
-**Experiencia:** <enlace a UXF-xxx cuando exista>. **Ingeniería:** <enlace a T-xxx cuando exista>.
+**Experiencia:** pendiente (`experiencia.md`). **Ingeniería:** pendiente (`ingenieria.md`).
 
 ## Casos límite que cruzan funcionalidades
 
-<!--
-Solo condiciones que afectan varias funcionalidades. Las propias de una viven en su bloque. Un caso
-retirado no se borra ni se reutiliza: conserva su fila, o se nombra con su motivo en una línea debajo.
-
-Los casos límite propios de un marketplace pre-lanzamiento aparecen acá: cero resultados en una comuna,
-un profesional sin reseñas, una categoría con un solo perfil, un perfil sin verificar.
--->
-
-| ID     | Condición concreta     | Comportamiento esperado | Funcionalidades |
-| ------ | ---------------------- | ----------------------- | --------------- |
-| CL-001 | <estado o combinación> | <qué hace Datealo>      | F-001           |
+| ID     | Condición concreta                                  | Comportamiento esperado                                                                 | Funcionalidades |
+| ------ | ------------------------------------------------------ | ------------------------------------------------------------------------------------------ | --------------- |
+| CL-001 | Profesional sin fotos                                  | Avatar o iniciales ocupan el espacio de la galería, sin achicar el bloque de identidad     | F-001            |
+| CL-002 | Profesional sin precio orientativo                     | La línea de precio no aparece; nada la reemplaza                                            | F-001            |
+| CL-003 | Profesional sin reseñas                                | La sección de reseñas muestra la invitación a dejar la primera, no un hueco vacío           | F-001            |
+| CL-004 | Descripción del profesional muy larga o muy corta      | El bloque de identidad no fuerza un alto fijo — crece o se achica con el texto real          | F-001            |
 
 ## Fuera de alcance
 
-<!-- Distingue postergado de descartado y qué condición justificaría reabrirlo. -->
-
-| Capacidad o caso      | Estado                  | Razón del recorte | Condición para reconsiderar |
-| --------------------- | ----------------------- | ----------------- | --------------------------- |
-| <capacidad del ideal> | postergada o descartada | <trade-off>       | <evidencia o hito>          |
+| Capacidad o caso                                             | Estado     | Razón del recorte                                                                                   | Condición para reconsiderar |
+| ---------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| Tags de atributos (disponibilidad, idiomas, "atiende fines de semana") | postergada | El schema de `professionals` no tiene estos campos hoy — agregarlos es una decisión de producto propia, no un ajuste de layout | Si una futura misión define y prioriza estos campos |
+| Mapa o "ver ubicación exacta"                                     | descartada | Datealo no usa geolocalización en ningún punto del código (confirmado en [E-020 de la misión 09](../09-layout-general/investigacion.md#e-020)); mostrar un mapa sin esa base es agregar una funcionalidad nueva, no reorganizar la existente | Si Datealo agrega geolocalización como funcionalidad propia |
+| Teléfono enmascarado con botón para revelarlo                    | descartada | Choca con el principio de contacto directo sin fricción (ver `CLAUDE.md`) — Datealo no pone pasos entre el buscador y el profesional | No aplica mientras el contacto directo siga siendo un guardrail de producto |
+| Rediseño completo de estados de cargando/tardando/no encontrado  | postergada | No son el problema que motivó esta misión (ver `investigacion.md`); solo se ajusta el esqueleto de carga para que calce con las nuevas proporciones | Si una revisión futura de estados vacíos/de error cubre toda la app a la vez |
 
 ## Señales de éxito
 
 <a id="m-001"></a>
 
-### M-001 — <señal que demuestra el resultado>
+### M-001 — la vista se entiende sin explicación
 
-- **Pregunta:** ¿<qué queremos comprobar>?
-- **Señal:** <comportamiento o resultado observable>.
-- **Método y umbral:** <instrumentación o revisión, qué resultado, en qué población y ventana>.
-- **Guardrail:** <daño que no debe aumentar para conseguir la señal>.
+- **Pregunta:** ¿alguien que nunca vio esta pantalla identifica en segundos quién es el profesional, cuánto
+  cobra y cómo contactarlo?
+- **Señal:** se le muestra la vista nueva (en el celular, sin contexto previo) a 5 personas ajenas al
+  proyecto. Al menos 4 de las 5 dicen sin ayuda, en menos de 10 segundos, el nombre/oficio, el precio
+  orientativo y cómo contactar — y ninguna la describe como "desordenada" o "confusa" sin que se le
+  pregunte por eso.
+- **Línea en la arena:** si menos de 4 de 5 lo logran, la entrega no se da por terminada — se revisa la
+  jerarquía visual antes de abrir el PR, no se corrige después de mergeado.
+- **Método:** revisión cualitativa, conversación uno a uno mostrando la pantalla — no hay instrumentación
+  automática posible sin usuarios reales todavía (etapa "Empatía" del framework `lean-analytics`, igual que
+  en la misión 09: la métrica esperada en esta etapa son notas de conversación, no un número instrumentado).
+- **Guardrail (contramétrica):** no aumentar el tiempo de carga de la página ni introducir scroll horizontal
+  en ningún tamaño de pantalla — evita que "se ve más ordenado" se logre a costa de rendimiento o de romper
+  el layout mobile.
 
 ## Decisiones de producto
 
-<!--
-Solo decisiones con alternativas reales. No borres decisiones reemplazadas: explican por qué el producto
-es como es. Toda decisión propuesta se refleja en el README con fecha límite.
--->
-
 <a id="d-001"></a>
 
-### D-001 — <decisión en una frase que se entiende sola>
+### D-001 — esta entrega reorganiza datos existentes; no agrega campos nuevos al perfil
 
-- **Estado:** propuesta, aceptada, reemplazada o descartada. **Fecha:** AAAA-MM-DD.
-- **Sustento:** [C-001](./investigacion.md#c-001).
-- **Tensión:** <criterios que no podían maximizarse al mismo tiempo>.
-- **Alternativas descartadas:** <opciones y razón concreta del rechazo, en la misma línea>.
-- **Decisión y consecuencia:** <qué se hará y qué habilita, limita o exige revisar en UX e ingeniería>.
-- **Reapertura:** <evidencia o cambio que justificaría revisarla>.
+- **Estado:** propuesta. **Fecha:** 2026-09-10.
+- **Sustento:** [C-002](./investigacion.md#c-002).
+- **Tensión:** la referencia de directorio de servicios ([E-004](./investigacion.md#e-004)) trae tags de
+  atributos y ubicación con mapa, que harían la ficha más rica — pero ninguno de esos datos existe hoy en
+  el schema de `professionals`.
+- **Alternativas descartadas:** agregar esos campos en la misma misión, para calzar más con la referencia
+  — se descarta porque mezclaría una decisión de qué datos nuevos pedirle a un profesional (con su propio
+  costo de fricción en el registro) con un problema que es puramente de layout; encarece y alarga esta
+  misión sin necesidad.
+- **Decisión y consecuencia:** el recorte reorganiza y prioriza lo que el perfil ya muestra. Habilita que
+  `experiencia.md` e `ingenieria.md` trabajen solo sobre componentes existentes, sin tocar `server/db/schema`.
+- **Reapertura:** si una misión futura decide agregar atributos o ubicación al perfil de profesional.
+
+<a id="d-002"></a>
+
+### D-002 — las reseñas salen de la tarjeta de contacto y pasan a ser una sección propia
+
+- **Estado:** propuesta. **Fecha:** 2026-09-10.
+- **Sustento:** [C-003](./investigacion.md#c-003).
+- **Tensión:** dejarlas donde están hoy (dentro de la misma columna que el CTA) es el cambio más chico;
+  moverlas a una sección propia es más trabajo de layout pero libera esa columna para que sea solo de
+  contacto.
+- **Alternativas descartadas:** dejar las reseñas donde están y solo separar visualmente con más espaciado
+  — se descarta porque no resuelve que compitan por la misma columna angosta que el precio y el CTA, que es
+  justo lo que el dueño de producto señaló como parte del desorden.
+- **Decisión y consecuencia:** las reseñas se diseñan en `experiencia.md` como bloque de ancho completo (o
+  equivalente), separado del bloque de identidad+contacto. En mobile esto cambia el orden de scroll actual
+  (hoy: descripción → precio → reseñas → CTA fijo).
+- **Reapertura:** si en el diseño de `experiencia.md` una sección separada resulta peor en mobile por el
+  espacio que ocupa — se evaluaría ahí, no acá.
+
+<a id="d-003"></a>
+
+### D-003 — el botón de contacto reserva su propio espacio; no depende del buffer genérico del footer
+
+- **Estado:** propuesta. **Fecha:** 2026-09-10.
+- **Sustento:** [C-004](./investigacion.md#c-004).
+- **Tensión:** la solución más simple es agrandar el `pb-24` que `general.vue` ya reserva — pero ese número
+  fue pensado para el buscador compacto de la misión 09, no para esta barra, y un número fijo más grande
+  sigue siendo frágil si el contenido de cualquiera de las dos barras cambia a futuro.
+- **Alternativas descartadas:** subir el buffer genérico a un número más grande y probar — se descarta como
+  decisión de producto porque es un parche que no explica por qué ese número es el correcto; queda como
+  posible solución técnica, pero la decisión de producto es que el comportamiento (nunca taparse) no puede
+  depender de que alguien adivine bien un número de píxeles.
+- **Decisión y consecuencia:** el requisito de producto es el comportamiento ("nunca tapado"), no el
+  mecanismo — cómo se reserva ese espacio exactamente (buffer propio, medición dinámica, u otro) es
+  decisión de `ingenieria.md`.
+- **Reapertura:** no aplica — es el tipo de decisión que no debería necesitar reabrirse si `ingenieria.md`
+  la resuelve bien la primera vez.
 
 ## Preguntas
 
-<!--
-Solo preguntas que pueden cambiar una decisión o funcionalidad. Lo demás va a un issue.
-Todas viven en esta tabla ordenada por ID, abiertas y cerradas juntas. Ningún ID se borra ni se reutiliza.
-Estado: abierta | resuelta AAAA-MM-DD (alguien la respondió) | disuelta AAAA-MM-DD (el producto cambió y la
-pregunta dejó de tener sentido). Solo las abiertas llevan bloque de detalle debajo de la tabla.
--->
+Sin preguntas abiertas — el recorte de esta entrega quedó definido en D-001 a D-003.
 
-<Una frase que responde "¿qué falta?": la pregunta que bloquea y qué bloquea.>
-
-| ID    | La duda                | Estado              | Respuesta, o quién la resuelve                                  |
-| ----- | ---------------------- | ------------------- | --------------------------------------------------------------- |
-| Q-001 | <la duda en una frase> | abierta             | <quién la resuelve, con qué método, qué bloquea y hasta cuándo> |
-| Q-002 | <la duda en una frase> | resuelta AAAA-MM-DD | <qué se respondió, enlazando la decisión que la cerró>          |
-
-<a id="q-001"></a>
-
-### Q-001 — <la pregunta en una frase que se entiende sola>
-
-- **La duda, con un ejemplo:** <el caso concreto que muestra por qué hay dos respuestas posibles>.
-- **Afecta a:** D-001 o F-001.
-- **Cómo se resolverá:** <quién y con qué método>.
-- **¿Bloquea algo?:** <qué bloquea y su fecha límite, o no>.
+| ID | La duda | Estado | Respuesta, o quién la resuelve |
+| -- | ------- | ------ | ------------------------------- |
+| —  | —       | —      | —                                |
