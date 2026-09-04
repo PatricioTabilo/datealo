@@ -18,7 +18,7 @@ abrieron y de dónde salió cada una.
 | 07  | [reseñas verificadas por contacto](./07-resenas-verificadas-por-contacto/) | producto | 2026-08-13 | cerrada 2026-08-31 | — | — |
 | 08  | [foto de perfil de profesional](./08-foto-perfil-profesional/) | producto | 2026-08-29 | cerrada 2026-09-02 | — | — |
 | 09  | [layout general (navbar, footer, TOS)](./09-layout-general/) | producto | 2026-08-31 | en construcción | — | — |
-| 10  | [vista de resultados de búsqueda](./10-vista-resultados-busqueda/) | producto | 2026-09-01 | lista para construir | — | — |
+| 10  | [vista de resultados de búsqueda](./10-vista-resultados-busqueda/) | producto | 2026-09-01 | cerrada 2026-09-04 | — | — |
 | 11  | [vista de detalle de perfil](./11-perfil-profesional/) | producto | 2026-09-01 | exploración | — | — |
 | 12  | [hero y copy de la landing](./12-hero-y-copy-landing/) | producto | 2026-09-01 | definición | Producto | — |
 
