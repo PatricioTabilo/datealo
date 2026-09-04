@@ -11,6 +11,9 @@ const { professional, pending, notFound, slow, refresh, updateProfessional } = u
 
 const memberSince = computed(() => professional.value ? formatMemberSince(professional.value.createdAt) : '')
 
+const contactBarRef = useTemplateRef('contactBar')
+useContactBarHeight(contactBarRef)
+
 function onReviewPublished(review: PublicReview) {
   if (!professional.value) return
   const reviews = upsertLocalReview(professional.value.reviews, review)
@@ -107,6 +110,7 @@ useSeoMeta({
         <p class="mt-3 text-xs text-datealo-muted">En Datealo desde {{ memberSince }}</p>
 
         <div
+          ref="contactBar"
           class="fixed inset-x-0 bottom-0 z-10 border-t border-datealo-surface bg-datealo-bg p-4 lg:static lg:mt-8 lg:border-0 lg:bg-transparent lg:p-0"
         >
           <ProfessionalPublicContactBar
