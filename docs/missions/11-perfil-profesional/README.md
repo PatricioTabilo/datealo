@@ -3,7 +3,7 @@
 **Tipo:** producto. **Abierta el** 2026-09-01. **Nace de:** división de la misión 09 (ver su
 [README](../09-layout-general/README.md)).
 
-**Estado de la misión:** en construcción
+**Estado de la misión:** cerrada 2026-09-04
 
 **Última actualización:** 2026-09-04
 
@@ -18,16 +18,24 @@ UX-005 quedan confirmadas — incluye el nombre junto al avatar del sidebar y el
 durante toda la lectura de reseñas (UX-005), agregados tras revisar el mockup con el dueño de producto.
 
 `ingenieria.md` **vigente — aprobado por Patricio el 2026-09-04**: contratos (TC-001), sin cambios de
-datos ni RLS, y tres decisiones técnicas (T-001 CSS Grid, T-002 medir el CTA en vez de adivinar el buffer,
-T-003 corrige un bug preexistente de CL-003 que esta misión hizo visible), en 5 slices de construcción.
-Pasó por una auditoría en agente separado que encontró y corrigió dos hallazgos bloqueantes antes de
-llegar a este estado.
+datos ni RLS, y dos decisiones técnicas (T-001 CSS Grid, T-002 medir el CTA en vez de adivinar el
+buffer). Pasó por una auditoría en agente separado que encontró y corrigió dos hallazgos bloqueantes
+antes de llegar a este estado. Una tercera decisión (T-003) se propuso y se descartó ya en ejecución — ver
+abajo.
 
-**Discovery cerrado.** La misión 09 se cerró el 2026-09-04 (S-008 movido a la misión 12), así que esta
-pasa a ser la única misión en delivery. **Próximo hito:** ejecutar el plan de construcción
-([#181](https://github.com/PatricioTabilo/datealo/issues/181) a
-[#185](https://github.com/PatricioTabilo/datealo/issues/185), ver tabla en
-[`ingenieria.md`](./ingenieria.md#plan-de-construcción)) — arrancando por S-001.
+**Construida:** S-001 a S-004 del plan de construcción mergeados
+([#189](https://github.com/PatricioTabilo/datealo/pull/189),
+[#190](https://github.com/PatricioTabilo/datealo/pull/190),
+[#191](https://github.com/PatricioTabilo/datealo/pull/191),
+[#192](https://github.com/PatricioTabilo/datealo/pull/192)). **S-005 se retiró sin código** — partía de
+T-003 ("mostrar la invitación a reseñar sin haber contactado"), que resultó estar mal fundada: el
+comportamiento actual ya es el que `experiencia.md` de la
+[misión 07](../07-resenas-verificadas-por-contacto/) decidió a propósito (el mecanismo anti-fraude de las
+reseñas verificadas por contacto), no un bug de esta misión. Detalle en
+[`ingenieria.md`](./ingenieria.md#t-003).
+
+**Misión cerrada.** Discovery y construcción completos — la 09 se cerró el 2026-09-04 (S-008 movido a la
+misión 12), y ahora la 11 también.
 
 ## Brief
 
