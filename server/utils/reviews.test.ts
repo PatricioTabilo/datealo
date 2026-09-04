@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildReviewNotificationEmail, computeRatingAverage, isValidComment, isValidRating, resolveReviewerName } from './reviews'
+import { buildReviewNotificationEmail, computeRatingAverage, groupRatingsByProfessional, isValidComment, isValidRating, resolveReviewerName } from './reviews'
 
 describe('isValidRating', () => {
   it('acepta enteros de 1 a 5', () => {
@@ -42,6 +42,25 @@ describe('computeRatingAverage', () => {
 
   it('devuelve el rating tal cual con una sola reseña', () => {
     expect(computeRatingAverage([3])).toBe(3)
+  })
+})
+
+describe('groupRatingsByProfessional', () => {
+  it('agrupa cada rating bajo su propio profesional, mezclados en la misma lista', () => {
+    const groups = groupRatingsByProfessional([
+      { professionalId: 'a', rating: 5 },
+      { professionalId: 'b', rating: 3 },
+      { professionalId: 'a', rating: 4 },
+      { professionalId: 'a', rating: 5 },
+      { professionalId: 'b', rating: 2 },
+    ])
+
+    expect(groups.get('a')).toEqual([5, 4, 5])
+    expect(groups.get('b')).toEqual([3, 2])
+  })
+
+  it('lista vacía devuelve un Map vacío', () => {
+    expect(groupRatingsByProfessional([]).size).toBe(0)
   })
 })
 

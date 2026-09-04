@@ -6,6 +6,9 @@ export type SearchResultProfessional = {
   comunaNombre: string
   priceFrom: number | null
   avatarUrl: string | null
+  photoUrl: string | null
+  ratingAverage: number | null
+  reviewCount: number
   createdAt: string
 }
 
