@@ -23,11 +23,13 @@ T-003 corrige un bug preexistente de CL-003 que esta misión hizo visible), en 5
 Pasó por una auditoría en agente separado que encontró y corrigió dos hallazgos bloqueantes antes de
 llegar a este estado.
 
-**Discovery cerrado.** Próximo hito: los issues del plan de construcción (S-001 a S-005) ya están abiertos
-(ver tabla en [`ingenieria.md`](./ingenieria.md#plan-de-construcción)). La ejecución todavía no arranca:
-la misión 09 sigue `en construcción` (le queda el issue #155 abierto) y `CLAUDE.md` fija una sola misión en
-delivery a la vez — queda pendiente de que el dueño de producto decida si esperar a que la 09 cierre o
-hacer una excepción explícita.
+**Discovery cerrado.** Próximo hito: los issues del plan de construcción ya están abiertos
+([#181](https://github.com/PatricioTabilo/datealo/issues/181) a
+[#185](https://github.com/PatricioTabilo/datealo/issues/185), ver tabla en
+[`ingenieria.md`](./ingenieria.md#plan-de-construcción)). La ejecución todavía no arranca: la misión 09
+sigue `en construcción` (le queda el issue #155 abierto) y `CLAUDE.md` fija una sola misión en delivery a
+la vez — queda pendiente de que el dueño de producto decida si esperar a que la 09 cierre o hacer una
+excepción explícita.
 
 ## Brief
 
