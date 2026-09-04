@@ -67,10 +67,14 @@ useSeoMeta({
       </div>
 
       <!-- cargando -->
-      <div v-else-if="pending" class="flex flex-col gap-3 p-4" aria-busy="true">
-        <div v-for="n in 4" :key="n" class="flex gap-3 rounded-2xl border border-datealo-surface bg-white p-3.5">
-          <div class="h-12 w-12 shrink-0 animate-pulse rounded-full bg-datealo-surface" />
-          <div class="flex-1 space-y-2">
+      <div
+        v-else-if="pending"
+        class="grid gap-4 p-4 lg:p-8 lg:[grid-template-columns:repeat(auto-fit,minmax(17.5rem,23.75rem))]"
+        aria-busy="true"
+      >
+        <div v-for="n in 4" :key="n" class="overflow-hidden rounded-2xl border border-datealo-surface bg-white">
+          <div class="aspect-4/3 w-full animate-pulse bg-datealo-surface" />
+          <div class="space-y-2 p-3.5">
             <div class="h-4 w-32 animate-pulse rounded bg-datealo-surface" />
             <div class="h-3 w-20 animate-pulse rounded bg-datealo-surface" />
             <div class="h-3 w-24 animate-pulse rounded bg-datealo-surface" />
