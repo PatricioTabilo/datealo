@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Mail, TriangleAlert } from '@lucide/vue'
 
-definePageMeta({ middleware: 'profesional' })
+definePageMeta({ middleware: 'profesional', layout: 'general' })
 
 useSeoMeta({ title: 'Entra a Datealo', robots: 'noindex' })
 

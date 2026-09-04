@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Hourglass } from '@lucide/vue'
 
+definePageMeta({ layout: 'general' })
+
 const route = useRoute()
 const router = useRouter()
 
@@ -20,6 +22,17 @@ watch([categoriaSlug, comunaCodigo], ([categoria, comuna]) => {
 })
 lastSearchQuery.value = { categoria: categoriaSlug.value, comuna: comunaCodigo.value }
 
+// CompactSearchBar (en AppHeader) navega a /buscar con una nueva query estando ya en /buscar — misma
+// ruta, así que el componente no se remonta y el seed inicial de arriba no vuelve a correr. Sin este
+// watch, la URL cambia pero categoriaSlug/comunaCodigo (lo que de verdad dispara la búsqueda) quedan
+// pegados en el valor viejo.
+watch(() => route.query, (query) => {
+  const categoria = typeof query.categoria === 'string' ? query.categoria : null
+  const comuna = typeof query.comuna === 'string' ? query.comuna : null
+  if (categoria !== categoriaSlug.value) categoriaSlug.value = categoria
+  if (comuna !== comunaCodigo.value) comunaCodigo.value = comuna
+})
+
 const { items: categorias } = useCategoriasCatalog()
 const { items: comunas } = useComunasCatalog()
 const categoriaNombre = computed(() => categorias.value.find(item => item.value === categoriaSlug.value)?.label ?? '')
@@ -27,11 +40,6 @@ const comunaNombre = computed(() => comunas.value.find(item => item.value === co
 
 const { ready, pending, error, slow, results, matchType, categoryHasResultsInChile, refresh } =
   useSearchResults(categoriaSlug, comunaCodigo)
-
-const comunaSelect = useTemplateRef('comunaSelect')
-watch(categoriaSlug, (value) => {
-  if (value && !comunaCodigo.value) comunaSelect.value?.focus()
-})
 
 useSeoMeta({
   title: () => categoriaNombre.value && comunaNombre.value
@@ -42,21 +50,6 @@ useSeoMeta({
 
 <template>
   <div class="flex min-h-screen flex-col">
-    <div class="sticky top-0 z-10 flex gap-2 border-b border-datealo-surface bg-datealo-bg p-3.5">
-      <div class="flex-1">
-        <label for="buscar-categoria" class="mb-1 block text-[0.625rem] font-bold uppercase tracking-wide text-datealo-muted">
-          Categoría
-        </label>
-        <CategoriaSelect id="buscar-categoria" v-model="categoriaSlug" />
-      </div>
-      <div class="flex-1">
-        <label for="buscar-comuna" class="mb-1 block text-[0.625rem] font-bold uppercase tracking-wide text-datealo-muted">
-          Comuna
-        </label>
-        <ComunaSelect id="buscar-comuna" ref="comunaSelect" v-model="comunaCodigo" />
-      </div>
-    </div>
-
     <SearchEmptyState
       v-if="!ready"
       :title="categoriaSlug && !comunaCodigo ? 'Elige tu comuna' : 'Elige una categoría y tu comuna'"

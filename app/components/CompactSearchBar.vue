@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { Search, X } from '@lucide/vue'
 
+// dense: la densidad chica del header general (siempre fijo en pantalla) — solo el valor de cada campo,
+// sin su nombre encima. Sin el prop, es la densidad completa que usa el navbar de la landing tras scroll.
+// No afecta mobile, cuyo resumen ya es de una sola línea.
+withDefaults(defineProps<{ dense?: boolean }>(), { dense: false })
+
 const {
   categoriaSlug,
   comunaCodigo,
@@ -33,29 +38,34 @@ const summary = computed(() => {
       class="flex w-full items-center gap-2.5 rounded-full border border-datealo-surface bg-white px-4.5 py-3.5 text-left shadow-[0_6px_16px_-8px_rgba(31,41,55,0.15)] lg:hidden"
       @click="open()"
     >
-      <Search class="h-4 w-4 shrink-0 text-primary" />
+      <Search class="h-4 w-4 shrink-0 text-primary" :stroke-width="2.5" />
       <span v-if="summary" class="truncate text-sm font-bold text-datealo-text">{{ summary }}</span>
       <span v-else class="text-sm font-medium text-datealo-muted">¿Qué profesional buscas?</span>
     </button>
 
-    <div class="relative z-40 hidden items-center gap-1 rounded-full bg-white p-1.5 shadow-[0_6px_18px_-8px_rgba(31,41,55,0.18)] lg:flex">
+    <div
+      class="relative z-40 hidden items-center gap-1 rounded-full bg-white shadow-[0_6px_18px_-8px_rgba(31,41,55,0.18)] lg:flex"
+      :class="dense ? 'p-1' : 'p-1.5'"
+    >
       <button
         type="button"
-        class="flex min-w-48 flex-col justify-center rounded-full px-6 py-3 text-left hover:bg-datealo-surface"
+        class="flex flex-col justify-center rounded-full text-left hover:bg-datealo-surface"
+        :class="dense ? 'min-w-28 px-5 py-2' : 'min-w-48 px-6 py-3'"
         @click="open('categoria')"
       >
-        <span class="text-xs font-bold uppercase tracking-wide text-datealo-muted">Categoría</span>
+        <span v-if="!dense" class="text-xs font-bold uppercase tracking-wide text-datealo-muted">Categoría</span>
         <span class="text-sm font-bold" :class="categoriaLabel ? 'text-datealo-text' : 'font-medium text-datealo-muted'">
           {{ categoriaLabel ?? 'Elige categoría' }}
         </span>
       </button>
-      <div class="h-8 w-px shrink-0 bg-datealo-surface" />
+      <div class="w-px shrink-0 bg-datealo-surface" :class="dense ? 'h-5' : 'h-8'" />
       <button
         type="button"
-        class="flex min-w-48 flex-col justify-center rounded-full px-6 py-3 text-left hover:bg-datealo-surface"
+        class="flex flex-col justify-center rounded-full text-left hover:bg-datealo-surface"
+        :class="dense ? 'min-w-28 px-5 py-2' : 'min-w-48 px-6 py-3'"
         @click="open('comuna')"
       >
-        <span class="text-xs font-bold uppercase tracking-wide text-datealo-muted">Comuna</span>
+        <span v-if="!dense" class="text-xs font-bold uppercase tracking-wide text-datealo-muted">Comuna</span>
         <span class="text-sm font-bold" :class="comunaLabel ? 'text-datealo-text' : 'font-medium text-datealo-muted'">
           {{ comunaLabel ?? 'Elige comuna' }}
         </span>
@@ -64,11 +74,11 @@ const summary = computed(() => {
         type="button"
         aria-label="Buscar"
         :disabled="!ready"
-        class="ml-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white disabled:cursor-not-allowed"
-        :class="ready ? 'bg-secondary' : 'bg-secondary/50'"
+        class="ml-1 flex shrink-0 items-center justify-center rounded-full text-white disabled:cursor-not-allowed"
+        :class="[ready ? 'bg-secondary' : 'bg-secondary/50', dense ? 'h-9 w-9' : 'h-12 w-12']"
         @click="confirm"
       >
-        <Search class="h-5 w-5" />
+        <Search :class="dense ? 'h-4 w-4' : 'h-5 w-5'" :stroke-width="2.5" />
       </button>
     </div>
 

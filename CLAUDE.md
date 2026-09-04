@@ -164,6 +164,13 @@ funcional atómico. Los issues salen del "Plan de construcción" de `ingenieria.
 - Si se pide algo sin issue asociado, crearlo primero (o preguntar si ya existe) antes de tocar código.
 - Al terminar una tarea, abrir el PR y **detenerse ahí**. El checkpoint de revisión humana es el punto
   central del flujo, no un paso opcional.
+- La rama de la tarea abre desde `main` (`feat/s-NNN-slug`); **no volver la raíz a `main` después de abrir
+  el PR** — el dev server del usuario corre desde la raíz, y necesita quedarse en la rama para hacer QA del
+  cambio recién armado. Volver a `main` solo cuando el usuario lo pida, o antes de arrancar la siguiente
+  tarea.
+- El cuerpo del PR abre con `Closes #NNN` — el keyword literal en inglés, no "Cierra": es lo único que
+  GitHub reconoce para cerrar el issue automáticamente al mergear (ver incidente en la misión 09, donde
+  "Cierra #NNN" dejó seis issues mergeados pero abiertos). El resto del cuerpo sigue en español.
 - Labels en dos dimensiones, alineadas a la convención de commits:
   - `type: feat|fix|chore|refactor|docs`
   - `scope: app|server|db|ui|infra|docs`
