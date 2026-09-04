@@ -37,16 +37,16 @@ useSeoMeta({
     </div>
 
     <!-- cargando -->
-    <div v-else-if="pending" class="mx-auto max-w-5xl lg:flex lg:gap-8 lg:px-8 lg:py-8" aria-busy="true">
-      <div class="aspect-4/3 w-full animate-pulse bg-datealo-surface lg:w-[55%] lg:rounded-2xl" />
-      <div
-        class="space-y-3 px-5 pt-5 lg:flex-1 lg:rounded-2xl lg:border lg:border-datealo-surface lg:px-6 lg:py-6"
-      >
-        <div class="h-6 w-48 animate-pulse rounded bg-datealo-surface" />
-        <div class="h-4 w-32 animate-pulse rounded bg-datealo-surface" />
-        <div class="h-4 w-full animate-pulse rounded bg-datealo-surface" />
-        <div class="h-4 w-2/3 animate-pulse rounded bg-datealo-surface" />
+    <div v-else-if="pending" class="mx-auto max-w-5xl lg:grid lg:grid-cols-[55fr_45fr] lg:items-start lg:gap-8 lg:px-8 lg:py-8" aria-busy="true">
+      <div>
+        <div class="aspect-4/3 w-full animate-pulse bg-datealo-surface lg:rounded-2xl" />
+        <div class="space-y-2.5 px-5 pt-4 lg:px-0">
+          <div class="h-6 w-48 animate-pulse rounded bg-datealo-surface" />
+          <div class="h-4 w-32 animate-pulse rounded bg-datealo-surface" />
+          <div class="mt-1.5 h-5 w-28 animate-pulse rounded bg-datealo-surface" />
+        </div>
       </div>
+      <div class="mx-5 mt-4 h-12 animate-pulse rounded-xl bg-datealo-surface lg:mx-0 lg:mt-0 lg:h-44 lg:rounded-2xl" />
     </div>
 
     <!-- no encontrado -->
