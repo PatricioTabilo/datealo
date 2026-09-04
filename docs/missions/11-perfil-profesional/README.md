@@ -3,7 +3,7 @@
 **Tipo:** producto. **Abierta el** 2026-09-01. **Nace de:** división de la misión 09 (ver su
 [README](../09-layout-general/README.md)).
 
-**Estado de la misión:** definición
+**Estado de la misión:** lista para construir
 
 **Última actualización:** 2026-09-04
 
@@ -17,7 +17,17 @@ quedan confirmadas tal cual (revisadas también contra `jobs-to-be-done` y `lean
 UX-005 quedan confirmadas — incluye el nombre junto al avatar del sidebar y el sidebar sticky en CSS Grid
 durante toda la lectura de reseñas (UX-005), agregados tras revisar el mockup con el dueño de producto.
 
-**Próximo hito:** trabajar `ingenieria.md` — contratos, modelo de datos y plan de construcción.
+`ingenieria.md` **vigente — aprobado por Patricio el 2026-09-04**: contratos (TC-001), sin cambios de
+datos ni RLS, y tres decisiones técnicas (T-001 CSS Grid, T-002 medir el CTA en vez de adivinar el buffer,
+T-003 corrige un bug preexistente de CL-003 que esta misión hizo visible), en 5 slices de construcción.
+Pasó por una auditoría en agente separado que encontró y corrigió dos hallazgos bloqueantes antes de
+llegar a este estado.
+
+**Discovery cerrado.** Próximo hito: los issues del plan de construcción (S-001 a S-005) ya están abiertos
+(ver tabla en [`ingenieria.md`](./ingenieria.md#plan-de-construcción)). La ejecución todavía no arranca:
+la misión 09 sigue `en construcción` (le queda el issue #155 abierto) y `CLAUDE.md` fija una sola misión en
+delivery a la vez — queda pendiente de que el dueño de producto decida si esperar a que la 09 cierre o
+hacer una excepción explícita.
 
 ## Brief
 

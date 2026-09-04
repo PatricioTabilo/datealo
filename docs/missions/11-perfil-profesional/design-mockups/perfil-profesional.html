@@ -412,9 +412,11 @@
               </h2>
               <!-- Grid de 2 columnas, no una sola card angosta flotando en un contenedor ancho — hallazgo
                    de la evaluación heurística: con las 12 reseñas del ejemplo de producto.md, una sola
-                   columna de 32rem dejaba la mitad del ancho en blanco. Cada card mantiene ~32rem (dentro
-                   del rango de 65-75ch recomendado para texto largo); el grid es lo que usa el ancho
-                   completo, no el ancho de cada card. -->
+                   columna de 32rem dejaba la mitad del ancho en blanco. Medido sobre el render real
+                   (segunda evaluación heurística, 2026-09-04): cada card ronda 21.5rem (~50 caracteres
+                   por línea con la tipografía real) dentro de este grid de 44rem, no 32rem — corregido
+                   en UX-002 de experiencia.md. El grid es lo que usa el ancho completo, no el ancho de
+                   cada card. -->
               <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:1rem;max-width:44rem;">
                 <div style="border:1px solid var(--ui-border);border-radius:0.75rem;padding:1rem;">
                   <div style="display:flex;align-items:center;gap:0.25rem;font-size:0.8125rem;margin-bottom:0.375rem;">
