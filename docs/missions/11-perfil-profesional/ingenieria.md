@@ -43,7 +43,7 @@ reorganización elimina — ver T-002).
 | ---------------------------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------- | -------------- |
 | `[id].vue`                        | Orquesta el layout (grid desktop, orden mobile) y pasa datos a los hijos | Contenido visual de fotos, reseñas o el botón de contacto   | F-001          |
 | `ProfessionalPublicPhotos.vue`    | Galería + miniaturas — sin cambios de comportamiento                    | El layout de la página que la envuelve                     | F-001          |
-| `ProfessionalPublicReviews.vue`   | Lista de reseñas + invitación a dejar la primera — se corrige un caso, ver Modelo de datos | El layout de la página que la envuelve | F-001, CL-003 |
+| `ProfessionalPublicReviews.vue`   | Lista de reseñas + invitación a dejar la primera — sin cambios (ver Modelo de datos) | El layout de la página que la envuelve | F-001, CL-003 |
 | `ProfessionalPublicContactBar.vue`| Botones de contacto — sin cambios                                       | Cuánto espacio reserva el resto de la página para no taparla | F-001, D-003 |
 | `useContactBarHeight`             | Mide el alto real del elemento que le pasan y lo escribe en `:root`      | Qué elemento medir, ni quién consume el valor               | D-003, T-002   |
 | `general.vue` / `AppFooter.vue`   | Consume la variable CSS como su propio `padding-bottom` **solo en mobile** — en desktop el CTA no es fijo y no reserva nada, igual que hoy | El valor de la variable — eso lo decide quien la setea | D-003, T-002 |
@@ -90,21 +90,19 @@ Sin cambios. `PublicProfessionalProfile` (`app/types/professional.ts`) ya trae c
 | `createdAt`                                                     | "En Datealo desde…", junto al bloque de contacto (UX-003)          |
 | `contact`                                                       | `ProfessionalPublicContactBar` — sin cambios                        |
 
-Los casos límite CL-001 (sin fotos), CL-002 (sin precio) y CL-004 (descripción corta o larga) ya están
-cubiertos por la nulabilidad existente de estos campos — ninguno necesita un campo nuevo ni un cambio de
-tipo, el `v-if` que ya existe alcanza.
+Los casos límite CL-001 (sin fotos), CL-002 (sin precio), CL-003 (sin reseñas) y CL-004 (descripción
+corta o larga) ya están cubiertos por el código existente — ninguno necesita un campo nuevo ni un cambio
+de tipo.
 
-**CL-003 no está cubierto hoy, y esta misión lo corrige.** `ProfessionalPublicReviews.vue:49` envuelve
-toda la sección (título y bloque de invitación incluidos) en `v-if="reviews.length > 0 || hasToken"`.
-`hasToken` solo se vuelve `true` después de que el visitante ya contactó al profesional
-(`ensureToken()` corre en `ProfessionalPublicContactBar.vue:23`, al hacer clic en WhatsApp o llamar) — así
-que cualquier visitante que **todavía no contactó** y ve un perfil sin reseñas no ve la invitación "Sé el
-primero en contarle…": ve un hueco vacío. Esto contradice el "Ejemplo verificable" de
-[F-001](./producto.md#f-001) (que describe a un visitante genérico, sin precondición de haber contactado)
-y el propio [CL-003](./producto.md#cl-003) ("la sección de reseñas muestra la invitación... sin
-condición"). Es un bug preexistente, no introducido por esta misión, pero esta misión es quien lo hace
-visible (el mockup y `experiencia.md` ya asumen que funciona) y quien lo corrige — ver
-[T-003](#t-003) y el slice S-005.
+**Corrección (2026-09-04):** esta sección afirmaba que CL-003 no estaba cubierto —
+`ProfessionalPublicReviews.vue` esconde toda la sección de reseñas (invitación incluida) cuando el
+visitante no tiene token de contacto, y se leyó eso como un bug contra el "sin condición" de
+[CL-003](./producto.md#cl-003) de `producto.md`. Es al revés: `experiencia.md` de la
+[misión 07](../07-resenas-verificadas-por-contacto/experiencia.md) (vigente) ya decidió este caso a
+propósito — CL-001 de esa misión dice explícitamente "la card... no existe... es el comportamiento
+esperado" cuando no hay token, y sus "Estados por superficie" listan "sin reseñas, sin token → ninguna
+sección de reseñas" como el estado correcto. Es el mecanismo anti-fraude de las reseñas verificadas por
+contacto funcionando como se diseñó, no una regresión. Ver [T-003](#t-003), reemplazada.
 
 ### Invariantes de datos
 
@@ -135,7 +133,6 @@ y `server/db/sql/rls.sql` completos antes de escribir esta sección, no asumido.
 | ------------------- | -------------------------- | ---------------------------------------------------------------------------------- | ---------------- |
 | TC-001               | unidad (Vitest, jsdom)     | Con `ResizeObserver` simulado disparando una entrada con `contentRect.height: 84`, `--contact-bar-h` en `document.documentElement.style` queda `"84px"` | `barRef` en `null`: no lanza, no escribe nada. Al desmontar: la propiedad se remueve (`getPropertyValue` vuelve vacío) |
 | F-001, CL-001, CL-002, CL-004 | componente (Vitest, jsdom) | `[id].vue` en modo `encontrado` con datos completos renderiza identidad+precio bajo la galería, sidebar con avatar+nombre+rating+CTA, reseñas fuera de ambas columnas | Cada caso límite (sin fotos, sin precio, descripción corta/larga) renderiza sin `v-if` roto ni bloque vacío visible |
-| CL-003 (corregido por T-003) | componente (Vitest, jsdom), mismo patrón que `professional-reviews.test.ts` | Perfil sin reseñas y `hasToken` en `false` (visitante que no contactó): la sección "Reseñas" y la invitación "Sé el primero..." son visibles | Perfil con reseñas y `hasToken` en `true`: la invitación de "¿cómo te fue?" convive con la lista existente, sin duplicarse |
 | D-003 (CTA nunca tapado) | visual, dispositivo real  | Ver TR-001 — este contrato no es testeable de forma significativa con Vitest/jsdom (no hay layout real ni `ResizeObserver` con medidas reales) | Verificación manual obligatoria en mobile real de 390px, siguiendo la sección "Verificación visual" de `CLAUDE.md` |
 
 **Nota de infraestructura de test:** `jsdom` no implementa `ResizeObserver` (limitación conocida, sin
@@ -160,12 +157,13 @@ definir un stub mínimo de `global.ResizeObserver` en su propio test, sin espera
 | S-002 | Reestructurar `[id].vue` (modo `encontrado`) a la jerarquía de UXF-001                 | UX-001, UX-002, UX-005, D-001, D-002 | En desktop, identidad+precio+descripción quedan en la columna de la galería y el sidebar (grid, `grid-row: span 2`) lleva solo avatar+nombre+rating+CTA+"en Datealo desde"; en mobile, el orden es foto → identidad+precio → descripción → reseñas → "en Datealo desde", con el CTA como overlay fijo; las reseñas quedan a ancho completo fuera de ambas columnas | S-001 | [#182](https://github.com/PatricioTabilo/datealo/issues/182) |
 | S-003 | Actualizar el skeleton de `cargando` a la forma nueva                                 | Reglas de F-001 ("no rediseña estados... más allá de que el esqueleto refleje las nuevas proporciones") | El skeleton muestra el bloque de galería + un bloque de identidad+precio agrupado, no líneas sueltas — no "salta" de forma al llegar los datos reales | S-002 | [#183](https://github.com/PatricioTabilo/datealo/issues/183) |
 | S-004 | Alt descriptivo en las miniaturas del carrusel, en vez de "Miniatura N"                | hallazgo de la evaluación heurística de `experiencia.md` (`web-design-guidelines`) | Cada miniatura anuncia qué foto activa (`"Ver foto 2 de 3 de {nombre}"` o equivalente), no solo su posición | — | [#184](https://github.com/PatricioTabilo/datealo/issues/184) |
-| S-005 | Mostrar la invitación a dejar la primera reseña aunque el visitante no haya contactado todavía | CL-003, T-003 | Perfil sin reseñas y visitante sin token: ve "Sé el primero en contarle..." + botón "Dejar una reseña". Perfil con reseñas y visitante con token: sigue viendo la lista de reseñas más la invitación a agregar la suya, sin duplicar nada | — | [#185](https://github.com/PatricioTabilo/datealo/issues/185) |
+| S-005 | **Retirado (2026-09-04)** — mostrar la invitación a reseñar sin haber contactado | T-003, reemplazada | — | — | [#185](https://github.com/PatricioTabilo/datealo/issues/185), cerrado sin cambios |
 
-Ningún slice depende de trabajo fuera de esta misión. S-004 y S-005 no dependen de ningún otro y pueden
-mergearse en cualquier momento del lote — de hecho, dado que S-005 corrige un bug que ya afecta a
-`/profesionales/[id]` hoy (no algo introducido por esta misión), conviene priorizarlo antes que S-002/S-003
-si se quiere el fix en producción cuanto antes, en vez de esperar al resto del reordenamiento.
+**S-005, retirado:** partía de T-003, que se descartó antes de escribirse en código — ver T-003 en
+"Decisiones técnicas" para el porqué (el comportamiento actual ya es el que `experiencia.md` de la misión
+07 decidió a propósito, no un bug). El issue #185 se cerró sin ningún cambio.
+
+Ningún slice depende de trabajo fuera de esta misión. S-004 no depende de ningún otro.
 
 ## Decisiones técnicas
 
@@ -227,22 +225,15 @@ si se quiere el fix en producción cuanto antes, en vez de esperar al resto del 
 
 ### T-003 — La invitación a dejar la primera reseña se muestra a cualquier visitante, no solo a quien ya contactó
 
-- **Estado:** aceptada. **Fecha:** 2026-09-04.
-- **Contratos:** [CL-003](./producto.md#cl-003), F-001.
-- **Alternativas descartadas:** dejar el comportamiento actual (invitación gateada por `hasToken`) y
-  documentar la diferencia como "fuera de alcance" — descartada porque CL-003 y el "Ejemplo verificable"
-  de F-001 ya son parte de lo aprobado en `producto.md`, no una funcionalidad nueva que se pueda recortar
-  acá; ignorarlo dejaría `ingenieria.md` construyendo sobre un contrato que el propio `producto.md`
-  contradice.
-- **Decisión y consecuencias:** en `ProfessionalPublicReviews.vue`, la sección deja de estar gateada por
-  `v-if="reviews.length > 0 || hasToken"` a nivel de toda la sección. El bloque de invitación/CTA de
-  reseña pasa a mostrarse cuando `reviews.length === 0` (siempre, cumple CL-003) **o** cuando `hasToken`
-  es verdadero (nudge a quien ya contactó, aunque ya haya reseñas de otras personas — comportamiento de
-  hoy, se conserva). La lista de reseñas existentes se sigue mostrando siempre que `reviews.length > 0`,
-  sin relación con `hasToken`. Con esto la sección entera queda visible en todos los casos que CL-001 a
-  CL-003 describen, sin gateo previo.
-- **Reapertura:** ninguna prevista — es la aplicación literal de un caso límite ya aprobado, no una
-  apuesta a revisar más adelante.
+- **Estado:** reemplazada (2026-09-04). Nunca se implementó — se descartó antes de escribir el slice.
+- **Qué decía, en corto:** proponía sacar el `v-if="reviews.length > 0 || hasToken"` de
+  `ProfessionalPublicReviews.vue` para que la invitación a dejar la primera reseña se viera siempre,
+  incluso sin token de contacto. Murió porque partía de una lectura incompleta: leyó el "sin condición"
+  de CL-003 de `producto.md` (misión 05) sin revisar que `experiencia.md` de la
+  [misión 07](../07-resenas-verificadas-por-contacto/experiencia.md) (posterior, vigente) ya había
+  decidido explícitamente que la sección entera se esconde sin token — es el mecanismo anti-fraude de las
+  reseñas verificadas por contacto, no un vacío sin resolver. Lo que sobrevive: nada cambia en el código;
+  el comportamiento actual de `ProfessionalPublicReviews.vue` queda confirmado como correcto.
 
 ## Preguntas
 
