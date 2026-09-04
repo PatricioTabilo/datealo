@@ -168,7 +168,15 @@ hace falta tocar `server/db/sql/rls.sql` en esta misión.
 | S-005 | Construir `CompactSearchBar`: resumen + panel categoría→comuna, "Buscar" habilitado solo con ambos | TC-002, F-002, C-016, UX-001       | Mobile: hoja completa, categoría se abre primero, su lista de opciones queda directo debajo del campo activo; desktop: panel flotante inline; en ambos, "Buscar" deshabilitado hasta tener categoría y comuna; el botón fijo de mobile queda visible con el teclado virtual abierto ([TR-001](#riesgos-y-experimentos-de-factibilidad)) | S-004      | [#152](https://github.com/PatricioTabilo/datealo/issues/152) |
 | S-006 | Construir `AppHeader`: botón de volver con destino por ruta, `CompactSearchBar` solo en `/buscar`, zona de avatar | TC-004, F-001, D-005, UX-003, UX-005 | Mobile: volver es solo ícono en toda superficie; desktop: volver lleva ícono+texto y el buscador queda centrado en un grid de 3 zonas; con sesión aparece el avatar a la derecha, sin sesión la zona derecha queda vacía fuera de la landing | S-003, S-005 | [#153](https://github.com/PatricioTabilo/datealo/issues/153) |
 | S-007 | Crear el layout `general.vue` y aplicarlo a `/buscar`, `/profesionales/[id]`, `/profesional/*` | F-001, F-003                       | Las cinco páginas muestran `AppHeader` + `AppFooter` envolviendo su contenido actual sin cambiar su lógica interna; `npx nuxi typecheck` y `npm run build` pasan | S-002, S-006 | [#154](https://github.com/PatricioTabilo/datealo/issues/154) |
-| S-008 | Reescribir `LandingNavbar`: "Categorías" + Publícate/Mi perfil (sin "Para profesionales" ni el CTA "Buscar" suelto), `CompactSearchBar` inline tras hacer scroll | F-001, D-005, UXF-003              | Antes de scroll: logo, Categorías (ancla), Publícate/Mi perfil; tras scroll: mismo nav pero con `CompactSearchBar` en vez de las anclas; con sesión activa, "Mi perfil" reemplaza a "Publícate" en ambos estados | S-003, S-005 | [#155](https://github.com/PatricioTabilo/datealo/issues/155) |
+| S-008 | **Retirado (2026-09-04)** — Reescribir `LandingNavbar`, movido a la misión 12 | F-001, D-005, UXF-003 | — | S-003, S-005 | [#155](https://github.com/PatricioTabilo/datealo/issues/155), cerrado |
+
+**S-008, retirado:** decía "Reescribir `LandingNavbar`: 'Categorías' + Publícate/Mi perfil, `CompactSearchBar`
+inline tras hacer scroll". Se sacó del plan de construcción de esta misión, a propósito — no quedó sin
+hacer, se movió. Al ejecutarlo, el enfoque original (buscador completo tras scroll, CTA "Publícate" como
+texto) resultó tener bugs reales en mobile, y revisándolo se vio que toca una decisión que en realidad es
+de la misión 12 ("hero y copy de la landing"): la landing tiene dos buscadores (hero + nav) y no está
+resuelto si el hero necesita el suyo propio una vez que el nav ya tiene uno. El issue #155 quedó cerrado
+con esa nota; se retoma junto con la misión 12, no como parte de esta.
 
 ## Decisiones técnicas
 

@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>V-001 Perfil de profesional — misión 11</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+    <style>
+      /* Mismo max-w-5xl (1024px) que app/pages/profesionales/[id].vue usa hoy — esta misión reorganiza
+         el contenido, no el ancho de página (restricción aceptada en producto.md). */
+      .profile-container {
+        max-width: 64rem;
+        margin: 0 auto;
+        width: 100%;
+      }
+      .gallery-photo {
+        aspect-ratio: 4 / 3;
+        width: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .thumb-row {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+      .thumb {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+      .avatar-circle {
+        width: 5.5rem;
+        height: 5.5rem;
+        border-radius: 9999px;
+        background: color-mix(in oklab, var(--ui-primary) 12%, var(--ui-bg));
+        color: var(--ui-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-heading);
+        font-weight: 800;
+        font-size: 1.5rem;
+      }
+      .icon {
+        width: 1rem;
+        height: 1rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .icon-star {
+        width: 0.875rem;
+        height: 0.875rem;
+        fill: #fbbf24;
+        stroke: none;
+      }
+      .sidebar-card {
+        border: 1px solid var(--ui-border);
+        border-radius: 1rem;
+        padding: 1.25rem;
+      }
+      .reviews-empty {
+        background: var(--ui-bg-muted);
+        border-radius: 1rem;
+        padding: 1rem;
+      }
+      .btn-primary {
+        flex: 1;
+        background: var(--ui-primary);
+        color: #fff;
+        border-radius: var(--ui-radius);
+        padding: 0.875rem 1rem;
+        font-weight: 700;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      .btn-secondary {
+        border: 1.5px solid var(--ui-border-accented);
+        border-radius: var(--ui-radius);
+        padding: 0.875rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ui-text-toned);
+      }
+      .footer-mock {
+        background: var(--ui-bg-muted);
+        border-top: 1px solid var(--ui-border);
+        padding: 1.5rem 1.25rem;
+        font-size: 0.6875rem;
+        color: var(--ui-text-muted);
+        line-height: 1.6;
+      }
+      .footer-mock strong {
+        display: block;
+        font-family: var(--font-heading);
+        font-weight: 800;
+        font-size: 0.875rem;
+        color: var(--color-datealo-text);
+        margin-bottom: 0.375rem;
+      }
+      .skel {
+        background: var(--ui-bg-accented);
+        border-radius: 0.375rem;
+      }
+      /* Cada frame es una foto fija de una posición de scroll, no una página que se puede scrollear de
+         verdad — por eso el CTA es `position: absolute` dentro de `.scroll-window` (recortado con
+         `overflow: hidden`) en vez de `position: fixed`. El mecanismo real ya existe hoy en el código
+         (`[id].vue`, `fixed inset-x-0 bottom-0`) y sigue siendo `fixed`; acá solo hacía falta que el CTA
+         quedara pegado al borde inferior de CADA frame para mostrar dos momentos de scroll distintos
+         (recién abierto, y con el footer general a la vista) sin depender de JS de scroll. Evaluado en la
+         revisión heurística de esta misión: técnica correcta, solo necesitaba esta aclaración escrita. */
+      .scroll-window {
+        position: relative;
+        height: 100%;
+        overflow: hidden;
+      }
+      .cta-fixed {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-top: 1px solid var(--ui-border);
+        background: var(--color-datealo-bg);
+        padding: 1rem;
+        display: flex;
+        gap: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+      <!-- ============================================================ MOBILE · CARGANDO ============ -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo cargando
+          <small>skeleton actualizado: bloque de identidad+precio agrupado bajo la galería, ya no una
+            columna de líneas sueltas</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="skel" style="aspect-ratio:4/3;width:100%;border-radius:0;"></div>
+          <div style="padding:1.25rem;display:flex;flex-direction:column;gap:0.625rem;">
+            <div class="skel" style="height:1.25rem;width:60%;"></div>
+            <div class="skel" style="height:0.875rem;width:40%;"></div>
+            <div class="skel" style="height:1.125rem;width:35%;margin-top:0.375rem;"></div>
+            <div class="skel" style="height:3rem;width:100%;border-radius:0.75rem;margin-top:1rem;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ MOBILE · ENCONTRADO (arriba) === -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo encontrado — recién abierto, sin scrollear
+          <small>foto, identidad y precio agrupados bajo la galería (D-001/D-002 producto.md); el CTA ya
+            es visible fijo abajo, sin haber scrolleado nada</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="scroll-window">
+            <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+            <img
+              class="gallery-photo"
+              alt="Tablero eléctrico instalado, foto de trabajo de Patricio Tabilo"
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23423ed0'/%3E%3Ctext x='200' y='150' font-family='sans-serif' font-size='22' fill='white' text-anchor='middle' dominant-baseline='middle'%3ETablero eléctrico%0Ainstalado%3C/text%3E%3C/svg%3E"
+            />
+            <div class="thumb-row" style="padding:0 1.25rem;">
+              <img class="thumb" style="outline:2px solid var(--ui-primary);outline-offset:2px;" alt="Ver foto 1: tablero eléctrico instalado" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%23423ed0'/%3E%3C/svg%3E" />
+              <img class="thumb" alt="Ver foto 2: cableado nuevo instalado" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%233ecbd7'/%3E%3C/svg%3E" />
+              <img class="thumb" alt="Ver foto 3: detalle del tablero terminado" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%231f2937'/%3E%3C/svg%3E" />
+            </div>
+            <div style="padding:1.25rem;">
+              <h1 style="font-family:var(--font-heading);font-weight:800;font-size:1.25rem;margin:0;color:var(--color-datealo-text);">
+                Patricio Tabilo
+              </h1>
+              <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--ui-text-muted);">
+                Electricidad · Puerto Varas
+              </p>
+              <div style="margin-top:0.375rem;display:flex;align-items:center;gap:0.25rem;font-size:0.8125rem;">
+                <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                <span style="font-weight:700;">4,8</span>
+                <span style="color:var(--ui-text-muted);">· 12 reseñas</span>
+              </div>
+              <p style="margin-top:0.625rem;font-family:var(--font-heading);font-weight:800;font-size:1.0625rem;color:var(--color-datealo-text);">
+                Desde $15.000
+              </p>
+            </div>
+          </div>
+          <div class="cta-fixed">
+            <div class="btn-primary">
+              <svg class="icon" aria-hidden="true" style="stroke:#fff;" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
+              Escribir por WhatsApp
+            </div>
+            <div class="btn-secondary" aria-label="Llamar">
+              <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.288 1.223 14.1 14.1 0 0 0 6.288 6.394Z" /></svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ MOBILE · DESCRIPCIÓN + RESEÑAS === -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo encontrado — descripción y reseñas
+          <small>las reseñas ya no viven pegadas al CTA (D-002 producto.md): son su propia sección, después
+            de la descripción</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div style="padding:1.25rem;">
+            <p style="font-size:0.875rem;line-height:1.6;color:var(--color-datealo-text);margin:0;">
+              Electricista con 10 años de experiencia. Trabajo en Puerto Varas y alrededores, atiendo
+              urgencias los fines de semana.
+            </p>
+            <div style="border-top:1px solid var(--ui-border);margin-top:1.5rem;padding-top:1.25rem;">
+              <h2 style="font-family:var(--font-heading);font-weight:800;font-size:1rem;margin:0 0 0.75rem;">
+                Reseñas
+              </h2>
+              <div style="border:1px solid var(--ui-border);border-radius:0.75rem;padding:0.875rem;">
+                <div style="display:flex;align-items:center;gap:0.25rem;font-size:0.8125rem;margin-bottom:0.375rem;">
+                  <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                  <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                  <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                  <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                  <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                  <span style="margin-left:0.375rem;color:var(--ui-text-muted);">Marcela F. · hace 2 semanas</span>
+                </div>
+                <p style="margin:0;font-size:0.8125rem;color:var(--color-datealo-text);">
+                  "Llegó puntual y dejó todo funcionando el mismo día. Muy recomendado."
+                </p>
+              </div>
+            </div>
+            <p style="margin-top:1.25rem;font-size:0.6875rem;color:var(--ui-text-muted);">
+              En Datealo desde agosto de 2026
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ MOBILE · FONDO DE PÁGINA ======== -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo encontrado — fondo de la página (footer general + CTA)
+          <small>D-003 producto.md: el CTA reserva su propio espacio y nunca tapa el footer general — acá
+            los dos conviven, separados</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="scroll-window" style="display:flex;flex-direction:column;justify-content:flex-end;">
+            <div class="footer-mock" style="padding-top:2rem;padding-bottom:6rem;">
+              <strong style="color:var(--ui-primary);">datealo</strong>
+              <p style="margin:0 0 0.75rem;">Encuentra al profesional que necesitas, cerca de ti.</p>
+              <p style="margin:0;">Buscar · Para profesionales · Términos · Privacidad</p>
+              <p style="margin:0.75rem 0 0;">hola@datealo.cl · Santiago, Chile</p>
+              <p style="margin:0.75rem 0 0;">© 2026 Datealo</p>
+            </div>
+          </div>
+          <div class="cta-fixed">
+            <div class="btn-primary">
+              <svg class="icon" aria-hidden="true" style="stroke:#fff;" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
+              Escribir por WhatsApp
+            </div>
+            <div class="btn-secondary" aria-label="Llamar">
+              <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.288 1.223 14.1 14.1 0 0 0 6.288 6.394Z" /></svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ MOBILE · CASO LÍMITE ============ -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo encontrado — sin fotos, sin precio, sin reseñas
+          <small>CL-001/CL-002/CL-003 de producto.md combinados en un solo perfil — el caso más frecuente
+            hoy, con la oferta recién arrancando</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div style="aspect-ratio:4/3;width:100%;display:flex;align-items:center;justify-content:center;background:var(--color-datealo-surface);">
+            <div class="avatar-circle" style="width:5.5rem;height:5.5rem;">HS</div>
+          </div>
+          <div style="padding:1.25rem;">
+            <h1 style="font-family:var(--font-heading);font-weight:800;font-size:1.25rem;margin:0;color:var(--color-datealo-text);">
+              Héctor Silva
+            </h1>
+            <p style="margin:0.25rem 0 0;font-size:0.875rem;color:var(--ui-text-muted);">
+              Gasfitería · Ñuñoa
+            </p>
+            <p style="margin-top:1rem;font-size:0.875rem;line-height:1.6;color:var(--color-datealo-text);">
+              Gasfitero matriculado, atiendo urgencias y trabajos de instalación en Ñuñoa y comunas
+              vecinas.
+            </p>
+            <div style="border-top:1px solid var(--ui-border);margin-top:1.5rem;padding-top:1.25rem;">
+              <h2 style="font-family:var(--font-heading);font-weight:800;font-size:1rem;margin:0 0 0.75rem;">
+                Reseñas
+              </h2>
+              <div class="reviews-empty">
+                <p style="margin:0 0 0.625rem;font-size:0.8125rem;font-weight:700;">
+                  Sé el primero en contarle a otros cómo te fue con Héctor Silva
+                </p>
+                <div style="background:var(--ui-primary);color:#fff;border-radius:var(--ui-radius);min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:0.8125rem;font-weight:700;">
+                  Dejar una reseña
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="padding:0 1.25rem 1.25rem;">
+            <div class="btn-primary" style="width:100%;">
+              <svg class="icon" aria-hidden="true" style="stroke:#fff;" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
+              Escribir por WhatsApp
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ DESKTOP · ENCONTRADO ============ -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">
+          V-001 · modo encontrado — desktop · ronda 3
+          <small>columna principal (galería + identidad + descripción) y sidebar acotada a rating breve +
+            contacto + "en Datealo desde" (UX-001), con el nombre junto al avatar (revisión 2026-09-04) —
+            reseñas en grid de 2 columnas debajo de ambas columnas (corregido tras la evaluación
+            heurística). Layout de `flex` a CSS Grid: el sidebar usa `grid-row: span 2` + `align-self:
+            start`, así el sticky sigue activo mientras se scrollea la descripción Y las reseñas, y se
+            despega solo al terminar el grid, sin buffer manual — mismo patrón que Airbnb ([UX-005](../experiencia.md#ux-005))</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="profile-container" style="padding:2rem 2rem 3rem;">
+            <div style="display:grid;grid-template-columns:55fr 45fr;gap:2rem;">
+              <div>
+                <img
+                  class="gallery-photo"
+                  style="border-radius:1rem;"
+                  alt="Tablero eléctrico instalado, foto de trabajo de Patricio Tabilo"
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23423ed0'/%3E%3Ctext x='200' y='150' font-family='sans-serif' font-size='22' fill='white' text-anchor='middle' dominant-baseline='middle'%3ETablero eléctrico%0Ainstalado%3C/text%3E%3C/svg%3E"
+                />
+                <div class="thumb-row">
+                  <img class="thumb" style="outline:2px solid var(--ui-primary);outline-offset:2px;width:5rem;height:5rem;" alt="Ver foto 1: tablero eléctrico instalado" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%23423ed0'/%3E%3C/svg%3E" />
+                  <img class="thumb" style="width:5rem;height:5rem;" alt="Ver foto 2: cableado nuevo instalado" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%233ecbd7'/%3E%3C/svg%3E" />
+                  <img class="thumb" style="width:5rem;height:5rem;" alt="Ver foto 3: detalle del tablero terminado" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%231f2937'/%3E%3C/svg%3E" />
+                </div>
+                <div style="margin-top:1.25rem;">
+                  <h1 style="font-family:var(--font-heading);font-weight:800;font-size:1.5rem;margin:0;color:var(--color-datealo-text);">
+                    Patricio Tabilo
+                  </h1>
+                  <p style="margin:0.25rem 0 0;font-size:0.9375rem;color:var(--ui-text-muted);">
+                    Electricidad · Puerto Varas
+                  </p>
+                  <p style="margin-top:0.5rem;font-family:var(--font-heading);font-weight:800;font-size:1.125rem;color:var(--color-datealo-text);">
+                    Desde $15.000
+                  </p>
+                  <p style="margin-top:0.875rem;font-size:0.875rem;line-height:1.6;color:var(--color-datealo-text);max-width:32rem;">
+                    Electricista con 10 años de experiencia. Trabajo en Puerto Varas y alrededores, atiendo
+                    urgencias los fines de semana.
+                  </p>
+                </div>
+              </div>
+              <div style="grid-row:span 2;align-self:start;position:sticky;top:2rem;">
+                <div class="sidebar-card">
+                  <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <div class="avatar-circle" style="width:3.5rem;height:3.5rem;font-size:1rem;">PT</div>
+                    <div>
+                      <p style="margin:0;font-family:var(--font-heading);font-weight:800;font-size:0.9375rem;color:var(--color-datealo-text);">
+                        Patricio Tabilo
+                      </p>
+                      <div style="display:flex;align-items:center;gap:0.25rem;font-size:0.8125rem;margin-top:0.125rem;">
+                        <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                        <span style="font-weight:700;">4,8</span>
+                        <span style="color:var(--ui-text-muted);">· 12 reseñas</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:0.5rem;margin-top:1.25rem;">
+                    <div class="btn-primary">
+                      <svg class="icon" aria-hidden="true" style="stroke:#fff;" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
+                      Escribir por WhatsApp
+                    </div>
+                    <div class="btn-secondary" aria-label="Llamar">
+                      <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.288 1.223 14.1 14.1 0 0 0 6.288 6.394Z" /></svg>
+                    </div>
+                  </div>
+                  <p style="margin-top:0.875rem;font-size:0.6875rem;color:var(--ui-text-muted);">
+                    En Datealo desde agosto de 2026
+                  </p>
+                </div>
+              </div>
+            <div style="grid-column:1 / -1;border-top:1px solid var(--ui-border);margin-top:2.5rem;padding-top:1.5rem;">
+              <h2 style="font-family:var(--font-heading);font-weight:800;font-size:1.125rem;margin:0 0 1rem;">
+                Reseñas
+              </h2>
+              <!-- Grid de 2 columnas, no una sola card angosta flotando en un contenedor ancho — hallazgo
+                   de la evaluación heurística: con las 12 reseñas del ejemplo de producto.md, una sola
+                   columna de 32rem dejaba la mitad del ancho en blanco. Medido sobre el render real
+                   (segunda evaluación heurística, 2026-09-04): cada card ronda 21.5rem (~50 caracteres
+                   por línea con la tipografía real) dentro de este grid de 44rem, no 32rem — corregido
+                   en UX-002 de experiencia.md. El grid es lo que usa el ancho completo, no el ancho de
+                   cada card. -->
+              <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:1rem;max-width:44rem;">
+                <div style="border:1px solid var(--ui-border);border-radius:0.75rem;padding:1rem;">
+                  <div style="display:flex;align-items:center;gap:0.25rem;font-size:0.8125rem;margin-bottom:0.375rem;">
+                    <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                    <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                    <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                    <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                    <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                    <span style="margin-left:0.375rem;color:var(--ui-text-muted);">Marcela F. · hace 2 semanas</span>
+                  </div>
+                  <p style="margin:0;font-size:0.8125rem;color:var(--color-datealo-text);">
+                    "Llegó puntual y dejó todo funcionando el mismo día. Muy recomendado."
+                  </p>
+                </div>
+                <div style="border:1px solid var(--ui-border);border-radius:0.75rem;padding:1rem;">
+                  <div style="display:flex;align-items:center;gap:0.25rem;font-size:0.8125rem;margin-bottom:0.375rem;">
+                    <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                    <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                    <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                    <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                    <svg class="icon-star" aria-hidden="true" viewBox="0 0 24 24" style="fill:var(--ui-border-accented);"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z" /></svg>
+                    <span style="margin-left:0.375rem;color:var(--ui-text-muted);">Héctor S. · hace 1 mes</span>
+                  </div>
+                  <p style="margin:0;font-size:0.8125rem;color:var(--color-datealo-text);">
+                    "Buena atención, aunque llegó unos minutos tarde. Dejó todo ordenado."
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ DESKTOP · CASO LÍMITE ========== -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">
+          V-001 · modo encontrado — sin fotos, sin precio, sin reseñas · desktop · ronda 3
+          <small>verifica que el sidebar acotado (avatar + nombre + CTA + "en Datealo desde", sin la fila
+            de rating) no se vea desproporcionadamente vacío junto a la columna de 55% — hallazgo no
+            bloqueante de la evaluación heurística, nadie lo había visto en desktop; nombre agregado junto
+            al avatar (revisión 2026-09-04); mismo layout de grid que el frame anterior (`grid-row: span
+            2` en el sidebar) para que el sticky siga activo durante la sección de reseñas
+            ([UX-005](../experiencia.md#ux-005))</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="profile-container" style="padding:2rem 2rem 3rem;">
+            <div style="display:grid;grid-template-columns:55fr 45fr;gap:2rem;">
+              <div>
+                <div style="aspect-ratio:4/3;width:100%;border-radius:1rem;display:flex;align-items:center;justify-content:center;background:var(--color-datealo-surface);">
+                  <div class="avatar-circle" style="width:5.5rem;height:5.5rem;">HS</div>
+                </div>
+                <div style="margin-top:1.25rem;">
+                  <h1 style="font-family:var(--font-heading);font-weight:800;font-size:1.5rem;margin:0;color:var(--color-datealo-text);">
+                    Héctor Silva
+                  </h1>
+                  <p style="margin:0.25rem 0 0;font-size:0.9375rem;color:var(--ui-text-muted);">
+                    Gasfitería · Ñuñoa
+                  </p>
+                  <p style="margin-top:0.875rem;font-size:0.875rem;line-height:1.6;color:var(--color-datealo-text);max-width:32rem;">
+                    Gasfitero matriculado, atiendo urgencias y trabajos de instalación en Ñuñoa y comunas
+                    vecinas.
+                  </p>
+                </div>
+              </div>
+              <div style="grid-row:span 2;align-self:start;position:sticky;top:2rem;">
+                <div class="sidebar-card">
+                  <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <div class="avatar-circle" style="width:3.5rem;height:3.5rem;font-size:1rem;">HS</div>
+                    <p style="margin:0;font-family:var(--font-heading);font-weight:800;font-size:0.9375rem;color:var(--color-datealo-text);">
+                      Héctor Silva
+                    </p>
+                  </div>
+                  <div style="display:flex;gap:0.5rem;margin-top:1.25rem;">
+                    <div class="btn-primary">
+                      <svg class="icon" aria-hidden="true" style="stroke:#fff;" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
+                      Escribir por WhatsApp
+                    </div>
+                    <div class="btn-secondary" aria-label="Llamar">
+                      <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.288 1.223 14.1 14.1 0 0 0 6.288 6.394Z" /></svg>
+                    </div>
+                  </div>
+                  <p style="margin-top:0.875rem;font-size:0.6875rem;color:var(--ui-text-muted);">
+                    En Datealo desde agosto de 2026
+                  </p>
+                </div>
+              </div>
+            <div style="grid-column:1 / -1;border-top:1px solid var(--ui-border);margin-top:2.5rem;padding-top:1.5rem;">
+              <h2 style="font-family:var(--font-heading);font-weight:800;font-size:1.125rem;margin:0 0 1rem;">
+                Reseñas
+              </h2>
+              <div class="reviews-empty" style="max-width:22rem;">
+                <p style="margin:0 0 0.625rem;font-size:0.8125rem;font-weight:700;">
+                  Sé el primero en contarle a otros cómo te fue con Héctor Silva
+                </p>
+                <div style="background:var(--ui-primary);color:#fff;border-radius:var(--ui-radius);min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:0.8125rem;font-weight:700;">
+                  Dejar una reseña
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
