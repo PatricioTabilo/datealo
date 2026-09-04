@@ -45,7 +45,10 @@ function selectPhoto(index: number) {
         :aria-current="index === activeIndex"
         @click="selectPhoto(index)"
       >
-        <img :src="url" :alt="`Miniatura ${index + 1} de ${displayName}`" class="h-full w-full object-cover">
+        <!-- alt vacío a propósito: el aria-label del botón ya es el nombre accesible completo de este
+             control (qué foto activa y su posición) — un lector de pantalla nunca anuncia el alt de la
+             imagen interna por separado, así que dejarlo con texto solo agrega algo que nadie escucha. -->
+        <img :src="url" alt="" class="h-full w-full object-cover">
       </button>
     </div>
   </div>
