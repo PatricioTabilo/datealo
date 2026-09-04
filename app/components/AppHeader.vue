@@ -26,7 +26,7 @@ const { professional } = await useProfessionalSession()
 </script>
 
 <template>
-  <header class="sticky top-0 z-20 border-b border-datealo-surface bg-datealo-surface">
+  <header class="sticky top-0 z-20 border-b border-datealo-surface bg-datealo-bg">
     <div class="flex items-center gap-3 px-5 py-3.5 lg:hidden">
       <NuxtLink
         :to="backTo"
