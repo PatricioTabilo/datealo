@@ -3,7 +3,7 @@
 **Tipo:** producto. **Abierta el** 2026-09-01. **Nace de:** división de la misión 09 (ver su
 [README](../09-layout-general/README.md)).
 
-**Estado de la misión:** lista para construir
+**Estado de la misión:** en construcción
 
 **Última actualización:** 2026-09-04
 
@@ -23,13 +23,11 @@ T-003 corrige un bug preexistente de CL-003 que esta misión hizo visible), en 5
 Pasó por una auditoría en agente separado que encontró y corrigió dos hallazgos bloqueantes antes de
 llegar a este estado.
 
-**Discovery cerrado.** Próximo hito: los issues del plan de construcción ya están abiertos
+**Discovery cerrado.** La misión 09 se cerró el 2026-09-04 (S-008 movido a la misión 12), así que esta
+pasa a ser la única misión en delivery. **Próximo hito:** ejecutar el plan de construcción
 ([#181](https://github.com/PatricioTabilo/datealo/issues/181) a
 [#185](https://github.com/PatricioTabilo/datealo/issues/185), ver tabla en
-[`ingenieria.md`](./ingenieria.md#plan-de-construcción)). La ejecución todavía no arranca: la misión 09
-sigue `en construcción` (le queda el issue #155 abierto) y `CLAUDE.md` fija una sola misión en delivery a
-la vez — queda pendiente de que el dueño de producto decida si esperar a que la 09 cierre o hacer una
-excepción explícita.
+[`ingenieria.md`](./ingenieria.md#plan-de-construcción)) — arrancando por S-001.
 
 ## Brief
 
