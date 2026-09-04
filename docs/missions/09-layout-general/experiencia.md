@@ -132,8 +132,10 @@ como parte de la página — nunca conviven los dos ([F-002](./producto.md#f-002
 **Objetivo:** volver a donde estaba (resultados o landing) sin perder lo que ya había elegido.
 **Contrato:** [F-001](./producto.md#f-001).
 
-**Punto de entrada:** cualquier página que muestre flecha atrás en vez de logo (`/buscar`,
-`/profesionales/[id]`, `/profesional/*`).
+**Punto de entrada:** en mobile, cualquier página que muestre flecha atrás en vez de logo (`/buscar`,
+`/profesionales/[id]`, `/profesional/*`). En desktop, solo `/profesional/*` — `/buscar` y
+`/profesionales/[id]` muestran el logo en su lugar ([D-009 en producto.md](./producto.md#d-009)); ahí este
+flujo no aplica, el logo lleva directo a la landing sin conservar filtros, igual que en la landing misma.
 
 **Criterio de término:** llega a la pantalla anterior con el estado (filtros) conservado cuando
 corresponde.
@@ -147,8 +149,8 @@ En `/buscar`, el resumen de búsqueda junto al botón confirma qué está viendo
 
 | Salida                                          | Cómo se ejecuta                          | Qué queda del trabajo |
 | --------------------------------------------------- | -------------------------------------------- | ------------------------ |
-| Vuelve desde el perfil a resultados             | toca el botón de volver en `/profesionales/[id]` | `/buscar` con los mismos filtros que tenía antes de entrar al perfil |
-| Vuelve desde `/buscar` a la landing             | toca el botón de volver en `/buscar`      | landing en su estado inicial (arriba) — los filtros no se conservan, es un nivel más arriba |
+| Vuelve desde el perfil a resultados             | toca el botón de volver en `/profesionales/[id]` (mobile en toda superficie; desktop no tiene este botón ahí, ver punto de entrada) | `/buscar` con los mismos filtros que tenía antes de entrar al perfil |
+| Vuelve desde `/buscar` a la landing             | mobile: toca el botón de volver. Desktop: toca el logo — mismo destino, otro elemento | landing en su estado inicial (arriba) — los filtros no se conservan, es un nivel más arriba |
 | Usa el botón atrás del navegador en vez del botón de volver | gesto del navegador, no de la app | mismo resultado — la URL ya refleja los filtros (misión 06) |
 
 ### Secuencia principal
@@ -310,7 +312,11 @@ o ausencia del avatar — no hay otro estado visual permanente para esto.
   como caso principal a alguien que entra en frío por WhatsApp, sin contexto previo para interpretar un
   ícono suelto); texto "Volver" en todo tamaño, incluido mobile (versión original de esta decisión) — se
   descarta en la revisión de abajo; volver a mostrar el isotipo junto al botón en `/buscar` y el perfil —
-  se descarta porque reabriría [C-011](./investigacion.md#c-011) (el logo se reserva para la landing).
+  se descartó en su momento porque reabriría [C-011](./investigacion.md#c-011) (el logo se reserva para la
+  landing). Esa razón ya no aplica en desktop: C-011 se revisó con evidencia propia de escritorio, y
+  `/buscar`/`/profesionales/[id]` en desktop sí muestran el logo en vez de "volver" —
+  [D-009 en producto.md](./producto.md#d-009). Esta decisión (UX-003) sigue vigente para cuándo el botón
+  de volver, cuando existe, lleva texto o no — no para dónde existe.
 - **Decisión y consecuencia:** en desktop, el botón lleva ícono + la palabra "Volver" — hay espacio y
   resuelve la orientación visual y el nombre accesible al mismo tiempo. En mobile, solo el ícono, con
   `aria-label` — 390px con el buscador y, cuando hay sesión, el avatar, no deja espacio para texto también
