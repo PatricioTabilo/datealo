@@ -2,7 +2,7 @@
 
 **Estado:** vigente — aprobado por Patricio el 2026-09-02
 
-**Última actualización:** 2026-09-02
+**Última actualización:** 2026-09-03
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -83,6 +83,13 @@ de opciones (categorías, o comunas frecuentes) inmediatamente debajo — nunca 
 entre el campo activo y su lista. El campo ya resuelto queda colapsado arriba, como resumen; el que todavía
 no corresponde llenar queda colapsado más abajo, después de la lista.
 
+**Dos densidades en desktop, mismo componente ([UX-006](#ux-006)):** el header general (`/buscar`, perfil,
+`/profesional/*`) usa la densidad chica — solo el valor elegido ("Electricidad · Puerto Varas"), sin el
+nombre del campo encima — porque ahí el buscador está fijo en pantalla todo el tiempo. El navbar de la
+landing tras hacer scroll (misión 08) usa la densidad completa, con el nombre del campo sobre el valor. En
+`/buscar`, este buscador es el único: reemplaza la barra de filtros de categoría/comuna que existe hoy
+como parte de la página — nunca conviven los dos ([F-002](./producto.md#f-002)).
+
 ### Salidas
 
 | Salida                        | Cómo se ejecuta                                          | Qué queda del trabajo |
@@ -97,21 +104,23 @@ no corresponde llenar queda colapsado más abajo, después de la lista.
 | 1    | Toca el buscador compacto (botón en mobile, campo en desktop) | Se abre el panel — hoja completa en mobile, panel flotante debajo en desktop | Título "¿Qué necesitas?" (mobile); campo "Categoría" expandido primero |
 | 2    | Ve la lista de categorías                            | —                                                                                | Eyebrow "Categorías" + las 8 categorías como filas tocables, con su ícono |
 | 3    | Toca una categoría                                    | El campo categoría queda con esa selección; el campo "Comuna" se expande automáticamente | Título "¿Dónde?" (mobile); comuna: buscador de texto + lista corta de comunas frecuentes |
-| 4    | Escribe, o elige una comuna frecuente de la lista      | El campo comuna queda con esa selección                                       | El botón "Buscar", fijo abajo en mobile, queda resaltado |
-| 5    | Toca "Buscar"                                         | Navega a `/buscar` con los filtros aplicados                                    | Resultados, o el estado vacío correspondiente |
+| 4    | Escribe para filtrar (opcional) y toca una comuna — de las frecuentes o de los resultados filtrados | El campo comuna queda con esa selección y navega directo a `/buscar` con ambos filtros — igual que categoría, sin pedir un tap aparte | Resultados, o el estado vacío correspondiente |
 
 ### Variantes y recuperación
 
 | Condición                                              | Qué cambia                                       | Cómo se entiende                                                          | Cómo se recupera |
 | --------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------- |
-| Categoría elegida, comuna todavía vacía                 | El botón "Buscar" permanece deshabilitado — `/api/search` exige ambas ([C-016](./investigacion.md#c-016)) | El botón se ve atenuado/sin resaltar, no clickeable | Elige una comuna (escrita o de la lista de frecuentes) para habilitarlo |
+| Categoría elegida, comuna todavía vacía                 | El botón "Buscar" permanece deshabilitado — `/api/search` exige ambas ([C-016](./investigacion.md#c-016)) | El botón se ve atenuado/sin resaltar, no clickeable | Elige una comuna (escrita o de la lista de frecuentes) — el mismo tap confirma y navega, sin paso aparte |
 | Ya había categoría/comuna elegidas (viene de `/buscar`) | El panel abre con esos valores ya cargados, no vacío | Los campos muestran el valor ya elegido, no un placeholder                   | Puede cambiarlos igual que si empezara de cero |
+| Cambia de categoría con una comuna ya elegida            | El campo comuna se mantiene, pero su valor previo no queda resaltado en la lista | El botón "Buscar" ya está habilitado apenas se elige la nueva categoría | Toca "Buscar" para confirmar esa misma comuna sin tener que volver a encontrarla en la lista |
 
 ### Decisiones que no deben quedar implícitas
 
 - Cerrar el panel sin confirmar no borra una selección previa que ya existía antes de abrirlo — solo
   descarta lo tocado en esa apertura.
-- El botón "Buscar" en mobile queda fijo abajo (zona de pulgar) durante todo el flujo, no solo al final.
+- El botón "Buscar" en mobile queda fijo abajo (zona de pulgar) durante todo el flujo. Elegir una comuna
+  ya navega directo — el botón queda como respaldo manual para cuando se cambia de categoría y se quiere
+  conservar la comuna que ya estaba elegida, sin tener que volver a tocarla en la lista.
 - Cuando el teclado virtual está abierto (campo de texto de comuna enfocado), el botón "Buscar" fijo tiene
   que seguir visible por encima del teclado, no quedar tapado detrás — es el momento en que más se necesita
   (justo después de escribir la comuna). Una evaluación heurística lo marcó como un caso no cubierto; la
@@ -125,8 +134,10 @@ no corresponde llenar queda colapsado más abajo, después de la lista.
 **Objetivo:** volver a donde estaba (resultados o landing) sin perder lo que ya había elegido.
 **Contrato:** [F-001](./producto.md#f-001).
 
-**Punto de entrada:** cualquier página que muestre flecha atrás en vez de logo (`/buscar`,
-`/profesionales/[id]`, `/profesional/*`).
+**Punto de entrada:** en mobile, cualquier página que muestre flecha atrás en vez de logo (`/buscar`,
+`/profesionales/[id]`, `/profesional/*`). En desktop, solo `/profesional/*` — `/buscar` y
+`/profesionales/[id]` muestran el logo en su lugar ([D-009 en producto.md](./producto.md#d-009)); ahí este
+flujo no aplica, el logo lleva directo a la landing sin conservar filtros, igual que en la landing misma.
 
 **Criterio de término:** llega a la pantalla anterior con el estado (filtros) conservado cuando
 corresponde.
@@ -140,8 +151,8 @@ En `/buscar`, el resumen de búsqueda junto al botón confirma qué está viendo
 
 | Salida                                          | Cómo se ejecuta                          | Qué queda del trabajo |
 | --------------------------------------------------- | -------------------------------------------- | ------------------------ |
-| Vuelve desde el perfil a resultados             | toca el botón de volver en `/profesionales/[id]` | `/buscar` con los mismos filtros que tenía antes de entrar al perfil |
-| Vuelve desde `/buscar` a la landing             | toca el botón de volver en `/buscar`      | landing en su estado inicial (arriba) — los filtros no se conservan, es un nivel más arriba |
+| Vuelve desde el perfil a resultados             | toca el botón de volver en `/profesionales/[id]` (mobile en toda superficie; desktop no tiene este botón ahí, ver punto de entrada) | `/buscar` con los mismos filtros que tenía antes de entrar al perfil |
+| Vuelve desde `/buscar` a la landing             | mobile: toca el botón de volver. Desktop: toca el logo — mismo destino, otro elemento | landing en su estado inicial (arriba) — los filtros no se conservan, es un nivel más arriba |
 | Usa el botón atrás del navegador en vez del botón de volver | gesto del navegador, no de la app | mismo resultado — la URL ya refleja los filtros (misión 06) |
 
 ### Secuencia principal
@@ -281,14 +292,25 @@ o ausencia del avatar — no hay otro estado visual permanente para esto.
   filtro que sí tenía bien puesto. Revertir solo lo tocado en la apertura actual, conservando lo que ya
   existía antes de abrir (versión original de esta decisión) — se descarta en la revisión de abajo.
 - **Decisión y consecuencia:** cerrar el panel (click afuera, la X) nunca descarta nada — lo que se haya
-  elegido, elegido queda, se haya tocado recién o ya viniera de antes. Confirmar con "Buscar" es la única
-  acción que navega; cerrar es solo cerrar.
+  elegido, elegido queda, se haya tocado recién o ya viniera de antes. Elegir comuna sí navega
+  ([revisión 2026-09-03](#ux-002-revision-2026-09-03) más abajo); cerrar sin llegar a elegirla es lo único
+  que solo cierra.
 - **Revisión (2026-09-02):** la versión original solo protegía una selección previa a abrir el panel,
   revirtiendo cualquier cambio hecho en esa apertura si se cerraba sin confirmar. Probado en un dispositivo
   real, esto se sintió como perder trabajo: elegir una categoría y cerrar sin querer (o sin haber llegado
   a elegir comuna todavía) borraba la categoría recién elegida — exactamente el caso que el sustento de
   esta misma decisión dice que hay que evitar. Se simplificó a "nunca se pierde nada al cerrar", sin
   distinguir cuándo se eligió.
+- <a id="ux-002-revision-2026-09-03"></a>**Revisión (2026-09-03):**
+  la redacción de arriba ("Confirmar con 'Buscar' es la única acción que navega") quedó inconsistente con
+  el propio [Mapa de estados](#mapa-de-estados) de este documento, que ya decía que tocar una comuna cierra
+  el panel y navega — nadie reconcilió las dos partes cuando se escribió esta decisión. Probado en un
+  dispositivo real: exigir un tap en "Buscar" además de elegir la comuna se sintió como un paso de más,
+  justo porque elegir categoría (la misma clase de interacción — tocar una fila de una lista corta) ya
+  avanza sola, sin pedirlo. Se corrigió para que elegir comuna navegue directo, igual que categoría, y el
+  Mapa de estados quedó como la versión correcta. El botón "Buscar" se mantiene como respaldo manual, para
+  cuando se cambia de categoría pero se quiere conservar la comuna ya elegida sin tener que volver a
+  encontrarla en la lista.
 - **Impacto en producto:** ninguno — es un detalle de estado que no cambia ninguna regla de F-002.
 
 <a id="ux-003"></a>
@@ -303,7 +325,11 @@ o ausencia del avatar — no hay otro estado visual permanente para esto.
   como caso principal a alguien que entra en frío por WhatsApp, sin contexto previo para interpretar un
   ícono suelto); texto "Volver" en todo tamaño, incluido mobile (versión original de esta decisión) — se
   descarta en la revisión de abajo; volver a mostrar el isotipo junto al botón en `/buscar` y el perfil —
-  se descarta porque reabriría [C-011](./investigacion.md#c-011) (el logo se reserva para la landing).
+  se descartó en su momento porque reabriría [C-011](./investigacion.md#c-011) (el logo se reserva para la
+  landing). Esa razón ya no aplica en desktop: C-011 se revisó con evidencia propia de escritorio, y
+  `/buscar`/`/profesionales/[id]` en desktop sí muestran el logo en vez de "volver" —
+  [D-009 en producto.md](./producto.md#d-009). Esta decisión (UX-003) sigue vigente para cuándo el botón
+  de volver, cuando existe, lleva texto o no — no para dónde existe.
 - **Decisión y consecuencia:** en desktop, el botón lleva ícono + la palabra "Volver" — hay espacio y
   resuelve la orientación visual y el nombre accesible al mismo tiempo. En mobile, solo el ícono, con
   `aria-label` — 390px con el buscador y, cuando hay sesión, el avatar, no deja espacio para texto también
@@ -360,6 +386,29 @@ o ausencia del avatar — no hay otro estado visual permanente para esto.
   [D-002 en producto.md](./producto.md#d-002).
 - **Impacto en producto:** sí — [D-002](./producto.md#d-002) se revisó para reflejar que header y footer
   ya no comparten el mismo criterio de "diseño propio por superficie".
+
+<a id="ux-006"></a>
+
+### UX-006 — El buscador compacto de desktop tiene una densidad chica (sin nombre de campo) para el header general, y una completa (con nombre de campo) para la landing tras scroll
+
+- **Estado:** aceptada. **Fecha:** 2026-09-03.
+- **Sustento:** hallazgo del dueño de producto probando el header general en vivo — con la barra de
+  filtros vieja de `/buscar` todavía sin sacar ([E-002](./investigacion.md#e-002)), el header se sentía
+  con demasiado alto fijo en pantalla. Ver [D-008 en producto.md](./producto.md#d-008).
+- **Alternativas descartadas:** achicar el header entero al hacer scroll (mismo componente cambia de
+  tamaño según la posición del scroll) — se descartó porque no hay evidencia de que Airbnb lo haga en
+  ningún header que no sea el hero de una landing sin sesión ([E-023](./investigacion.md#e-023)); dejar
+  una sola densidad en todos lados — pierde la ocasión de que la landing tras scroll (una entrada más
+  prominente al producto) siga viéndose completa sin pagar ese mismo alto en el header general, que está
+  fijo todo el tiempo.
+- **Decisión y consecuencia:** en desktop, `CompactSearchBar` recibe qué densidad mostrar según dónde
+  vive — no cambia sola con el scroll. Densidad **chica**: cada campo muestra solo su valor ("Electricidad
+  · Puerto Varas"), sin el nombre del campo encima; la usa el header general (`/buscar`, perfil,
+  `/profesional/*`). Densidad **completa** (la que ya existía): el nombre del campo ("Categoría"/"Comuna")
+  sobre su valor; la usa el navbar de la landing tras hacer scroll (misión 08, todavía sin construir). El
+  panel que se abre al hacer click (categorías o comunas) es igual en ambas densidades — lo que cambia es
+  solo el resumen cerrado. Mobile no tiene esta distinción, su resumen ya es una sola línea.
+- **Impacto en producto:** sí — [D-008](./producto.md#d-008), nueva.
 
 ## Preguntas
 

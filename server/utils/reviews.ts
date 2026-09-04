@@ -1,4 +1,4 @@
-import { desc, eq, sql } from 'drizzle-orm'
+import { desc, eq, inArray, sql } from 'drizzle-orm'
 import { escapeHtml } from './professionals'
 import { isUuid } from './validation'
 import { reviews } from '../db/schema/reviews'
@@ -47,6 +47,41 @@ function normalizeReviewerName(name: string | undefined): string | null {
 export function computeRatingAverage(ratings: number[]): number {
   const sum = ratings.reduce((total, rating) => total + rating, 0)
   return Math.round((sum / ratings.length) * 10) / 10
+}
+
+export type RatingSummary = {
+  ratingAverage: number | null
+  reviewCount: number
+}
+
+export function groupRatingsByProfessional(
+  rows: { professionalId: string, rating: number }[],
+): Map<string, number[]> {
+  const groups = new Map<string, number[]>()
+  for (const row of rows) {
+    const group = groups.get(row.professionalId)
+    if (group) group.push(row.rating)
+    else groups.set(row.professionalId, [row.rating])
+  }
+  return groups
+}
+
+// Una sola consulta IN para todo el conjunto de resultados de una búsqueda, no una por profesional —
+// evita el N+1 de llamar findReviewsForProfessional por cada resultado. Un profesional sin reseñas
+// simplemente no tiene entrada en el Map devuelto — el llamador decide el null/0 para ese caso.
+export async function findRatingSummaries(professionalIds: string[]): Promise<Map<string, RatingSummary>> {
+  if (professionalIds.length === 0) return new Map()
+
+  const rows = await useDb()
+    .select({ professionalId: reviews.professionalId, rating: reviews.rating })
+    .from(reviews)
+    .where(inArray(reviews.professionalId, professionalIds))
+
+  const summaries = new Map<string, RatingSummary>()
+  for (const [professionalId, ratings] of groupRatingsByProfessional(rows)) {
+    summaries.set(professionalId, { ratingAverage: computeRatingAverage(ratings), reviewCount: ratings.length })
+  }
+  return summaries
 }
 
 function toPublicReview(row: {

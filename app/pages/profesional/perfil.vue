@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Loader2 } from '@lucide/vue'
 
-definePageMeta({ middleware: 'profesional' })
+definePageMeta({ middleware: 'profesional', layout: 'general' })
 
 useSeoMeta({ title: 'Tu perfil', robots: 'noindex' })
 

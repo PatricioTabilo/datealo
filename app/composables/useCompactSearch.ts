@@ -15,13 +15,17 @@ export function useCompactSearch() {
 
   const ready = computed(() => Boolean(categoriaSlug.value) && Boolean(comunaCodigo.value))
 
-  function open(field?: CompactSearchField) {
-    activeField.value = field ?? (categoriaSlug.value ? 'comuna' : 'categoria')
+  // El botón compacto de mobile llama open() sin argumento — siempre parte en categoría, incluso si ya
+  // hay una elegida (ej. en /buscar): es el único campo con lista corta y sin buscador de texto, así que
+  // reelegirla de paso no cuesta un tap extra. Desktop siempre pasa el field explícito y nunca pasa por
+  // este default.
+  function open(field: CompactSearchField = 'categoria') {
+    activeField.value = field
     isOpen.value = true
   }
 
   // Cerrar (click afuera, la X) solo cierra — lo que ya se eligió, elegido queda; no hay "cancelar" que
-  // lo revierta. Confirmar con "Buscar" es la única acción que navega.
+  // lo revierta.
   function close() {
     isOpen.value = false
   }
@@ -31,13 +35,18 @@ export function useCompactSearch() {
     activeField.value = 'comuna'
   }
 
-  // A diferencia de la categoría (que sigue directo al siguiente campo), la comuna es el último paso —
-  // elegirla cierra el panel: no queda nada más por completar antes de poder tocar "Buscar".
-  function selectComuna(codigo: string) {
+  // Elegir comuna busca directo, igual que elegir categoría ya avanza sola sin pedir confirmación — es
+  // el mismo tipo de interacción (tocar una fila de una lista corta), así que exigir un tap extra acá
+  // rompería esa misma consistencia. confirm() no navega si todavía falta la categoría (ej. en desktop,
+  // si se abrió el panel de comuna primero), así que queda seguro incluso en ese orden.
+  async function selectComuna(codigo: string) {
     comunaCodigo.value = codigo
-    isOpen.value = false
+    await confirm()
   }
 
+  // "Buscar" queda además como respaldo manual: cambiar de categoría vuelve a mostrar la comuna ya
+  // elegida sin resaltarla en la lista, así que tocarlo confirma esa misma comuna sin tener que
+  // encontrarla de nuevo entre las opciones.
   async function confirm() {
     if (!ready.value) return
     isOpen.value = false

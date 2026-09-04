@@ -1,5 +1,7 @@
 import { and, eq, inArray } from 'drizzle-orm'
 import { findVecinasActivas } from './comunas'
+import { buildAvatarUrl, buildPhotoUrls } from './professionals'
+import { findRatingSummaries, type RatingSummary } from './reviews'
 import { comunas } from '../db/schema/comunas'
 import { professionals } from '../db/schema/professionals'
 
@@ -11,6 +13,9 @@ export type SearchResultProfessional = {
   comunaNombre: string
   priceFrom: number | null
   avatarUrl: string | null
+  photoUrl: string | null
+  ratingAverage: number | null
+  reviewCount: number
   createdAt: string
 }
 
@@ -30,7 +35,7 @@ export type ProfessionalCompletenessInput = {
   hasPrice: boolean
 }
 
-type ProfessionalSearchRow = {
+export type ProfessionalSearchRow = {
   id: string
   displayName: string
   comunaNombre: string
@@ -67,21 +72,25 @@ function toCompletenessInput(row: ProfessionalSearchRow): ProfessionalCompletene
   }
 }
 
-function toSearchResult(row: ProfessionalSearchRow): SearchResultProfessional {
+export function toSearchResult(row: ProfessionalSearchRow, rating: RatingSummary | undefined): SearchResultProfessional {
   return {
     id: row.id,
     displayName: row.displayName,
     comunaNombre: row.comunaNombre,
     priceFrom: row.priceFrom,
     avatarUrl: buildAvatarUrl(row.avatarPath),
+    photoUrl: buildPhotoUrls(row.photoPaths)[0] ?? null,
+    ratingAverage: rating?.ratingAverage ?? null,
+    reviewCount: rating?.reviewCount ?? 0,
     createdAt: row.createdAt.toISOString(),
   }
 }
 
-function orderResults(rows: ProfessionalSearchRow[]): SearchResultProfessional[] {
+async function orderResults(rows: ProfessionalSearchRow[]): Promise<SearchResultProfessional[]> {
   const ranked = rankByCompleteness(rows.map(toCompletenessInput))
   const rowById = new Map(rows.map(row => [row.id, row]))
-  return ranked.map(({ id }) => toSearchResult(rowById.get(id)!))
+  const ratings = await findRatingSummaries(rows.map(row => row.id))
+  return ranked.map(({ id }) => toSearchResult(rowById.get(id)!, ratings.get(id)))
 }
 
 async function findActiveProfessionals(
@@ -127,14 +136,14 @@ async function existsActiveProfessionalForCategoria(categoriaSlug: string): Prom
 export async function findSearchResults(categoriaSlug: string, comunaCodigo: string): Promise<SearchResult> {
   const exactRows = await findActiveProfessionals(categoriaSlug, [comunaCodigo])
   if (exactRows.length > 0) {
-    return { results: orderResults(exactRows), matchType: 'exacta', categoryHasResultsInChile: true }
+    return { results: await orderResults(exactRows), matchType: 'exacta', categoryHasResultsInChile: true }
   }
 
   const vecinas = await findVecinasActivas(comunaCodigo)
   if (vecinas.length > 0) {
     const vecinaRows = await findActiveProfessionals(categoriaSlug, vecinas.map(vecina => vecina.codigo))
     if (vecinaRows.length > 0) {
-      return { results: orderResults(vecinaRows), matchType: 'vecina', categoryHasResultsInChile: true }
+      return { results: await orderResults(vecinaRows), matchType: 'vecina', categoryHasResultsInChile: true }
     }
   }
 
