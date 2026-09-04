@@ -38,7 +38,7 @@ const summary = computed(() => {
       class="flex w-full items-center gap-2.5 rounded-full border border-datealo-surface bg-white px-4.5 py-3.5 text-left shadow-[0_6px_16px_-8px_rgba(31,41,55,0.15)] lg:hidden"
       @click="open()"
     >
-      <Search class="h-4 w-4 shrink-0 text-primary" />
+      <Search class="h-4 w-4 shrink-0 text-primary" :stroke-width="2.5" />
       <span v-if="summary" class="truncate text-sm font-bold text-datealo-text">{{ summary }}</span>
       <span v-else class="text-sm font-medium text-datealo-muted">¿Qué profesional buscas?</span>
     </button>
@@ -78,7 +78,7 @@ const summary = computed(() => {
         :class="[ready ? 'bg-secondary' : 'bg-secondary/50', dense ? 'h-9 w-9' : 'h-12 w-12']"
         @click="confirm"
       >
-        <Search :class="dense ? 'h-4 w-4' : 'h-5 w-5'" />
+        <Search :class="dense ? 'h-4 w-4' : 'h-5 w-5'" :stroke-width="2.5" />
       </button>
     </div>
 
