@@ -2,18 +2,21 @@
 
 **Tipo:** producto. **Abierta el** 2026-08-31. **Nace de:** ninguna.
 
-**Estado de la misión:** en construcción
+**Estado de la misión:** cerrada 2026-09-04, con una excepción — ver abajo.
 
-**Última actualización:** 2026-09-02
+**Última actualización:** 2026-09-04
 
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** los 8 issues del plan de construcción ya están abiertos
-([#148](https://github.com/PatricioTabilo/datealo/issues/148) a
-[#155](https://github.com/PatricioTabilo/datealo/issues/155), ver tabla en
-[`ingenieria.md`](./ingenieria.md#plan-de-construcción)) — arrancar por S-001, S-003 y S-004 (sin
-dependencias entre sí), en la raíz del repo, un PR chico por issue. Sin fecha límite todavía.
+**Cierre:** 7 de los 8 slices del plan de construcción están mergeados (S-001 a S-007,
+[#148](https://github.com/PatricioTabilo/datealo/issues/148) a
+[#154](https://github.com/PatricioTabilo/datealo/issues/154)). Queda **S-008** (reescribir `LandingNavbar`,
+[#155](https://github.com/PatricioTabilo/datealo/issues/155)) explícitamente afuera: al implementarlo se
+encontraron bugs reales (el buscador se rompía en mobile) y una pregunta de fondo — si tiene sentido un
+buscador en el hero y otro en el nav a la vez — que depende de decisiones del hero, territorio de la
+misión 12. Como esa misión ya estaba planeada para el final (después de 09, 10 y 11 — ver su README),
+S-008 se retoma junto con ella en vez de bloquear el cierre de esta.
 
 `ingenieria.md` **vigente — aprobado por Patricio el 2026-09-02**: sin tablas nuevas (reutiliza
 `GET /api/professionals/me` y agrega una sola query de solo lectura, comunas frecuentes); layout de Nuxt

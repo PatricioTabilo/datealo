@@ -2,7 +2,7 @@
 
 **Estado:** vigente — aprobado por Patricio el 2026-09-02
 
-**Última actualización:** 2026-09-02
+**Última actualización:** 2026-09-04
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -169,6 +169,12 @@ hace falta tocar `server/db/sql/rls.sql` en esta misión.
 | S-006 | Construir `AppHeader`: botón de volver con destino por ruta, `CompactSearchBar` solo en `/buscar`, zona de avatar | TC-004, F-001, D-005, UX-003, UX-005 | Mobile: volver es solo ícono en toda superficie; desktop: volver lleva ícono+texto y el buscador queda centrado en un grid de 3 zonas; con sesión aparece el avatar a la derecha, sin sesión la zona derecha queda vacía fuera de la landing | S-003, S-005 | [#153](https://github.com/PatricioTabilo/datealo/issues/153) |
 | S-007 | Crear el layout `general.vue` y aplicarlo a `/buscar`, `/profesionales/[id]`, `/profesional/*` | F-001, F-003                       | Las cinco páginas muestran `AppHeader` + `AppFooter` envolviendo su contenido actual sin cambiar su lógica interna; `npx nuxi typecheck` y `npm run build` pasan | S-002, S-006 | [#154](https://github.com/PatricioTabilo/datealo/issues/154) |
 | S-008 | Reescribir `LandingNavbar`: "Categorías" + Publícate/Mi perfil (sin "Para profesionales" ni el CTA "Buscar" suelto), `CompactSearchBar` inline tras hacer scroll | F-001, D-005, UXF-003              | Antes de scroll: logo, Categorías (ancla), Publícate/Mi perfil; tras scroll: mismo nav pero con `CompactSearchBar` en vez de las anclas; con sesión activa, "Mi perfil" reemplaza a "Publícate" en ambos estados | S-003, S-005 | [#155](https://github.com/PatricioTabilo/datealo/issues/155) |
+
+**S-008 queda bloqueado, no cancelado:** se intentó en la PR #167 (cerrada sin mergear) — el buscador se
+rompía en mobile dentro de la fila del nav, y la transición al hacer scroll saltaba en vez de transicionar
+suave. De fondo, tener un buscador en el hero y otro en el nav es una pregunta que depende de decisiones
+del hero (misión 12, ya planeada para después de esta misión, la 10 y la 11). Se retoma junto con esa
+misión — ver el README de esta misión.
 
 ## Decisiones técnicas
 

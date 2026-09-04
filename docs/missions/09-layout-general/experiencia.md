@@ -28,7 +28,8 @@ descartadas y su porqué (ver D-001, D-005, D-006, D-007 de `producto.md`). Esta
 exploración — la traduce a secuencias verificables.
 
 - **Funcionalidades cubiertas:** F-001, F-002, F-003, F-004.
-- **Pendiente bloqueante:** ninguna.
+- **Pendiente bloqueante:** ninguna para cerrar esta misión — S-008 (`LandingNavbar` tras scroll) queda
+  fuera, bloqueado por la misión 12 (ver su README).
 
 Este documento pasó por una evaluación heurística en un agente sin memoria de su redacción (`ui-ux-pro-max`,
 `web-design-guidelines`, `frontend-design`, `ux-writing`, todos invocados de verdad). Encontró dos
