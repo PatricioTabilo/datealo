@@ -2,7 +2,7 @@
 
 **Estado:** vigente — aprobado por Patricio el 2026-09-02
 
-**Última actualización:** 2026-09-02
+**Última actualización:** 2026-09-04
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -264,6 +264,15 @@ como fuente. Con esto la decisión queda cerrada.
 - **Impacto en producto:** ninguno — cumple lo que [CL-002](./producto.md#cl-002) de producto.md ya
   prometía ("evita que la card quede perdida en una esquina"), que con solo el ancho máximo de página no
   se cumplía.
+
+**Revisión (2026-09-04):** implementado en S-003 ([PR #175](https://github.com/PatricioTabilo/datealo/pull/175))
+y corregido en vivo por el dueño de producto — con `justify-content: center`, una fila parcial se movía al
+centro de su fila, no solo el contenedor de página. Lo que se quería centrar era el contenedor
+(`max-w-6xl`, ya lo resuelve [UX-002](#ux-002)), no las cards dentro de su fila: esas quedan arriba a la
+izquierda, como en cualquier grid normal. `auto-fit` + `minmax` por sí solo ya resuelve el problema
+original que motivó esta decisión (columnas fijas desperdiciando espacio en un contenedor ahora acotado)
+sin necesitar `justify-content: center`. La decisión queda: `grid-template-columns:
+repeat(auto-fit, minmax(280px, 380px))`, sin `justify-content`.
 
 ## Preguntas
 
