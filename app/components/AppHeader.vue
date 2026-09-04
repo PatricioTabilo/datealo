@@ -17,6 +17,11 @@ const backTo = computed(() => {
 })
 const backLabel = computed(() => (isBuscar.value ? 'Volver al inicio' : 'Volver a la búsqueda'))
 
+// Solo en desktop: /buscar y el perfil público no tienen la restricción de espacio que en mobile justifica
+// "volver" en vez del logo — ahí el logo reemplaza al botón. /profesional/* (edición de la cuenta propia,
+// no contenido público) mantiene "volver" en los dos tamaños.
+const showLogoInDesktop = computed(() => isBuscar.value || route.path.startsWith('/profesionales/'))
+
 const { professional } = await useProfessionalSession()
 </script>
 
@@ -44,6 +49,14 @@ const { professional } = await useProfessionalSession()
 
     <div class="hidden grid-cols-[1fr_auto_1fr] items-center gap-6 px-12 py-4 lg:grid">
       <NuxtLink
+        v-if="showLogoInDesktop"
+        to="/"
+        class="w-fit justify-self-start font-heading text-lg font-extrabold text-primary"
+      >
+        datea<span class="text-secondary">lo</span>
+      </NuxtLink>
+      <NuxtLink
+        v-else
         :to="backTo"
         :aria-label="backLabel"
         class="flex w-fit items-center gap-2 justify-self-start rounded-full px-3.5 py-2 text-sm font-bold text-datealo-text hover:bg-datealo-surface"
