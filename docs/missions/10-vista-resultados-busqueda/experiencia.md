@@ -244,6 +244,12 @@ como fuente. Con esto la decisión queda cerrada.
   ancho extra se traduzca en fotos más grandes, no en más margen.
 - **Impacto en producto:** ninguno.
 
+**Revisión (2026-09-04):** el tope de 380px de UX-003 volvió a bajar a 336px — con un máximo fijo,
+`auto-fit` nunca lograba 3 columnas dentro de este mismo `max-w-6xl` (detalle en la revisión de
+[UX-003](#ux-003)). El contenedor sigue en `max-w-6xl`; lo que cambia es que ya no hay margen para que las
+cards crezcan más allá de 336px al ensancharse la pantalla — se prioriza que 3 resultados llenen la fila
+(el caso común, y lo que esta vista promete) sobre cards más grandes en monitores anchos.
+
 <a id="ux-003"></a>
 
 ### UX-003 — El grid de desktop usa columnas `auto-fit` con `justify-content: center`, no `grid-cols-3` fijo
@@ -273,6 +279,16 @@ izquierda, como en cualquier grid normal. `auto-fit` + `minmax` por sí solo ya 
 original que motivó esta decisión (columnas fijas desperdiciando espacio en un contenedor ahora acotado)
 sin necesitar `justify-content: center`. La decisión queda: `grid-template-columns:
 repeat(auto-fit, minmax(280px, 380px))`, sin `justify-content`.
+
+**Revisión (2026-09-04, segunda):** con un máximo *fijo* (380px, no `1fr`), el navegador usa ese máximo
+—no el mínimo— para calcular cuántas columnas entran en `auto-fit`: 3 columnas necesitan
+`3×380px + 2×16px = 1172px`, más de lo que `max-w-6xl` entrega disponible (1088px, ver
+[UX-002](#ux-002)) — nunca alcanzan 3, sin importar el ancho de pantalla, contradiciendo "con 3
+resultados el efecto es prácticamente el mismo de un grid fijo" de esta misma decisión. Encontrado
+probando la vista con datos reales (4 profesionales) recién ahora, con 1-2 resultados el síntoma no era
+visible. El máximo baja a `336px` (`3×336 + 32 = 1040px`, con margen real) para que 3 quepan de verdad —
+revierte el valor que [UX-002](#ux-002) había subido a 380px, así que esa decisión también queda
+corregida. La decisión queda: `grid-template-columns: repeat(auto-fit, minmax(280px, 336px))`.
 
 ## Preguntas
 
