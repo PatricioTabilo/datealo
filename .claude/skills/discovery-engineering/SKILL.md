@@ -73,10 +73,14 @@ en revisión se paga dos veces.
 - los escenarios críticos tienen criterio de prueba antes de considerar el feature listo
 - el diseño está cortado en slices (ver [Slicing](#slicing-del-diseño-a-tareas-atómicas)) y el plan de
   construcción vive en la sección homónima de `ingenieria.md`
-- el diseño pasó una auditoría en un contexto separado (ver "Evaluar antes de cerrar, en un contexto
-  separado" más abajo) y sus hallazgos bloqueantes están resueltos
+- si el **Carril** de la misión (ver `docs/missions/README.md#carril-según-riesgo`) es Full Spec, el diseño
+  pasó una auditoría en un contexto separado (ver "Evaluar antes de cerrar, en un contexto separado" más
+  abajo) y sus hallazgos bloqueantes están resueltos. En Light Spec el paso es opcional y no bloquea el
+  gate — pero si `ingenieria.md` termina tocando RLS, Auth, pagos o datos de usuario, la misión ya debería
+  haber subido a Full Spec por el criterio del carril, y este paso vuelve a ser obligatorio.
 
-**Evaluar antes de cerrar, en un contexto separado:** mismo problema que en `discovery-ux` — la
+**Evaluar antes de cerrar, en un contexto separado** (obligatorio en Full Spec, opcional en Light Spec):
+mismo problema que en `discovery-ux` — la
 conversación que diseñó `ingenieria.md` ya se convenció a sí misma de por qué cada capa, cada contrato y
 cada policy tienen sentido; juzgar el propio diseño en la misma pasada no encuentra lo que ese diseño no vio.
 

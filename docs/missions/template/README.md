@@ -48,6 +48,9 @@ importancia de la columna "límite de la evidencia".
 **Misión NN** — abierta el AAAA-MM-DD. Nace de: `<D-xxx de la misión NN>` o "ninguna". Ver el
 [registro de misiones](../README.md).
 
+**Carril:** Light Spec | Full Spec — ver [criterio](../README.md#carril-según-riesgo). Declarar al abrir la
+misión, no al final.
+
 **Estado de la misión:** exploración · definición · lista para construir · en construcción ·
 en validación · cerrada · pausada
 

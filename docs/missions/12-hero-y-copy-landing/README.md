@@ -1,6 +1,7 @@
 # Misión 12 — Hero y copy de la landing
 
-**Tipo:** producto. **Abierta el** 2026-09-01. **Nace de:** división de la misión 09 (ver su
+**Tipo:** producto. **Carril:** Light Spec — copy y hero de landing, sin RLS, sin dato de usuario, 100%
+reversible. **Abierta el** 2026-09-01. **Nace de:** división de la misión 09 (ver su
 [README](../09-layout-general/README.md)) — investigación ya hecha, movida acá con su contenido.
 
 **Estado de la misión:** lista para construir

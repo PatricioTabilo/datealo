@@ -69,6 +69,30 @@ registro no se llene de intenciones:
   que sí cambia algo visible para el usuario, deja de ser técnica: se completa con `producto.md` y
   `experiencia.md` desde ese punto.
 
+## Carril según riesgo
+
+"Tipo" decide qué documentos existen. **"Carril" decide cuánto rigor de verificación pesa sobre esos
+documentos**, y aplica el mismo criterio anti-molde de arriba a la profundidad del proceso: forzar el
+proceso completo en un cambio reversible y de bajo riesgo es ceremonia sin valor — spec-driven development
+funciona para cambios cross-team y de seguridad crítica, y se rompe rápido en desarrollo exploratorio, que
+es la mayoría de los casos de un producto pre-lanzamiento como Datealo.
+
+- **Sin misión** — bugs de un archivo, ajustes de copy o UI 100% reversibles, sin decisión de producto
+  involucrada: issue directo + rama + PR + verificación, sin carpeta ni número de misión. Ya se usa así en
+  la práctica (ver issue #199, el fix de los dots del carrusel) — esto solo lo hace explícito.
+- **Light Spec** — la misión completa, con los documentos que le correspondan según su Tipo, pero **la
+  evaluación en un contexto separado de cada gate es opcional**, no bloqueante. Aplica cuando la misión no
+  crea ni cambia una tabla con datos de usuario, no toca RLS, Auth o pagos, y una decisión equivocada es
+  barata de revertir.
+- **Full Spec** — el proceso completo: evaluación en un contexto separado **obligatoria** en los tres gates
+  que la tengan. Aplica cuando la misión toca modelo de datos con datos de usuario, RLS, Auth, pagos, o
+  cualquier decisión cara de revertir (migración de datos, un contrato que otros PRs van a asumir como
+  cierto).
+
+El carril se declara en el README de la misión (`**Carril:**`) al abrirla. Puede subir a Full Spec a mitad
+de camino si el diseño revela que sí toca algo de la lista — nunca bajar sin verificar antes que lo que ya
+se saltó no hacía falta.
+
 ## Convención
 
 - Carpeta `NN-slug/`. `NN` es el orden en que se abrió la misión: nunca se reusa, nunca se reordena, y una
@@ -81,11 +105,40 @@ registro no se llene de intenciones:
 - Si una misión nace de una decisión de otra, el "nace de" apunta a esa `D-xxx`. Las misiones se
   ramifican; sin ese campo, en tres meses nadie reconstruye por qué existe la número 04.
 
-## Cómo se conecta con la ejecución
+## Secuencia completa de una misión
 
-El discovery termina en el "Plan de construcción" de `ingenieria.md`: una lista ordenada de slices donde
-cada slice es un Issue y un PR. Los issues llevan la etiqueta de la decisión que los sustenta (`D-xxx`,
-`TC-xxx`), para que cuando una decisión cambie se pueda encontrar exactamente qué tareas reescribir.
+Cada paso ya está definido en otro lado (`CLAUDE.md`, los skills de discovery, `discovery-engineering`) —
+esta lista solo fija el **orden**, para no reconstruirlo de memoria cada vez. `/mision-estado` la lee para
+decir en qué paso está una misión y cuál sigue.
 
-El método de corte está en el skill `discovery-engineering`
-([`references/slicing.md`](../../.claude/skills/discovery-engineering/references/slicing.md)).
+**Esta secuencia es la de una misión de producto** (ver "Tipos de misión" arriba). Una misión **técnica**
+salta los pasos 2 a 4 completos: no tiene `investigacion.md`, `producto.md` ni `experiencia.md` — va directo
+del paso 1 (worktree) al paso 5 (`ingenieria.md`, citando el `A-xxx` que la sustenta en vez de un `F-xxx`).
+Todo lo demás (6 en adelante) es igual para las dos.
+
+1. **Abrir el worktree** (`EnterWorktree`, nombrado `NN-slug`) y copiar `template/` con el número siguiente.
+2. **`investigacion.md`** — acumulativo, sin gate, no se aprueba. *(solo misión de producto)*
+3. **`producto.md`** — gate de `discovery-product`, evaluación en un contexto separado, aprobación del
+   dueño de producto (`vigente`). *(solo misión de producto)*
+4. **`experiencia.md`** — gate de `discovery-ux`, evaluación en un contexto separado, aprobación. *(solo
+   misión de producto)*
+5. **`ingenieria.md`** — gate de `discovery-engineering` (incluye `seguridad-datos` si hay RLS), evaluación
+   en un contexto separado, aprobación. Termina con el "Plan de construcción" cortado en slices — el método
+   de corte está en [`references/slicing.md`](../../.claude/skills/discovery-engineering/references/slicing.md).
+   Los issues del plan llevan la etiqueta de la decisión que los sustenta (`D-xxx`, `TC-xxx`), para que
+   cuando esa decisión cambie se pueda encontrar exactamente qué tareas reescribir.
+6. **Abrir el PR con los tres documentos** (`producto.md`, `experiencia.md`, `ingenieria.md`) — no antes de
+   que los tres estén `vigente`.
+7. **Mergear el PR de discovery.**
+8. **Cerrar el worktree** (`ExitWorktree action: "remove"`) — antes de crear el primer issue, nunca después.
+9. **Crear los issues** en GitHub desde el "Plan de construcción", uno por slice, con su label
+   `type:`/`scope:` y la decisión que lo sustenta citada en el cuerpo.
+10. **Por cada issue, en la raíz** (nunca en worktree): rama desde `main` → implementar → verificar
+    (typecheck, build) → abrir PR citando `Closes #NNN` → **detenerse** — el checkpoint de revisión humana
+    no es opcional. No arrancar el siguiente issue hasta que el PR actual esté mergeado o el dueño de
+    producto pida explícitamente saltar al siguiente.
+11. **Cuando todos los issues del plan estén mergeados**, cerrar la misión: actualizar el estado acá y en
+    el README de la misión.
+
+Saltarse el paso 6, 7 u 8 — ir de "`ingenieria.md` aprobado" directo al paso 9 — ya pasó una vez. No es
+hipotético.
