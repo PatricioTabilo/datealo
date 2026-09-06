@@ -103,6 +103,14 @@ un host externo.
   reseñas)" revela los desbordes de texto que "Profesional 1" esconde.
 - **Vocabulario chileno y los términos decididos en `producto.md`.** Un mockup con jerga distinta a la del
   documento reabre discusiones ya cerradas.
+- **Sin em dash (—) en el copy real** — cualquier string entre comillas que un usuario final llegaría a
+  leer en la interfaz: labels, headline y subheadline, trust items, mensajes de error, empty states,
+  contenido de correos. Se reemplaza por coma, punto seguido o dos puntos según el caso. Es un tic
+  reconocible de escritura generada por IA que no aparece en el copy de otros productos (decisión de
+  Patricio, commit `5e9f091`, misión 04) — se repitió en las misiones 09 y 12 porque la regla solo vivía
+  en memoria y ningún skill genérico la conoce. La regla es solo sobre el texto citado que el usuario
+  final vería: la prosa explicativa del documento (justificaciones, "Decisiones que no deben quedar
+  implícitas", etc.) puede seguir usando em dash con libertad.
 - **Los tokens los pone el kit.** Un color hexadecimal escrito a mano en el mockup queda desactualizado sin
   que nadie lo note.
 - **JS puro solo si el flujo se evalúa mejor moviéndolo** — abrir un bottom sheet, cambiar de tab. Un
