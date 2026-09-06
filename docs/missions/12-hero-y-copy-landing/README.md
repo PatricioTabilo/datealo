@@ -21,6 +21,12 @@ S-002 buscador del hero, S-003 CTA de profesionales del nav), auditado en contex
 09 ya cerró, así que deja de bloquear el único cupo de misión `en construcción` a la vez. TR-002 sigue
 abierto: verificar en mobile que el CTA del nav no repite el bug que pausó el issue #155.
 
+**Corrección durante delivery (2026-09-06):** al ver S-002 implementado en vivo, Patricio pidió que el
+dropdown de categoría del buscador del hero muestre ícono por opción, igual que el panel de `/buscar`
+(`CompactSearchBarPanel`) — D-003 original solo pedía texto plano, igual que el resto de la app. Se
+registró como [D-005](./producto.md#d-005) y [TC-004](./ingenieria.md#tc-004) antes de seguir con el
+código, según el loop de vuelta de `discovery-product`.
+
 ## Brief
 
 Nace de la misma investigación que arrancó como parte de la misión 09 ("mejoras de UI/UX") — al dividir

@@ -1,8 +1,9 @@
 # Misión: hero y copy de la landing — Experiencia
 
-**Estado:** vigente — aprobado por Patricio el 2026-09-04, con F-002 sumada y aceptada el mismo día
+**Estado:** vigente — aprobado por Patricio el 2026-09-04, con F-002 sumada el mismo día y UX-001 revisada
+el 2026-09-06 (ícono por opción en el dropdown, D-005)
 
-**Última actualización:** 2026-09-04
+**Última actualización:** 2026-09-06
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -84,9 +85,9 @@ buscar o todavía le falta un campo.
 
 | Paso | Acción                                    | Respuesta del sistema                                                                                   | Información visible                                        |
 | ---- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| 1    | Toca el campo "¿Qué servicio buscas?"      | Se abre debajo el dropdown de categorías (mismo `CatalogSelect` que usa el resto de la app)               | Lista de categorías por nombre                              |
+| 1    | Toca el campo "¿Qué servicio buscas?"      | Se abre debajo el dropdown de categorías (mismo `CatalogSelect` que usa el resto de la app, con ícono y círculo de color por categoría — igual que `CompactSearchBarPanel` de `/buscar`, [D-005](./producto.md#d-005)) | Lista de categorías con ícono y nombre                       |
 | 2    | Elige "Gasfitería"                         | El campo pasa de mostrar el placeholder a mostrar "Gasfitería" en negrita; el dropdown se cierra          | El valor elegido reemplaza el placeholder                   |
-| 3    | Toca el campo "¿Qué comuna buscas?"        | Se abre el dropdown de comunas, con buscador de texto (catálogo grande)                                   | Lista de comunas frecuentes, o resultados al escribir        |
+| 3    | Toca el campo "¿Qué comuna buscas?"        | Se abre el dropdown de comunas, con buscador de texto (catálogo grande), con el mismo ícono de pin en cada opción | Lista de comunas frecuentes, o resultados al escribir        |
 | 4    | Elige "Ñuñoa"                              | El campo muestra "Ñuñoa"; con los dos campos llenos, el botón "Buscar" pasa de atenuado a su color sólido | El botón cambia de color — señal de que ya puede tocarlo    |
 | 5    | Toca "Buscar"                              | Navega a `/buscar?categoria=gasfiteria&comuna=nunoa`                                                       | Vista de resultados (fuera del alcance de esta misión)      |
 
@@ -172,6 +173,9 @@ en producción (`LandingNavbar.vue`), con el mismo criterio de sesión que `AppH
   dropdown en el lugar (reusa `CatalogSelect`, sin sheet ni `Teleport`), con un botón "Buscar" (ícono +
   texto) al final de la pill.
 - **Impacto en producto:** ninguno — mismo nivel de detalle que ya fija [D-003](./producto.md#d-003).
+- **Revisión (2026-09-06):** el dropdown que abre cada campo pasa a mostrar ícono y círculo de color por
+  opción, igual que `CompactSearchBarPanel` de `/buscar` — ver [D-005](./producto.md#d-005). No cambia el
+  resto de la decisión: sigue siendo `CatalogSelect` en el lugar, sin sheet ni panel aparte.
 
 <a id="ux-002"></a>
 
