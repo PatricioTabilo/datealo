@@ -4,7 +4,7 @@
 reversible. **Abierta el** 2026-09-01. **Nace de:** división de la misión 09 (ver su
 [README](../09-layout-general/README.md)) — investigación ya hecha, movida acá con su contenido.
 
-**Estado de la misión:** lista para construir
+**Estado de la misión:** cerrada 2026-09-06
 
 **En foco:** —
 
@@ -13,19 +13,26 @@ reversible. **Abierta el** 2026-09-01. **Nace de:** división de la misión 09 (
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-`ingenieria.md` también está **vigente** — aprobado por Patricio el 2026-09-06: tres slices (S-001 copy,
-S-002 buscador del hero, S-003 CTA de profesionales del nav), auditado en contexto separado dos veces
-(F-001 y la ampliación F-002).
+**Cierre:** los 3 slices del plan de construcción están mergeados en `main` — copy del hero sin
+"verificado" (S-001, [#205](https://github.com/PatricioTabilo/datealo/pull/205)), buscador del hero
+rediseñado como pill segmentada (S-002, [#206](https://github.com/PatricioTabilo/datealo/pull/206)), CTA
+directo de profesionales en el nav (S-003, [#209](https://github.com/PatricioTabilo/datealo/pull/209)).
+TR-002 quedó verificado dentro de S-003: el link nuevo no repite el bug de mobile que pausó el issue #155.
 
-**Próximo hito:** crear los issues de los tres slices y abrir el primer PR de delivery (S-001) — la misión
-09 ya cerró, así que deja de bloquear el único cupo de misión `en construcción` a la vez. TR-002 sigue
-abierto: verificar en mobile que el CTA del nav no repite el bug que pausó el issue #155.
+Dos correcciones en vivo durante delivery, ambas ya reflejadas en los documentos antes de tocar código
+(loop de vuelta de `discovery-product`):
 
-**Corrección durante delivery (2026-09-06):** al ver S-002 implementado en vivo, Patricio pidió que el
-dropdown de categoría del buscador del hero muestre ícono por opción, igual que el panel de `/buscar`
-(`CompactSearchBarPanel`) — D-003 original solo pedía texto plano, igual que el resto de la app. Se
-registró como [D-005](./producto.md#d-005) y [TC-004](./ingenieria.md#tc-004) antes de seguir con el
-código, según el loop de vuelta de `discovery-product`.
+- **S-002** — el dropdown de categoría del buscador pasó a mostrar ícono por opción, igual que el panel de
+  `/buscar` (`CompactSearchBarPanel`) — D-003 original solo pedía texto plano. Registrado como
+  [D-005](./producto.md#d-005) y [TC-004](./ingenieria.md#tc-004).
+- **S-003** — el CTA de profesionales pasó de link de texto a botón turquesa con texto oscuro (mismo
+  patrón que "Buscar", pero con su propio color) — el dueño de producto lo pidió más llamativo al verlo en
+  vivo, y corrigió el contraste (blanco sobre turquesa) en la misma revisión.
+
+Aparte de la misión: comparando el sitio en dos navegadores con preferencia de sistema distinta, se detectó
+que Nuxt UI cambiaba el tono de `primary` con el modo oscuro del sistema (Datealo no tiene modo oscuro
+propio) — no es parte de esta misión, quedó como
+[fix aparte (#211)](https://github.com/PatricioTabilo/datealo/pull/211).
 
 ## Brief
 
