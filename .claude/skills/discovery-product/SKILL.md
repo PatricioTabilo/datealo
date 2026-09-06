@@ -112,6 +112,34 @@ observables. El único documento que el dueño de producto aprueba es `producto.
 - toda `D-xxx` con tensión real trae al menos una alternativa genuina en "Alternativas descartadas", no
   solo el statu quo
 - las decisiones propuestas tienen fecha límite en el README de la misión
+- si el **Carril** de la misión (ver `docs/missions/README.md#carril-según-riesgo`) es Full Spec,
+  `producto.md` pasó una evaluación en un contexto separado (ver "Evaluar antes de cerrar, en un contexto
+  separado" más abajo) y sus hallazgos bloqueantes están resueltos, incluyendo que ninguna guardrail de
+  producto del `CLAUDE.md` raíz fue violada. En Light Spec el paso es opcional y no bloquea el gate.
+
+**Evaluar antes de cerrar, en un contexto separado** (obligatorio en Full Spec, opcional en Light Spec):
+mismo problema que en `discovery-ux` y
+`discovery-engineering` — la conversación que escribió `producto.md` ya se convenció a sí misma de por qué
+cada JTBD, cada señal y cada decisión tienen sentido; juzgar el propio documento en la misma pasada no
+encuentra lo que esa conversación no vio.
+
+- **La evaluación corre en un agente sin memoria de haber escrito el documento** — recibe solo
+  `producto.md` terminado, `investigacion.md`, las guardrails de producto del `CLAUDE.md` raíz, y la lista
+  de skills a aplicar; nunca el razonamiento de esta conversación. Un fork **no sirve para esto**: hereda
+  toda la conversación, incluida la justificación de cada decisión, así que carga el mismo sesgo que se
+  busca evitar. Un agente nuevo (`Agent` con un `subagent_type` que no sea `fork`, o una sesión distinta)
+  sí aísla el sesgo.
+- **Cada skill se invoca de verdad**, con la tool `Skill`, uno por uno, según lo que `producto.md` haya
+  usado: `jobs-to-be-done`, `cold-start-problem`, `lean-analytics`, `obviously-awesome`, y `mom-test` si hay
+  evidencia de entrevistas que auditar. Un hallazgo que no cita qué dijo el skill invocado es una
+  aplicación de memoria, no una evaluación — no cuenta para el gate.
+- **La evaluación confirma explícitamente que ninguna guardrail de producto del `CLAUDE.md` fue violada**
+  (subastas o bidding, pago obligatorio para contactar, dashboards complejos, copy agresivo o de urgencia
+  artificial, pasos extra al flujo buscar → perfil → contactar). Es el único punto de control real que
+  existe para esas guardrails — si esta evaluación no las revisa, nada más lo hace.
+- **La evaluación cuestiona decisiones, no solo redacción.** Antes de cerrar, tiene que intentar tumbar al
+  menos una `D-xxx` o un `F-xxx` ya tomado citando por qué — si ninguno sobrevive el intento, recién ahí se
+  confirma el documento; si nunca se intenta, la evaluación fue cosmética.
 
 **Aprobación:** Claude propone y marca `en revisión`; `vigente` lo otorga solo el dueño de producto. Toda
 decisión `propuesta` lleva fecha límite — sin deadline es pocket veto.

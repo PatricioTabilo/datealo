@@ -46,10 +46,10 @@ trabajos, también desde el celular.
 ## Stack técnico
 
 - **Frontend**: Nuxt 4, Vue 3, TypeScript strict
-- **Estilos**: Tailwind CSS v4, DaisyUI v5 (tema `datealo`), tipografías Plus Jakarta Sans + DM Sans
-  — la migración a Nuxt UI v4 está decidida y pendiente (A-004 del skill `arquitectura`). Nuxt UI trae
+- **Estilos**: Tailwind CSS v4 + Nuxt UI v4, tipografías Plus Jakarta Sans + DM Sans. Nuxt UI trae
   `@nuxt/fonts`, que auto-hospeda las tipografías en vez de cargarlas por `<link>` a Google Fonts — ojo con
-  esto al tocar `nuxt.config.ts` o `app.head` una vez que la migración aterrice.
+  esto al tocar `nuxt.config.ts` o `app.head`. El motor de interfaz y su historia (por qué Nuxt UI y no
+  DaisyUI) están en A-004 del skill `arquitectura` — no se repiten acá para no divergir cuando cambien.
 - **Iconos**: `@lucide/vue` (paquete renombrado desde `lucide-vue-next` en su v1, 2026-03)
 - **Auth/DB**: Supabase (PostgreSQL + Auth + RLS)
 - **ORM**: Drizzle
@@ -150,12 +150,22 @@ Cada cambio de schema debe evaluar si RLS necesita actualización antes de cerra
 
 ## Flujo de trabajo: misión → issue atómico → PR
 
+**No todo necesita una misión.** Un bug de un archivo o un ajuste de copy/UI 100% reversible, sin decisión
+de producto involucrada, va directo a issue + rama + PR + verificación — sin carpeta de misión. Forzar eso
+al framework completo es ceremonia sin valor (ver "Carril según riesgo" en `docs/missions/README.md`). Ante
+la duda de si algo entra en esta categoría o necesita misión, preguntar antes de elegir por las dudas el
+camino largo.
+
 El discovery de una feature vive en `docs/missions/`. El tracking de ejecución vive en **GitHub Issues**.
 
 **Una misión** documenta el discovery de una feature en cuatro documentos con fuentes de verdad separadas
 (`investigacion.md` → `producto.md` → `experiencia.md` → `ingenieria.md`). Cómo se escribe cada uno está en
-los skills `discovery-product`, `discovery-ux` y `discovery-engineering`. El registro de misiones y la
-convención de carpetas están en [`docs/missions/README.md`](docs/missions/README.md).
+los skills `discovery-product`, `discovery-ux` y `discovery-engineering`. El registro de misiones, la
+convención de carpetas y la secuencia completa numerada de una misión están en
+[`docs/missions/README.md`](docs/missions/README.md).
+
+**Al retomar una misión que ya existe** (no una recién abierta) — otra sesión, otro día, o después de un
+`/clear` — correr `/mision-estado <misión>` antes de seguir. No reconstruir de memoria en qué paso quedó.
 
 ### Discovery: siempre en worktree
 
@@ -167,6 +177,11 @@ dueño de producto) están completos y a punto de pasar a `vigente`, abrir el PR
 misión. Una vez aprobado y mergeado, cerrar el worktree con `ExitWorktree action: "remove"`.
 
 ### Delivery: siempre en la raíz, una misión a la vez
+
+Antes de crear el primer issue de esta fase, confirmar que el worktree de discovery de la misión ya se
+cerró (`ExitWorktree action: "remove"`). Es la última oportunidad de acordarse: una vez que arranca la
+construcción la atención se va a los issues, y el worktree queda huérfano — ya pasó con las misiones 09 y
+10, ambas con el worktree vivo semanas después de mergeado su PR de discovery.
 
 La ejecución (issues y PRs de código de una misión ya aprobada) se trabaja siempre en la raíz del repo,
 nunca en un worktree. Por foco, solo una misión puede estar en delivery (estado `en construcción`) a la
@@ -226,6 +241,7 @@ Skills propios del repo, escritos para las convenciones de Datealo:
 | `supabase-functions-logic`   | Lógica de negocio en Supabase Edge Functions (`supabase/functions/**`) |
 | `seguridad-datos`            | Auditar RLS/Storage/claves de un `ingenieria.md` o un cambio de schema real, antes de aprobarlo |
 | `audit-security`             | Comando `/audit-security <misión>` — corre `seguridad-datos` más una auditoría del slicing        |
+| `mision-estado`              | Comando `/mision-estado <misión>` — dice en qué paso de la secuencia está una misión y cuál sigue |
 
 Skills de terceros, pre-instalados y trackeados en `skills-lock.json` (con su fuente exacta): `nuxt`,
 `vue`, `drizzle-orm`, `frontend-design`, `ui-ux-pro-max`, `web-design-guidelines`, `marketing-psychology`,
@@ -253,8 +269,8 @@ Ante duda entre investigar y preguntar, investiga primero (cuesta cero):
 | Decisión de negocio que solo el usuario conoce (prioridad, alcance)      | Pregunta al usuario                   |
 | Bloqueo real (herramienta caída, credencial faltante)                    | Reporta el bloqueo y detente          |
 
-- Al implementar con versiones recientes (Nuxt 4, Tailwind v4, DaisyUI v5, Drizzle), verifica la API
-  contra la documentación oficial en vez de asumir por memoria — las tres cambiaron de forma en su
+- Al implementar con versiones recientes (Nuxt 4, Tailwind v4, Nuxt UI v4, Drizzle), verifica la API
+  contra la documentación oficial en vez de asumir por memoria — las cuatro cambiaron de forma en su
   última mayor.
 - Lee un archivo completo antes de editarlo. Un edit sobre contexto parcial pisa código que no viste.
 - Si encuentras algo roto y el fix es claro, arréglalo.
