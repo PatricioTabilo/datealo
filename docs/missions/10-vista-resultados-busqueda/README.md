@@ -3,19 +3,21 @@
 **Tipo:** producto. **Abierta el** 2026-09-01. **Nace de:** división de la misión 09 (ver su
 [README](../09-layout-general/README.md)).
 
-**Estado de la misión:** lista para construir
+**Estado de la misión:** cerrada 2026-09-04
 
 **En foco:** —
 
-**Última actualización:** 2026-09-02
+**Última actualización:** 2026-09-04
 
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** discovery cerrado — `producto.md`, `experiencia.md` e `ingenieria.md` vigentes, los tres
-aprobados por Patricio el 2026-09-02. Plan de construcción con 4 slices (S-001 a S-004) listo en
-`ingenieria.md`, sin issues abiertos todavía por pedido explícito — se crean cuando el dueño de producto lo
-pida.
+**Cierre:** los 4 slices del plan de construcción (S-001 a S-004) están mergeados en `main` — foto/rating
+en `/api/search` (#171), `SearchResultCard.vue` vertical foto-arriba (#173), ancho máximo `max-w-6xl` y
+grid `auto-fit` centrado (#175), skeleton con la misma forma que la card nueva (#178). S-003 tuvo una
+corrección en vivo del dueño de producto ya reflejada en `experiencia.md` (UX-003, revisión 2026-09-04,
+[PR #176](https://github.com/PatricioTabilo/datealo/pull/176)): centra el contenedor, no las cards dentro
+de su fila.
 
 ## Brief
 

@@ -69,7 +69,7 @@ useSeoMeta({
       <!-- cargando -->
       <div
         v-else-if="pending"
-        class="grid gap-4 p-4 lg:p-8 lg:[grid-template-columns:repeat(auto-fit,minmax(17.5rem,23.75rem))]"
+        class="grid gap-4 p-4 lg:p-8 lg:[grid-template-columns:repeat(auto-fit,minmax(17.5rem,21rem))]"
         aria-busy="true"
       >
         <div v-for="n in 4" :key="n" class="overflow-hidden rounded-2xl border border-datealo-surface bg-white">
@@ -101,7 +101,11 @@ useSeoMeta({
           {{ results.length }} {{ results.length === 1 ? 'resultado' : 'resultados' }}
         </p>
 
-        <div class="grid gap-4 lg:[grid-template-columns:repeat(auto-fit,minmax(17.5rem,23.75rem))]">
+        <!-- El máximo de la tarjeta (21rem) no es solo un tope de ancho: con auto-fit, cuando el máximo
+             de minmax() es un valor fijo (no 1fr), el navegador lo usa a ÉL — no al mínimo — para
+             calcular cuántas columnas entran. Con 23.75rem el cálculo daba justo 2 en el ancho de
+             max-w-6xl, sin importar cuánto más ancha fuera la pantalla; 21rem dejan entrar 3 con margen. -->
+        <div class="grid gap-4 lg:[grid-template-columns:repeat(auto-fit,minmax(17.5rem,21rem))]">
           <SearchResultCard
             v-for="professional in results"
             :key="professional.id"

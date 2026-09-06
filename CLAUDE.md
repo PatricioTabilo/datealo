@@ -112,8 +112,22 @@ npx nuxi typecheck      # Cero errores
 npm run build           # Compila
 ```
 
-**Verificación visual**: para cambios de UI, levantar `npm run dev` (puerto 3001) y probar en el browser
-antes de dar el cambio por hecho. Móvil primero: 390px de ancho es el caso principal, no una variante.
+**Verificación visual**: para cambios de UI, levantar `npm run dev` (puerto 3001) y probar antes de dar el
+cambio por hecho. Móvil primero: 390px de ancho es el caso principal, no una variante.
+
+Para la captura automatizada, usar Playwright headless (`devDependency` del repo), nunca `claude-in-chrome`:
+`tabs_context_mcp({createIfEmpty: true})` no garantiza una ventana aislada — en la práctica puede adjuntarse
+a una ventana real del usuario y redimensionarla o interactuar con ella sin que el usuario lo pida (pasó dos
+veces, documentado en incidentes reales). Playwright headless corre en un proceso de Chromium propio, sin
+ninguna relación con el Chrome del usuario, así que el riesgo no existe:
+
+```bash
+npx playwright screenshot --viewport-size=390,844 http://localhost:3001/ruta output.png
+```
+
+`claude-in-chrome` queda reservado para cuando se necesite de verdad una sesión logueada o interacción en
+vivo que el usuario pueda ver — y ahí, confirmar con el usuario antes de cualquier acción que cambie estado
+de su navegador (resize, navegación, cierre de tabs), nunca asumir aislamiento.
 
 ## Escribir código
 
