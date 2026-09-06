@@ -21,6 +21,13 @@ const props = defineProps<{
   // Nombre de ícono Iconify (ej. "i-lucide-wrench"), reenviado tal cual al `leading-icon` de `UInput`.
   // Sin valor, el campo se ve igual que hoy — es un override por consumidor, no un default nuevo.
   leadingIcon?: string
+  // `variant`/`size` de UInput y clases extra para el input real — todos opcionales, sin valor el campo
+  // se ve exactamente igual que hoy. Existen porque un consumidor (el buscador del hero) necesita verse
+  // como un segmento sin borde dentro de su propia pill, no como el input con anillo que usa el resto de
+  // la app — ninguno de esos dos casos debe imponerle su estilo al otro.
+  variant?: 'outline' | 'ghost'
+  size?: 'md' | 'lg' | 'xl'
+  inputClass?: string
   // Catálogo chico (categorías): mostrar todo al enfocar no cuesta nada. Catálogo grande (comunas):
   // esperar a que se escriba, el patrón ya validado de Mercado Libre — mostrar todas las opciones de
   // entrada es más ruido que ayuda.
@@ -137,8 +144,11 @@ defineExpose({ focus: () => uInputRef.value?.inputRef?.focus() })
       :placeholder="placeholder"
       :readonly="error"
       :leading-icon="leadingIcon"
+      :variant="variant"
+      :size="size"
       trailing-icon="i-lucide-chevron-down"
       class="w-full"
+      :class="inputClass"
       @update:model-value="handleInput"
     />
 

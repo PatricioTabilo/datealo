@@ -27,12 +27,28 @@ function handleSubmit() {
     <!-- Mobile: campos apilados con divisor horizontal, botón ancho abajo -->
     <div class="rounded-3xl bg-white p-2 shadow-2xl shadow-black/20 lg:hidden" :class="{ 'animate-shake': shaking }">
       <label for="hero-categoria-mobile" class="sr-only">Categoría</label>
-      <CategoriaSelect id="hero-categoria-mobile" v-model="categoriaSlug" placeholder="¿Qué servicio buscas?" leading-icon="i-lucide-wrench" />
+      <CategoriaSelect
+        id="hero-categoria-mobile"
+        v-model="categoriaSlug"
+        placeholder="¿Qué servicio buscas?"
+        leading-icon="i-lucide-wrench"
+        variant="ghost"
+        size="xl"
+        input-class="rounded-2xl py-3.5"
+      />
 
       <div class="mx-2 my-1 h-px bg-datealo-surface" />
 
       <label for="hero-comuna-mobile" class="sr-only">Comuna</label>
-      <ComunaSelect id="hero-comuna-mobile" v-model="comunaCodigo" placeholder="¿Qué comuna buscas?" leading-icon="i-lucide-map-pin" />
+      <ComunaSelect
+        id="hero-comuna-mobile"
+        v-model="comunaCodigo"
+        placeholder="¿Qué comuna buscas?"
+        leading-icon="i-lucide-map-pin"
+        variant="ghost"
+        size="xl"
+        input-class="rounded-2xl py-3.5"
+      />
 
       <button
         type="button"
@@ -49,14 +65,30 @@ function handleSubmit() {
     <div class="hidden items-center gap-1 rounded-full bg-white p-1.5 shadow-2xl shadow-black/20 lg:flex" :class="{ 'animate-shake': shaking }">
       <div class="flex-1">
         <label for="hero-categoria-desktop" class="sr-only">Categoría</label>
-        <CategoriaSelect id="hero-categoria-desktop" v-model="categoriaSlug" placeholder="Elige categoría" leading-icon="i-lucide-wrench" />
+        <CategoriaSelect
+          id="hero-categoria-desktop"
+          v-model="categoriaSlug"
+          placeholder="Elige categoría"
+          leading-icon="i-lucide-wrench"
+          variant="ghost"
+          size="xl"
+          input-class="rounded-full py-3.5"
+        />
       </div>
 
       <div class="h-8 w-px shrink-0 bg-datealo-surface" />
 
       <div class="flex-1">
         <label for="hero-comuna-desktop" class="sr-only">Comuna</label>
-        <ComunaSelect id="hero-comuna-desktop" v-model="comunaCodigo" placeholder="Elige comuna" leading-icon="i-lucide-map-pin" />
+        <ComunaSelect
+          id="hero-comuna-desktop"
+          v-model="comunaCodigo"
+          placeholder="Elige comuna"
+          leading-icon="i-lucide-map-pin"
+          variant="ghost"
+          size="xl"
+          input-class="rounded-full py-3.5"
+        />
       </div>
 
       <button
