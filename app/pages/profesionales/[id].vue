@@ -87,8 +87,10 @@ useSeoMeta({
            (row-span-2, la fila siguiente la usa ProfessionalPublicReviews con col-span-2) — sin el span,
            se despegaría al terminar esta columna. El borde/padding de tarjeta y el avatar+nombre+rating
            son solo de desktop: en mobile el bloque queda sin estilo propio, y su único hijo con presencia
-           real es el CTA (fixed, fuera del flujo normal). -->
-      <div class="lg:sticky lg:top-8 lg:row-span-2 lg:self-start lg:rounded-2xl lg:border lg:border-datealo-surface lg:p-6">
+           real es el CTA (fixed, fuera del flujo normal). El top usa --header-h (AppHeader, vía
+           useHeaderHeight) en vez de un valor fijo: con top-8 a secas, el header (sticky, z-20, fondo
+           opaco) tapaba el borde superior de la tarjeta apenas esta se volvía sticky. -->
+      <div class="lg:sticky lg:top-[calc(var(--header-h,4.5rem)+2rem)] lg:row-span-2 lg:self-start lg:rounded-2xl lg:border lg:border-datealo-surface lg:p-6">
         <div class="hidden items-center gap-3 lg:flex">
           <img
             v-if="professional.photoUrls.length && professional.avatarUrl"

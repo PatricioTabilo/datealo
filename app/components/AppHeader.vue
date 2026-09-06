@@ -23,10 +23,13 @@ const backLabel = computed(() => (isBuscar.value ? 'Volver al inicio' : 'Volver 
 const showLogoInDesktop = computed(() => isBuscar.value || route.path.startsWith('/profesionales/'))
 
 const { professional } = await useProfessionalSession()
+
+const headerRef = useTemplateRef('header')
+useHeaderHeight(headerRef)
 </script>
 
 <template>
-  <header class="sticky top-0 z-20 border-b border-datealo-surface bg-datealo-bg">
+  <header ref="header" class="sticky top-0 z-20 border-b border-datealo-surface bg-datealo-bg">
     <div class="flex items-center gap-3 px-5 py-3.5 lg:hidden">
       <NuxtLink
         :to="backTo"
