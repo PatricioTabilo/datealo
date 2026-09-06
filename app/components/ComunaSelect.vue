@@ -4,13 +4,13 @@ const {
   leadingIcon,
   variant,
   size,
-  inputClass,
+  ui,
 } = defineProps<{
   placeholder?: string
   leadingIcon?: string
   variant?: 'outline' | 'ghost'
   size?: 'md' | 'lg' | 'xl'
-  inputClass?: string
+  ui?: { base?: string, leading?: string, leadingIcon?: string, trailing?: string, trailingIcon?: string }
 }>()
 const modelValue = defineModel<string | null>()
 const { items, pending, error, refresh } = useComunasCatalog()
@@ -30,7 +30,7 @@ defineExpose({ focus: () => catalogSelect.value?.focus() })
     :leading-icon="leadingIcon"
     :variant
     :size
-    :input-class="inputClass"
+    :ui
     error-message="No pudimos cargar las comunas."
     @retry="refresh"
   />

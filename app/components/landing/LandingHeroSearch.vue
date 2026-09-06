@@ -36,7 +36,7 @@ function handleSubmit() {
         leading-icon="i-lucide-wrench"
         variant="outline"
         size="xl"
-        input-class="rounded-2xl py-3.5"
+        :ui="{ base: 'rounded-2xl py-3.5 ps-11', leadingIcon: 'size-4 text-primary' }"
       />
 
       <label for="hero-comuna-mobile" class="sr-only">Comuna</label>
@@ -47,7 +47,7 @@ function handleSubmit() {
         leading-icon="i-lucide-map-pin"
         variant="outline"
         size="xl"
-        input-class="rounded-2xl py-3.5"
+        :ui="{ base: 'rounded-2xl py-3.5 ps-11', leadingIcon: 'size-4 text-primary' }"
       />
 
       <button
@@ -72,7 +72,7 @@ function handleSubmit() {
           leading-icon="i-lucide-wrench"
           variant="ghost"
           size="xl"
-          input-class="rounded-full py-3.5"
+          :ui="{ base: 'rounded-full py-3.5', leadingIcon: 'size-4 text-primary' }"
         />
       </div>
 
@@ -87,7 +87,7 @@ function handleSubmit() {
           leading-icon="i-lucide-map-pin"
           variant="ghost"
           size="xl"
-          input-class="rounded-full py-3.5"
+          :ui="{ base: 'rounded-full py-3.5', leadingIcon: 'size-4 text-primary' }"
         />
       </div>
 
