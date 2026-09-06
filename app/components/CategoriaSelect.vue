@@ -8,6 +8,7 @@ const {
   size,
   ui,
   itemIcon,
+  panelClass,
 } = defineProps<{
   placeholder?: string
   leadingIcon?: string
@@ -15,6 +16,7 @@ const {
   size?: 'md' | 'lg' | 'xl'
   ui?: { base?: string, leading?: string, leadingIcon?: string, trailing?: string, trailingIcon?: string }
   itemIcon?: (value: string) => Component
+  panelClass?: string
 }>()
 const modelValue = defineModel<string | null>()
 const { items, pending, error, refresh } = useCategoriasCatalog()
@@ -32,6 +34,7 @@ const { items, pending, error, refresh } = useCategoriasCatalog()
     :size
     :ui
     :item-icon="itemIcon"
+    :panel-class="panelClass"
     error-message="No pudimos cargar las categorías."
     :show-all-on-focus="true"
     @retry="refresh"

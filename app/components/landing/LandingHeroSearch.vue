@@ -33,7 +33,7 @@ function handleSubmit() {
     <!-- Mobile: cada campo es su propia tarjeta blanca con borde, separadas por espacio (no una línea
          divisora) — así se ve en el mockup validado, distinto del desktop porque ahí las dos van sueltas
          en columna, no lado a lado compartiendo una sola pill. -->
-    <div class="flex flex-col gap-2 rounded-3xl bg-white p-2 shadow-2xl shadow-black/20 lg:hidden" :class="{ 'animate-shake': shaking }">
+    <div class="flex flex-col gap-2 rounded-[24px] bg-white p-2 shadow-2xl shadow-black/20 lg:hidden" :class="{ 'animate-shake': shaking }">
       <label for="hero-categoria-mobile" class="sr-only">Categoría</label>
       <CategoriaSelect
         id="hero-categoria-mobile"
@@ -42,7 +42,7 @@ function handleSubmit() {
         leading-icon="i-lucide-wrench"
         variant="outline"
         size="xl"
-        :ui="{ base: 'rounded-2xl py-3.5 ps-11', leadingIcon: 'size-4 text-primary' }"
+        :ui="{ base: 'rounded-[16px] py-3.5 ps-11 ring-[var(--ui-border)]', leadingIcon: 'size-4 text-primary' }"
         :item-icon="categoriaIcon"
       />
 
@@ -54,13 +54,13 @@ function handleSubmit() {
         leading-icon="i-lucide-map-pin"
         variant="outline"
         size="xl"
-        :ui="{ base: 'rounded-2xl py-3.5 ps-11', leadingIcon: 'size-4 text-primary' }"
+        :ui="{ base: 'rounded-[16px] py-3.5 ps-11 ring-[var(--ui-border)]', leadingIcon: 'size-4 text-primary' }"
         :item-icon="() => MapPin"
       />
 
       <button
         type="button"
-        class="flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3.5 text-[0.9375rem] font-bold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+        class="flex w-full items-center justify-center gap-2 rounded-[16px] px-5 py-3.5 text-[0.9375rem] font-bold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
         :class="ready ? 'bg-secondary shadow-lg shadow-secondary/30' : 'bg-secondary/50'"
         @click="handleSubmit"
       >
@@ -69,8 +69,9 @@ function handleSubmit() {
       </button>
     </div>
 
-    <!-- Desktop: campos y botón en una fila, divisor vertical, placeholder corto para que quepa en una línea -->
-    <div class="hidden items-center gap-1 rounded-full bg-white p-1.5 shadow-2xl shadow-black/20 lg:flex" :class="{ 'animate-shake': shaking }">
+    <!-- Desktop: campos y botón en una sola fila continua, sin divisor — el hover de cada campo ya
+         distingue dónde empieza y termina, un divisor de línea partía visualmente la pill al medio. -->
+    <div class="hidden items-center gap-0.5 rounded-full bg-white p-2 shadow-2xl shadow-black/20 lg:flex" :class="{ 'animate-shake': shaking }">
       <div class="flex-1">
         <label for="hero-categoria-desktop" class="sr-only">Categoría</label>
         <CategoriaSelect
@@ -80,12 +81,11 @@ function handleSubmit() {
           leading-icon="i-lucide-wrench"
           variant="ghost"
           size="xl"
-          :ui="{ base: 'rounded-full py-3.5', leadingIcon: 'size-4 text-primary' }"
+          :ui="{ base: 'rounded-full py-4 font-semibold text-datealo-text', leadingIcon: 'size-4 text-primary' }"
           :item-icon="categoriaIcon"
+          panel-class="min-w-80"
         />
       </div>
-
-      <div class="h-8 w-px shrink-0 bg-datealo-surface" />
 
       <div class="flex-1">
         <label for="hero-comuna-desktop" class="sr-only">Comuna</label>
@@ -96,15 +96,16 @@ function handleSubmit() {
           leading-icon="i-lucide-map-pin"
           variant="ghost"
           size="xl"
-          :ui="{ base: 'rounded-full py-3.5', leadingIcon: 'size-4 text-primary' }"
+          :ui="{ base: 'rounded-full py-4 font-semibold text-datealo-text', leadingIcon: 'size-4 text-primary' }"
           :item-icon="() => MapPin"
+          panel-class="min-w-80"
         />
       </div>
 
       <button
         type="button"
         aria-label="Buscar"
-        class="flex shrink-0 items-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+        class="flex shrink-0 items-center gap-2 rounded-full px-7 py-4 text-sm font-bold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
         :class="ready ? 'bg-secondary shadow-lg shadow-secondary/30 hover:bg-secondary/90' : 'bg-secondary/50'"
         @click="handleSubmit"
       >

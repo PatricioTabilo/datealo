@@ -34,6 +34,10 @@ const props = defineProps<{
   variant?: 'outline' | 'ghost'
   size?: 'md' | 'lg' | 'xl'
   ui?: { base?: string, leading?: string, leadingIcon?: string, trailing?: string, trailingIcon?: string }
+  // Clases extra para el panel del dropdown — sin valor, mide lo mismo que el campo (comportamiento de
+  // hoy). El buscador del hero lo usa para que el panel no quede angosto pegado al ancho de un solo
+  // segmento de la pill, igual de generoso que el panel de `/buscar`.
+  panelClass?: string
   // Catálogo chico (categorías): mostrar todo al enfocar no cuesta nada. Catálogo grande (comunas):
   // esperar a que se escriba, el patrón ya validado de Mercado Libre — mostrar todas las opciones de
   // entrada es más ruido que ayuda.
@@ -161,6 +165,7 @@ defineExpose({ focus: () => uInputRef.value?.inputRef?.focus() })
     <div
       v-if="isOpen"
       class="absolute inset-x-0 top-full z-10 mt-2 max-h-72 overflow-auto rounded-md border p-1 shadow-lg"
+      :class="panelClass"
       style="background: var(--ui-bg); border-color: var(--ui-border)"
     >
       <template v-if="error">
