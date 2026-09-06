@@ -8,6 +8,7 @@
 // ref/computed importados explícitos (no solo auto-import de Nuxt): así el componente se puede montar
 // en un test con Vitest + Vue Test Utils plano, sin levantar un contexto de Nuxt completo.
 import { computed, ref, watch } from 'vue'
+import type { Component } from 'vue'
 
 export type CatalogOption = { value: string, label: string }
 
@@ -18,6 +19,25 @@ const props = defineProps<{
   error: boolean
   placeholder: string
   errorMessage: string
+  // Mapea el value de una opción a su ícono — sin valor, la lista se ve igual que hoy (solo texto).
+  // Un consumidor (el buscador del hero) lo usa para mostrar el mismo ícono por categoría que ya muestra
+  // CompactSearchBarPanel; ninguno de los otros usos de este componente lo necesita.
+  itemIcon?: (value: string) => Component
+  // Nombre de ícono Iconify (ej. "i-lucide-wrench"), reenviado tal cual al `leading-icon` de `UInput`.
+  // Sin valor, el campo se ve igual que hoy — es un override por consumidor, no un default nuevo.
+  leadingIcon?: string
+  // `variant`/`size`/`ui` de UInput, reenviados tal cual — todos opcionales, sin valor el campo se ve
+  // exactamente igual que hoy. Existen porque un consumidor (el buscador del hero) necesita verse como un
+  // segmento sin borde dentro de su propia pill, con un ícono más chico y menos espacio reservado para él
+  // que el que UInput calcula por defecto en tamaño xl — ninguno de esos ajustes debe imponerse al input
+  // con anillo que usa el resto de la app.
+  variant?: 'outline' | 'ghost'
+  size?: 'md' | 'lg' | 'xl'
+  ui?: { base?: string, leading?: string, leadingIcon?: string, trailing?: string, trailingIcon?: string }
+  // Clases extra para el panel del dropdown — sin valor, mide lo mismo que el campo (comportamiento de
+  // hoy). El buscador del hero lo usa para que el panel no quede angosto pegado al ancho de un solo
+  // segmento de la pill, igual de generoso que el panel de `/buscar`.
+  panelClass?: string
   // Catálogo chico (categorías): mostrar todo al enfocar no cuesta nada. Catálogo grande (comunas):
   // esperar a que se escriba, el patrón ya validado de Mercado Libre — mostrar todas las opciones de
   // entrada es más ruido que ayuda.
@@ -133,14 +153,19 @@ defineExpose({ focus: () => uInputRef.value?.inputRef?.focus() })
       :model-value="searchTerm"
       :placeholder="placeholder"
       :readonly="error"
+      :leading-icon="leadingIcon"
+      :variant="variant"
+      :size="size"
       trailing-icon="i-lucide-chevron-down"
       class="w-full"
+      :ui="ui"
       @update:model-value="handleInput"
     />
 
     <div
       v-if="isOpen"
       class="absolute inset-x-0 top-full z-10 mt-2 max-h-72 overflow-auto rounded-md border p-1 shadow-lg"
+      :class="panelClass"
       style="background: var(--ui-bg); border-color: var(--ui-border)"
     >
       <template v-if="error">
@@ -165,9 +190,12 @@ defineExpose({ focus: () => uInputRef.value?.inputRef?.focus() })
           :key="item.value"
           type="button"
           :data-testid="`option-${item.value}`"
-          class="catalog-option flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-left text-sm"
+          class="catalog-option flex w-full cursor-pointer items-center gap-3 rounded-md px-2 py-1.5 text-left text-sm"
           @click="selectItem(item)"
         >
+          <span v-if="itemIcon" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-datealo-surface text-primary">
+            <component :is="itemIcon(item.value)" class="h-4 w-4" />
+          </span>
           {{ item.label }}
         </button>
       </template>

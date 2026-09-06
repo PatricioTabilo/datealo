@@ -3,7 +3,6 @@ export const LANDING_HERO = {
   headline: 'Deja de preguntarle al grupo del edificio',
   headlineAccent: 'y encuentra a alguien que sí te va a resolver.',
   subheadline: 'Gasfiter, electricista, peluquera y más. Busca por categoría y comuna, no por quién contesta primero en el chat del edificio.',
-  cta: 'Buscar',
   trust: ['Reseñas reales de tu zona', 'Ordenados por cercanía', 'Categorías claras'],
   heroImage: {
     src: 'https://images.pexels.com/photos/5493672/pexels-photo-5493672.jpeg?auto=compress&cs=tinysrgb&w=1600&h=1100&fit=crop',
