@@ -1,10 +1,10 @@
 export const LANDING_HERO = {
   tagline: 'lo bueno se recomienda',
-  headline: 'Deja de buscar en grupos de Facebook.',
-  headlineAccent: 'Encuentra profesionales reales, cerca de ti.',
-  subheadline: 'datealo conecta a personas con profesionales verificados de su zona. Gasfiter, electricista, peluquera — a un click.',
+  headline: 'Deja de preguntarle al grupo del edificio',
+  headlineAccent: 'y encuentra a alguien que sí te va a resolver.',
+  subheadline: 'Gasfiter, electricista, peluquera y más. Busca por categoría y comuna, no por quién contesta primero en el chat del edificio.',
   cta: 'Buscar',
-  trust: ['Gratis', 'Sin registro', 'Contacto directo'],
+  trust: ['Reseñas reales de tu zona', 'Ordenados por cercanía', 'Categorías claras'],
   heroImage: {
     src: 'https://images.pexels.com/photos/5493672/pexels-photo-5493672.jpeg?auto=compress&cs=tinysrgb&w=1600&h=1100&fit=crop',
     alt: 'Trabajador sonriendo mientras usa un taladro en renovación de hogar',
@@ -44,12 +44,12 @@ export const LANDING_PROBLEM = {
 
 export const LANDING_SOLUTION = {
   title: 'Imagina un lugar donde encontrar al profesional correcto es fácil',
-  subtitle: 'Eso es datealo. Un buscador de profesionales verificados, con reseñas reales, cerca de ti.',
+  subtitle: 'Eso es datealo. Un buscador de profesionales con reseñas reales, cerca de ti.',
   features: [
     {
-      icon: 'ShieldCheck' as const,
-      title: 'Profesionales verificados',
-      description: 'Cada profesional pasa por un proceso de verificación. Sabes que es real antes de contactarlo.',
+      icon: 'LayoutGrid' as const,
+      title: 'Busca por categoría',
+      description: 'Gasfitería, electricidad, peluquería y más. Encuentra justo lo que necesitas, no un hilo de mensajes mezclado.',
     },
     {
       icon: 'Star' as const,
@@ -101,7 +101,7 @@ export const LANDING_FOR_PROFESSIONALS = {
 export const LANDING_FINAL_CTA = {
   headline: 'No te lo cuenten —',
   headlineAccent: 'datealo',
-  subheadline: 'Ya podés buscar profesionales verificados en tu zona. Sin registro, sin esperar.',
+  subheadline: 'Ya podés buscar profesionales de tu zona, con reseñas reales. Sin registro, sin esperar.',
   cta: 'Buscar profesionales',
   trust: ['Gratis', 'Sin registro', 'Contacto directo'],
 } as const

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 useSeoMeta({
   title: 'datealo — Encuentra al profesional que necesitas, cerca de ti',
-  description: 'Conectamos personas con profesionales verificados de su zona. Gasfitería, electricidad, peluquería, limpieza y más. Regístrate para acceso anticipado.',
-  ogTitle: 'datealo — Profesionales verificados cerca de ti',
+  description: 'Conectamos personas con profesionales de su zona, con reseñas reales. Gasfitería, electricidad, peluquería, limpieza y más. Regístrate para acceso anticipado.',
+  ogTitle: 'datealo — Profesionales cerca de ti, con reseñas reales',
   ogDescription: 'Busca, compara y contacta profesionales de confianza en tu zona. Estamos por lanzar — únete a la lista de espera.',
   ogType: 'website',
   ogLocale: 'es_CL',
@@ -18,7 +18,7 @@ useHead({
         '@type': 'WebSite',
         name: 'datealo',
         url: 'https://datealo.cl',
-        description: 'Buscador de profesionales verificados para el hogar y la vida diaria.',
+        description: 'Buscador de profesionales con reseñas reales para el hogar y la vida diaria.',
         potentialAction: {
           '@type': 'SearchAction',
           target: 'https://datealo.cl/buscar?categoria={search_term_string}',
