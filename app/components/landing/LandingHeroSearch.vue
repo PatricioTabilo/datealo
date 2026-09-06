@@ -24,20 +24,20 @@ function handleSubmit() {
 
 <template>
   <div class="relative z-20 max-w-xl">
-    <!-- Mobile: campos apilados con divisor horizontal, botón ancho abajo -->
-    <div class="rounded-3xl bg-white p-2 shadow-2xl shadow-black/20 lg:hidden" :class="{ 'animate-shake': shaking }">
+    <!-- Mobile: cada campo es su propia tarjeta blanca con borde, separadas por espacio (no una línea
+         divisora) — así se ve en el mockup validado, distinto del desktop porque ahí las dos van sueltas
+         en columna, no lado a lado compartiendo una sola pill. -->
+    <div class="flex flex-col gap-2 rounded-3xl bg-white p-2 shadow-2xl shadow-black/20 lg:hidden" :class="{ 'animate-shake': shaking }">
       <label for="hero-categoria-mobile" class="sr-only">Categoría</label>
       <CategoriaSelect
         id="hero-categoria-mobile"
         v-model="categoriaSlug"
         placeholder="¿Qué servicio buscas?"
         leading-icon="i-lucide-wrench"
-        variant="ghost"
+        variant="outline"
         size="xl"
         input-class="rounded-2xl py-3.5"
       />
-
-      <div class="mx-2 my-1 h-px bg-datealo-surface" />
 
       <label for="hero-comuna-mobile" class="sr-only">Comuna</label>
       <ComunaSelect
@@ -45,14 +45,14 @@ function handleSubmit() {
         v-model="comunaCodigo"
         placeholder="¿Qué comuna buscas?"
         leading-icon="i-lucide-map-pin"
-        variant="ghost"
+        variant="outline"
         size="xl"
         input-class="rounded-2xl py-3.5"
       />
 
       <button
         type="button"
-        class="mt-1 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3.5 text-[0.9375rem] font-bold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+        class="flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3.5 text-[0.9375rem] font-bold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
         :class="ready ? 'bg-secondary shadow-lg shadow-secondary/30' : 'bg-secondary/50'"
         @click="handleSubmit"
       >
