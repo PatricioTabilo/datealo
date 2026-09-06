@@ -22,6 +22,8 @@ const scrollToSection = (selector: string) => {
 const goToTop = () => {
   window.scrollTo({ top: 0, behavior: 'auto' })
 }
+
+const { professional } = await useProfessionalSession()
 </script>
 
 <template>
@@ -52,12 +54,12 @@ const goToTop = () => {
           Categorías
         </UButton>
         <UButton
+          :to="professional ? '/profesional/perfil' : '/profesional/registro'"
           variant="link"
           color="neutral"
           class="nav-link hidden sm:inline-flex items-center px-3.5 py-2 text-sm font-semibold text-white/80 hover:text-white active:text-white rounded-lg hover:bg-white/10 transition-all duration-200"
-          @click="scrollToSection('#profesionales')"
         >
-          Para profesionales
+          {{ professional ? 'Mi perfil' : 'Publícate' }}
         </UButton>
 
         <!-- CTA -->
