@@ -2,7 +2,7 @@
 
 **Estado:** activo
 
-**Última actualización:** 2026-09-01
+**Última actualización:** 2026-09-04
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -61,6 +61,8 @@ una entrevista, la columna "límite" es lo que impide que se lea como dato duro.
 | E-003 | código + producto | `server/db/schema/*.ts`, `app/constants/landing.ts:5,47,51-52,104`, [D-001 de misión 07](../07-resenas-verificadas-por-contacto/producto.md#d-001) | No existe ningún campo de verificación en el schema de profesionales, ni ninguna misión que planifique construirlo. Pese a eso, `LandingSolution` ya afirma como hecho "Cada profesional pasa por un proceso de verificación" y el hero dice "profesionales verificados". Misión 07 ya resolvió esta misma tensión para las reseñas: nunca dice "verificada" a secas, siempre "verificada por contacto" — porque lo único que Datealo puede respaldar es que el contacto ocurrió. | Confirma que "verificado" no es una funcionalidad planeada en ningún horizonte visible, no solo que falta hoy. |
 | E-004 | análisis (JTBD) | skill `jobs-to-be-done` aplicado al trabajo que alguien contrata al buscar un profesional de servicios para el hogar | El trabajo tiene tres dimensiones: funcional (encontrar rápido a alguien confiable, cerca, disponible), emocional (dejar la ansiedad de "¿me va a estafar o no va a llegar?" — alivio), social (evitar la exposición de pedir ayuda o depender de la buena voluntad de un grupo). El copy actual del hero cubre la funcional y roza la social ("deja de buscar en grupos"), pero no nombra la emocional — que `LANDING_PROBLEM` ya identificó como consecuencia ("la ruleta de la confianza", "el maestro fantasma"). | Es una aplicación del framework sobre conocimiento de dominio ya documentado (`CLAUDE.md`, `LANDING_PROBLEM`), no entrevistas nuevas con usuarios de Datealo. |
 | E-005 | benchmark   | [listivo6.tangiblewp.com](https://listivo6.tangiblewp.com/) — referencia aportada por el dueño de producto | El buscador del hero de la referencia tiene inputs más grandes (con íconos por campo), más padding, y un botón de búsqueda con ícono + texto — se siente "más trabajado" que el buscador actual de Datealo, que no tiene íconos ni el mismo padding. | Es un theme genérico, sirve como referencia de tamaño/jerarquía visual, no de contenido — ver [misión 09](../09-layout-general/investigacion.md#c-003) para el análisis completo de esta referencia. |
+| E-006 | código      | `app/components/CompactSearchBar.vue`, usado en `app/components/AppHeader.vue` (solo en `/buscar`) | Datealo ya tiene un buscador de categoría+comuna con estilo pill redondeada, campos segmentados y botón de búsqueda circular — visualmente cercano al patrón de Airbnb que el dueño de producto usa como referencia. Hoy solo vive en el header de `/buscar`; el hero usa un componente distinto (`CategoriaSelect`/`ComunaSelect` en una caja blanca simple, botón `variant="link"`). | Confirma que el estándar deseado ya existe construido en el producto, no que `CompactSearchBar` sea reusable tal cual en el hero (está afinado para un header angosto, con panel propio para mobile) — la forma exacta de aplicarlo es un detalle de `experiencia.md`. |
+| E-007 | producto (decisión) | [Issue #155](https://github.com/PatricioTabilo/datealo/issues/155) de la misión 09, comentarios del dueño de producto del 2026-09-04 | El link "Para profesionales" del nav de la landing (`LandingNavbar.vue`) hace scroll a una sección de la misma página (`#profesionales`) — dos pasos para llegar a crear un perfil. El dueño de producto había diseñado un link directo ("Publícate"/"Mi perfil") para reemplazarlo en el issue #155, pero lo pausó citando textualmente que "el enfoque original (buscador completo tras scroll, CTA 'Publícate' como texto) tenía bugs reales (mobile se rompe)", además de mezclar una segunda decisión (si el nav necesita su propio buscador tras el scroll). | El comentario de pausa no aísla si el bug de mobile venía del buscador tras scroll, del CTA de texto, o de ambos juntos — así que retomar solo el CTA no garantiza estar libre de ese bug; se verifica en mobile (390px) antes de dar el slice por bueno, no se asume resuelto. |
 
 ## Conclusiones
 
@@ -131,6 +133,40 @@ una entrevista, la columna "límite" es lo que impide que se lea como dato duro.
   el dueño de producto).
 - **Confianza:** alta — confirmado directamente por el dueño de producto.
 
+<a id="c-006"></a>
+
+### C-006 — El estándar que el buscador del hero debe seguir ya existe construido en Datealo, no hay que inventarlo desde una referencia externa
+
+- **Sustento:** [E-006](#e-006).
+- **Razonamiento:** `CompactSearchBar` (usado hoy en `/buscar`) ya resuelve el mismo problema que
+  [C-005](#c-005) describe — campos grandes, jerarquía clara, botón de búsqueda trabajado — con un patrón
+  pill/segmentado cercano al de Airbnb. El buscador del hero usa hoy un componente distinto y visualmente
+  más simple. Seguir ese patrón ya construido, en vez de partir de la referencia externa de E-005, evita
+  que Datealo termine con dos estilos de buscador compitiendo por ser "el" estándar.
+- **Implicación:** la revisión visual del buscador del hero toma `CompactSearchBar` como referencia de
+  forma (pill, segmentado, botón circular), no solo el benchmark externo — el detalle de cómo se adapta al
+  tamaño del hero (que no es un header angosto) se resuelve en `experiencia.md`.
+- **Confianza:** alta — el componente de referencia ya existe y está en producción en `/buscar`.
+
+<a id="c-007"></a>
+
+### C-007 — El nav de la landing necesita el mismo CTA directo al lado profesional que ya usa el header general, sin pasar por un scroll intermedio
+
+- **Sustento:** [E-007](#e-007).
+- **Razonamiento:** la misión 09 ya estableció el patrón "Publícate" (sin sesión) / "Mi perfil" (con
+  sesión) como el acceso directo al lado profesional en el header general — un link a
+  `/profesional/registro` o `/profesional/perfil`. El nav de la landing es la única superficie que
+  todavía usa un patrón distinto (ancla de scroll a una sección de la misma página), inconsistente con
+  esa decisión ya vigente.
+- **Implicación:** reemplazar "Para profesionales" por el mismo patrón directo cierra esa inconsistencia,
+  reusando una decisión de nombres/destinos ya vigente (D-005 de misión 09) en vez de inventar un CTA
+  nuevo. La pregunta de si el nav necesita además su propio buscador tras el scroll (y si el hero seguiría
+  necesitando el suyo) queda fuera, sin resolver todavía.
+- **Confianza:** media — el destino y el naming ("Publícate"/"Mi perfil") ya están decididos, pero el
+  comentario de pausa del issue #155 nombra el "CTA 'Publícate' como texto" junto al bug de mobile sin
+  aislar si el bug era del buscador, del CTA, o de ambos — la implementación de F-002 verifica en mobile
+  antes de darse por resuelta ([TR-002](./ingenieria.md) en `ingenieria.md`).
+
 ## El ideal: el hero comunica en segundos qué es Datealo, por qué es mejor que preguntarle al vecino, y con un buscador que se ve tan cuidado como el resto de la sección
 
 <!--
@@ -153,7 +189,8 @@ tocarlo. Ningún trust item promete algo que Datealo no puede respaldar todavía
 | --------- | -------------------- | ------------------------------------- | --------------------------- |
 | Copy revisado | alguien llega a la landing por primera vez | entiende en segundos qué hace Datealo, sin repetir atributos de la alternativa que ya conoce | [C-001](#c-001), [C-002](#c-002), [C-004](#c-004) |
 | Mensaje de confianza honesto | cualquiera que lea el hero o la sección de soluciones | ningún texto afirma verificación que no existe; la confianza se apoya en reseñas reales | [C-003](#c-003) |
-| Buscador del hero pulido | alguien interactúa con el buscador del hero | campos grandes, con íconos, botón de búsqueda trabajado | [C-005](#c-005) |
+| Buscador del hero pulido | alguien interactúa con el buscador del hero | campos grandes, con íconos, botón de búsqueda trabajado, con el mismo lenguaje visual que el buscador de `/buscar` | [C-005](#c-005), [C-006](#c-006) |
+| CTA profesional directo en el nav | alguien que quiere ofrecer sus servicios ve el nav de la landing | encuentra un link directo a crear o ver su perfil, sin pasar por un scroll intermedio | [C-007](#c-007) |
 
 ### El ideal no significa
 

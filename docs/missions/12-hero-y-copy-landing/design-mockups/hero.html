@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>V-001 Hero de la landing — misión 12</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+    <style>
+      .icon { width: 1em; height: 1em; display: inline-block; vertical-align: middle; }
+      .hero-bg { background: var(--color-datealo-primary); }
+      .field-box { background: #fff; border: 1px solid var(--ui-border); }
+      .field-icon { background: var(--color-datealo-surface); color: var(--color-datealo-primary); }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+      <!-- ============================================================ MOBILE · inicial ============ -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo inicial
+          <small>ronda 3 — copy sin em dash en el texto real (solo queda en las anotaciones del mockup)</small>
+        </div>
+        <div class="frame-viewport hero-bg">
+          <div class="status-bar text-white"><span>9:41</span><span>▮▮▮</span></div>
+
+          <div class="px-5 pt-6 pb-8">
+            <h1 class="font-heading text-[2.1rem] font-extrabold leading-[1.12] text-white tracking-tight">
+              Deja de preguntarle al grupo del edificio
+              <span class="text-secondary block mt-1">y encuentra a alguien que sí te va a resolver.</span>
+            </h1>
+
+            <p class="mt-4 text-[0.9375rem] leading-relaxed text-white/80 font-medium">
+              Gasfiter, electricista, peluquera y más. Busca por categoría y comuna, no por quién
+                contesta primero en el chat del edificio.
+            </p>
+
+            <!-- Buscador: pill blanca, campos segmentados con ícono, botón ancho abajo -->
+            <div class="mt-6 rounded-3xl bg-white p-2 shadow-2xl shadow-black/20">
+              <button type="button" class="field-box flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-left">
+                <span class="field-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-xl">
+                  <svg class="icon w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                </span>
+                <span class="text-[0.9375rem] font-medium text-datealo-muted">¿Qué servicio buscas?</span>
+                <svg class="icon w-4 h-4 ml-auto text-datealo-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+
+              <div class="my-1 h-px bg-datealo-surface mx-2"></div>
+
+              <button type="button" class="field-box flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-left">
+                <span class="field-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-xl">
+                  <svg class="icon w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                </span>
+                <span class="text-[0.9375rem] font-medium text-datealo-muted">¿Qué comuna buscas?</span>
+                <svg class="icon w-4 h-4 ml-auto text-datealo-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+
+              <button type="button" disabled class="mt-1 flex w-full items-center justify-center gap-2 rounded-2xl bg-secondary/50 px-5 py-3.5 text-[0.9375rem] font-bold text-white">
+                <svg class="icon w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                Buscar
+              </button>
+            </div>
+
+            <ul class="flex flex-wrap items-center gap-x-5 gap-y-2.5 mt-6 text-[0.8125rem] text-white/80 font-semibold">
+              <li class="flex items-center gap-1.5">
+                <svg class="icon w-[15px] h-[15px] text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                Reseñas reales de tu zona
+              </li>
+              <li class="flex items-center gap-1.5">
+                <svg class="icon w-[15px] h-[15px] text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                Ordenados por cercanía
+              </li>
+              <li class="flex items-center gap-1.5">
+                <svg class="icon w-[15px] h-[15px] text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                Categorías claras
+              </li>
+            </ul>
+          </div>
+          <div class="fold" style="top: 640px"></div>
+        </div>
+      </section>
+
+      <!-- ============================================================ MOBILE · listo ================ -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo listo
+          <small>ronda 3 — categoría y comuna elegidas, botón "Buscar" habilitado</small>
+        </div>
+        <div class="frame-viewport hero-bg">
+          <div class="status-bar text-white"><span>9:41</span><span>▮▮▮</span></div>
+
+          <div class="px-5 pt-6 pb-8">
+            <h1 class="font-heading text-[2.1rem] font-extrabold leading-[1.12] text-white tracking-tight">
+              Deja de preguntarle al grupo del edificio
+              <span class="text-secondary block mt-1">y encuentra a alguien que sí te va a resolver.</span>
+            </h1>
+
+            <p class="mt-4 text-[0.9375rem] leading-relaxed text-white/80 font-medium">
+              Gasfiter, electricista, peluquera y más. Busca por categoría y comuna, no por quién
+                contesta primero en el chat del edificio.
+            </p>
+
+            <div class="mt-6 rounded-3xl bg-white p-2 shadow-2xl shadow-black/20">
+              <button type="button" class="field-box flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-left">
+                <span class="field-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-xl">
+                  <svg class="icon w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                </span>
+                <span class="text-[0.9375rem] font-bold text-datealo-text">Gasfitería</span>
+                <svg class="icon w-4 h-4 ml-auto text-datealo-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+
+              <div class="my-1 h-px bg-datealo-surface mx-2"></div>
+
+              <button type="button" class="field-box flex w-full items-center gap-3 rounded-2xl px-4 py-3.5 text-left">
+                <span class="field-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-xl">
+                  <svg class="icon w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                </span>
+                <span class="text-[0.9375rem] font-bold text-datealo-text">Ñuñoa</span>
+                <svg class="icon w-4 h-4 ml-auto text-datealo-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+
+              <button type="button" class="mt-1 flex w-full items-center justify-center gap-2 rounded-2xl bg-secondary px-5 py-3.5 text-[0.9375rem] font-bold text-white shadow-lg shadow-secondary/30">
+                <svg class="icon w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                Buscar
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ DESKTOP · inicial ============= -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">
+          V-001 · modo inicial
+          <small>ronda 4 — pill más ancha, placeholder corto ("Elige categoría"/"Elige comuna"), sin wrap a 2 líneas</small>
+        </div>
+        <div class="frame-viewport hero-bg">
+          <div class="grid grid-cols-2 gap-16 items-center h-full px-20 py-16">
+            <div class="max-w-xl">
+              <h1 class="font-heading text-[3.4rem] font-extrabold leading-[1.08] text-white tracking-tight">
+                Deja de preguntarle al grupo del edificio
+                <span class="text-secondary block mt-2">y encuentra a alguien que sí te va a resolver.</span>
+              </h1>
+
+              <p class="mt-6 text-lg leading-relaxed text-white/80 font-medium max-w-md">
+                Gasfiter, electricista, peluquera y más. Busca por categoría y comuna, no por quién
+                contesta primero en el chat del edificio.
+              </p>
+
+              <div class="mt-8 flex items-center gap-1 rounded-full bg-white p-1.5 shadow-2xl shadow-black/20 max-w-2xl">
+                <button type="button" class="flex flex-1 items-center gap-2.5 rounded-full px-5 py-3.5 text-left hover:bg-datealo-surface">
+                  <svg class="icon w-[18px] h-[18px] text-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                  <span class="whitespace-nowrap text-sm font-medium text-datealo-muted">Elige categoría</span>
+                </button>
+                <div class="w-px h-8 bg-datealo-surface shrink-0"></div>
+                <button type="button" class="flex flex-1 items-center gap-2.5 rounded-full px-5 py-3.5 text-left hover:bg-datealo-surface">
+                  <svg class="icon w-[18px] h-[18px] text-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span class="whitespace-nowrap text-sm font-medium text-datealo-muted">Elige comuna</span>
+                </button>
+                <button type="button" disabled class="flex shrink-0 items-center gap-2 rounded-full bg-secondary/50 px-7 py-3.5 text-sm font-bold text-white">
+                  <svg class="icon w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                  Buscar
+                </button>
+              </div>
+
+              <ul class="flex flex-wrap items-center gap-x-6 gap-y-3 mt-7 text-sm text-white/80 font-semibold">
+                <li class="flex items-center gap-2">
+                  <svg class="icon w-4 h-4 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                  Reseñas reales de tu zona
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="icon w-4 h-4 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                  Ordenados por cercanía
+                </li>
+                <li class="flex items-center gap-2">
+                  <svg class="icon w-4 h-4 text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                  Categorías claras
+                </li>
+              </ul>
+            </div>
+
+            <div class="h-full w-full rounded-[2.5rem] bg-white/10 border-4 border-white/10 flex items-center justify-center">
+              <span class="text-white/40 text-sm font-semibold">Imagen del hero — sin cambios</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ DESKTOP · listo =============== -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">
+          V-001 · modo listo
+          <small>ronda 4 — categoría y comuna elegidas, botón "Buscar" habilitado</small>
+        </div>
+        <div class="frame-viewport hero-bg">
+          <div class="grid grid-cols-2 gap-16 items-center h-full px-20 py-16">
+            <div class="max-w-xl">
+              <h1 class="font-heading text-[3.4rem] font-extrabold leading-[1.08] text-white tracking-tight">
+                Deja de preguntarle al grupo del edificio
+                <span class="text-secondary block mt-2">y encuentra a alguien que sí te va a resolver.</span>
+              </h1>
+
+              <p class="mt-6 text-lg leading-relaxed text-white/80 font-medium max-w-md">
+                Gasfiter, electricista, peluquera y más. Busca por categoría y comuna, no por quién
+                contesta primero en el chat del edificio.
+              </p>
+
+              <div class="mt-8 flex items-center gap-1 rounded-full bg-white p-1.5 shadow-2xl shadow-black/20 max-w-2xl">
+                <button type="button" class="flex flex-1 items-center gap-2.5 rounded-full px-5 py-3.5 text-left hover:bg-datealo-surface">
+                  <svg class="icon w-[18px] h-[18px] text-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                  <span class="whitespace-nowrap text-sm font-bold text-datealo-text">Gasfitería</span>
+                </button>
+                <div class="w-px h-8 bg-datealo-surface shrink-0"></div>
+                <button type="button" class="flex flex-1 items-center gap-2.5 rounded-full px-5 py-3.5 text-left hover:bg-datealo-surface">
+                  <svg class="icon w-[18px] h-[18px] text-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span class="whitespace-nowrap text-sm font-bold text-datealo-text">Ñuñoa</span>
+                </button>
+                <button type="button" class="flex shrink-0 items-center gap-2 rounded-full bg-secondary px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-secondary/30 hover:bg-secondary/90">
+                  <svg class="icon w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                  Buscar
+                </button>
+              </div>
+            </div>
+
+            <div class="h-full w-full rounded-[2.5rem] bg-white/10 border-4 border-white/10 flex items-center justify-center">
+              <span class="text-white/40 text-sm font-semibold">Imagen del hero — sin cambios</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

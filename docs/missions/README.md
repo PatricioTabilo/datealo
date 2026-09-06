@@ -20,7 +20,7 @@ abrieron y de dónde salió cada una.
 | 09  | [layout general (navbar, footer, TOS)](./09-layout-general/) | producto | 2026-08-31 | cerrada 2026-09-04 | — | — |
 | 10  | [vista de resultados de búsqueda](./10-vista-resultados-busqueda/) | producto | 2026-09-01 | cerrada 2026-09-04 | — | — |
 | 11  | [vista de detalle de perfil](./11-perfil-profesional/) | producto | 2026-09-01 | cerrada 2026-09-04 | — | — |
-| 12  | [hero y copy de la landing](./12-hero-y-copy-landing/) | producto | 2026-09-01 | definición | Producto | — |
+| 12  | [hero y copy de la landing](./12-hero-y-copy-landing/) | producto | 2026-09-01 | lista para construir | — | — |
 
 Misiones 02 a 07 son las seis que llevan al MVP (registrarse, mostrarse, buscar, reseñar), en el orden de
 dependencia definido en la conversación de roadmap del 2026-08-13 — el número no es prioridad, pero acá sí
