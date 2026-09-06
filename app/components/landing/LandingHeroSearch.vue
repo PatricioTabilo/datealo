@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { Search } from '@lucide/vue'
+import { MapPin, Search, Wrench } from '@lucide/vue'
+import { CATEGORIA_ICONS } from '~/constants/categoria-icons'
+
+// Mismo mapeo que usa CompactSearchBarPanel para su propio dropdown de categorías.
+function categoriaIcon(slug: string) {
+  return CATEGORIA_ICONS[slug as keyof typeof CATEGORIA_ICONS] ?? Wrench
+}
 
 const categoriaSlug = ref<string | null>(null)
 const comunaCodigo = ref<string | null>(null)
@@ -37,6 +43,7 @@ function handleSubmit() {
         variant="outline"
         size="xl"
         :ui="{ base: 'rounded-2xl py-3.5 ps-11', leadingIcon: 'size-4 text-primary' }"
+        :item-icon="categoriaIcon"
       />
 
       <label for="hero-comuna-mobile" class="sr-only">Comuna</label>
@@ -48,6 +55,7 @@ function handleSubmit() {
         variant="outline"
         size="xl"
         :ui="{ base: 'rounded-2xl py-3.5 ps-11', leadingIcon: 'size-4 text-primary' }"
+        :item-icon="() => MapPin"
       />
 
       <button
@@ -73,6 +81,7 @@ function handleSubmit() {
           variant="ghost"
           size="xl"
           :ui="{ base: 'rounded-full py-3.5', leadingIcon: 'size-4 text-primary' }"
+          :item-icon="categoriaIcon"
         />
       </div>
 
@@ -88,6 +97,7 @@ function handleSubmit() {
           variant="ghost"
           size="xl"
           :ui="{ base: 'rounded-full py-3.5', leadingIcon: 'size-4 text-primary' }"
+          :item-icon="() => MapPin"
         />
       </div>
 

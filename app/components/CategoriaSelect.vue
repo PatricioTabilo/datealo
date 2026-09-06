@@ -1,16 +1,20 @@
 <script setup lang="ts">
+import type { Component } from 'vue'
+
 const {
   placeholder = '¿Qué necesitas?',
   leadingIcon,
   variant,
   size,
   ui,
+  itemIcon,
 } = defineProps<{
   placeholder?: string
   leadingIcon?: string
   variant?: 'outline' | 'ghost'
   size?: 'md' | 'lg' | 'xl'
   ui?: { base?: string, leading?: string, leadingIcon?: string, trailing?: string, trailingIcon?: string }
+  itemIcon?: (value: string) => Component
 }>()
 const modelValue = defineModel<string | null>()
 const { items, pending, error, refresh } = useCategoriasCatalog()
@@ -27,6 +31,7 @@ const { items, pending, error, refresh } = useCategoriasCatalog()
     :variant
     :size
     :ui
+    :item-icon="itemIcon"
     error-message="No pudimos cargar las categorías."
     :show-all-on-focus="true"
     @retry="refresh"

@@ -8,6 +8,7 @@
 // ref/computed importados explícitos (no solo auto-import de Nuxt): así el componente se puede montar
 // en un test con Vitest + Vue Test Utils plano, sin levantar un contexto de Nuxt completo.
 import { computed, ref, watch } from 'vue'
+import type { Component } from 'vue'
 
 export type CatalogOption = { value: string, label: string }
 
@@ -18,6 +19,10 @@ const props = defineProps<{
   error: boolean
   placeholder: string
   errorMessage: string
+  // Mapea el value de una opción a su ícono — sin valor, la lista se ve igual que hoy (solo texto).
+  // Un consumidor (el buscador del hero) lo usa para mostrar el mismo ícono por categoría que ya muestra
+  // CompactSearchBarPanel; ninguno de los otros usos de este componente lo necesita.
+  itemIcon?: (value: string) => Component
   // Nombre de ícono Iconify (ej. "i-lucide-wrench"), reenviado tal cual al `leading-icon` de `UInput`.
   // Sin valor, el campo se ve igual que hoy — es un override por consumidor, no un default nuevo.
   leadingIcon?: string
@@ -180,9 +185,12 @@ defineExpose({ focus: () => uInputRef.value?.inputRef?.focus() })
           :key="item.value"
           type="button"
           :data-testid="`option-${item.value}`"
-          class="catalog-option flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-left text-sm"
+          class="catalog-option flex w-full cursor-pointer items-center gap-3 rounded-md px-2 py-1.5 text-left text-sm"
           @click="selectItem(item)"
         >
+          <span v-if="itemIcon" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-datealo-surface text-primary">
+            <component :is="itemIcon(item.value)" class="h-4 w-4" />
+          </span>
           {{ item.label }}
         </button>
       </template>
