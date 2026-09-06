@@ -4,7 +4,7 @@ import { LANDING_HERO } from '~/constants/landing'
 </script>
 
 <template>
-  <section class="hero-section relative overflow-hidden bg-primary pt-32 pb-20 lg:pt-40 lg:pb-32">
+  <section class="hero-section relative bg-primary pt-32 pb-20 lg:pt-40 lg:pb-32">
     <!-- Decorative background elements -->
     <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
       <div class="absolute -top-[20%] -right-[10%] w-[70%] h-[70%] rounded-full bg-white/5 blur-3xl" />
@@ -14,9 +14,9 @@ import { LANDING_HERO } from '~/constants/landing'
     </div>
 
     <div class="container relative z-10 mx-auto px-5 sm:px-8">
-      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div class="grid lg:grid-cols-[55fr_45fr] gap-12 lg:gap-16 items-center">
         <!-- Text Content -->
-        <div class="max-w-2xl">
+        <div>
           <h1 class="text-4xl sm:text-5xl lg:text-[4rem] font-extrabold leading-[1.1] text-white mb-6 tracking-tight">
             {{ LANDING_HERO.headline }}
             <span class="text-secondary block mt-2">{{ LANDING_HERO.headlineAccent }}</span>

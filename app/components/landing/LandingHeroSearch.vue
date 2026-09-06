@@ -29,7 +29,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <div class="relative z-20 max-w-xl">
+  <div class="relative z-20 max-w-2xl">
     <!-- Mobile: cada campo es su propia tarjeta blanca con borde, separadas por espacio (no una línea
          divisora) — así se ve en el mockup validado, distinto del desktop porque ahí las dos van sueltas
          en columna, no lado a lado compartiendo una sola pill. -->
