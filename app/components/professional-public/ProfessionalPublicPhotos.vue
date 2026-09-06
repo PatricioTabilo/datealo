@@ -18,11 +18,20 @@ function selectPhoto(index: number) {
 
 <template>
   <div v-if="photoUrls.length">
+    <!-- dots solo mobile: ahí es la única señal de que hay más de una foto. En desktop la tira de
+         miniaturas de abajo ya cumple lo mismo con preview real, y los dots (centrados bajo todo el ancho
+         del carrusel) terminan superpuestos con las miniaturas apenas hay 4 fotos o más. -->
     <UCarousel
       ref="carousel"
       :items="photoUrls"
       dots
-      class="aspect-4/3 w-full overflow-hidden lg:rounded-2xl"
+      class="w-full"
+      :ui="{
+        viewport: 'aspect-4/3 overflow-hidden lg:rounded-2xl',
+        container: 'h-full',
+        item: 'h-full',
+        dots: 'lg:hidden',
+      }"
       @select="activeIndex = $event"
     >
       <template #default="{ item, index }">
