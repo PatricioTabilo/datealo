@@ -82,7 +82,7 @@ const searchQuery = computed(() => {
               <Star class="w-6 h-6 fill-current" />
             </div>
             <div>
-              <p class="text-sm font-extrabold text-datealo-text leading-tight">Profesionales<br>verificados</p>
+              <p class="text-sm font-extrabold text-datealo-text leading-tight">Reseñas<br>reales</p>
             </div>
           </div>
         </div>
