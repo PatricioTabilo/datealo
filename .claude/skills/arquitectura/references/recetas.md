@@ -416,6 +416,13 @@ export default defineAppConfig({
 Antes de crear una escala custom para un gris o un color de estado (éxito, error), comprobar si ya coincide
 con un color nativo de Tailwind — ahorra los 11 tonos.
 
+**Nuxt UI instala modo oscuro por defecto** (`@nuxtjs/color-mode`, activado con `ui.colorMode: true` de
+forma implícita) y cambia el tono que resuelve `primary` según la preferencia de sistema del visitante —
+el `500` de arriba en modo claro, el `400` en modo oscuro. Datealo no diseñó ni activó un modo oscuro
+propio, así que ese cambio automático solo desvía la marca del hex exacto sin ningún propósito — detectado
+comparando el sitio en dos navegadores con preferencia de sistema distinta. `ui: { colorMode: false }` en
+`nuxt.config.ts` (no en `app.config.ts` — ese es el módulo, no el theming) lo desactiva.
+
 **El radio base se overridea como variable CSS, no en `app.config.ts`:**
 
 ```css
