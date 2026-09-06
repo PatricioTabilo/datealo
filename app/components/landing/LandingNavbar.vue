@@ -57,7 +57,7 @@ const { professional } = await useProfessionalSession()
           :to="professional ? '/profesional/perfil' : '/profesional/registro'"
           variant="link"
           color="neutral"
-          class="hidden sm:inline-flex items-center h-10 px-5 rounded-xl text-sm font-bold text-white bg-secondary hover:bg-secondary active:text-white shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
+          class="hidden sm:inline-flex items-center h-10 px-5 rounded-xl text-sm font-bold text-primary bg-secondary hover:bg-secondary active:text-primary shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
         >
           {{ professional ? 'Mi perfil' : 'Publícate' }}
         </UButton>
