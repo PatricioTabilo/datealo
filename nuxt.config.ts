@@ -4,6 +4,11 @@ export default defineNuxtConfig({
 
   modules: ['@nuxt/ui'],
 
+  // Sin modo oscuro propio (ningún mockup ni componente lo diseña): sin esto, Nuxt UI instala
+  // @nuxtjs/color-mode y cambia el tono de `primary` según la preferencia de sistema del visitante,
+  // desviando la marca del hex exacto sin ningún propósito.
+  ui: { colorMode: false },
+
   devtools: { enabled: true },
 
   devServer: { port: 3001 },
