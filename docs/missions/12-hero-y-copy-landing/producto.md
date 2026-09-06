@@ -1,8 +1,9 @@
 # Misión: hero y copy de la landing — Producto
 
-**Estado:** vigente — aprobado por Patricio el 2026-09-04, con F-002/D-004 sumadas y aceptadas el mismo día
+**Estado:** vigente — aprobado por Patricio el 2026-09-04, con F-002/D-004 sumadas el mismo día y D-005
+sumada y aceptada el 2026-09-06
 
-**Última actualización:** 2026-09-04
+**Última actualización:** 2026-09-06
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -48,7 +49,7 @@ en "Fuera de alcance" hasta que se retome.
 
 | ID    | Funcionalidad                  | Lado    | Sustento             | Éxito |
 | ----- | ------------------------------ | ------- | ---------------------- | ----- |
-| F-001 | Revisar hero y copy de la landing | buscador | C-001 a C-006, D-001 a D-003 | M-001 |
+| F-001 | Revisar hero y copy de la landing | buscador | C-001 a C-006, D-001 a D-003, D-005 | M-001 |
 | F-002 | Reemplazar el CTA "Para profesionales" del nav de la landing | profesional | C-007, D-004 | M-002 |
 
 <a id="f-001"></a>
@@ -269,6 +270,28 @@ necesitando su propio buscador en ese caso — ver "Fuera de alcance".
   del nav (Categorías, Buscar) no cambia.
 - **Reapertura:** si se retoma la pregunta del buscador en el nav tras scroll (ver "Fuera de alcance"), se
   revisa si este link necesita moverse o reacomodarse junto a ese cambio.
+
+<a id="d-005"></a>
+
+### D-005 — El dropdown de categoría del buscador del hero muestra ícono y círculo de color por categoría, igual que el panel de `/buscar`
+
+- **Estado:** aceptada. **Fecha:** 2026-09-06.
+- **Sustento:** revisión en vivo del dueño de producto sobre la implementación de S-002 (D-003).
+- **Tensión:** D-003 dice que el hero reusa `CatalogSelect` tal cual (lista en texto plano, igual que
+  registro y perfil de profesional) vs. al ver el resultado en vivo, el dueño de producto lo comparó con
+  el dropdown real de `/buscar` (`CompactSearchBarPanel`, que sí muestra ícono por categoría) y lo pidió
+  explícitamente ahí.
+- **Alternativas descartadas:** dejar el dropdown en texto plano, tal como quedó definido en D-003 — se
+  descarta porque el dueño de producto, viéndolo al lado del de `/buscar`, lo pidió explícitamente distinto
+  al aprobado originalmente; reemplazar `CatalogSelect` por `CompactSearchBarPanel` en el hero — se
+  descarta porque reintroduce el sheet/panel que UX-001 ya rechazó para el hero (los dos campos deben
+  seguir siempre visibles, sin abrir un panel aparte); esto es solo la lista interna de opciones, no el
+  mecanismo de apertura.
+- **Decisión y consecuencia:** `CatalogSelect` gana un prop opcional para mapear cada opción a un ícono
+  (reusando `CATEGORIA_ICONS`, la misma fuente que ya usa `CompactSearchBarPanel`) — sin ese prop, se ve
+  igual que hoy (registro y perfil de profesional no cambian). El campo de comuna del hero usa el mismo
+  ícono de pin para todas las opciones, igual que `CompactSearchBarPanel`.
+- **Reapertura:** —.
 
 ## Preguntas
 

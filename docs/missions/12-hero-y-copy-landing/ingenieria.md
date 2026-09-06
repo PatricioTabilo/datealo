@@ -1,6 +1,7 @@
 # Misión: hero y copy de la landing — Ingeniería
 
-**Estado:** vigente — aprobado por Patricio el 2026-09-06
+**Estado:** vigente — aprobado por Patricio el 2026-09-06, con TC-004 sumado y aceptado el mismo día
+(ícono por opción en el dropdown, [D-005](./producto.md#d-005))
 
 **Última actualización:** 2026-09-06
 
@@ -102,6 +103,22 @@ implementación (fetch, filtrado, apertura de la lista) sigue escondida en `Cata
   sesión, sin cambios de esta misión.
 - **Contrato de producto:** [F-002](./producto.md#f-002), [D-004](./producto.md#d-004).
 
+### TC-004 — `CatalogSelect` acepta un mapeo opcional de ícono por opción, sin cambiar su comportamiento por defecto
+
+- **Entrada:** un prop nuevo, opcional, en `CatalogSelect.vue`: `itemIcon?: (value: string) => Component`.
+  Sin valor, la lista se ve igual que hoy (texto plano) — mismo criterio aditivo que TC-001.
+  `CategoriaSelect.vue` lo reenvía como `itemIcon={(slug) => CATEGORIA_ICONS[slug] ?? Wrench}` (la misma
+  fuente que ya usa `CompactSearchBarPanel.vue`); `ComunaSelect.vue` lo reenvía como una función constante
+  que siempre devuelve `MapPin`.
+- **Salida:** cuando `itemIcon` viene definido, cada opción de la lista renderiza el resultado de
+  `itemIcon(item.value)` dentro de un círculo `bg-datealo-surface text-primary` (mismo estilo que
+  `CompactSearchBarPanel.vue`), antes del label. Sin `itemIcon`, la opción renderiza solo el label, igual
+  que hoy.
+- **Invariantes:** `profesional/registro.vue` y `profesional/perfil.vue`, que no pasan `itemIcon`, se ven
+  idénticos a antes del cambio. La selección, el filtrado y los estados de carga/error no cambian.
+- **Errores:** ninguno nuevo.
+- **Contrato de producto:** [D-005](./producto.md#d-005).
+
 ## Modelo de datos
 
 No aplica. `LANDING_HERO`, `LANDING_SOLUTION` y `LANDING_FINAL_CTA` son constantes estáticas en
@@ -142,7 +159,7 @@ texto. Ningún dato de usuario ni de negocio se lee o escribe como parte de esta
 
 | ID     | Riesgo o pregunta | Qué invalida | Experimento o mitigación | Criterio de salida | Estado |
 | ------ | ------------------ | ------------- | -------------------------- | -------------------- | ------ |
-| TR-001 | El override de `placeholder`/`leadingIcon` de TC-001 podría filtrarse sin querer a `profesional/registro.vue` o `profesional/perfil.vue`, cambiando esas pantallas fuera del alcance de F-001 | El alcance ("no toca" otras pantallas) | Los props son opcionales con default `undefined`, y el mismo slice que los agrega verifica visualmente esas dos pantallas (`npm run dev`, 390px) sin pasar los props nuevos | Registro y perfil de profesional se ven idénticos a antes del cambio | abierto |
+| TR-001 | El override de `placeholder`/`leadingIcon`/`itemIcon` (TC-001, TC-004) podría filtrarse sin querer a `profesional/registro.vue` o `profesional/perfil.vue`, cambiando esas pantallas fuera del alcance de F-001 | El alcance ("no toca" otras pantallas) | Los props son opcionales con default `undefined`, y el mismo slice que los agrega verifica visualmente esas dos pantallas (`npm run dev`, 390px) sin pasar los props nuevos | Registro y perfil de profesional se ven idénticos a antes del cambio | abierto |
 | TR-002 | El comentario de pausa del [issue #155](https://github.com/PatricioTabilo/datealo/issues/155) nombra "el CTA 'Publícate' como texto" junto al bug de mobile, sin aislar si el bug era del buscador tras scroll (fuera de este alcance), del CTA, o de ambos. Tampoco está definido qué muestra el link mientras `useProfessionalSession()` resuelve (el `await` inicial) | El criterio de aceptación de S-003 ("sin cambios de scroll, se ve igual que antes salvo el link") | Verificación manual en mobile (390px) del link nuevo, con y sin sesión, antes de dar S-003 por aceptado — si aparece algo parecido al bug original, se investiga como parte del mismo slice, no se ignora asumiendo que ya estaba resuelto | El link se ve y navega bien en 390px, en los tres momentos: cargando, sin sesión, con sesión | abierto |
 
 ## Estrategia de pruebas
@@ -167,7 +184,7 @@ texto. Ningún dato de usuario ni de negocio se lee o escribe como parte de esta
 | ID    | Slice (una frase, sin "y")                                        | Sustento                    | Criterio de aceptación principal | Depende de |
 | ----- | -------------------------------------------------------------------- | ------------------------------ | ------------------------------------ | ---------- |
 | S-001 | Reescribir el copy del hero, `LandingSolution` y `LandingFinalCta` sin "verificado" | D-001, D-002, C-001 a C-004, C-006 | El texto de `app/constants/landing.ts` queda como en "Contenido final" de arriba; ninguna cadena visible en la landing usa "verificado"/"verificados" para describir profesionales; `npx nuxi typecheck` y `npm run build` pasan | — |
-| S-002 | Rediseñar el buscador del hero como pill segmentada con íconos, siguiendo `CompactSearchBar` | D-003, UX-001, UX-002, TC-001, TC-002 | `placeholder`/`leadingIcon` quedan declarados con `defineProps` propio en `CategoriaSelect.vue`/`ComunaSelect.vue` (no por fallthrough), `leadingIcon` tipado `string` (nombre Iconify, no `Component`). Mobile: dos campos apilados con ícono + botón ancho abajo. Desktop: pill horizontal con los dos campos y el botón. Tocar "Buscar" con los dos campos elegidos navega a `/buscar` con la query; incompleto, hace shake y no navega. `profesional/registro.vue` y `profesional/perfil.vue` sin cambios visuales (TR-001). `npx nuxi typecheck` y `npm run build` pasan | S-001 (usa el copy ya actualizado en los placeholders de las pruebas manuales, aunque el componente en sí no depende del texto) |
+| S-002 | Rediseñar el buscador del hero como pill segmentada con íconos, siguiendo `CompactSearchBar` | D-003, D-005, UX-001, UX-002, TC-001, TC-002, TC-004 | `placeholder`/`leadingIcon` quedan declarados con `defineProps` propio en `CategoriaSelect.vue`/`ComunaSelect.vue` (no por fallthrough), `leadingIcon` tipado `string` (nombre Iconify, no `Component`). Mobile: dos campos apilados con ícono + botón ancho abajo. Desktop: pill horizontal con los dos campos y el botón. El dropdown de categoría muestra ícono por opción (`CATEGORIA_ICONS`), el de comuna muestra `MapPin` en todas (TC-004). Tocar "Buscar" con los dos campos elegidos navega a `/buscar` con la query; incompleto, hace shake y no navega. `profesional/registro.vue` y `profesional/perfil.vue` sin cambios visuales (TR-001). `npx nuxi typecheck` y `npm run build` pasan | S-001 (usa el copy ya actualizado en los placeholders de las pruebas manuales, aunque el componente en sí no depende del texto) |
 | S-003 | Reemplazar "Para profesionales" en `LandingNavbar` por "Publícate"/"Mi perfil" | D-004, TC-003 | Sin sesión, el link dice "Publícate" y navega a `/profesional/registro`; con sesión (`useProfessionalSession`), dice "Mi perfil" y navega a `/profesional/perfil`. Categorías, Buscar y el comportamiento de scroll del nav no cambian. Verificación manual en mobile (390px), en los tres momentos (cargando, sin sesión, con sesión), sin el bug de mobile que motivó pausar el issue #155 (TR-002). `npx nuxi typecheck` y `npm run build` pasan | — |
 
 ## Decisiones técnicas
