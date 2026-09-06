@@ -1,6 +1,7 @@
 # Misión 12 — Hero y copy de la landing
 
-**Tipo:** producto. **Abierta el** 2026-09-01. **Nace de:** división de la misión 09 (ver su
+**Tipo:** producto. **Carril:** Light Spec — copy y hero de landing, sin RLS, sin dato de usuario, 100%
+reversible. **Abierta el** 2026-09-01. **Nace de:** división de la misión 09 (ver su
 [README](../09-layout-general/README.md)) — investigación ya hecha, movida acá con su contenido.
 
 **Estado de la misión:** lista para construir
@@ -19,6 +20,12 @@ S-002 buscador del hero, S-003 CTA de profesionales del nav), auditado en contex
 **Próximo hito:** crear los issues de los tres slices y abrir el primer PR de delivery (S-001) — la misión
 09 ya cerró, así que deja de bloquear el único cupo de misión `en construcción` a la vez. TR-002 sigue
 abierto: verificar en mobile que el CTA del nav no repite el bug que pausó el issue #155.
+
+**Corrección durante delivery (2026-09-06):** al ver S-002 implementado en vivo, Patricio pidió que el
+dropdown de categoría del buscador del hero muestre ícono por opción, igual que el panel de `/buscar`
+(`CompactSearchBarPanel`) — D-003 original solo pedía texto plano, igual que el resto de la app. Se
+registró como [D-005](./producto.md#d-005) y [TC-004](./ingenieria.md#tc-004) antes de seguir con el
+código, según el loop de vuelta de `discovery-product`.
 
 ## Brief
 

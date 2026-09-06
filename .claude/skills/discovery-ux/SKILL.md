@@ -107,13 +107,15 @@ desde producto — no en paralelo a una revisión de `producto.md` "para mantene
 - cada flujo crítico está mockeado en móvil, y en desktop si también vive ahí
 - no quedan pantallas descritas como "similar a X" sin especificar qué cambia
 - cada `UXF-xxx` no trivial pasó por "Divergencia antes de converger" antes de fijar su enfoque
-- los flujos críticos pasaron una evaluación heurística en un contexto separado (ver "Evaluar antes de
-  cerrar, en un contexto separado" más abajo) y sus hallazgos bloqueantes están resueltos, y todo hallazgo
-  de enfoque volvió a divergencia en vez de parcharse
+- si el **Carril** de la misión (ver `docs/missions/README.md#carril-según-riesgo`) es Full Spec, los
+  flujos críticos pasaron una evaluación heurística en un contexto separado (ver "Evaluar antes de cerrar,
+  en un contexto separado" más abajo) y sus hallazgos bloqueantes están resueltos, y todo hallazgo de
+  enfoque volvió a divergencia en vez de parcharse. En Light Spec el paso es opcional y no bloquea el gate.
 - cada string de contenido (Estados por superficie, columnas "Información visible" de las secuencias,
   mockups) pasó el "Barrido de copy" contra `ux-writing` — la evaluación heurística general no lo reemplaza
 
-**Evaluar antes de cerrar, en un contexto separado:** proponer y juzgar son actos distintos, y hacerlos en
+**Evaluar antes de cerrar, en un contexto separado** (obligatorio en Full Spec, opcional en Light Spec):
+proponer y juzgar son actos distintos, y hacerlos en
 la misma pasada produce ceguera — el flujo recién escrito parece bueno porque uno acaba de convencerse a sí
 mismo de por qué cada decisión tiene sentido. Esa ceguera no se resuelve "prestando más atención": la
 conversación que escribió el flujo ya tiene la narrativa de por qué está bien, y esa narrativa contamina
