@@ -41,6 +41,16 @@ que ya nos pidieron?".
 - Funciones: camelCase.
 - Named exports sobre default exports.
 
+## Tamaño de texto
+
+Piso tipográfico (misión 13, D-001/D-002): ningún texto de uso frecuente —el que alguien lee para decidir
+algo o que bloquea completar una tarea (nombre, precio, comuna, descripción, reseña, mensaje de error,
+botón de acción)— se escribe en `text-xs` (12px) ni en un `UButton`/`UInput` con `size` que rinda menos de
+16px. El texto principal de una pantalla o card va en `text-base` (16px); su secundario, en `text-sm`
+(14px) como mínimo. `text-xs` queda solo para lo que se lee una sola vez y no decide nada: un label de
+sección ("Categorías"), una fecha relativa, un badge. Ante la duda de si algo es "uso frecuente" o
+"se lee una vez", pensar si un error ahí bloquea una tarea o informa una decisión — si sí, sube.
+
 ## Componentes Vue, mínimo
 
 - Siempre `<script setup lang="ts">`.

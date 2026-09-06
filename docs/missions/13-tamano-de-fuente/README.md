@@ -3,17 +3,21 @@
 **Tipo:** producto. **Carril:** Light Spec — cambio visual, sin RLS, sin dato de usuario, 100% reversible.
 **Abierta el** 2026-09-06. **Nace de:** ninguna.
 
-**Estado de la misión:** exploración
+**Estado de la misión:** lista para construir
 
-**En foco:** Investigación
+**En foco:** ninguno — discovery completo, falta abrir el PR
 
 **Última actualización:** 2026-09-06
 
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** completar `investigacion.md` con el problema concreto y benchmark de tamaños de fuente
-contra productos comparables — sin fecha límite todavía, recién se abre la misión.
+**Próximo hito:** los cuatro documentos están vigentes — aprobados por Patricio el 2026-09-06. Sigue
+abrir el PR de discovery con los tres documentos que requieren aprobación (producto/experiencia/ingeniería,
+más `README.md` y `design-mockups/`) sobre esta misma rama (`worktree-abrir-misiones-13-14-15`, donde ya
+vive el PR #213 abierto). Después: mergear → `ExitWorktree action: "remove"` → recién ahí crear los issues
+S-001 a S-003 en la raíz. [Q-001](./producto.md#q-001) sigue abierta sin bloquear — se resuelve con
+[TR-001](./ingenieria.md), revisando la captura real de cada slice antes de su PR.
 
 ## Brief
 

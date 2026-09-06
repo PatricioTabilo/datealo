@@ -21,7 +21,7 @@ abrieron y de dónde salió cada una.
 | 10  | [vista de resultados de búsqueda](./10-vista-resultados-busqueda/) | producto | 2026-09-01 | cerrada 2026-09-04 | — | — |
 | 11  | [vista de detalle de perfil](./11-perfil-profesional/) | producto | 2026-09-01 | cerrada 2026-09-04 | — | — |
 | 12  | [hero y copy de la landing](./12-hero-y-copy-landing/) | producto | 2026-09-01 | cerrada 2026-09-06 | — | — |
-| 13  | [tamaño de fuente](./13-tamano-de-fuente/) | producto | 2026-09-06 | exploración | Investigación | — |
+| 13  | [tamaño de fuente](./13-tamano-de-fuente/) | producto | 2026-09-06 | lista para construir | — | — |
 | 14  | [múltiples categorías por profesional](./14-multiples-categorias-profesional/) | producto | 2026-09-06 | exploración | Investigación | — |
 | 15  | [múltiples comunas por profesional](./15-multiples-comunas-profesional/) | producto | 2026-09-06 | exploración | Investigación | — |
 

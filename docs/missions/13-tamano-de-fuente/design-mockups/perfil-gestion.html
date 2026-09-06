@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>V-003 Perfil de gestión — misión 13</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+      <!-- ANTES -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 · perfil de gestión (privado)
+          <small>antes — text-sm/text-xs, código actual</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="px-5 pt-4" style="background: var(--color-datealo-bg, #fafafa)">
+            <h1 class="text-xl font-extrabold" style="color: var(--color-datealo-text)">María Fernanda Rojas Ilabaca</h1>
+            <p class="mt-0.5 text-sm" style="color: var(--color-datealo-muted)">Gasfitería · San José de Maipo</p>
+
+            <div class="mt-6">
+              <p class="text-sm font-semibold" style="color: var(--color-datealo-text)">Descripción</p>
+              <p class="mt-1 text-sm" style="color: var(--color-datealo-text)">
+                Gasfiter con 12 años de experiencia. Reparaciones, instalaciones y mantención.
+              </p>
+              <p class="mt-1 text-xs font-semibold text-primary underline">Editar</p>
+            </div>
+
+            <div class="mt-6">
+              <p class="text-sm font-semibold" style="color: var(--color-datealo-text)">Precio</p>
+              <p class="mt-1 text-sm" style="color: var(--color-datealo-text)">Desde $25.000</p>
+              <p class="mt-2 text-right text-xs font-semibold text-error">No se pudo guardar, toca para reintentar</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DESPUÉS -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 · perfil de gestión (privado)
+          <small>después — D-001: descripción/precio en text-base, "Editar" y errores de validación en text-sm</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="px-5 pt-4" style="background: var(--color-datealo-bg, #fafafa)">
+            <h1 class="text-xl font-extrabold" style="color: var(--color-datealo-text)">María Fernanda Rojas Ilabaca</h1>
+            <p class="mt-0.5 text-sm" style="color: var(--color-datealo-muted)">Gasfitería · San José de Maipo</p>
+
+            <div class="mt-6">
+              <p class="text-base font-semibold" style="color: var(--color-datealo-text)">Descripción</p>
+              <p class="mt-1 text-base" style="color: var(--color-datealo-text)">
+                Gasfiter con 12 años de experiencia. Reparaciones, instalaciones y mantención.
+              </p>
+              <p class="mt-1 text-sm font-semibold text-primary underline">Editar</p>
+            </div>
+
+            <div class="mt-6">
+              <p class="text-base font-semibold" style="color: var(--color-datealo-text)">Precio</p>
+              <p class="mt-1 text-base" style="color: var(--color-datealo-text)">Desde $25.000</p>
+              <p class="mt-2 text-right text-sm font-semibold text-error">No se pudo guardar, toca para reintentar</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

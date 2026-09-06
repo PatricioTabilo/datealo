@@ -1,8 +1,8 @@
-# Misión: <nombre> — Ingeniería
+# Misión 13: Tamaño de fuente — Ingeniería
 
-**Estado:** borrador
+**Estado:** vigente — aprobado por Patricio el 2026-09-06
 
-**Última actualización:** AAAA-MM-DD
+**Última actualización:** 2026-09-06
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -24,26 +24,30 @@ Gate de salida — ingenieria.md está lista para construir cuando:
 - el plan de construcción corta el diseño en slices atómicos ordenados (un slice = un Issue = un PR)
 -->
 
-## Decisión técnica: <arquitectura y riesgo principal>
+## Decisión técnica: cambiar clases y props de tamaño, archivo por archivo, sin config global
 
-<Dirección técnica, trade-off principal y el riesgo que todavía podría invalidarla.>
+F-001 se implementa cambiando clases Tailwind (`text-xs`→`text-sm`, `text-sm`→`text-base`) y props `size`
+de Nuxt UI (`UButton`, `UInput`) directo en cada uno de los 18 archivos que `producto.md` ya enumeró. El
+riesgo principal era el mecanismo de D-002 ("default a prueba de error"): la investigación de ingeniería
+encontró que un override global en `app.config.ts` del tema de `button` (ej. redefinir que `size="lg"`
+rinda 16px) tiene un radio de efecto que se sale del alcance de la misión — `size="lg"` también lo usan los
+botones "Reintentar" de `buscar/index.vue`/`[id].vue` (que esta misión decidió no tocar, ya cumplen el piso
+de 14px) y los `UButton` de `registro.vue`/`ingresar.vue` (explícitamente fuera de alcance). Cambiar el
+tema global subiría esas pantallas sin que nadie lo haya pedido ni revisado. Por eso D-002 se resuelve con
+cambios explícitos por instancia para el código que ya existe, y con el piso tipográfico agregado al skill
+`write-code` (invocado obligatoriamente antes de cualquier edición de `.vue`/`.ts`) para el texto que se
+escriba después — ver [T-001](#t-001).
 
-- **Contratos de producto cubiertos:** F-001, <otros>.
-- **Riesgo bloqueante:** <incertidumbre o "ninguna">.
+- **Contratos de producto cubiertos:** F-001.
+- **Riesgo bloqueante:** ninguno.
 
-## Arquitectura: <cómo se divide la responsabilidad>
+## Arquitectura: no hay una nueva — es un cambio de presentación sobre componentes existentes
 
-<!--
-La lógica de negocio se separa de la infraestructura: funciones puras en utils/ y server/utils/,
-reactividad en composables, acceso a datos en server/api/ con Drizzle. Incluye diagrama solo cuando tres o
-más partes interactúan.
--->
-
-<Descripción del enfoque y por qué satisface los contratos con menor riesgo.>
-
-| Componente | Responsabilidad       | No debe decidir | Contratos |
-| ---------- | --------------------- | --------------- | --------- |
-| <nombre>   | <una responsabilidad> | <frontera>      | F-001     |
+Esta misión no introduce lógica de negocio, funciones puras, composables ni endpoints — es cambiar el
+valor de una prop (`class`, `size`) en 18 archivos ya existentes. No hay responsabilidad nueva que dividir
+ni frontera nueva que trazar: forzar una tabla de "componente → responsabilidad" acá describiría una
+arquitectura que no existe. La única decisión de diseño real es T-001 (mecanismo de D-002), ya resuelta
+arriba.
 
 ## Contratos
 
@@ -52,26 +56,17 @@ Cada contrato especifica entrada, salida e invariantes al nivel en que se puede 
 de aclaración. Incluye los errores observables y el código HTTP cuando es un endpoint.
 -->
 
-### TC-001 — <contrato en una frase>
-
-- **Entrada:** <datos y precondiciones, con tipos y forma concreta>.
-- **Salida:** <resultado y su forma concreta>.
-- **Invariantes:** <qué se cumple siempre: atomicidad, consistencia, idempotencia>.
-- **Errores:** <condición → código HTTP y cuerpo `{ error, code? }`, y qué puede hacer el llamador>.
-- **Contrato de producto:** [F-001](./producto.md#f-001).
+Sin contratos nuevos ni modificados: F-001 no cambia qué datos entran o salen de ningún endpoint, ni las
+props públicas de ningún componente (`CategoriaSelect`/`ComunaSelect` siguen recibiendo `modelValue`/`size`
+igual que antes; `SearchResultCard` sigue recibiendo `professional`/`vecina`). Cambia únicamente el interior
+de sus templates.
 
 ## Modelo de datos
 
 <!-- Entidades con significado, escritura y ciclo de vida. El schema completo vive en server/db/. -->
 
-| Entidad o campo | Significado             | Escritura          | Retención o historial |
-| --------------- | ----------------------- | ------------------ | --------------------- |
-| <dato>          | <semántica de producto> | <endpoint o acción>| <política>            |
-
-### Invariantes de datos
-
-- <unicidad, pertenencia, orden o consistencia temporal>.
-- <qué operación es atómica o qué dato tiene una única fuente de verdad>.
+No aplica — F-001 no crea, modifica ni lee ninguna tabla, columna o entidad. No hay datos nuevos que
+tengan significado, escritura o retención que documentar.
 
 ### Impacto en RLS
 
@@ -80,9 +75,11 @@ Obligatorio. Fuente de verdad: server/db/sql/rls.sql. Si el cambio no toca owner
 en policies, decirlo explícitamente con esa razón — no dejar la sección vacía.
 -->
 
-| Tabla    | Cambio                 | Policy afectada | Acción                    |
-| -------- | ---------------------- | --------------- | ------------------------- |
-| <tabla>  | <nueva, ownership, FK> | <nombre>        | <crear, actualizar, nada> |
+Ninguno. Corrí el checklist de `seguridad-datos` contra este diseño: no hay tabla ni bucket nuevo o
+modificado, no cambia qué usa el cliente de Supabase del browser (`app/plugins/supabase.client.ts` sigue
+llamando exactamente a lo mismo), no hay función `SECURITY DEFINER` ni verificación de pertenencia que
+tocar — F-001 no le agrega ni le quita superficie a PostgREST/Storage. El checklist no aplica punto por
+punto porque su precondición (tocar datos) no se cumple.
 
 ## Riesgos y experimentos de factibilidad
 
@@ -91,22 +88,28 @@ Un riesgo que podría cambiar el producto se enlaza como pregunta o decisión en
 tiene pregunta, límite de tiempo y resultado capaz de cerrar la incertidumbre.
 -->
 
-| ID     | Riesgo o pregunta | Qué invalida        | Experimento o mitigación  | Criterio de salida      | Estado  |
-| ------ | ----------------- | ------------------- | ------------------------- | ----------------------- | ------- |
-| TR-001 | <incertidumbre>   | <alcance en riesgo> | <spike, prueba o recorte> | <resultado concluyente> | abierto |
+| ID     | Riesgo o pregunta                                                                 | Qué invalida | Experimento o mitigación | Criterio de salida | Estado |
+| ------ | ------------------------------------------------------------------------------------ | -------------- | --------------------------- | --------------------- | -------- |
+| TR-001 | Los mockups usan Tailwind puro (aproximación); Nuxt UI real puede espaciar distinto y romper algún layout que el mockup no capturó | UX-001 (jerarquía sin tocar peso/color) — no D-001/F-001 en sí | Captura con Playwright en 390px de cada slice ya implementado, antes de abrir su PR | El dueño de producto revisa la captura real y confirma que sostiene lo que muestra el mockup — esto es lo que cierra [Q-001](./producto.md#q-001) | abierto |
 
 ## Estrategia de pruebas
 
 <!-- Mapea los ejemplos verificables de producto.md a niveles de prueba. Qué demuestra cada una. -->
 
-| Contrato o riesgo | Nivel                          | Caso principal | Límite o falla |
-| ----------------- | ------------------------------ | -------------- | -------------- |
-| F-001, CL-001     | <unidad, contrato, integración>| <caso>         | <caso>         |
+No hay lógica pura ni contrato de API que probar con unidad/integración — F-001 es presentación. La
+verificación es la que ya define [M-001](./producto.md#m-001) en `producto.md`:
+
+| Contrato o riesgo | Nivel                                  | Caso principal                                                        | Límite o falla |
+| ------------------- | ------------------------------------------ | -------------------------------------------------------------------------- | ------------------ |
+| F-001              | estático (grep contra la lista de `producto.md`) | cero clases `text-xs`/`size="sm"` restantes en los elementos listados como "sube", por archivo | un elemento exento (ej. "En Datealo desde…") aparece en el grep y hay que confirmar a mano que sigue en la lista de exentos, no que se filtró |
+| F-001, CL-001      | visual (Playwright, 390px, por slice)   | captura de cada vista con datos reales (incluido el nombre largo de CL-001) sin overflow ni layout roto | TR-001: la captura no sostiene lo que muestra el mockup → vuelve a UX-001, no se parcha en el PR |
 
 ### Propiedades que deben probarse
 
-- <invariante bajo reintentos, concurrencia o distintas entradas>.
-- <ausencia de efectos parciales en falla>.
+- El truncado (`truncate`, `…`) sigue activo en nombre y comuna con el tamaño nuevo — CL-001 no depende
+  de un ancho fijo que el tamaño más grande pueda romper.
+- Ningún elemento de la lista "sube" de `producto.md` queda en 12px o en un `size` que rinda 12-14px por
+  debajo de lo que esa fila pide — verificable con el mismo grep que usa M-001.
 
 ## Plan de construcción
 
@@ -117,9 +120,16 @@ Issue, un PR, ejecutable sin haber leído la misión (el issue lleva su contrato
 pass/fail enumerables como tests. Guía completa en el skill discovery-engineering.
 -->
 
-| ID    | Slice (una frase, sin "y") | Sustento      | Criterio de aceptación principal          | Depende de |
-| ----- | -------------------------- | ------------- | ----------------------------------------- | ---------- |
-| S-001 | <cambio atómico>           | TC-001, D-001 | <entrada concreta → resultado observable> | —          |
+Eje de corte: por vista (V-001/V-002/V-003), no por tipo de cambio (ej. "todos los botones" separado de
+"todos los textos") — cada slice es revisable y verificable de forma aislada en una sola pantalla, sin
+esperar a que otro slice termine, y el riesgo es parejo entre los tres (ningún slice es más incierto que
+otro, así que no hay un eje de riesgo que priorizar por encima del de superficie).
+
+| ID    | Slice (una frase, sin "y")                                    | Sustento                        | Criterio de aceptación principal | Depende de |
+| ----- | ----------------------------------------------------------------- | ------------------------------------ | ------------------------------------- | ------------ |
+| S-001 | Subir el tamaño de texto del buscador y la card de resultados     | F-001, D-001, D-002, CL-001, [E-005](./investigacion.md#e-005) | Con "María Fernanda Rojas Ilabaca" en "San José de Maipo" y $25.000 en `/buscar` a 390px: el nombre se ve en 16px bold, comuna/rating/precio/contador en 14px, "En Datealo desde…" sin cambio, el botón "Buscar" del selector en 16px, y el nombre sigue truncando con `…` sin desbordar la card | — |
+| S-002 | Subir el tamaño de texto del perfil público y su CTA de contacto  | F-001, D-001, D-002                  | En `/profesionales/[id]` a 390px: descripción y precio en 16px, "Escribir por WhatsApp" en 16px real (no 14px pese a `size="lg"`), "Reseñas" y el contenido de cada reseña en 16px, "En Datealo desde…" y la fecha relativa sin cambio | — |
+| S-003 | Subir el tamaño de texto del perfil de gestión y sus componentes  | F-001, D-001, D-002                  | En `/profesional/perfil` a 390px: "Descripción"/"Precio" y sus valores en 16px, "Editar" y los mensajes de error de guardado en 14px, los inputs de precio y "Tus datos" en 16px (sin `size="sm"`), el botón "Reintentar" del selector de categoría/comuna en 14px (no 12px) | — |
 
 ## Secciones bajo demanda
 
@@ -139,13 +149,39 @@ Agregar solo cuando el riesgo lo justifique, con estos títulos:
 
 <a id="t-001"></a>
 
-### T-001 — <decisión en una frase>
+### T-001 — El código se corrige archivo por archivo; el piso a futuro se hace cumplir vía el skill `write-code`, no vía config ni lint
 
-- **Estado:** propuesta, aceptada, reemplazada o descartada. **Fecha:** AAAA-MM-DD.
-- **Contratos:** F-001 y <regla relevante>.
-- **Alternativas descartadas:** <opciones y trade-offs, con el porqué del rechazo>.
-- **Decisión y consecuencias:** <enfoque elegido, beneficio, costo y trabajo futuro aceptado>.
-- **Reapertura:** <medición o cambio que justificaría revisar>.
+- **Estado:** aceptada — aprobado por Patricio el 2026-09-06. **Fecha:** 2026-09-06.
+- **Contratos:** F-001, [D-002](./producto.md#d-002).
+- **Alternativas descartadas:**
+  - Sobrescribir en `app.config.ts` el tamaño real de `size="lg"`/`"sm"` de `button`/`input` para que
+    "por default" rindan más grande — descartada: `size="lg"` lo usan también los botones "Reintentar" de
+    `buscar/index.vue`/`[id].vue`, que esta misión decidió dejar en 14px, y los `UButton` de
+    `registro.vue`/`ingresar.vue`, explícitamente fuera de alcance. Un override global los sube a todos
+    sin que nadie lo haya pedido — CL-002 de `producto.md` ya anticipaba este riesgo, y acá se confirma
+    que el radio de efecto es demasiado ancho para esta misión.
+  - Una regla de lint/CI que bloquee `text-xs`/`size="sm"` — descartada: para verificar si una instancia
+    puntual es "de uso frecuente" (sube) o "se lee una vez" (exenta) un lint necesitaría esa distinción
+    marcada en el código de alguna forma (un atributo, una convención de nombre) que hoy no existe;
+    construir esa marca solo para este chequeo es una abstracción a la medida de una herramienta, no del
+    problema.
+  - No decir nada y confiar en que el patrón ya escrito en `producto.md` se recuerde solo — descartada:
+    es exactamente lo que ya falló una vez en esta misión (los inputs con `size="sm"` que rompían un
+    supuesto que el propio documento daba por hecho); una regla que nadie vuelve a leer se repite.
+- **Decisión y consecuencias:** cada slice (S-001 a S-003) cambia las clases y props `size` directo en los
+  archivos que `producto.md` ya enumeró. Para el código que ya existe, esto cierra el problema. Para texto
+  nuevo que se escriba después de esta misión, el piso tipográfico (texto de uso frecuente nunca en 12px;
+  principal en 16px, secundario en 14px como mínimo) quedó agregado al skill `write-code`
+  (`.claude/skills/write-code/SKILL.md`), que el proyecto invoca **obligatoriamente** antes de escribir o
+  editar cualquier `.vue`/`.ts` (`write-code.global.md`) — no es una guía que alguien podría no leer, es
+  un paso del flujo de edición, igual que el `typecheck` antes de cerrar un cambio. Consecuencia aceptada:
+  esto depende de que el skill se siga invocando (una garantía de proceso, no una imposibilidad técnica
+  como sería un tipo de TypeScript) — más débil que un lint, pero cubre el caso real (un desarrollador o
+  un agente escribiendo código nuevo) sin la abstracción a medida que exigiría automatizarlo hoy.
+- **Reapertura:** si el piso documentado en `write-code` se salta más de una vez en la práctica (alguien
+  edita un `.vue` sin que el skill se haya invocado, o lo invoca y aun así reintroduce 12px), reconsiderar
+  el lint descartado arriba — a esa altura ya habría evidencia real de que la marca semántica que hace
+  falta vale la pena construirse.
 
 ## Preguntas
 
@@ -154,9 +190,6 @@ Todas viven en esta tabla ordenada por ID, abiertas y cerradas juntas. Ningún I
 Estado: abierta | resuelta AAAA-MM-DD | disuelta AAAA-MM-DD. Solo las abiertas llevan bloque de detalle.
 -->
 
-<Una frase que responde "¿qué falta?": la pregunta que bloquea construcción y qué bloquea.>
-
-| ID     | La duda                | Estado              | Respuesta, o quién la resuelve                                  |
-| ------ | ---------------------- | ------------------- | --------------------------------------------------------------- |
-| TQ-001 | <la duda en una frase> | abierta             | <quién la resuelve, con qué método, qué bloquea y hasta cuándo> |
-| TQ-002 | <la duda en una frase> | resuelta AAAA-MM-DD | <qué se respondió, enlazando la decisión que la cerró>          |
+No hay ninguna pregunta abierta que bloquee la construcción. TR-001 (¿el layout real sostiene lo que
+muestra el mockup?) no bloquea empezar — se resuelve slice por slice, con la captura de cada PR, antes de
+mergearlo.

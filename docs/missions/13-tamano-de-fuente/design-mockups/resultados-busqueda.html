@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>V-001 Resultados de búsqueda — misión 13</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+      <!-- ANTES: tamaños actuales del código (text-sm / text-xs) -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · buscador + card de resultados
+          <small>antes — text-sm / text-xs, código actual</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-4" style="background: var(--color-datealo-bg, #fafafa)">
+            <button
+              type="button"
+              class="flex w-full items-center gap-2.5 rounded-full border bg-white px-4.5 py-3.5 text-left shadow-[0_6px_16px_-8px_rgba(31,41,55,0.15)]"
+              style="border-color: var(--color-datealo-surface)"
+            >
+              <span class="truncate text-sm font-bold" style="color: var(--color-datealo-text)"
+                >Gasfitería en Ñuñoa</span
+              >
+            </button>
+
+            <p class="mt-4 px-0.5 text-xs" style="color: var(--color-datealo-muted)">2 resultados</p>
+
+            <div class="mt-2 grid grid-cols-2 gap-3">
+              <div class="flex flex-col overflow-hidden rounded-2xl border bg-white" style="border-color: var(--color-datealo-surface)">
+                <div class="flex aspect-4/3 w-full items-center justify-center" style="background: color-mix(in srgb, var(--color-primary) 10%, white)">
+                  <div class="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-xl font-extrabold text-white">MF</div>
+                </div>
+                <div class="min-w-0 p-3.5">
+                  <p class="truncate text-sm font-bold" style="color: var(--color-datealo-text)">María Fernanda Rojas Ilabaca</p>
+                  <p class="truncate text-xs" style="color: var(--color-datealo-muted)">San José de Maipo</p>
+                  <div class="mt-1 flex items-center gap-1 text-xs">
+                    <span class="font-bold" style="color: var(--color-datealo-text)">★ 4,8</span>
+                    <span style="color: var(--color-datealo-muted)">· 23 reseñas</span>
+                  </div>
+                  <p class="mt-1 text-xs font-bold" style="color: var(--color-datealo-text)">Desde $25.000</p>
+                  <p class="mt-0.5" style="font-size: 0.6875rem; color: var(--color-datealo-muted)">En Datealo desde ago. 2026</p>
+                </div>
+              </div>
+
+              <div class="flex flex-col overflow-hidden rounded-2xl border bg-white" style="border-color: var(--color-datealo-surface)">
+                <div class="flex aspect-4/3 w-full items-center justify-center" style="background: color-mix(in srgb, var(--color-primary) 10%, white)">
+                  <div class="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-xl font-extrabold text-white">JP</div>
+                </div>
+                <div class="min-w-0 p-3.5">
+                  <p class="truncate text-sm font-bold" style="color: var(--color-datealo-text)">Juan Pérez</p>
+                  <p class="truncate text-xs" style="color: var(--color-datealo-muted)">Ñuñoa</p>
+                  <div class="mt-1 flex items-center gap-1 text-xs">
+                    <span class="font-bold" style="color: var(--color-datealo-text)">★ 4,6</span>
+                    <span style="color: var(--color-datealo-muted)">· 8 reseñas</span>
+                  </div>
+                  <p class="mt-1 text-xs font-bold" style="color: var(--color-datealo-text)">Desde $18.000</p>
+                  <p class="mt-0.5" style="font-size: 0.6875rem; color: var(--color-datealo-muted)">En Datealo desde jul. 2026</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DESPUÉS: D-001 aplicado (text-base / text-sm) -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · buscador + card de resultados
+          <small>después — D-001: text-base / text-sm</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-4" style="background: var(--color-datealo-bg, #fafafa)">
+            <button
+              type="button"
+              class="flex w-full items-center gap-2.5 rounded-full border bg-white px-4.5 py-3.5 text-left shadow-[0_6px_16px_-8px_rgba(31,41,55,0.15)]"
+              style="border-color: var(--color-datealo-surface)"
+            >
+              <span class="truncate text-base font-bold" style="color: var(--color-datealo-text)"
+                >Gasfitería en Ñuñoa</span
+              >
+            </button>
+
+            <p class="mt-4 px-0.5 text-sm" style="color: var(--color-datealo-muted)">2 resultados</p>
+
+            <div class="mt-2 grid grid-cols-2 gap-3">
+              <div class="flex flex-col overflow-hidden rounded-2xl border bg-white" style="border-color: var(--color-datealo-surface)">
+                <div class="flex aspect-4/3 w-full items-center justify-center" style="background: color-mix(in srgb, var(--color-primary) 10%, white)">
+                  <div class="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-xl font-extrabold text-white">MF</div>
+                </div>
+                <div class="min-w-0 p-3.5">
+                  <p class="truncate text-base font-bold" style="color: var(--color-datealo-text)">María Fernanda Rojas Ilabaca</p>
+                  <p class="truncate text-sm" style="color: var(--color-datealo-muted)">San José de Maipo</p>
+                  <div class="mt-1 flex items-center gap-1 text-sm">
+                    <span class="font-bold" style="color: var(--color-datealo-text)">★ 4,8</span>
+                    <span style="color: var(--color-datealo-muted)">· 23 reseñas</span>
+                  </div>
+                  <p class="mt-1 text-sm font-bold" style="color: var(--color-datealo-text)">Desde $25.000</p>
+                  <p class="mt-0.5 text-xs" style="color: var(--color-datealo-muted)">En Datealo desde ago. 2026</p>
+                </div>
+              </div>
+
+              <div class="flex flex-col overflow-hidden rounded-2xl border bg-white" style="border-color: var(--color-datealo-surface)">
+                <div class="flex aspect-4/3 w-full items-center justify-center" style="background: color-mix(in srgb, var(--color-primary) 10%, white)">
+                  <div class="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-xl font-extrabold text-white">JP</div>
+                </div>
+                <div class="min-w-0 p-3.5">
+                  <p class="truncate text-base font-bold" style="color: var(--color-datealo-text)">Juan Pérez</p>
+                  <p class="truncate text-sm" style="color: var(--color-datealo-muted)">Ñuñoa</p>
+                  <div class="mt-1 flex items-center gap-1 text-sm">
+                    <span class="font-bold" style="color: var(--color-datealo-text)">★ 4,6</span>
+                    <span style="color: var(--color-datealo-muted)">· 8 reseñas</span>
+                  </div>
+                  <p class="mt-1 text-sm font-bold" style="color: var(--color-datealo-text)">Desde $18.000</p>
+                  <p class="mt-0.5 text-xs" style="color: var(--color-datealo-muted)">En Datealo desde jul. 2026</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANTES: selector de categoría/comuna abierto (modo del buscador) -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · buscador, selector abierto
+          <small>antes — lista en text-sm, botón "Buscar" en 15px (`text-[0.9375rem]`, ni siquiera un token)</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div style="background: var(--color-datealo-bg, #fafafa)">
+            <div class="flex items-center justify-between px-5 py-4">
+              <p class="font-heading text-base font-extrabold" style="color: var(--color-datealo-text)">¿Qué necesitas?</p>
+              <div class="flex h-9 w-9 items-center justify-center rounded-full border" style="border-color: var(--color-datealo-surface)">✕</div>
+            </div>
+            <div class="px-4">
+              <p class="px-1 pb-1" style="font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-datealo-muted)">Categorías</p>
+              <div class="rounded-xl p-3 text-sm font-semibold" style="background: color-mix(in srgb, var(--color-primary) 8%, white); color: var(--color-datealo-text)">Gasfitería</div>
+              <div class="mt-1 rounded-xl p-3 text-sm font-semibold" style="color: var(--color-datealo-text)">Electricidad</div>
+              <div class="mt-1 rounded-xl p-3 text-sm font-semibold" style="color: var(--color-datealo-text)">Peluquería a domicilio</div>
+            </div>
+            <div class="mt-8 px-5 pb-5">
+              <div class="rounded-full bg-secondary py-4 text-center font-bold text-white" style="font-size: 0.9375rem">Buscar</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DESPUÉS: mismo modo, tamaños D-001 -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · buscador, selector abierto
+          <small>después — lista sin cambio (ya cumplía el piso bajo un título de 16px), botón "Buscar" en 16px real</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div style="background: var(--color-datealo-bg, #fafafa)">
+            <div class="flex items-center justify-between px-5 py-4">
+              <p class="font-heading text-base font-extrabold" style="color: var(--color-datealo-text)">¿Qué necesitas?</p>
+              <div class="flex h-9 w-9 items-center justify-center rounded-full border" style="border-color: var(--color-datealo-surface)">✕</div>
+            </div>
+            <div class="px-4">
+              <p class="px-1 pb-1" style="font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-datealo-muted)">Categorías</p>
+              <div class="rounded-xl p-3 text-sm font-semibold" style="background: color-mix(in srgb, var(--color-primary) 8%, white); color: var(--color-datealo-text)">Gasfitería</div>
+              <div class="mt-1 rounded-xl p-3 text-sm font-semibold" style="color: var(--color-datealo-text)">Electricidad</div>
+              <div class="mt-1 rounded-xl p-3 text-sm font-semibold" style="color: var(--color-datealo-text)">Peluquería a domicilio</div>
+            </div>
+            <div class="mt-8 px-5 pb-5">
+              <div class="rounded-full bg-secondary py-4 text-center text-base font-bold text-white">Buscar</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

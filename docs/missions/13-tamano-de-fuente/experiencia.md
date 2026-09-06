@@ -1,8 +1,8 @@
-# Misión: <nombre> — Experiencia
+# Misión 13: Tamaño de fuente — Experiencia
 
-**Estado:** borrador
+**Estado:** vigente — aprobado por Patricio el 2026-09-06
 
-**Última actualización:** AAAA-MM-DD
+**Última actualización:** 2026-09-06
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -25,12 +25,25 @@ Gate de salida — experiencia.md está lista para ingenieria.md cuando:
 - ninguna pantalla queda descrita como "similar a X" sin especificar qué cambia
 -->
 
-## Decisión de experiencia: <qué cambia para quien usa el producto>
+## Decisión de experiencia: subir el texto sin romper ni la jerarquía ni el layout de tres vistas existentes
 
-<Modelo de interacción elegido, flujo más importante y la incertidumbre que sigue abierta.>
+Esta misión no crea ninguna vista, modo ni flujo nuevo — sube el tamaño de texto (D-001) en tres vistas
+que ya existen (resultados de búsqueda, perfil público, perfil de gestión), y corrige el tamaño real del
+CTA de contacto y la regla de color (D-002). Por eso el foco de este documento no es diseñar un camino
+nuevo: es verificar, con mockups de las tres vistas en 390px y contenido realista (incluido el caso
+límite CL-001, un nombre y una comuna largos), que el texto más grande no rompe el truncado, no hace que
+la card crezca de forma rara y que la jerarquía entre texto principal y secundario se sigue notando solo
+con peso y color — la pregunta abierta en `producto.md` ([Q-001](./producto.md#q-001)).
 
-- **Funcionalidades cubiertas:** F-001, <otras>.
-- **Pendiente bloqueante:** <pregunta o "ninguna">.
+Los tres mockups (`design-mockups/resultados-busqueda.html`,
+`design-mockups/perfil-publico.html`, `design-mockups/perfil-gestion.html`) muestran que sí se sostiene:
+en las tres vistas el nombre en negrita se distingue de la comuna/metadata en gris incluso después de
+subir ambos un escalón. No encontré un caso donde la jerarquía se pierda con el tamaño nuevo — ver
+"Jerarquía de información" más abajo para el detalle.
+
+- **Funcionalidades cubiertas:** F-001.
+- **Pendiente bloqueante:** ninguno. Q-001 sigue formalmente abierta en `producto.md` (se resuelve ahí
+  con el PR ya implementado, no con este mockup estático), pero no bloquea pasar a `ingenieria.md`.
 
 ## Vistas
 
@@ -45,9 +58,15 @@ decisión (UX-xxx). Regla de formato para todo el documento: las tablas se reser
 cortas; lo que lleva justificación extensa va en secciones con header + bullets, nunca en una celda.
 -->
 
-- **V-001 — <vista>** · móvil / desktop · resuelve F-001 · flujos UXF-001 · pendiente
-  - modo **<nombre>** — <qué lo distingue y qué se puede hacer en él>
-  - modo **<nombre>** — <ídem>
+Las tres vistas ya existen (misiones 05, 06/10 y 04/11) y esta misión no les agrega ni les quita modos —
+solo cambia el tamaño de su texto. Se listan igual, por trazabilidad con F-001, con su nombre real en vez
+de un ID nuevo.
+
+- **V-001 — Resultados de búsqueda** (buscador + lista de cards) · móvil / desktop · resuelve F-001 ·
+  sin modos nuevos — ver el mapa de estados completo en la misión 06/10
+- **V-002 — Perfil público de profesional** · móvil / desktop · resuelve F-001 · sin modos nuevos — ver
+  la misión 05/11
+- **V-003 — Perfil de gestión (privado)** · móvil · resuelve F-001 · sin modos nuevos — ver la misión 04
 
 ## Mapa de estados
 
@@ -57,59 +76,21 @@ lleva de uno a otro y qué pasa con el trabajo del usuario en cada salto. Cada f
 pregunta que ingeniería resuelve inventando.
 -->
 
-| Desde  | Acción             | Queda en | Qué pasa con el trabajo              |
-| ------ | ------------------ | -------- | ------------------------------------ |
-| <modo> | <acción concreta>  | <modo>   | <qué se aplicó, qué quedó pendiente> |
-| <modo> | <salir sin cerrar> | <modo>   | <qué se pierde o se conserva>        |
+Sin modos nuevos, no hay transiciones nuevas que mapear: la navegación entre V-001, V-002 y V-003 es
+exactamente la que ya documentaron sus misiones de origen. Esta tabla queda vacía a propósito — llenarla
+con filas que no cambian sería inventar contenido para completar el molde, no información nueva.
 
-## UXF-001 — <flujo principal en verbo>
+## Sin flujo crítico nuevo
 
-<!--
-Duplica por flujo crítico. Cada paso describe acción → respuesta al nivel de "el usuario toca X → Datealo
-muestra Y". Un mockup no reemplaza la secuencia porque no explica estados ni recuperación.
--->
+Esta misión no agrega un `UXF-xxx`: no hay una secuencia de pasos, salidas ni recuperación que
+documentar, porque F-001 no cambia qué hace el usuario ni qué responde Datealo, solo qué tan grande se ve
+el texto que ya existía. La navegación de entrada y salida de V-001, V-002 y V-003 (cómo se llega, cómo se
+vuelve, qué pasa si el usuario se va a WhatsApp y vuelve) sigue siendo la que documentaron las misiones
+04, 05, 06, 10 y 11 — forzar un `UXF-001` acá sería completar el molde con una secuencia que no cambió.
 
-**Objetivo:** <qué se completa o comprende>. **Contrato:** [F-001](./producto.md#f-001).
-
-**Punto de entrada:** <estado y superficie inicial, y qué acción trae al usuario hasta acá>.
-
-**Criterio de término:** <estado observable que confirma que el flujo terminó bien>.
-
-**Cómo sabe el usuario dónde está:** <el elemento concreto y permanente en pantalla que se lo dice, por
-cada modo que toca este flujo>.
-
-### Salidas
-
-<!--
-Todas las formas de irse, no solo terminar bien. El criterio de término cubre la salida buena; las otras
-son las que el usuario encuentra primero. Un modo del que no se sabe salir es un modo donde el usuario se
-pierde.
--->
-
-| Salida                | Cómo se ejecuta       | Qué queda del trabajo           |
-| --------------------- | --------------------- | ------------------------------- |
-| <termina bien>        | <acción>              | <qué se aplicó y dónde>         |
-| <descarta>            | <acción, Esc, cerrar> | <nada, ni a medias>             |
-| <abandona sin cerrar> | <navega a otra parte> | <se conserva, se pierde, avisa> |
-
-### Secuencia principal
-
-| Paso | Acción            | Respuesta del sistema         | Información visible |
-| ---- | ----------------- | ----------------------------- | ------------------- |
-| 1    | <acción concreta> | <feedback o cambio de estado> | <dato y jerarquía>  |
-
-### Variantes y recuperación
-
-| Condición          | Qué cambia              | Cómo se entiende    | Cómo se recupera             |
-| ------------------ | ----------------------- | ------------------- | ---------------------------- |
-| <sin resultados>   | <estado>                | <mensaje concreto>  | <acción disponible>          |
-| <sin permiso de ubicación> | <comportamiento> | <indicador visible> | <alternativa manual>         |
-| <conexión lenta>   | <skeleton, no spinner>  | <qué se ve mientras>| <qué pasa si falla>          |
-
-### Decisiones que no deben quedar implícitas
-
-- <qué ocurre al cancelar, volver atrás, reintentar o confirmar>.
-- <qué cambio se guarda inmediato y cuál necesita confirmación>.
+La verificación real de esta misión (si el texto más grande sigue leyéndose con la jerarquía correcta, y
+si el caso límite CL-001 de nombre y comuna largos sigue truncando bien) vive en "Jerarquía de
+información" más abajo, con evidencia visual en los mockups.
 
 ## Estados por superficie
 
@@ -118,12 +99,22 @@ El contenido es concreto: texto real, no "mensaje apropiado". El estado vacío d
 pre-lanzamiento no es un detalle: para muchas búsquedas será el estado principal durante meses.
 -->
 
-| Estado  | Qué se muestra (texto e información real) | Acción disponible                   |
-| ------- | ----------------------------------------- | ----------------------------------- |
-| inicial | <contenido>                               | <acción>                            |
-| vacío   | <por qué está vacío, con texto concreto>  | <cómo avanzar, o ninguna y por qué> |
-| carga   | <skeleton de qué forma>                   | <ninguna>                           |
-| error   | <causa útil y alcance>                    | <recuperación>                      |
+Solo se documenta el estado que esta misión toca (con datos, texto en el tamaño nuevo) y el caso límite
+CL-001. Los estados vacío/carga/error de estas tres vistas no cambian de contenido y ya están
+documentados en sus misiones de origen — repetirlos acá sería duplicar texto que se desactualiza en un
+solo lado sin que nadie lo note.
+
+| Vista · estado                          | Qué se muestra (texto real, tamaño nuevo)                                                                                    | Acción disponible          |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| V-001 · con resultados                   | Contador "N resultados" en 14px (antes 12px, `buscar/index.vue`), nombre en 16px bold ("María Fernanda Rojas Ilabaca", truncado con `…`), comuna/rating/precio en 14px ("San José de Maipo", "★ 4,8 · 23 reseñas", "Desde $25.000"), "En Datealo desde…" sin cambio (11px) | Tocar la card → va al perfil |
+| V-001 · CL-001 (nombre y comuna largos)  | El nombre trunca antes que con el tamaño viejo (menos caracteres caben en 16px) pero sigue en una sola línea con `…`; la comuna hace lo mismo en su propia línea; la card no crece de ancho, solo puede crecer unos px de alto | Igual que el estado normal    |
+| V-001 · selector de categoría/comuna abierto | Lista de opciones sin cambio (14px, ya cumplía el piso bajo el título de 16px), botón "Buscar" pasa de 15px (`text-[0.9375rem]`, ni un token de la escala) a 16px real | Elegir una opción → confirma y busca |
+| V-002 · perfil con datos                 | Descripción y precio en 16px, categoría·comuna sin cambio (ya estaba en 14px), "En Datealo desde…" sin cambio (12px), CTA "Escribir por WhatsApp" en 16px real (antes rendía 14px pese a `size="lg"`) | Tocar el CTA → WhatsApp/llamar |
+| V-002 · con reseñas                      | Título "Reseñas" sube de 14px a 16px (mismo criterio que "Descripción"/"Precio" del perfil de gestión); nombre de quien reseña y comentario suben de 14px a 16px; fecha relativa y badge "verificado" sin cambio (11px) | Tocar "Escribir una reseña" → abre el formulario (fuera de alcance, ver producto.md) |
+| V-003 · perfil de gestión con datos      | "Descripción" y "Precio" (labels y valores) en 16px, "Editar" en 14px (antes 12px)                                              | Tocar "Editar" → modo edición |
+| V-003 · error de validación              | "No se pudo guardar, toca para reintentar" (texto real de `perfil.vue`) y errores equivalentes de `ProfessionalAvatar`/`ProfessionalPhotos`/`ProfessionalCatalogRow`/`ProfessionalDataRow` pasan de 12px a 14px — un error bloquea guardar, no es texto de una sola lectura | Tocar el error → reintenta guardar |
+| V-003 · cargando / error de carga        | "Cargando tu perfil…" y el mensaje de `loadError` pasan de 14px a 16px — no mockeado aparte: mismo patrón ya probado en el mensaje de comunas vecinas (único texto de la pantalla, sin título arriba) | ninguna, o recargar según el error |
+| V-002 · invitación a reseñar             | El `cardHeading` de la mini-card ("¿Cómo te fue con...?") pasa de 14px a 16px, mismo criterio que "Reseñas" — no mockeado aparte, mismo patrón que el encabezado "Reseñas" ya validado | Tocar el botón → abre el formulario (fuera de alcance) |
 
 ## Mockups
 
@@ -132,17 +123,19 @@ Los mockups viven en design-mockups/ como HTML (ver el skill discovery-ux y docs
 Exploran o materializan una decisión; no son fuente de verdad de reglas de producto.
 -->
 
-| Mockup   | Cubre   | Estado                 | Ruta                              |
-| -------- | ------- | ---------------------- | --------------------------------- |
-| <nombre> | UXF-001 | exploración o validado | `./design-mockups/<archivo>.html` |
+| Mockup                 | Cubre                                     | Estado    | Ruta                                             |
+| ------------------------ | -------------------------------------------- | ----------- | ---------------------------------------------------- |
+| Resultados de búsqueda | V-001, F-001, CL-001, selector abierto     | validado  | `./design-mockups/resultados-busqueda.html`      |
+| Perfil público         | V-002, F-001, reseñas                      | validado  | `./design-mockups/perfil-publico.html`           |
+| Perfil de gestión      | V-003, F-001, error de validación          | validado  | `./design-mockups/perfil-gestion.html`           |
 
 ## Cobertura
 
 <!-- Detecta huecos antes de construir. Una funcionalidad sin pantalla nueva igual tiene estados. -->
 
-| Funcionalidad | Flujo   | Estados cubiertos       | Estado    |
-| ------------- | ------- | ----------------------- | --------- |
-| F-001         | UXF-001 | principal, vacío, error | pendiente |
+| Funcionalidad | Flujo               | Estados cubiertos                                  | Estado   |
+| --------------- | ---------------------- | ----------------------------------------------------- | ---------- |
+| F-001         | sin flujo nuevo (ver arriba) | V-001 con resultados + CL-001 + selector abierto, V-002 con datos + reseñas, V-003 con datos + error de validación | validado |
 
 ## Secciones bajo demanda
 
@@ -156,17 +149,52 @@ Agregar solo cuando una decisión las necesite, con estos títulos:
 - "Accesibilidad y adaptación": cuando el contexto de uso cambie el flujo o la representación.
 -->
 
+## Jerarquía de información
+
+La duda de fondo de esta misión (Q-001 en `producto.md`) es de jerarquía: la diferencia en px entre
+principal y secundario no cambia (2px antes, 12 vs 14; 2px después, 14 vs 16), pero proporcionalmente es
+más chica (14% antes, 12,5% después) — ¿alcanza para que la diferencia se siga notando de un vistazo, o
+hace falta que peso/color compensen esa diferencia relativa más chica?
+
+Los tres mockups (ver "Mockups" arriba) muestran que no compiten, en las tres vistas, por el mismo motivo:
+la jerarquía nunca dependió solo del tamaño — depende del peso (`font-bold` en el principal, peso normal
+en el secundario) y del color (`text-datealo-text` oscuro contra `text-datealo-muted` gris). Esos dos ejes
+no cambian con esta misión, así que la separación visual se mantiene:
+
+- **V-001, card de resultados:** el nombre (16px, bold, oscuro) se lee primero; comuna, rating y precio
+  (14px, peso normal o bold puntual, mezcla de gris y oscuro) quedan claramente detrás incluso con el
+  nombre largo de CL-001 truncado.
+- **V-002, perfil público:** el precio en bold se distingue de la descripción en peso normal aunque ambos
+  compartan 16px — el peso hace el trabajo que antes hacía parcialmente el tamaño.
+- **V-003, perfil de gestión:** "Descripción"/"Precio" como labels en semibold quedan por encima de su
+  valor en peso normal, igual que antes de subir el tamaño.
+
+**Conclusión de esta misión:** con la evidencia de los tres mockups, subir el tamaño (D-001) alcanza sin
+tocar peso ni color — no encontré un caso donde la jerarquía se pierda. Esto no cierra
+[Q-001](./producto.md#q-001) de forma definitiva: esa pregunta se resuelve, según quedó escrito en
+`producto.md`, con el dueño de producto revisando el PR ya implementado (Nuxt UI real, no la aproximación
+de Tailwind puro del mockup) — pero le da a esa revisión una expectativa clara de qué debería ver.
+
 ## Decisiones de experiencia
 
 <a id="ux-001"></a>
 
-### UX-001 — <decisión en una frase>
+### UX-001 — La jerarquía se sostiene solo con peso y color; no hace falta rediseñarla para D-001
 
-- **Estado:** propuesta, aceptada, reemplazada o descartada. **Fecha:** AAAA-MM-DD.
-- **Sustento:** F-001 o <hallazgo>.
-- **Alternativas descartadas:** <opciones relevantes y trade-off, con el porqué del rechazo>.
-- **Decisión y consecuencia:** <qué flujo o superficie cambia>.
-- **Impacto en producto:** <ninguno o enlace a D-xxx/F-xxx actualizado>.
+- **Estado:** aceptada — aprobado por Patricio el 2026-09-06. **Fecha:** 2026-09-06.
+- **Sustento:** F-001, evidencia de los tres mockups (ver "Jerarquía de información").
+- **Alternativas descartadas:**
+  - Bajar el peso o aclarar el color del texto secundario para separarlo más del principal ahora que
+    ambos son más grandes — descartada: los mockups no muestran pérdida de jerarquía, cambiar peso/color
+    sin evidencia de que haga falta sería resolver un problema que no apareció.
+  - Aumentar el contraste de tamaño entre principal y secundario más allá de D-001 (ej. principal en
+    18px) para asegurar la separación — descartada: `producto.md` (D-001) ya evaluó y descartó ir más
+    allá del piso de accesibilidad sin evidencia que lo pida; repetir esa discusión acá sería reabrir una
+    decisión ya tomada sin un hallazgo nuevo.
+- **Decisión y consecuencia:** F-001 se implementa solo cambiando tamaño (clases Tailwind) en las tres
+  vistas, sin tocar `font-weight` ni color. Si al implementarlo con Nuxt UI real (no la aproximación del
+  mockup) la jerarquía sí se siente débil, eso reabre esta UX-001, no se parcha en silencio.
+- **Impacto en producto:** ninguno — no cambia ni agrega ninguna `D-xxx`/`F-xxx` de `producto.md`.
 
 ## Preguntas
 
@@ -175,9 +203,7 @@ Todas viven en esta tabla ordenada por ID, abiertas y cerradas juntas. Ningún I
 Estado: abierta | resuelta AAAA-MM-DD | disuelta AAAA-MM-DD. Solo las abiertas llevan bloque de detalle.
 -->
 
-<Una frase que responde "¿qué falta?": la pregunta que bloquea construcción y qué bloquea.>
-
-| ID      | La duda                | Estado              | Respuesta, o quién la resuelve                                  |
-| ------- | ---------------------- | ------------------- | --------------------------------------------------------------- |
-| UXQ-001 | <la duda en una frase> | abierta             | <quién la resuelve, con qué método, qué bloquea y hasta cuándo> |
-| UXQ-002 | <la duda en una frase> | resuelta AAAA-MM-DD | <qué se respondió, enlazando la decisión que la cerró>          |
+No hay ninguna pregunta abierta que bloquee el paso a `ingenieria.md`. La única incertidumbre real de esta
+misión (si la jerarquía se sostiene) quedó evaluada en "Jerarquía de información" y en
+[UX-001](#ux-001); lo que queda pendiente (Q-001 de `producto.md`) ya está registrado ahí, con su propio
+método y sin fecha límite, y no es una pregunta de experiencia.
