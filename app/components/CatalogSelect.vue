@@ -18,6 +18,9 @@ const props = defineProps<{
   error: boolean
   placeholder: string
   errorMessage: string
+  // Nombre de ícono Iconify (ej. "i-lucide-wrench"), reenviado tal cual al `leading-icon` de `UInput`.
+  // Sin valor, el campo se ve igual que hoy — es un override por consumidor, no un default nuevo.
+  leadingIcon?: string
   // Catálogo chico (categorías): mostrar todo al enfocar no cuesta nada. Catálogo grande (comunas):
   // esperar a que se escriba, el patrón ya validado de Mercado Libre — mostrar todas las opciones de
   // entrada es más ruido que ayuda.
@@ -133,6 +136,7 @@ defineExpose({ focus: () => uInputRef.value?.inputRef?.focus() })
       :model-value="searchTerm"
       :placeholder="placeholder"
       :readonly="error"
+      :leading-icon="leadingIcon"
       trailing-icon="i-lucide-chevron-down"
       class="w-full"
       @update:model-value="handleInput"

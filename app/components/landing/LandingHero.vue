@@ -1,16 +1,6 @@
 <script setup lang="ts">
 import { CheckCircle, Star } from '@lucide/vue'
 import { LANDING_HERO } from '~/constants/landing'
-
-const categoriaSlug = ref<string | null>(null)
-const comunaCodigo = ref<string | null>(null)
-
-const searchQuery = computed(() => {
-  const query: Record<string, string> = {}
-  if (categoriaSlug.value) query.categoria = categoriaSlug.value
-  if (comunaCodigo.value) query.comuna = comunaCodigo.value
-  return query
-})
 </script>
 
 <template>
@@ -36,27 +26,7 @@ const searchQuery = computed(() => {
             {{ LANDING_HERO.subheadline }}
           </p>
 
-          <!-- Buscador -->
-          <div class="bg-white p-3 rounded-2xl shadow-2xl shadow-black/20 max-w-xl relative z-20">
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <div class="flex-1">
-                <label for="hero-categoria" class="sr-only">Categoría</label>
-                <CategoriaSelect id="hero-categoria" v-model="categoriaSlug" />
-              </div>
-              <div class="flex-1">
-                <label for="hero-comuna" class="sr-only">Comuna</label>
-                <ComunaSelect id="hero-comuna" v-model="comunaCodigo" />
-              </div>
-              <UButton
-                :to="{ path: '/buscar', query: searchQuery }"
-                variant="link"
-                color="neutral"
-                class="h-14 rounded-xl px-7 text-sm font-bold bg-secondary text-white hover:bg-secondary/90 hover:text-white active:text-white hover:scale-[1.02] shadow-lg shadow-secondary/20 transition-all"
-              >
-                {{ LANDING_HERO.cta }}
-              </UButton>
-            </div>
-          </div>
+          <LandingHeroSearch />
 
           <ul class="flex flex-wrap items-center gap-x-6 gap-y-3 mt-8 text-sm text-white/80 font-semibold">
             <li v-for="item in LANDING_HERO.trust" :key="item" class="flex items-center gap-2">
