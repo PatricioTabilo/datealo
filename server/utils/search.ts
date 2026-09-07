@@ -3,6 +3,7 @@ import { findVecinasActivas } from './comunas'
 import { buildAvatarUrl, buildPhotoUrls } from './professionals'
 import { findRatingSummaries, type RatingSummary } from './reviews'
 import { comunas } from '../db/schema/comunas'
+import { professionalCategorias } from '../db/schema/professional-categorias'
 import { professionals } from '../db/schema/professionals'
 
 export type SearchMatchType = 'exacta' | 'vecina' | 'ninguna'
@@ -102,30 +103,38 @@ async function findActiveProfessionals(
       id: professionals.id,
       displayName: professionals.displayName,
       comunaNombre: comunas.nombre,
-      priceFrom: professionals.priceFrom,
+      priceFrom: professionalCategorias.priceFrom,
       avatarPath: professionals.avatarPath,
       createdAt: professionals.createdAt,
       photoPaths: professionals.photoPaths,
-      description: professionals.description,
+      description: professionalCategorias.description,
     })
     .from(professionals)
     .innerJoin(comunas, eq(professionals.comunaCodigo, comunas.codigo))
+    .innerJoin(professionalCategorias, and(
+      eq(professionalCategorias.professionalId, professionals.id),
+      eq(professionalCategorias.categoriaSlug, categoriaSlug),
+    ))
     .where(and(
-      eq(professionals.categoriaSlug, categoriaSlug),
       inArray(professionals.comunaCodigo, comunaCodigos),
       eq(professionals.active, true),
     ))
 }
 
 // Se une a comunas para excluir zonas que se desactivaron — "existe en otra parte de Chile" solo cuenta
-// comunas donde alguien podría buscar hoy, no cualquier fila histórica de professionals.
+// comunas donde alguien podría buscar hoy, no cualquier fila histórica de professionals. El join contra
+// professional_categorias es el filtro: un profesional cuenta acá solo si esa categoría puntual está
+// entre las que declaró, nunca por tener cualquier otra.
 async function existsActiveProfessionalForCategoria(categoriaSlug: string): Promise<boolean> {
   const [row] = await useDb()
     .select({ id: professionals.id })
     .from(professionals)
     .innerJoin(comunas, eq(professionals.comunaCodigo, comunas.codigo))
+    .innerJoin(professionalCategorias, and(
+      eq(professionalCategorias.professionalId, professionals.id),
+      eq(professionalCategorias.categoriaSlug, categoriaSlug),
+    ))
     .where(and(
-      eq(professionals.categoriaSlug, categoriaSlug),
       eq(professionals.active, true),
       eq(comunas.activa, true),
     ))
