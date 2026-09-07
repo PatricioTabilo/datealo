@@ -4,17 +4,18 @@
 categoría por profesional) y cómo `/api/search` filtra por categoría. **Abierta el** 2026-09-06.
 **Nace de:** ninguna.
 
-**Estado de la misión:** exploración
+**Estado de la misión:** lista para construir
 
-**En foco:** Investigación
+**En foco:** ninguno — los tres documentos (`producto.md`, `experiencia.md`, `ingenieria.md`) están
+`vigente`
 
-**Última actualización:** 2026-09-06
+**Última actualización:** 2026-09-07
 
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** completar `investigacion.md` con el problema concreto y evidencia de que un profesional
-real ofrece más de un oficio — sin fecha límite todavía, recién se abre la misión.
+**Próximo hito:** abrir el PR de discovery con los tres documentos vigentes (paso 6 de la secuencia en
+`docs/missions/README.md`). Sin fecha límite todavía.
 
 ## Brief
 
