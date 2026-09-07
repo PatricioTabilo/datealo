@@ -3,21 +3,20 @@
 **Tipo:** producto. **Carril:** Light Spec — cambio visual, sin RLS, sin dato de usuario, 100% reversible.
 **Abierta el** 2026-09-06. **Nace de:** ninguna.
 
-**Estado de la misión:** lista para construir
+**Estado de la misión:** cerrada 2026-09-06
 
-**En foco:** ninguno — discovery completo, falta abrir el PR
+**En foco:** ninguno — misión cerrada
 
 **Última actualización:** 2026-09-06
 
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** los cuatro documentos están vigentes — aprobados por Patricio el 2026-09-06. Sigue
-abrir el PR de discovery con los tres documentos que requieren aprobación (producto/experiencia/ingeniería,
-más `README.md` y `design-mockups/`) sobre esta misma rama (`worktree-abrir-misiones-13-14-15`, donde ya
-vive el PR #213 abierto). Después: mergear → `ExitWorktree action: "remove"` → recién ahí crear los issues
-S-001 a S-003 en la raíz. [Q-001](./producto.md#q-001) sigue abierta sin bloquear — se resuelve con
-[TR-001](./ingenieria.md), revisando la captura real de cada slice antes de su PR.
+**Cierre:** los tres slices del plan de construcción se implementaron y mergearon: S-001 (#217, issue
+#214), S-002 (#218, issue #215) y S-003 (#219, issue #216). [Q-001](./producto.md#q-001) se resolvió
+revisando la captura real de S-001 en 390px — la jerarquía nombre 16px bold / secundario 14px normal se
+sostiene sola, sin ajuste de peso o contraste. [TR-001](./ingenieria.md) cerrado con el mismo criterio
+para los tres slices.
 
 ## Brief
 

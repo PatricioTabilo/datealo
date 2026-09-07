@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>V-002/V-003 Registro y perfil — misión 15</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-002 · registro · modo campo vacío
+          <small>ronda 1 — antes de tocar "Tus comunas" por primera vez</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="px-6 py-6">
+            <p class="text-2xl font-extrabold text-datealo-text">Crea tu perfil</p>
+            <div class="mt-4 flex gap-1.5">
+              <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+              <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+              <div class="h-1.5 flex-1 rounded-full" style="background: var(--ui-bg-elevated)"></div>
+              <div class="h-1.5 flex-1 rounded-full" style="background: var(--ui-bg-elevated)"></div>
+            </div>
+
+            <p class="mb-2 mt-5 text-sm font-semibold text-datealo-text">Tu categoría</p>
+            <div class="rounded-xl border px-4 py-3 text-sm text-datealo-text" style="border-color: var(--ui-border)">Gasfitería</div>
+
+            <p class="mb-2 mt-5 text-sm font-semibold text-datealo-text">Tus comunas</p>
+            <div class="flex items-center justify-between rounded-xl border px-4 py-3" style="border-color: var(--ui-border)">
+              <span class="text-sm text-datealo-muted">¿Dónde atiendes?</span>
+              <span class="text-datealo-muted">▾</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-002 · registro · modo campo con selección
+          <small>ronda 1 — después de marcar y tocar "Listo" en el sheet</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="px-6 py-6">
+            <p class="text-2xl font-extrabold text-datealo-text">Crea tu perfil</p>
+            <div class="mt-4 flex gap-1.5">
+              <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+              <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+              <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+              <div class="h-1.5 flex-1 rounded-full" style="background: var(--ui-bg-elevated)"></div>
+            </div>
+
+            <p class="mb-2 mt-5 text-sm font-semibold text-datealo-text">Tu categoría</p>
+            <div class="rounded-xl border px-4 py-3 text-sm text-datealo-text" style="border-color: var(--ui-border)">Gasfitería</div>
+
+            <p class="mb-2 mt-5 text-sm font-semibold text-datealo-text">Tus comunas</p>
+            <div class="flex items-center justify-between rounded-xl border px-4 py-3" style="border-color: var(--ui-border)">
+              <span class="truncate text-sm text-datealo-text">Llanquihue, Frutillar y Puerto Varas</span>
+              <span class="ml-2 shrink-0 text-datealo-muted">▾</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 · perfil editable · fila "Comunas"
+          <small>ronda 1 — reemplaza la fila "Comuna" de hoy; siempre con selección (D-003)</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="px-5 py-6">
+            <p class="text-xl font-extrabold text-datealo-text">Rudiberto Soto</p>
+            <p class="mt-0.5 text-sm text-datealo-muted">Gasfitería · Llanquihue, Frutillar y Puerto Varas</p>
+
+            <div class="mt-5 rounded-2xl border p-4" style="border-color: var(--color-datealo-surface)">
+              <p class="mb-1 text-base font-semibold text-datealo-text">Tus datos</p>
+
+              <div class="flex items-center justify-between border-b py-3 text-sm" style="border-color: var(--color-datealo-surface)">
+                <span class="text-datealo-muted">Nombre</span>
+                <span class="text-datealo-text">Rudiberto Soto</span>
+              </div>
+              <div class="flex items-center justify-between border-b py-3 text-sm" style="border-color: var(--color-datealo-surface)">
+                <span class="text-datealo-muted">Categoría</span>
+                <span class="text-datealo-text">Gasfitería</span>
+              </div>
+              <div class="flex items-center justify-between gap-3 border-b py-3 text-sm" style="border-color: var(--color-datealo-surface)">
+                <span class="shrink-0 text-datealo-muted">Comunas</span>
+                <span class="min-w-0 truncate text-right text-datealo-text">Llanquihue, Frutillar y Puerto Varas</span>
+              </div>
+              <div class="flex items-center justify-between py-3 text-sm">
+                <span class="text-datealo-muted">Contacto</span>
+                <span class="text-datealo-text">+56 9 8765 4321</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-002 · registro · modo campo con muchas comunas
+          <small>ronda 2 — Camila Reyes, electricista de Santiago Oriente, 6 comunas: no caben en una línea (UX-004)</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="px-6 py-6">
+            <p class="text-2xl font-extrabold text-datealo-text">Crea tu perfil</p>
+            <div class="mt-4 flex gap-1.5">
+              <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+              <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+              <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+              <div class="h-1.5 flex-1 rounded-full" style="background: var(--ui-bg-elevated)"></div>
+            </div>
+
+            <p class="mb-2 mt-5 text-sm font-semibold text-datealo-text">Tu categoría</p>
+            <div class="rounded-xl border px-4 py-3 text-sm text-datealo-text" style="border-color: var(--ui-border)">Electricidad</div>
+
+            <p class="mb-2 mt-5 text-sm font-semibold text-datealo-text">Tus comunas</p>
+            <div class="flex items-center justify-between gap-2 rounded-xl border px-4 py-3" style="border-color: var(--ui-border)">
+              <span class="min-w-0 truncate text-sm text-datealo-text">La Reina, Las Condes, Lo Barnechea, Ñuñoa, Providencia y Vitacura</span>
+              <span class="shrink-0 text-datealo-muted">▾</span>
+            </div>
+            <p class="mt-2 text-xs text-datealo-muted">Trunca con elipsis: es un control de una sola línea, igual que Categoría. Tocarlo reabre el sheet con las 6 ya marcadas.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-003 · perfil editable · fila "Comunas" con muchas comunas
+          <small>ronda 2 — mismo criterio de truncado que el campo de registro (UX-004)</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="px-5 py-6">
+            <p class="text-xl font-extrabold text-datealo-text">Camila Reyes</p>
+            <p class="mt-0.5 text-sm text-datealo-muted">Electricidad · La Reina, Las Condes, Lo Barnechea, Ñuñoa, Providencia y Vitacura</p>
+
+            <div class="mt-5 rounded-2xl border p-4" style="border-color: var(--color-datealo-surface)">
+              <p class="mb-1 text-base font-semibold text-datealo-text">Tus datos</p>
+
+              <div class="flex items-center justify-between border-b py-3 text-sm" style="border-color: var(--color-datealo-surface)">
+                <span class="text-datealo-muted">Nombre</span>
+                <span class="text-datealo-text">Camila Reyes</span>
+              </div>
+              <div class="flex items-center justify-between border-b py-3 text-sm" style="border-color: var(--color-datealo-surface)">
+                <span class="text-datealo-muted">Categoría</span>
+                <span class="text-datealo-text">Electricidad</span>
+              </div>
+              <div class="flex items-center justify-between gap-3 border-b py-3 text-sm" style="border-color: var(--color-datealo-surface)">
+                <span class="shrink-0 text-datealo-muted">Comunas</span>
+                <span class="min-w-0 truncate text-right text-datealo-text">La Reina, Las Condes, Lo Barnechea, Ñuñoa, Providencia y Vitacura</span>
+              </div>
+              <div class="flex items-center justify-between py-3 text-sm">
+                <span class="text-datealo-muted">Contacto</span>
+                <span class="text-datealo-text">+56 9 2345 6789</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

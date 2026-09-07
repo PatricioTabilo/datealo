@@ -39,8 +39,8 @@ const summary = computed(() => {
       @click="open()"
     >
       <Search class="h-4 w-4 shrink-0 text-primary" :stroke-width="2.5" />
-      <span v-if="summary" class="truncate text-sm font-bold text-datealo-text">{{ summary }}</span>
-      <span v-else class="text-sm font-medium text-datealo-muted">¿Qué profesional buscas?</span>
+      <span v-if="summary" class="truncate text-base font-bold text-datealo-text">{{ summary }}</span>
+      <span v-else class="text-base font-medium text-datealo-muted">¿Qué profesional buscas?</span>
     </button>
 
     <div
@@ -53,8 +53,8 @@ const summary = computed(() => {
         :class="dense ? 'min-w-28 px-5 py-2' : 'min-w-48 px-6 py-3'"
         @click="open('categoria')"
       >
-        <span v-if="!dense" class="text-xs font-bold uppercase tracking-wide text-datealo-muted">Categoría</span>
-        <span class="text-sm font-bold" :class="categoriaLabel ? 'text-datealo-text' : 'font-medium text-datealo-muted'">
+        <span v-if="!dense" class="text-sm font-bold uppercase tracking-wide text-datealo-muted">Categoría</span>
+        <span class="text-base font-bold" :class="categoriaLabel ? 'text-datealo-text' : 'font-medium text-datealo-muted'">
           {{ categoriaLabel ?? 'Elige categoría' }}
         </span>
       </button>
@@ -65,8 +65,8 @@ const summary = computed(() => {
         :class="dense ? 'min-w-28 px-5 py-2' : 'min-w-48 px-6 py-3'"
         @click="open('comuna')"
       >
-        <span v-if="!dense" class="text-xs font-bold uppercase tracking-wide text-datealo-muted">Comuna</span>
-        <span class="text-sm font-bold" :class="comunaLabel ? 'text-datealo-text' : 'font-medium text-datealo-muted'">
+        <span v-if="!dense" class="text-sm font-bold uppercase tracking-wide text-datealo-muted">Comuna</span>
+        <span class="text-base font-bold" :class="comunaLabel ? 'text-datealo-text' : 'font-medium text-datealo-muted'">
           {{ comunaLabel ?? 'Elige comuna' }}
         </span>
       </button>
@@ -104,7 +104,7 @@ const summary = computed(() => {
           <button
             type="button"
             :disabled="!ready"
-            class="w-full rounded-full py-4 text-center text-[0.9375rem] font-bold disabled:cursor-not-allowed"
+            class="w-full rounded-full py-4 text-center text-base font-bold disabled:cursor-not-allowed"
             :class="ready ? 'bg-secondary text-white shadow-[0_10px_24px_-8px_rgba(62,203,215,0.5)]' : 'bg-datealo-surface text-datealo-muted'"
             @click="confirm"
           >

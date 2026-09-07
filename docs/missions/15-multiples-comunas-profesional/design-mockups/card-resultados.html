@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>V-005 Card de resultados — misión 15</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-005 · búsqueda "gasfitería" en Puerto Varas · coincidencia exacta
+          <small>ronda 1 — Rudiberto declaró Puerto Varas; la card sigue mostrando solo la comuna buscada (UX-005)</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-4">
+            <div class="overflow-hidden rounded-2xl border" style="border-color: var(--color-datealo-surface)">
+              <div class="aspect-4/3 w-full" style="background: color-mix(in oklab, var(--ui-primary) 10%, white)"></div>
+              <div class="p-3.5">
+                <p class="text-base font-bold text-datealo-text">Rudiberto Soto</p>
+                <p class="text-sm text-datealo-muted">Puerto Varas</p>
+                <p class="mt-1 text-sm font-bold text-datealo-text">Desde $15.000</p>
+                <p class="mt-0.5 text-[0.6875rem] text-datealo-muted">En Datealo desde ago. 2026</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-005 · búsqueda "gasfitería" en Puerto Octay · coincidencia vecina
+          <small>ronda 1 — Puerto Octay no tiene profesionales; Rudiberto aparece por ser vecina de Llanquihue, una de sus comunas declaradas</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="p-4">
+            <div class="overflow-hidden rounded-2xl border" style="border-color: var(--color-datealo-surface)">
+              <div class="aspect-4/3 w-full" style="background: color-mix(in oklab, var(--ui-primary) 10%, white)"></div>
+              <div class="p-3.5">
+                <p class="text-base font-bold text-datealo-text">Rudiberto Soto</p>
+                <p class="text-sm font-bold text-datealo-text">Llanquihue</p>
+                <p class="mt-1 text-sm font-bold text-datealo-text">Desde $15.000</p>
+                <p class="mt-0.5 text-[0.6875rem] text-datealo-muted">En Datealo desde ago. 2026</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
