@@ -42,7 +42,7 @@ function onSelect(newValue: string | null | undefined) {
         <slot name="select" :model-value="draft" :update="onSelect" />
       </div>
     </div>
-    <p v-if="hasSaveError" class="mt-1 text-right text-xs font-semibold text-error" aria-live="polite">
+    <p v-if="hasSaveError" class="mt-1 text-right text-sm font-semibold text-error" aria-live="polite">
       No se pudo guardar, toca para reintentar
     </p>
   </div>

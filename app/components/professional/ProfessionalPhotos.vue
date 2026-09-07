@@ -56,7 +56,7 @@ function onFileSelected(event: Event) {
 
     <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFileSelected">
 
-    <p v-if="uploadError" class="mt-2 text-xs font-semibold text-error" aria-live="polite">{{ uploadError }}</p>
-    <p v-if="deleteError" class="mt-2 text-xs font-semibold text-error" aria-live="polite">{{ deleteError }}</p>
+    <p v-if="uploadError" class="mt-2 text-sm font-semibold text-error" aria-live="polite">{{ uploadError }}</p>
+    <p v-if="deleteError" class="mt-2 text-sm font-semibold text-error" aria-live="polite">{{ deleteError }}</p>
   </div>
 </template>

@@ -171,7 +171,7 @@ defineExpose({ focus: () => uInputRef.value?.inputRef?.focus() })
       <template v-if="error">
         <div class="flex flex-col items-center gap-2 px-2 py-3 text-center">
           <p class="text-sm" style="color: var(--ui-text-muted)">{{ errorMessage }}</p>
-          <UButton size="sm" data-testid="retry-button" @click="retry">Reintentar</UButton>
+          <UButton size="md" data-testid="retry-button" @click="retry">Reintentar</UButton>
         </div>
       </template>
       <template v-else-if="pending">

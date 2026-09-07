@@ -40,14 +40,14 @@ function onFileSelected(event: Event) {
         </div>
       </button>
 
-      <p v-if="!hasAvatar" class="text-xs text-datealo-muted">
+      <p v-if="!hasAvatar" class="text-sm text-datealo-muted">
         Para que te reconozcan antes de escribirte. Opcional.
       </p>
       <div v-else>
-        <p class="text-xs font-semibold text-datealo-text">Toca la foto para cambiarla</p>
+        <p class="text-sm font-semibold text-datealo-text">Toca la foto para cambiarla</p>
         <button
           type="button"
-          class="-m-2 mt-1 inline-block p-2 text-xs font-semibold text-error underline disabled:opacity-50"
+          class="-m-2 mt-1 inline-block p-2 text-sm font-semibold text-error underline disabled:opacity-50"
           :disabled="removing"
           @click="remove"
         >
@@ -58,7 +58,7 @@ function onFileSelected(event: Event) {
 
     <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFileSelected">
 
-    <p v-if="uploadError" class="mt-2 text-xs font-semibold text-error" aria-live="polite">{{ uploadError }}</p>
-    <p v-if="removeError" class="mt-2 text-xs font-semibold text-error" aria-live="polite">{{ removeError }}</p>
+    <p v-if="uploadError" class="mt-2 text-sm font-semibold text-error" aria-live="polite">{{ uploadError }}</p>
+    <p v-if="removeError" class="mt-2 text-sm font-semibold text-error" aria-live="polite">{{ removeError }}</p>
   </div>
 </template>
