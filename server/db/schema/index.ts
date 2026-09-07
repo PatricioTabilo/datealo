@@ -1,6 +1,7 @@
 export * from './categorias'
 export * from './comuna-vecinas'
 export * from './comunas'
+export * from './professional-categorias'
 export * from './professional-contact-events'
 export * from './professional-contact-tokens'
 export * from './professionals'

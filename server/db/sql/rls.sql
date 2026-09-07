@@ -74,6 +74,52 @@ create policy professionals_update_own on professionals
 -- rol dueño de Drizzle, donde auth.uid() es NULL, y rompería todo insert/update del servidor.
 revoke all on public.professionals from anon, authenticated;
 
+-- professional_categorias: mismo patrón asimétrico que professionals (lectura pública, escritura
+-- solo del dueño), pero la pertenencia se resuelve con un exists contra professionals.user_id — esta
+-- tabla no tiene user_id propio. A diferencia de professionals, sí lleva policy de delete: acá existe
+-- una operación real de borrado (quitar una categoría propia).
+
+alter table professional_categorias enable row level security;
+
+drop policy if exists professional_categorias_select_public on professional_categorias;
+create policy professional_categorias_select_public on professional_categorias
+  for select to authenticated, anon using (true);
+
+drop policy if exists professional_categorias_insert_own on professional_categorias;
+create policy professional_categorias_insert_own on professional_categorias
+  for insert to authenticated with check (
+    exists (
+      select 1 from professionals p
+      where p.id = professional_categorias.professional_id and p.user_id = (select auth.uid())
+    )
+  );
+
+drop policy if exists professional_categorias_update_own on professional_categorias;
+create policy professional_categorias_update_own on professional_categorias
+  for update to authenticated using (
+    exists (
+      select 1 from professionals p
+      where p.id = professional_categorias.professional_id and p.user_id = (select auth.uid())
+    )
+  ) with check (
+    exists (
+      select 1 from professionals p
+      where p.id = professional_categorias.professional_id and p.user_id = (select auth.uid())
+    )
+  );
+
+drop policy if exists professional_categorias_delete_own on professional_categorias;
+create policy professional_categorias_delete_own on professional_categorias
+  for delete to authenticated using (
+    exists (
+      select 1 from professionals p
+      where p.id = professional_categorias.professional_id and p.user_id = (select auth.uid())
+    )
+  );
+
+-- Igual que professionals: cierra PostgREST por completo. Drizzle usa el rol dueño y no le afecta.
+revoke all on public.professional_categorias from anon, authenticated;
+
 -- professional-photos: acá la policy es la barrera real, no un respaldo — las fotos se suben con el
 -- cliente de sesión del propio usuario (mismo publishable key + JWT que arma requireUser()), que sí
 -- evalúa storage.objects. file_size_limit y allowed_mime_types quedan fijados en el propio bucket:
