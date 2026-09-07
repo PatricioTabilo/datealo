@@ -208,4 +208,18 @@ describe('CatalogSelect', () => {
 
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['gasfiteria'])
   })
+
+  it('el mousedown sobre una opción previene su default, para no perder el foco del input en touch', async () => {
+    const wrapper = mountCatalogSelect()
+    await wrapper.find('input').trigger('focusin')
+    await wrapper.find('input').setValue('gasfi')
+
+    // dispatchEvent nativo en vez de wrapper.trigger: necesitamos el objeto Event de vuelta para leer
+    // defaultPrevented, que trigger() de vue-test-utils no expone.
+    const option = wrapper.find('[data-testid="option-gasfiteria"]').element
+    const mousedown = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+    option.dispatchEvent(mousedown)
+
+    expect(mousedown.defaultPrevented).toBe(true)
+  })
 })

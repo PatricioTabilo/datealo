@@ -112,9 +112,10 @@ function handleFocusIn() {
 
 // focusout (no blur) a nivel del contenedor: permite distinguir "el foco se fue a otra opción de la
 // misma lista" (relatedTarget adentro del contenedor, no hacer nada) de "el foco se fue afuera de
-// verdad" (ahí sí cerrar). Sin esto, tocar una opción dispara blur del input antes que su propio
-// click, y la selección se pierde — el mismo problema de fondo que forzó a abandonar el combobox de
-// Reka, resuelto acá con un patrón estándar en vez de pelear contra una librería.
+// verdad" (ahí sí cerrar). Cubre el mouse, donde relatedTarget apunta al botón clickeado. En touch
+// (iOS/Android) el input pierde el foco antes de que relatedTarget llegue a apuntar al botón, así que
+// cada opción previene su propio mousedown (ver el botón más abajo) para que el input no pierda el
+// foco y la lista no se desmonte antes de que el click corra.
 function handleFocusOut(event: FocusEvent) {
   const related = event.relatedTarget
   if (containerRef.value && related instanceof Node && containerRef.value.contains(related)) {
@@ -191,6 +192,7 @@ defineExpose({ focus: () => uInputRef.value?.inputRef?.focus() })
           type="button"
           :data-testid="`option-${item.value}`"
           class="catalog-option flex w-full cursor-pointer items-center gap-3 rounded-md px-2 py-1.5 text-left text-sm"
+          @mousedown.prevent
           @click="selectItem(item)"
         >
           <span v-if="itemIcon" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-datealo-surface text-primary">
