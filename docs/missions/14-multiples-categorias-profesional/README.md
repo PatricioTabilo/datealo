@@ -4,18 +4,19 @@
 categoría por profesional) y cómo `/api/search` filtra por categoría. **Abierta el** 2026-09-06.
 **Nace de:** ninguna.
 
-**Estado de la misión:** lista para construir
+**Estado de la misión:** en construcción
 
-**En foco:** ninguno — los tres documentos (`producto.md`, `experiencia.md`, `ingenieria.md`) están
-`vigente`
+**En foco:** ninguno — discovery cerrado, los tres documentos (`producto.md`, `experiencia.md`,
+`ingenieria.md`) están `vigente`
 
 **Última actualización:** 2026-09-07
 
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** abrir el PR de discovery con los tres documentos vigentes (paso 6 de la secuencia en
-`docs/missions/README.md`). Sin fecha límite todavía.
+**Próximo hito:** issues creados desde el Plan de construcción (#225 a #233, S-001 a S-009). Trabajando
+S-001 (#225) primero — el resto sigue el orden de dependencias del Plan de construcción de
+`ingenieria.md`.
 
 ## Brief
 
