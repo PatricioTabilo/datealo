@@ -1,8 +1,8 @@
 import { and, eq, sql } from 'drizzle-orm'
 import { existsActiveCategoria } from './categorias'
 import { existsActiveComuna } from './comunas'
+import { findProfessionalCategorias, type PublicCategoria } from './professional-categorias'
 import { isUuid } from './validation'
-import { categorias } from '../db/schema/categorias'
 import { comunas } from '../db/schema/comunas'
 import { professionals } from '../db/schema/professionals'
 
@@ -37,6 +37,10 @@ export type Professional = {
 
 // Forma que ve un buscador sin sesión (misión 05): categoría/comuna ya resueltas a su nombre (nunca el
 // slug/código, que no significa nada para quien mira el perfil) y createdAt, que Professional no expone.
+//
+// categoriaNombre/priceFrom/description quedan calculados desde categorias[0] mientras conviva con el
+// array nuevo — categorias es la forma real; esos tres campos se retiran una vez que perfil.vue y
+// [id].vue dejen de leerlos directamente.
 export type PublicProfessionalProfile = {
   id: string
   displayName: string
@@ -45,6 +49,7 @@ export type PublicProfessionalProfile = {
   contact: string
   description: string | null
   priceFrom: number | null
+  categorias: PublicCategoria[]
   photoUrls: string[]
   avatarUrl: string | null
   createdAt: string
@@ -141,32 +146,34 @@ export async function findPublicProfessionalProfile(id: string): Promise<PublicP
     .select({
       id: professionals.id,
       displayName: professionals.displayName,
-      categoriaSlug: professionals.categoriaSlug,
-      categoriaNombre: categorias.nombre,
       comunaCodigo: professionals.comunaCodigo,
       comunaNombre: comunas.nombre,
       contact: professionals.contact,
-      description: professionals.description,
-      priceFrom: professionals.priceFrom,
       photoPaths: professionals.photoPaths,
       avatarPath: professionals.avatarPath,
       createdAt: professionals.createdAt,
     })
     .from(professionals)
-    .leftJoin(categorias, eq(professionals.categoriaSlug, categorias.slug))
     .leftJoin(comunas, eq(professionals.comunaCodigo, comunas.codigo))
     .where(and(eq(professionals.id, id), eq(professionals.active, true)))
 
   if (!row) return null
 
+  const categoriasList = await findProfessionalCategorias(row.id)
+  // Un profesional activo nunca tiene 0 filas en professional_categorias — la única forma de llegar
+  // a cero se bloquea al quitar la última categoría, no acá, así que esta lectura confía en que
+  // categoriasList siempre trae al menos una fila.
+  const [primaryCategoria] = categoriasList
+
   return {
     id: row.id,
     displayName: row.displayName,
-    categoriaNombre: row.categoriaNombre ?? row.categoriaSlug,
+    categoriaNombre: primaryCategoria!.nombre,
     comunaNombre: row.comunaNombre ?? row.comunaCodigo,
     contact: row.contact,
-    description: row.description,
-    priceFrom: row.priceFrom,
+    description: primaryCategoria!.description,
+    priceFrom: primaryCategoria!.priceFrom,
+    categorias: categoriasList,
     photoUrls: buildPhotoUrls(row.photoPaths),
     avatarUrl: buildAvatarUrl(row.avatarPath),
     createdAt: row.createdAt.toISOString(),
@@ -185,6 +192,30 @@ export async function professionalExists(id: string): Promise<boolean> {
 export async function findProfessionalByUserId(userId: string): Promise<Professional | null> {
   const [row] = await useDb().select(publicColumns).from(professionals).where(eq(professionals.userId, userId))
   return row ? toPublicProfessional(row) : null
+}
+
+// categoriaSlug/priceFrom/description quedan calculados desde categorias[0], igual que
+// findPublicProfessionalProfile — esto es solo para GET /me. Los endpoints de escritura (POST /me,
+// PATCH /me) todavía leen y escriben la fila de professionals tal cual, sin pasar por acá.
+export type ProfessionalProfile = Professional & { categorias: PublicCategoria[] }
+
+export async function findProfessionalProfileByUserId(userId: string): Promise<ProfessionalProfile | null> {
+  const professional = await findProfessionalByUserId(userId)
+  if (!professional) return null
+
+  const categoriasList = await findProfessionalCategorias(professional.id)
+  // Un profesional activo nunca tiene 0 filas en professional_categorias — la única forma de llegar
+  // a cero se bloquea al quitar la última categoría, no acá, así que esta lectura confía en que
+  // categoriasList siempre trae al menos una fila.
+  const [primaryCategoria] = categoriasList
+
+  return {
+    ...professional,
+    categoriaSlug: primaryCategoria!.slug,
+    priceFrom: primaryCategoria!.priceFrom,
+    description: primaryCategoria!.description,
+    categorias: categoriasList,
+  }
 }
 
 // Lo único que necesita el correo de aviso de reseña nueva (misión 07) — nunca active, que ya decidió
