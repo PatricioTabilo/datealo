@@ -64,9 +64,9 @@ function commitPrice() {
 
 <template>
   <div class="mx-auto min-h-screen max-w-md px-5 py-8 pb-16">
-    <p v-if="pending" class="text-sm text-datealo-muted">Cargando tu perfil…</p>
+    <p v-if="pending" class="text-base text-datealo-muted">Cargando tu perfil…</p>
 
-    <p v-else-if="loadError" class="text-sm text-error">{{ loadError }}</p>
+    <p v-else-if="loadError" class="text-base text-error">{{ loadError }}</p>
 
     <template v-else-if="professional">
       <h1 class="text-xl font-extrabold text-datealo-text">{{ professional.displayName }}</h1>
@@ -78,17 +78,17 @@ function commitPrice() {
 
       <div class="mt-3 rounded-2xl border border-datealo-surface p-4">
         <div class="flex items-center justify-between">
-          <p class="text-sm font-semibold text-datealo-text">Descripción</p>
+          <p class="text-base font-semibold text-datealo-text">Descripción</p>
           <Loader2 v-if="isSavingDescription" class="h-3.5 w-3.5 animate-spin text-primary" />
         </div>
 
-        <p v-if="!isEditingDescription && professional.description" class="mt-1 text-sm text-datealo-text">
+        <p v-if="!isEditingDescription && professional.description" class="mt-1 text-base text-datealo-text">
           {{ professional.description }}
         </p>
         <button
           v-else-if="!isEditingDescription"
           type="button"
-          class="mt-1 text-left text-sm italic text-datealo-muted"
+          class="mt-1 text-left text-base italic text-datealo-muted"
           @click="editDescription"
         >
           Ej: "Electricista con 10 años de experiencia en Ñuñoa"
@@ -104,23 +104,23 @@ function commitPrice() {
         <button
           v-if="!isEditingDescription && professional.description"
           type="button"
-          class="mt-1 text-xs font-semibold text-primary underline"
+          class="mt-1 text-sm font-semibold text-primary underline"
           @click="editDescription"
         >
           Editar
         </button>
-        <p v-if="hasDescriptionError" class="mt-2 text-xs font-semibold text-error" aria-live="polite">
+        <p v-if="hasDescriptionError" class="mt-2 text-sm font-semibold text-error" aria-live="polite">
           No se pudo guardar, toca para reintentar
         </p>
       </div>
 
       <div class="mt-3 rounded-2xl border border-datealo-surface p-4">
         <div class="flex items-center justify-between">
-          <p class="text-sm font-semibold text-datealo-text">Precio</p>
+          <p class="text-base font-semibold text-datealo-text">Precio</p>
           <Loader2 v-if="isSavingPrice" class="h-3.5 w-3.5 animate-spin text-primary" />
         </div>
 
-        <button v-if="!isEditingPrice" type="button" class="mt-1 block text-left text-sm" @click="editPrice">
+        <button v-if="!isEditingPrice" type="button" class="mt-1 block text-left text-base" @click="editPrice">
           <template v-if="professional.priceFrom">
             <span class="text-datealo-text">Desde ${{ formatPriceFrom(professional.priceFrom) }}</span>
           </template>
@@ -130,24 +130,24 @@ function commitPrice() {
           </template>
         </button>
         <div v-else class="mt-2 flex items-center gap-2">
-          <span class="text-sm text-datealo-muted">Desde $</span>
+          <span class="text-base text-datealo-muted">Desde $</span>
           <UInput
             v-model="priceDraft"
             inputmode="numeric"
             autofocus
-            size="sm"
+            size="lg"
             class="w-32"
             @blur="commitPrice"
             @keyup.enter="commitPrice"
           />
         </div>
-        <p v-if="hasPriceError" class="mt-2 text-xs font-semibold text-error" aria-live="polite">
+        <p v-if="hasPriceError" class="mt-2 text-sm font-semibold text-error" aria-live="polite">
           No se pudo guardar, toca para reintentar
         </p>
       </div>
 
       <div class="mt-3 rounded-2xl border border-datealo-surface p-4">
-        <p class="mb-1 text-sm font-semibold text-datealo-text">Tus datos</p>
+        <p class="mb-1 text-base font-semibold text-datealo-text">Tus datos</p>
 
         <ProfessionalDataRow label="Nombre" field="displayName" :value="professional.displayName" />
         <ProfessionalCatalogRow

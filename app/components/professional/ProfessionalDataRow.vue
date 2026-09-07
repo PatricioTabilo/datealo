@@ -43,7 +43,7 @@ function commit() {
         v-else
         v-model="draft"
         :type="type === 'tel' ? 'tel' : 'text'"
-        size="sm"
+        size="lg"
         class="w-40"
         autofocus
         :color="fieldError ? 'error' : 'primary'"
@@ -52,10 +52,10 @@ function commit() {
         @keyup.enter="commit"
       />
     </div>
-    <p v-if="isEditing && fieldError" class="mt-1 text-right text-xs font-semibold text-error" aria-live="polite">
+    <p v-if="isEditing && fieldError" class="mt-1 text-right text-sm font-semibold text-error" aria-live="polite">
       {{ fieldError }}
     </p>
-    <p v-if="hasSaveError" class="mt-1 text-right text-xs font-semibold text-error" aria-live="polite">
+    <p v-if="hasSaveError" class="mt-1 text-right text-sm font-semibold text-error" aria-live="polite">
       No se pudo guardar, toca para reintentar
     </p>
   </div>
