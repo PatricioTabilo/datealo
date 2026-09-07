@@ -90,14 +90,14 @@ useSeoMeta({
       <!-- con resultados / comunas vecinas -->
       <div v-else-if="matchType === 'exacta' || matchType === 'vecina'" class="flex flex-col gap-3 p-4 lg:p-8">
         <template v-if="matchType === 'vecina'">
-          <div class="rounded-xl bg-datealo-surface p-3.5 text-sm text-datealo-text">
+          <div class="rounded-xl bg-datealo-surface p-3.5 text-base text-datealo-text">
             Todavía no hay profesionales de {{ categoriaNombre }} en {{ comunaNombre }}.
           </div>
           <p class="px-0.5 text-[0.6875rem] font-bold uppercase tracking-wide text-datealo-muted">
             Cerca de {{ comunaNombre }}
           </p>
         </template>
-        <p v-else class="px-0.5 text-xs text-datealo-muted">
+        <p v-else class="px-0.5 text-sm text-datealo-muted">
           {{ results.length }} {{ results.length === 1 ? 'resultado' : 'resultados' }}
         </p>
 

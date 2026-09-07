@@ -40,18 +40,18 @@ const memberSince = computed(() => formatMemberSince(props.professional.createdA
     </div>
 
     <div class="min-w-0 p-3.5">
-      <p class="truncate text-sm font-bold text-datealo-text">{{ professional.displayName }}</p>
+      <p class="truncate text-base font-bold text-datealo-text">{{ professional.displayName }}</p>
       <!-- en negrita en modo vecina: el peso visual, no solo el texto, tiene que avisar que esta comuna
            no es la que se pidió — así el fallback nunca se lee como un resultado real de la exacta -->
-      <p class="truncate text-xs" :class="vecina ? 'font-bold text-datealo-text' : 'text-datealo-muted'">
+      <p class="truncate text-sm" :class="vecina ? 'font-bold text-datealo-text' : 'text-datealo-muted'">
         {{ professional.comunaNombre }}
       </p>
-      <div v-if="professional.ratingAverage !== null" class="mt-1 flex items-center gap-1 text-xs">
+      <div v-if="professional.ratingAverage !== null" class="mt-1 flex items-center gap-1 text-sm">
         <Star class="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
         <span class="font-bold text-datealo-text">{{ professional.ratingAverage.toFixed(1).replace('.', ',') }}</span>
         <span class="text-datealo-muted">· {{ professional.reviewCount }} reseñas</span>
       </div>
-      <p v-if="professional.priceFrom" class="mt-1 text-xs font-bold text-datealo-text">
+      <p v-if="professional.priceFrom" class="mt-1 text-sm font-bold text-datealo-text">
         Desde ${{ formatPriceFrom(professional.priceFrom) }}
       </p>
       <p class="mt-0.5 text-[0.6875rem] text-datealo-muted">En Datealo desde {{ memberSince }}</p>
