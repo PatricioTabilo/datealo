@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>V-001 Editar perfil con varias categorías — misión 14</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../../design/datealo-mockup-kit.css" />
+    <style type="text/tailwindcss">
+      @theme {
+        --color-primary: var(--ui-primary);
+        --color-secondary: var(--ui-secondary);
+        --color-success: var(--ui-success);
+        --color-error: var(--ui-error);
+      }
+    </style>
+    <style>
+      .field-card {
+        border: 1px solid var(--ui-border);
+        border-radius: 1rem;
+        padding: 1rem;
+      }
+      .field-card + .field-card {
+        margin-top: 0.75rem;
+      }
+      .field-card.is-editing {
+        border-color: var(--ui-primary);
+        background: color-mix(in oklab, var(--ui-primary) 4%, var(--ui-bg));
+      }
+      .field-title {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 0.875rem;
+        color: var(--color-datealo-text);
+        margin: 0;
+      }
+      /* padding vertical/horizontal invisible: el texto se ve chico (0.75rem) pero el área de toque real
+         cumple el mínimo de 24x24px con 8px de separación entre "Quitar" y "Editar" (hallazgo de la
+         evaluación heurística de esta misión) */
+      .field-link {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--ui-primary);
+        text-decoration: underline;
+        padding: 0.5rem;
+        margin: -0.5rem;
+      }
+      .input-mock {
+        border: 1px solid var(--ui-border-accented);
+        border-radius: var(--ui-radius);
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        color: var(--color-datealo-text);
+        background: var(--ui-bg);
+      }
+      .add-category-btn {
+        border: 1.5px dashed var(--ui-border-accented);
+        border-radius: 1rem;
+        padding: 0.875rem;
+        text-align: center;
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--ui-primary);
+      }
+      .select-mock {
+        border: 1px solid var(--ui-primary);
+        border-radius: var(--ui-radius);
+        padding: 0.625rem 0.75rem;
+        font-size: 0.875rem;
+        color: var(--ui-text-muted);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="frames">
+      <!-- ============================================== MOBILE · LISTA CON 2 CATEGORÍAS ================= -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo lista de categorías — 2 declaradas
+          <small>cada categoría es un bloque con precio y descripción propios (D-002/D-003 producto.md);
+            "+ Agregar categoría" queda al final, siempre visible</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div style="padding:1.25rem;">
+            <h1 style="font-family:var(--font-heading);font-weight:800;font-size:1.25rem;margin:0;color:var(--color-datealo-text);">
+              Tu perfil
+            </h1>
+            <p style="margin:0.25rem 0 1.25rem;font-size:0.8125rem;color:var(--ui-text-muted);">Feña Silva · Ñuñoa</p>
+
+            <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--ui-text-muted);margin:0 0 0.5rem;">
+              Tus categorías
+            </p>
+
+            <div class="field-card">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <p class="field-title">Gasfitería</p>
+                <button class="field-link" style="color:var(--ui-error);text-decoration:none;" aria-label="Quitar Gasfitería">Quitar</button>
+              </div>
+              <p style="margin:0.375rem 0 0;font-size:0.875rem;color:var(--color-datealo-text);">Desde $18.000</p>
+              <p style="margin:0.25rem 0 0;font-size:0.8125rem;color:var(--ui-text-muted);">
+                Reparación de filtraciones, estanques y llaves. Atiendo fines de semana.
+              </p>
+              <button class="field-link" style="margin-top:0.5rem;display:inline-block;" aria-label="Editar Gasfitería">Editar</button>
+            </div>
+
+            <div class="field-card">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <p class="field-title">Electricidad</p>
+                <button class="field-link" style="color:var(--ui-error);text-decoration:none;" aria-label="Quitar Electricidad">Quitar</button>
+              </div>
+              <p style="margin:0.375rem 0 0;font-size:0.875rem;color:var(--color-datealo-text);">Desde $20.000</p>
+              <p style="margin:0.25rem 0 0;font-size:0.8125rem;color:var(--ui-text-muted);">
+                Instalaciones y reparación de tableros. 8 años de experiencia en Ñuñoa.
+              </p>
+              <button class="field-link" style="margin-top:0.5rem;display:inline-block;" aria-label="Editar Electricidad">Editar</button>
+            </div>
+
+            <div class="add-category-btn" style="margin-top:0.75rem;">+ Agregar categoría</div>
+
+            <div class="field-card" style="margin-top:1.5rem;">
+              <p class="field-title">Tus datos</p>
+              <p style="margin:0.5rem 0 0;font-size:0.8125rem;color:var(--ui-text-muted);">Nombre · Comuna · Contacto</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== DESKTOP · MISMA COLUMNA ANGOSTA ================= -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">
+          V-001 · modo lista de categorías · desktop
+          <small>`perfil.vue` ya fuerza `max-w-md` sin importar el ancho de pantalla (decisión previa a
+            esta misión) — en desktop es la misma columna angosta centrada, con más espacio vacío a los
+            costados, no un layout de dos columnas como el perfil público</small>
+        </div>
+        <div class="frame-viewport">
+          <div style="height:100%;overflow:hidden;display:flex;justify-content:center;background:var(--color-datealo-bg);">
+            <div style="width:28rem;padding:2rem 1.25rem;">
+              <h1 style="font-family:var(--font-heading);font-weight:800;font-size:1.25rem;margin:0;color:var(--color-datealo-text);">
+                Tu perfil
+              </h1>
+              <p style="margin:0.25rem 0 1.25rem;font-size:0.8125rem;color:var(--ui-text-muted);">Feña Silva · Ñuñoa</p>
+
+              <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--ui-text-muted);margin:0 0 0.5rem;">
+                Tus categorías
+              </p>
+
+              <div class="field-card">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <p class="field-title">Gasfitería</p>
+                  <button class="field-link" style="color:var(--ui-error);text-decoration:none;">Quitar</button>
+                </div>
+                <p style="margin:0.375rem 0 0;font-size:0.875rem;color:var(--color-datealo-text);">Desde $18.000</p>
+                <p style="margin:0.25rem 0 0;font-size:0.8125rem;color:var(--ui-text-muted);">
+                  Reparación de filtraciones, estanques y llaves. Atiendo fines de semana.
+                </p>
+                <button class="field-link" style="margin-top:0.5rem;display:inline-block;">Editar</button>
+              </div>
+
+              <div class="field-card">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <p class="field-title">Electricidad</p>
+                  <button class="field-link" style="color:var(--ui-error);text-decoration:none;">Quitar</button>
+                </div>
+                <p style="margin:0.375rem 0 0;font-size:0.875rem;color:var(--color-datealo-text);">Desde $20.000</p>
+                <p style="margin:0.25rem 0 0;font-size:0.8125rem;color:var(--ui-text-muted);">
+                  Instalaciones y reparación de tableros. 8 años de experiencia en Ñuñoa.
+                </p>
+                <button class="field-link" style="margin-top:0.5rem;display:inline-block;">Editar</button>
+              </div>
+
+              <div class="add-category-btn" style="margin-top:0.75rem;">+ Agregar categoría</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== MOBILE · CONFIRMANDO QUITAR ===================== -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo confirmando quitar categoría
+          <small>pide confirmar con la consecuencia dicha explícitamente — no un "¿estás seguro?" genérico
+            (benchmark: LinkedIn al quitar una habilidad, Fiverr al eliminar un gig, ambos confirman)</small>
+        </div>
+        <div class="frame-viewport">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div style="padding:1.25rem;opacity:0.4;">
+            <h1 style="font-family:var(--font-heading);font-weight:800;font-size:1.25rem;margin:0;color:var(--color-datealo-text);">
+              Tu perfil
+            </h1>
+            <p style="margin:0.25rem 0 1.25rem;font-size:0.8125rem;color:var(--ui-text-muted);">Feña Silva · Ñuñoa</p>
+            <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--ui-text-muted);margin:0 0 0.5rem;">
+              Tus categorías
+            </p>
+            <div class="field-card">
+              <p class="field-title">Gasfitería</p>
+              <p style="margin:0.375rem 0 0;font-size:0.875rem;color:var(--color-datealo-text);">Desde $18.000</p>
+            </div>
+            <div class="field-card">
+              <p class="field-title">Electricidad</p>
+              <p style="margin:0.375rem 0 0;font-size:0.875rem;color:var(--color-datealo-text);">Desde $20.000</p>
+            </div>
+            <div class="add-category-btn" style="margin-top:0.75rem;">+ Agregar categoría</div>
+          </div>
+
+          <!-- Overlay a todo el alto real del viewport (844px, no is-auto) — así el sheet queda anclado
+               al borde inferior de una pantalla real, no al borde de un contenido recortado. -->
+          <div style="position:absolute;inset:0;background:rgb(31 41 55 / 0.45);">
+            <div style="position:absolute;left:0;right:0;bottom:0;background:var(--ui-bg);border-radius:1.25rem 1.25rem 0 0;padding:0.75rem 1.5rem 1.5rem;box-shadow:0 -8px 24px -12px rgb(31 41 55 / 0.35);">
+              <div style="width:2.25rem;height:0.25rem;border-radius:999px;background:var(--ui-border-accented);margin:0 auto 1rem;"></div>
+              <p style="font-family:var(--font-heading);font-weight:800;font-size:1.0625rem;margin:0;color:var(--color-datealo-text);">
+                ¿Quitar Gasfitería de tu perfil?
+              </p>
+              <p style="margin-top:0.5rem;font-size:0.875rem;line-height:1.5;color:var(--ui-text-muted);">
+                Perderás el precio y la descripción que escribiste para esta categoría.
+              </p>
+              <div style="margin-top:1.25rem;display:flex;gap:0.75rem;">
+                <button style="flex:1;padding:0.75rem;border-radius:var(--ui-radius);border:1.5px solid var(--ui-border-accented);font-weight:700;font-size:0.875rem;color:var(--ui-text-toned);background:none;">
+                  Cancelar
+                </button>
+                <button style="flex:1;padding:0.75rem;border-radius:var(--ui-radius);border:none;font-weight:700;font-size:0.875rem;color:#fff;background:#ef4444;">
+                  Quitar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== DESKTOP · CONFIRMANDO QUITAR, MODAL CENTRADO ==== -->
+      <section class="frame frame-desktop">
+        <div class="frame-label">
+          V-001 · modo confirmando quitar categoría · desktop
+          <small>el bottom sheet es un patrón táctil (deslizar para cerrar) que no aplica con mouse — en
+            desktop es el modal centrado por defecto de `UModal` (Nuxt UI), fondo atenuado cubriendo todo
+            el viewport, no solo la columna angosta del perfil</small>
+        </div>
+        <div class="frame-viewport">
+          <div style="height:100%;overflow:hidden;display:flex;justify-content:center;background:var(--color-datealo-bg);position:relative;">
+            <div style="width:28rem;padding:2rem 1.25rem;opacity:0.4;">
+              <h1 style="font-family:var(--font-heading);font-weight:800;font-size:1.25rem;margin:0;color:var(--color-datealo-text);">
+                Tu perfil
+              </h1>
+              <p style="margin:0.25rem 0 1.25rem;font-size:0.8125rem;color:var(--ui-text-muted);">Feña Silva · Ñuñoa</p>
+              <div class="field-card">
+                <p class="field-title">Gasfitería</p>
+                <p style="margin:0.375rem 0 0;font-size:0.875rem;color:var(--color-datealo-text);">Desde $18.000</p>
+              </div>
+              <div class="field-card">
+                <p class="field-title">Electricidad</p>
+                <p style="margin:0.375rem 0 0;font-size:0.875rem;color:var(--color-datealo-text);">Desde $20.000</p>
+              </div>
+            </div>
+
+            <div style="position:absolute;inset:0;background:rgb(31 41 55 / 0.45);display:flex;align-items:center;justify-content:center;">
+              <div style="width:24rem;background:var(--ui-bg);border-radius:1rem;padding:1.75rem;box-shadow:0 20px 40px -12px rgb(31 41 55 / 0.4);">
+                <p style="font-family:var(--font-heading);font-weight:800;font-size:1.125rem;margin:0;color:var(--color-datealo-text);">
+                  ¿Quitar Gasfitería de tu perfil?
+                </p>
+                <p style="margin-top:0.625rem;font-size:0.875rem;line-height:1.5;color:var(--ui-text-muted);">
+                  Perderás el precio y la descripción que escribiste para esta categoría.
+                </p>
+                <div style="margin-top:1.5rem;display:flex;justify-content:flex-end;gap:0.75rem;">
+                  <button style="padding:0.625rem 1.25rem;border-radius:var(--ui-radius);border:1.5px solid var(--ui-border-accented);font-weight:700;font-size:0.875rem;color:var(--ui-text-toned);background:none;">
+                    Cancelar
+                  </button>
+                  <button style="padding:0.625rem 1.25rem;border-radius:var(--ui-radius);border:none;font-weight:700;font-size:0.875rem;color:#fff;background:#ef4444;">
+                    Quitar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== MOBILE · AGREGANDO, ELIGIENDO CATEGORÍA ========= -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo agregando categoría — paso 1, eligiendo
+          <small>el selector excluye Gasfitería y Electricidad, que ya están declaradas</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div style="padding:1.25rem;">
+            <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--ui-text-muted);margin:0 0 0.5rem;">
+              Tus categorías
+            </p>
+            <div class="field-card" style="opacity:0.55;">
+              <p class="field-title">Gasfitería</p>
+              <p style="margin:0.375rem 0 0;font-size:0.875rem;color:var(--color-datealo-text);">Desde $18.000</p>
+            </div>
+            <div class="field-card" style="opacity:0.55;">
+              <p class="field-title">Electricidad</p>
+              <p style="margin:0.375rem 0 0;font-size:0.875rem;color:var(--color-datealo-text);">Desde $20.000</p>
+            </div>
+
+            <div class="field-card is-editing">
+              <p class="field-title">Categoría nueva</p>
+              <div class="select-mock" style="margin-top:0.5rem;">
+                Elige una categoría
+                <svg class="icon" style="width:0.875rem;height:0.875rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg>
+              </div>
+              <button class="field-link" style="margin-top:0.625rem;display:inline-block;color:var(--ui-text-muted);text-decoration:none;">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== MOBILE · AGREGANDO, CATEGORÍA ELEGIDA =========== -->
+      <section class="frame frame-mobile">
+        <div class="frame-label">
+          V-001 · modo agregando categoría — paso 2, precio y descripción
+          <small>ambos campos son opcionales, igual que hoy permite un perfil sin descripción; se guardan
+            al perder el foco (mismo patrón que "Descripción"/"Precio")</small>
+        </div>
+        <div class="frame-viewport is-auto">
+          <div class="status-bar"><span>9:41</span><span>▮▮▮</span></div>
+          <div style="padding:1.25rem;">
+            <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--ui-text-muted);margin:0 0 0.5rem;">
+              Tus categorías
+            </p>
+            <div class="field-card" style="opacity:0.55;">
+              <p class="field-title">Gasfitería</p>
+              <p style="margin:0.375rem 0 0;font-size:0.875rem;color:var(--color-datealo-text);">Desde $18.000</p>
+            </div>
+            <div class="field-card" style="opacity:0.55;">
+              <p class="field-title">Electricidad</p>
+              <p style="margin:0.375rem 0 0;font-size:0.875rem;color:var(--color-datealo-text);">Desde $20.000</p>
+            </div>
+
+            <div class="field-card is-editing">
+              <p class="field-title">Jardín y áreas verdes</p>
+              <div style="margin-top:0.625rem;display:flex;align-items:center;gap:0.5rem;">
+                <span style="font-size:0.875rem;color:var(--ui-text-muted);">Desde $</span>
+                <div class="input-mock" style="width:5rem;">10.000</div>
+              </div>
+              <textarea
+                class="input-mock"
+                style="margin-top:0.625rem;width:100%;resize:none;"
+                rows="2"
+                placeholder='Ej: "Corte de pasto y desmalezado con máquina"'
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
