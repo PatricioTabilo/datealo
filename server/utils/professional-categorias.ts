@@ -46,3 +46,23 @@ export async function findProfessionalCategorias(professionalId: string): Promis
     .where(eq(professionalCategorias.professionalId, professionalId))
     .orderBy(asc(professionalCategorias.createdAt))
 }
+
+// null en vez de lanzar: onConflictDoNothing captura el choque contra la PK compuesta
+// (professionalId, categoriaSlug) sin una vuelta redonda de select-antes-de-insert, y el endpoint
+// traduce null a 400 already_declared en vez de dejar que un 500 de Postgres llegue al cliente.
+export async function addProfessionalCategoria(
+  professionalId: string,
+  categoriaSlug: string,
+  priceFrom: number | null,
+  description: string | null,
+): Promise<PublicCategoria[] | null> {
+  const [inserted] = await useDb()
+    .insert(professionalCategorias)
+    .values({ professionalId, categoriaSlug, priceFrom, description })
+    .onConflictDoNothing({ target: [professionalCategorias.professionalId, professionalCategorias.categoriaSlug] })
+    .returning({ professionalId: professionalCategorias.professionalId })
+
+  if (!inserted) return null
+
+  return findProfessionalCategorias(professionalId)
+}
