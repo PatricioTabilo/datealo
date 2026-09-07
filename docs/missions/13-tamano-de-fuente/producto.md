@@ -292,7 +292,7 @@ resolverla no se puede cerrar si `experiencia.md` solo ajusta números o tambié
 
 | ID    | La duda                                                                              | Estado  | Respuesta, o quién la resuelve                                                                          |
 | ----- | --------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------- |
-| Q-001 | ¿Alcanza con subir el tamaño (D-001), o el texto secundario necesita además más peso o contraste para distinguirse del principal? | abierta | Dueño de producto, revisando una captura en 390px del antes/después de F-001 ya implementado. Bloquea si `experiencia.md` toca solo tamaños o también peso/color; sin fecha límite, se resuelve al revisar el primer PR de F-001. |
+| Q-001 | ¿Alcanza con subir el tamaño (D-001), o el texto secundario necesita además más peso o contraste para distinguirse del principal? | resuelta 2026-09-06 | Dueño de producto, revisando la captura real en 390px de `SearchResultCard` (S-001 ya implementado): la jerarquía nombre 16px bold / secundario 14px normal se sostiene sola, sin necesidad de ajustar peso o contraste. |
 
 <a id="q-001"></a>
 
@@ -303,8 +303,7 @@ resolverla no se puede cerrar si `experiencia.md` solo ajusta números o tambié
   hace que ambos textos "compitan" visualmente y haga falta bajarle el peso o el contraste de color al
   secundario para que la jerarquía se mantenga clara?
 - **Afecta a:** [D-001](#d-001) y [F-001](#f-001).
-- **Cómo se resolverá:** el dueño de producto revisa una captura de F-001 ya implementado en 390px, antes
-  de aprobar `experiencia.md` como definitivo.
-- **¿Bloquea algo?:** no bloquea empezar `experiencia.md` ni la implementación de F-001 — bloquea
-  únicamente si `experiencia.md` necesita una segunda vuelta para ajustar peso/color además de tamaño. Sin
-  fecha límite.
+- **Cómo se resolvió:** el dueño de producto revisó la captura real de S-001 en 390px (PR #217, ya
+  mergeado) y confirmó que la jerarquía se sostiene sola, sin ajuste de peso o contraste.
+- **Resolución:** 2026-09-06 — no bloqueó nada; los tres slices (S-001 a S-003) se implementaron y
+  mergearon con el criterio de `experiencia.md` sin cambios.

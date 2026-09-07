@@ -90,7 +90,7 @@ tiene pregunta, límite de tiempo y resultado capaz de cerrar la incertidumbre.
 
 | ID     | Riesgo o pregunta                                                                 | Qué invalida | Experimento o mitigación | Criterio de salida | Estado |
 | ------ | ------------------------------------------------------------------------------------ | -------------- | --------------------------- | --------------------- | -------- |
-| TR-001 | Los mockups usan Tailwind puro (aproximación); Nuxt UI real puede espaciar distinto y romper algún layout que el mockup no capturó | UX-001 (jerarquía sin tocar peso/color) — no D-001/F-001 en sí | Captura con Playwright en 390px de cada slice ya implementado, antes de abrir su PR | El dueño de producto revisa la captura real y confirma que sostiene lo que muestra el mockup — esto es lo que cierra [Q-001](./producto.md#q-001) | abierto |
+| TR-001 | Los mockups usan Tailwind puro (aproximación); Nuxt UI real puede espaciar distinto y romper algún layout que el mockup no capturó | UX-001 (jerarquía sin tocar peso/color) — no D-001/F-001 en sí | Captura con Playwright en 390px de cada slice ya implementado, antes de abrir su PR | El dueño de producto revisa la captura real y confirma que sostiene lo que muestra el mockup — esto es lo que cierra [Q-001](./producto.md#q-001) | cerrado 2026-09-06 — capturas de los tres slices revisadas, layout y jerarquía sostenidos sin ajustes |
 
 ## Estrategia de pruebas
 
