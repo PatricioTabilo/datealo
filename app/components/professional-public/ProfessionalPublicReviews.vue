@@ -47,13 +47,13 @@ async function handleSubmit() {
 
 <template>
   <div v-if="reviews.length > 0 || hasToken">
-    <h2 class="text-sm font-extrabold text-datealo-text">Reseñas</h2>
+    <h2 class="text-base font-extrabold text-datealo-text">Reseñas</h2>
 
     <div
       v-if="hasToken"
       class="mt-3 rounded-2xl border-[1.5px] border-dashed border-datealo-surface bg-datealo-surface/40 p-4"
     >
-      <p class="text-sm font-bold text-datealo-text">{{ cardHeading }}</p>
+      <p class="text-base font-bold text-datealo-text">{{ cardHeading }}</p>
       <UButton class="mt-2.5 w-full justify-center" @click="sheet.open()">
         {{ cardButtonLabel }}
       </UButton>

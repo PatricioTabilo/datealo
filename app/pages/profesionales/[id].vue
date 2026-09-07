@@ -77,7 +77,7 @@ useSeoMeta({
             Desde ${{ formatPriceFrom(professional.priceFrom) }}
           </p>
 
-          <p v-if="professional.description" class="mt-4 text-sm leading-relaxed text-datealo-text">
+          <p v-if="professional.description" class="mt-4 text-base leading-relaxed text-datealo-text">
             {{ professional.description }}
           </p>
         </div>

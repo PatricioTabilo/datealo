@@ -27,13 +27,13 @@ function registerContact() {
 
 <template>
   <div class="flex gap-2">
-    <UButton :to="whatsappUrl" size="lg" class="flex-1 justify-center font-bold" @click="registerContact">
+    <UButton :to="whatsappUrl" size="xl" class="flex-1 justify-center font-bold" @click="registerContact">
       <MessageCircle class="h-5 w-5" />
       Escribir por WhatsApp
     </UButton>
     <UButton
       :to="telUrl"
-      size="lg"
+      size="xl"
       variant="outline"
       color="neutral"
       class="px-4"
