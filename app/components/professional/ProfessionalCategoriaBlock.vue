@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Loader2 } from '@lucide/vue'
+import { UModal, USlideover } from '#components'
 import type { PublicCategoria } from '~/types/professional'
 
 const props = defineProps<{
@@ -20,6 +21,25 @@ const isRemoving = ref(false)
 const removeErrorMessage = ref<string | null>(null)
 
 const rootEl = ref<HTMLElement | null>(null)
+
+// El bottom sheet (USlideover) trae su propia animación de deslizar desde abajo — forzarlo a quedar
+// centrado en desktop con clases pelea contra esa animación (el contenido termina centrado, pero se
+// ve deslizar desde fuera del viewport en el camino). Elegir el componente según el ancho evita esa
+// pelea: cada uno anima de la forma que ya trae resuelta.
+const isDesktop = ref(false)
+let desktopQuery: MediaQueryList | undefined
+
+function syncIsDesktop(event: MediaQueryList | MediaQueryListEvent) {
+  isDesktop.value = event.matches
+}
+
+onMounted(() => {
+  desktopQuery = window.matchMedia('(min-width: 640px)')
+  syncIsDesktop(desktopQuery)
+  desktopQuery.addEventListener('change', syncIsDesktop)
+})
+
+onUnmounted(() => desktopQuery?.removeEventListener('change', syncIsDesktop))
 
 // El bloque muestra precio y descripción juntos en edición (a diferencia de los bloques de un solo
 // campo que ya usa el perfil): "toca fuera del bloque" es lo que cierra la edición, no el blur de cada
@@ -150,14 +170,12 @@ async function confirmRemove() {
       No puedes quitar tu única categoría. Agrega otra antes de quitar esta.
     </p>
 
-    <USlideover
+    <component
+      :is="isDesktop ? UModal : USlideover"
       :open="confirmingRemove"
-      side="bottom"
+      :side="isDesktop ? undefined : 'bottom'"
       :title="`¿Quitar ${categoria.nombre} de tu perfil?`"
       description="Perderás el precio y la descripción que escribiste para esta categoría."
-      :ui="{
-        content: 'rounded-t-2xl sm:inset-x-auto sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-full sm:max-w-md sm:rounded-2xl sm:max-h-[85vh]',
-      }"
       @update:open="confirmingRemove = $event"
     >
       <template #body>
@@ -173,6 +191,6 @@ async function confirmRemove() {
           </UButton>
         </div>
       </template>
-    </USlideover>
+    </component>
   </div>
 </template>
