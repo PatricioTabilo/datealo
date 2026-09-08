@@ -7,7 +7,7 @@ const props = defineProps<{
   canRemove: boolean
 }>()
 
-const { updateCategoria, removeCategoria } = useProfessionalCategorias()
+const { updateCategoria, removeCategoria, justAddedSlug } = useProfessionalCategorias()
 
 const isEditing = ref(false)
 const isSaving = ref(false)
@@ -43,6 +43,15 @@ function startEdit() {
   hasSaveError.value = false
   isEditing.value = true
 }
+
+// Un bloque recién creado entra directo en edición: elegir la categoría ya la guardó, lo que falta es
+// precio y descripción, sin un toque extra a "Editar" en el medio.
+onMounted(() => {
+  if (justAddedSlug.value === props.categoria.slug) {
+    justAddedSlug.value = null
+    startEdit()
+  }
+})
 
 async function commitPrice() {
   const trimmed = priceDraft.value.trim()
@@ -146,6 +155,9 @@ async function confirmRemove() {
       side="bottom"
       :title="`¿Quitar ${categoria.nombre} de tu perfil?`"
       description="Perderás el precio y la descripción que escribiste para esta categoría."
+      :ui="{
+        content: 'rounded-t-2xl sm:inset-x-auto sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-full sm:max-w-md sm:rounded-2xl sm:max-h-[85vh]',
+      }"
       @update:open="confirmingRemove = $event"
     >
       <template #body>

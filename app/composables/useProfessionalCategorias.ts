@@ -7,6 +7,10 @@ export function useProfessionalCategorias() {
 
   const categorias = computed(() => professional.value?.categorias ?? [])
   const announcement = useState('professional-categorias-announcement', () => '')
+  // El bloque que se acaba de crear lee y limpia esto en su propio onMounted, para entrar directo en
+  // edición de precio/descripción sin que el usuario tenga que tocar "Editar" después de elegir la
+  // categoría — elegirla ya la guardó, lo único que falta es esos dos campos.
+  const justAddedSlug = useState<string | null>('professional-categorias-just-added', () => null)
 
   function applyCategorias(updated: PublicCategoria[]) {
     if (professional.value) professional.value = { ...professional.value, categorias: updated }
@@ -20,6 +24,7 @@ export function useProfessionalCategorias() {
       })
       applyCategorias(updated)
       announcement.value = `${updated.find(c => c.slug === categoriaSlug)?.nombre ?? categoriaSlug} agregada`
+      justAddedSlug.value = categoriaSlug
       return true
     } catch {
       return false
@@ -54,5 +59,5 @@ export function useProfessionalCategorias() {
     }
   }
 
-  return { categorias, announcement, addCategoria, updateCategoria, removeCategoria }
+  return { categorias, announcement, justAddedSlug, addCategoria, updateCategoria, removeCategoria }
 }
