@@ -1,8 +1,10 @@
 # Misión: múltiples categorías por profesional — Experiencia
 
-**Estado:** vigente — aprobado por Patricio Tabilo el 2026-09-06
+**Estado:** en revisión — UXF-001/UX-002 revisados el 2026-09-07 (guardado explícito con Cancelar/Guardar
+en vez de autosave por campo; ver el detalle en cada sección). El resto del documento sigue como se aprobó
+el 2026-09-06.
 
-**Última actualización:** 2026-09-06
+**Última actualización:** 2026-09-07
 
 [Índice](./README.md) · [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
@@ -25,9 +27,12 @@ fuera del registro inicial — solo se hace editando el perfil ya creado.
   flujo UXF-001
   - modo **lista de categorías** — cada categoría declarada como bloque con su precio y descripción; "+
     Agregar categoría" al final, siempre visible
-  - modo **agregando categoría** — un bloque nuevo en edición: primero el selector de categoría, después
-    precio y descripción
-  - modo **confirmando quitar** — bottom sheet con la consecuencia explícita, Cancelar/Quitar
+  - modo **agregando categoría** — un bloque nuevo con sus tres campos visibles a la vez (selector,
+    precio, descripción) y Cancelar/Guardar categoría al pie
+  - modo **editando una categoría declarada** — el bloque existente muestra precio y descripción
+    editables juntos, con Cancelar/Guardar cambios al pie — mismo mecanismo que agregar, sin el selector
+  - modo **confirmando quitar** — bottom sheet (mobile) o modal centrado (desktop) con la consecuencia
+    explícita, Cancelar/Quitar
 - **V-002 — Resultados de búsqueda** · móvil / desktop · resuelve F-002 · sin flujo nuevo
   - Vista ya construida (misión 10); esta misión no le agrega modos. Un profesional con 2+ categorías
     aparece en cada búsqueda por separado, con el precio de la categoría que corresponde a esa búsqueda —
@@ -50,60 +55,83 @@ fuera del registro inicial — solo se hace editando el perfil ya creado.
 | Desde                          | Acción                                             | Queda en                       | Qué pasa con el trabajo                                    |
 | ------------------------------- | --------------------------------------------------- | -------------------------------- | -------------------------------------------------------------- |
 | V-001 · lista de categorías      | Toca "+ Agregar categoría"                            | V-001 · agregando categoría       | Los bloques existentes no cambian                              |
-| V-001 · agregando categoría      | Elige categoría, llena precio/descripción (o no) y sale del bloque | V-001 · lista de categorías | Se agrega el bloque nuevo al final de la lista                 |
-| V-001 · agregando categoría      | Toca "Cancelar" antes de elegir categoría             | V-001 · lista de categorías       | No se guarda nada, el bloque en blanco desaparece               |
+| V-001 · agregando categoría      | Elige categoría, llena precio/descripción (o no) y toca "Guardar categoría" | V-001 · lista de categorías | Se agrega el bloque nuevo al final de la lista, con confirmación |
+| V-001 · agregando categoría      | Toca "Cancelar", en cualquier momento                | V-001 · lista de categorías       | No se guarda nada, el bloque en blanco desaparece               |
+| V-001 · lista de categorías      | Toca "Editar" en un bloque declarado                  | V-001 · editando esa categoría    | El resto de los bloques no cambia                               |
+| V-001 · editando una categoría   | Cambia precio/descripción y toca "Guardar cambios"    | V-001 · lista de categorías       | El bloque queda con los valores nuevos, con confirmación        |
+| V-001 · editando una categoría   | Toca "Cancelar"                                       | V-001 · lista de categorías       | El bloque vuelve a sus valores de antes, nada se envía al servidor |
 | V-001 · lista de categorías      | Toca "Quitar" en un bloque (con 2+ categorías)        | V-001 · lista de categorías       | Ese bloque desaparece de inmediato, el resto no cambia          |
 | V-002 · resultados de "Gasfitería en Ñuñoa" | Toca la card de un profesional multi-categoría | V-003 · perfil (contexto: Gasfitería) | El precio, la descripción y el mensaje de WhatsApp usan Gasfitería |
 | V-003 · perfil (cualquier modo)  | Toca "Escribir por WhatsApp" o "Llamar"               | WhatsApp / marcador (fuera de Datealo) | El perfil queda en la misma posición al volver                 |
 
-## UXF-001 — Agregar una categoría al perfil
+## UXF-001 — Agregar o editar una categoría del perfil
 
-**Objetivo:** el profesional agrega una categoría que no tenía, con su propio precio y descripción.
+**Objetivo:** el profesional agrega una categoría que no tenía, o cambia el precio/descripción de una que
+ya declaró, con la certeza de que quedó guardado antes de seguir.
 **Contrato:** [F-001](./producto.md#f-001).
 
 **Punto de entrada:** el profesional está en su perfil (V-001), con al menos una categoría ya declarada
 (todo profesional tiene una desde el registro).
 
-**Criterio de término:** la nueva categoría aparece como un bloque más en la lista, con su precio y
-descripción guardados (o vacíos si no los llenó), y desde ese momento cuenta para las búsquedas de esa
-categoría.
+**Criterio de término:** toca "Guardar categoría" (al agregar) o "Guardar cambios" (al editar) y ve la
+confirmación; el bloque queda con los valores nuevos y, si es una categoría nueva, cuenta desde ese
+momento para las búsquedas de esa categoría.
 
 **Cómo sabe el usuario dónde está:** cada bloque de categoría muestra su nombre como título; el bloque en
-edición se distingue con el mismo borde/fondo resaltado que ya usan hoy los bloques de "Descripción" y
-"Precio" al editarse.
+edición se distingue con el mismo borde/fondo resaltado que ya usan los bloques de "Nombre"/"Comuna" del
+perfil, y siempre trae Cancelar/Guardar visibles al pie mientras dura la edición — nunca solo uno de los
+dos.
 
 ### Salidas
 
 | Salida                | Cómo se ejecuta                                                  | Qué queda del trabajo                                |
 | ---------------------- | ------------------------------------------------------------------ | -------------------------------------------------------- |
-| Termina bien           | Elige categoría y llena precio/descripción (guardado automático al perder el foco de cada campo) | El bloque nuevo queda guardado y visible                 |
-| Cancela                | Toca "Cancelar" antes de elegir categoría                           | Nada se guarda, el bloque en blanco desaparece            |
-| Abandona sin cerrar    | Cierra la app o navega a otra parte a medio llenar                 | Nada se guarda (no hay borrador); al volver ve la lista como estaba antes de tocar "+ Agregar" |
+| Termina bien (agregar) | Elige categoría, llena precio/descripción si quiere, toca "Guardar categoría" | Un solo guardado con los tres datos juntos; el bloque nuevo queda visible con confirmación |
+| Termina bien (editar)  | Cambia precio/descripción, toca "Guardar cambios"                   | Un solo guardado con los dos datos juntos; el bloque queda con los valores nuevos y confirmación |
+| Cancela                | Toca "Cancelar", en cualquier momento mientras el bloque está en edición | Al agregar: nada se guarda, el bloque en blanco desaparece. Al editar: el bloque vuelve a mostrar sus valores de antes, no se envía nada al servidor |
+| Abandona sin cerrar    | Cierra la app o navega a otra parte con el bloque a medio llenar   | Nada se guarda (no hay borrador); al volver ve la lista como estaba antes de entrar en edición |
+| Falla el guardado      | Toca "Guardar categoría"/"Guardar cambios" y el servidor falla      | El bloque conserva todo lo escrito, con un error inline; reintentar no obliga a volver a escribir nada |
 | Quita una categoría    | Toca "Quitar", confirma en el modal ("¿Quitar Gasfitería de tu perfil? Perderás el precio y la descripción que escribiste.") | El bloque desaparece; si cancela el modal, no cambia nada |
 
 ### Secuencia principal
 
+**Agregar:**
+
 | Paso | Acción                                                              | Respuesta del sistema                                                                 | Información visible                                                                 |
 | ---- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
-| 1    | Toca "+ Agregar categoría" al final de la lista                        | Aparece un bloque nuevo en modo edición, con el selector de categoría enfocado              | El selector solo lista las categorías que le faltan (excluye las ya declaradas)            |
-| 2    | Elige una categoría (ej. "Gasfitería")                                  | El bloque muestra el nombre elegido y dos campos: precio y descripción, vacíos              | "Gasfitería" como título del bloque, con el mismo placeholder de ejemplo que ya usa el bloque general de descripción |
-| 3    | Llena precio y/o descripción (ambos opcionales) y sale del campo (blur) | Cada campo se guarda al perder el foco, con el mismo loader que usa hoy "Descripción"/"Precio" | Spinner breve junto al campo que se está guardando                                        |
-| 4    | Termina de editar (toca fuera del bloque, o pasa a otro)                | El bloque pasa a modo lectura: "Gasfitería · Desde $18.000" y la descripción si la ingresó   | El bloque queda tan compacto como los de "Descripción"/"Precio" existentes                 |
+| 1    | Toca "+ Agregar categoría" al final de la lista                        | Aparece un bloque nuevo con sus tres campos visibles a la vez: selector de categoría (enfocado), precio y descripción — ninguno aparece después, todos están ahí desde el primer instante | El selector solo lista las categorías que le faltan (excluye las ya declaradas); "Guardar categoría" empieza deshabilitado |
+| 2    | Elige una categoría y, si quiere, llena precio y/o descripción (ambos opcionales); nada se envía todavía | "Guardar categoría" pasa a habilitado apenas hay una categoría elegida                     | Cancelar y Guardar categoría, siempre visibles al pie del bloque                           |
+| 3    | Toca "Guardar categoría"                                               | Un solo request guarda categoría, precio y descripción juntos; el botón muestra su propio loader mientras espera | El resto del perfil sigue interactivo mientras tanto                                       |
+| 4    | El guardado termina                                                    | El bloque pasa a modo lectura: "Gasfitería · Desde $18.000" y la descripción si la ingresó, más una confirmación visible ("Gasfitería agregada") | El bloque queda tan compacto como los demás de la lista                                    |
+
+**Editar una categoría ya declarada:** mismo mecanismo, sin el paso 1 del selector — tocar "Editar" abre
+directo precio y descripción prellenados con los valores actuales, y el botón dice "Guardar cambios".
 
 ### Variantes y recuperación
 
 | Condición                                              | Qué cambia                                                    | Cómo se entiende                                                        | Cómo se recupera                                             |
 | --------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | Ya declaró todas las categorías activas                    | El botón "+ Agregar categoría" no aparece                          | Se omite en silencio — es un estado normal, no un error                       | No aplica                                                          |
-| Falla el guardado (categoría, precio o descripción)        | El bloque conserva su valor anterior                                | "No se pudo guardar, toca para reintentar" bajo el campo (patrón ya existente en descripción/precio) | Tocar el mensaje reintenta el guardado                              |
+| Todavía no eligió categoría (agregar)                      | "Guardar categoría" está deshabilitado                             | El botón se ve inactivo — previene el intento en vez de rechazarlo después     | Elegir una categoría lo habilita                                    |
+| Falla el guardado (agregar o editar)                       | El bloque conserva categoría, precio y descripción tal como estaban escritos | "No se pudo guardar. Toca 'Guardar categoría' para reintentar." bajo los botones | Tocar el botón de nuevo reintenta el mismo guardado, sin perder nada |
 | Intenta quitar su única categoría restante                 | El botón "Quitar" de esa categoría no aparece                       | Texto breve junto al bloque: "No puedes quitar tu única categoría. Agrega otra antes de quitar esta." | Agregar otra categoría primero habilita quitar la actual            |
-| Conexión lenta al guardar                                  | El campo muestra el mismo spinner que hoy usan precio/descripción   | Spinner junto al campo, no bloquea el resto del perfil                        | Mismo reintento que ya tienen los demás campos editables            |
+| Conexión lenta al guardar                                  | "Guardar categoría"/"Guardar cambios" muestra su propio loader, deshabilitado mientras dura | Loader en el botón, no bloquea el resto del perfil                            | Espera a que termine; no hay reintento manual necesario             |
 
 ### Decisiones que no deben quedar implícitas
 
-- Elegir una categoría del selector la guarda de inmediato, sin un botón "Confirmar" aparte — mismo patrón
-  de guardado inmediato por campo que ya usa el resto del perfil.
-- Cancelar antes de elegir categoría no deja un bloque vacío a medio crear: el bloque desaparece.
+- El guardado es una acción explícita — "Guardar categoría"/"Guardar cambios" — nunca automática al
+  perder el foco. Con dos o tres campos relacionados a la vez (categoría, precio, descripción), guardar
+  cada uno por separado en silencio no le da al profesional ninguna señal de "ya terminé"; un botón con su
+  propio estado de carga y una confirmación visible sí. Esto es distinto del patrón de "Nombre"/"Contacto"
+  del perfil general (guardado inmediato por campo al perder el foco): ahí cada bloque es un solo dato
+  suelto, acá son dos o tres que se completan juntos antes de comprometerlos.
+- Todos los campos del bloque están visibles desde el primer instante — el selector no revela precio y
+  descripción recién después de elegir categoría. Revelar campos en pasos sorprende con un formulario que
+  cambia de forma a mitad de la tarea, justo cuando el profesional ya empezó a escribir.
+- "Cancelar" está disponible en todo momento mientras el bloque está en edición, tanto al agregar (descarta
+  el bloque entero, nada se guarda) como al editar una categoría ya declarada (revierte los campos a sus
+  valores actuales, sin llamar al servidor). Sin esto, la única forma de salir de la edición es guardar
+  algo, aunque sea un error de tipeo que el profesional quiere descartar.
 - Quitar una categoría pide confirmar, con la consecuencia dicha explícitamente: "¿Quitar Gasfitería de
   tu perfil? Perderás el precio y la descripción que escribiste para esta categoría." con botones
   Cancelar/Quitar. No es el mismo caso que quitar una foto de trabajo (`ProfessionalPhotos.vue`, sin
@@ -115,22 +143,24 @@ edición se distingue con el mismo borde/fondo resaltado que ya usan hoy los blo
   la categoría (ver "Fuera de alcance" en `producto.md`). Salvo que sea la única categoría restante, en
   cuyo caso ni siquiera se ofrece la opción de quitarla. En móvil el modal aparece como bottom sheet (sube
   desde abajo, esquinas superiores redondeadas) — el patrón que Datealo ya tiene decidido para overlays
-  en móvil. Aunque `perfil.vue` mantiene su columna angosta (`max-w-md`) en cualquier ancho de pantalla
-  (ver la vista V-001 más arriba), el modal de confirmación no hereda ese ancho: en desktop se ve
-  centrado en toda la pantalla, con el fondo atenuado cubriendo el viewport completo (no solo la columna),
-  esquinas redondeadas en los cuatro lados y sin el tirador de arrastre — el bottom sheet es un patrón
-  táctil (deslizar para cerrar) que no tiene sentido con mouse, y un sheet de ancho completo en una
-  pantalla de escritorio se vería como una franja larga y vacía. Es el comportamiento por defecto de
-  `UModal` de Nuxt UI entre breakpoints, no algo que haya que construir a mano.
+  en móvil. En desktop se ve centrado en toda la pantalla, con el fondo atenuado cubriendo el viewport
+  completo (no solo la columna angosta de `perfil.vue`), esquinas redondeadas en los cuatro lados y sin el
+  tirador de arrastre — el bottom sheet es un patrón táctil (deslizar para cerrar) que no tiene sentido con
+  mouse, y un sheet de ancho completo en una pantalla de escritorio se vería como una franja larga y vacía.
+  Nuxt UI no cambia esto solo entre tamaños de pantalla (verificado contra el paquete instalado): son dos
+  componentes distintos, uno por ancho de pantalla, elegidos en tiempo de ejecución — no un solo componente
+  con comportamiento responsive nativo.
 - Los botones "Quitar" y "Editar" llevan `aria-label` con el nombre de la categoría ("Quitar Gasfitería",
   "Editar Gasfitería") — el texto visible se queda corto ("Quitar" a secas) cuando hay más de un bloque en
   pantalla y un lector de pantalla los anuncia sin el contexto visual que los separa. Cada uno lleva
   padding suficiente para un área de toque de al menos 24×24px (el texto visible es más chico) y al menos
   8px de separación entre ambos, aunque compartan la misma línea — no solo tamaño de fuente pequeño sin
   margen alrededor.
-- Agregar o quitar un bloque de categoría anuncia el cambio con `aria-live="polite"` sobre la lista de
-  categorías (ej. "Gasfitería agregada" / "Gasfitería quitada") — sin esto, alguien que usa lector de
-  pantalla no se entera de que la lista cambió, porque el bloque aparece o desaparece en silencio.
+- Agregar, editar o quitar una categoría confirma con un toast (`bottom-right`, mismo patrón que ya usa
+  `ProfessionalPublicReviews.vue` para "Reseña publicada") en vez de solo un cambio visual en la lista —
+  "Gasfitería agregada" / "Cambios guardados" / "Gasfitería quitada". Es la única forma de que alguien que
+  usa lector de pantalla se entere de que la lista cambió, y además le da a cualquiera una señal clara de
+  "esto ya terminó" sin tener que interpretar que el bloque volvió a su forma compacta.
 
 ## UXF-002 — Ver y contactar a un profesional con varias categorías
 
@@ -240,9 +270,9 @@ ambigüedad sobre a qué categoría corresponde cada dato aunque no compartan el
 
 <a id="ux-002"></a>
 
-### UX-002 — Agregar una categoría es un bloque más en el mismo perfil, no un modal ni un wizard aparte
+### UX-002 — Agregar o editar una categoría es un bloque más en el mismo perfil, con Guardar/Cancelar explícitos
 
-- **Estado:** aceptada. **Fecha:** 2026-09-06.
+- **Estado:** aceptada. **Fecha:** 2026-09-06, revisada 2026-09-07.
 - **Sustento:** [F-001](./producto.md#f-001).
 - **Alternativas descartadas:** un modal o bottom sheet "Gestionar categorías" separado del scroll
   principal del perfil — descartado porque el perfil ya es una sola pantalla scrolleable y no hay ninguna
@@ -250,10 +280,21 @@ ambigüedad sobre a qué categoría corresponde cada dato aunque no compartan el
   pasos igual al del registro (selector → precio → descripción → confirmar, en pantallas separadas) —
   descartado por sobre-construir un flujo de varios pasos para agregar un solo bloque con dos campos,
   cuando el registro lo justifica ahí por tener 4 datos heterogéneos de una sola vez, no por ser el patrón
-  correcto para "agregar un dato más" sobre un perfil que ya existe.
-- **Decisión y consecuencia:** agregar una categoría reutiliza el mismo patrón de "bloque con borde +
-  edición de campo por campo con guardado automático" que ya usan "Descripción" y "Precio" en V-001. No
-  agrega pantallas nuevas ni navegación fuera del perfil.
+  correcto para "agregar un dato más" sobre un perfil que ya existe. Una primera versión de esta decisión
+  reutilizaba el guardado automático por campo de "Nombre"/"Contacto" (cada campo se guarda solo al perder
+  el foco, sin botón) — descartada tras probarla: con dos o tres campos relacionados a la vez, ese patrón
+  no da ninguna señal de "ya terminé" (el dueño de producto lo describió como quedar "ahí, sin saber si
+  guardé"), y revelar precio/descripción recién después de elegir categoría hacía que el formulario
+  cambiara de forma a mitad de la tarea. Tampoco había forma de cancelar una edición ya empezada — la única
+  salida era guardar algo, aunque fuera un error. Tres problemas del mismo enfoque, no de un detalle suyo.
+- **Decisión y consecuencia:** el bloque de agregar muestra selector, precio y descripción juntos desde el
+  primer instante (nunca revela campos después de elegir categoría), y el bloque de editar muestra precio
+  y descripción juntos con los valores actuales. Ninguno de los dos guarda nada hasta que el profesional
+  toca "Guardar categoría"/"Guardar cambios" — un solo request con todos los campos del bloque, con su
+  propio estado de carga y una confirmación visible al terminar (ver "Decisiones que no deben quedar
+  implícitas" de [UXF-001](#uxf-001)). "Cancelar" siempre está disponible mientras dura la edición. Sigue
+  sin agregar pantallas nuevas ni navegación fuera del perfil — el cambio es el mecanismo de guardado
+  dentro del mismo bloque, no la superficie.
 - **Impacto en producto:** ninguno.
 
 <a id="ux-003"></a>

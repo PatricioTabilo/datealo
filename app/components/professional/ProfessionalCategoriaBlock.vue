@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Loader2 } from '@lucide/vue'
 import { UModal, USlideover } from '#components'
 import type { PublicCategoria } from '~/types/professional'
 
@@ -8,7 +7,7 @@ const props = defineProps<{
   canRemove: boolean
 }>()
 
-const { updateCategoria, removeCategoria, justAddedSlug } = useProfessionalCategorias()
+const { updateCategoria, removeCategoria } = useProfessionalCategorias()
 
 const isEditing = ref(false)
 const isSaving = ref(false)
@@ -20,12 +19,10 @@ const confirmingRemove = ref(false)
 const isRemoving = ref(false)
 const removeErrorMessage = ref<string | null>(null)
 
-const rootEl = ref<HTMLElement | null>(null)
-
-// El bottom sheet (USlideover) trae su propia animación de deslizar desde abajo — forzarlo a quedar
-// centrado en desktop con clases pelea contra esa animación (el contenido termina centrado, pero se
-// ve deslizar desde fuera del viewport en el camino). Elegir el componente según el ancho evita esa
-// pelea: cada uno anima de la forma que ya trae resuelta.
+// USlideover trae su propia animación de deslizar desde abajo — forzarlo a quedar centrado en desktop
+// con clases pelea contra esa animación (el contenido termina centrado, pero se ve deslizar desde fuera
+// del viewport en el camino). Elegir el componente según el ancho evita esa pelea: cada uno anima de la
+// forma que ya trae resuelta.
 const isDesktop = ref(false)
 let desktopQuery: MediaQueryList | undefined
 
@@ -41,22 +38,6 @@ onMounted(() => {
 
 onUnmounted(() => desktopQuery?.removeEventListener('change', syncIsDesktop))
 
-// El bloque muestra precio y descripción juntos en edición (a diferencia de los bloques de un solo
-// campo que ya usa el perfil): "toca fuera del bloque" es lo que cierra la edición, no el blur de cada
-// campo (eso solo guarda). Un listener de focusout confunde el foco real que sale del bloque con el
-// hueco transitorio que deja Vue al reemplazar el botón "Editar" (que tenía el foco) por el input
-// nuevo — un click fuera del bloque no tiene esa ambigüedad.
-function handleClickOutside(event: MouseEvent) {
-  if (!rootEl.value?.contains(event.target as Node)) isEditing.value = false
-}
-
-watch(isEditing, (editing) => {
-  if (editing) document.addEventListener('click', handleClickOutside, true)
-  else document.removeEventListener('click', handleClickOutside, true)
-})
-
-onUnmounted(() => document.removeEventListener('click', handleClickOutside, true))
-
 function startEdit() {
   priceDraft.value = props.categoria.priceFrom ? String(props.categoria.priceFrom) : ''
   descriptionDraft.value = props.categoria.description ?? ''
@@ -64,31 +45,22 @@ function startEdit() {
   isEditing.value = true
 }
 
-// Un bloque recién creado entra directo en edición: elegir la categoría ya la guardó, lo que falta es
-// precio y descripción, sin un toque extra a "Editar" en el medio.
-onMounted(() => {
-  if (justAddedSlug.value === props.categoria.slug) {
-    justAddedSlug.value = null
-    startEdit()
-  }
-})
-
-async function commitPrice() {
-  const trimmed = priceDraft.value.trim()
-  const parsed = trimmed === '' ? null : Number(trimmed)
-  const normalized = parsed !== null && !Number.isNaN(parsed) ? parsed : null
-  if (normalized === (props.categoria.priceFrom ?? null)) return
-  isSaving.value = true
-  hasSaveError.value = !(await updateCategoria(props.categoria.slug, { priceFrom: normalized }))
-  isSaving.value = false
+function cancelEdit() {
+  isEditing.value = false
+  hasSaveError.value = false
 }
 
-async function commitDescription() {
-  const trimmed = descriptionDraft.value.trim()
-  if (trimmed === (props.categoria.description ?? '')) return
+async function saveEdit() {
+  const trimmedPrice = priceDraft.value.trim()
+  const parsedPrice = trimmedPrice === '' ? null : Number(trimmedPrice)
+  const priceFrom = parsedPrice !== null && !Number.isNaN(parsedPrice) ? parsedPrice : null
+  const description = descriptionDraft.value.trim() || null
+
   isSaving.value = true
-  hasSaveError.value = !(await updateCategoria(props.categoria.slug, { description: trimmed || null }))
+  const ok = await updateCategoria(props.categoria.slug, { priceFrom, description })
   isSaving.value = false
+  hasSaveError.value = !ok
+  if (ok) isEditing.value = false
 }
 
 function requestRemove() {
@@ -107,7 +79,6 @@ async function confirmRemove() {
 
 <template>
   <div
-    ref="rootEl"
     class="rounded-2xl border p-4"
     :class="isEditing ? 'border-primary bg-primary/5' : 'border-datealo-surface'"
   >
@@ -143,29 +114,27 @@ async function confirmRemove() {
     <template v-else>
       <div class="mt-2.5 flex items-center gap-2">
         <span class="text-base text-datealo-muted">Desde $</span>
-        <UInput
-          v-model="priceDraft"
-          inputmode="numeric"
-          autofocus
-          size="lg"
-          class="w-32"
-          @blur="commitPrice"
-          @keyup.enter="commitPrice"
-        />
-        <Loader2 v-if="isSaving" class="h-3.5 w-3.5 animate-spin text-primary" />
+        <UInput v-model="priceDraft" inputmode="numeric" autofocus size="lg" class="w-32" />
       </div>
       <UTextarea
         v-model="descriptionDraft"
         class="mt-2.5 w-full"
         :rows="2"
         placeholder='Ej: "Reparación de filtraciones, estanques y llaves"'
-        @blur="commitDescription"
       />
+      <p v-if="hasSaveError" class="mt-2 text-sm font-semibold text-error" aria-live="polite">
+        No se pudo guardar. Toca "Guardar cambios" para reintentar.
+      </p>
+      <div class="mt-3 flex gap-3">
+        <UButton class="flex-1 justify-center" color="neutral" variant="outline" @click="cancelEdit">
+          Cancelar
+        </UButton>
+        <UButton class="flex-1 justify-center" :loading="isSaving" @click="saveEdit">
+          Guardar cambios
+        </UButton>
+      </div>
     </template>
 
-    <p v-if="hasSaveError" class="mt-2 text-sm font-semibold text-error" aria-live="polite">
-      No se pudo guardar, toca para reintentar
-    </p>
     <p v-if="!canRemove" class="mt-2 text-xs text-datealo-muted">
       No puedes quitar tu única categoría. Agrega otra antes de quitar esta.
     </p>

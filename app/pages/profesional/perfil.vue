@@ -14,7 +14,7 @@ const comunaNombre = computed(
     ?? professional.value?.comunaCodigo ?? '',
 )
 
-const { categorias, announcement } = useProfessionalCategorias()
+const { categorias } = useProfessionalCategorias()
 const categoriaSlugs = computed(() => categorias.value.map(c => c.slug))
 </script>
 
@@ -33,7 +33,6 @@ const categoriaSlugs = computed(() => categorias.value.map(c => c.slug))
       <ProfessionalPhotos class="mt-3" />
 
       <p class="mb-2 mt-5 text-xs font-bold uppercase tracking-wide text-datealo-muted">Tus categorías</p>
-      <span class="sr-only" aria-live="polite">{{ announcement }}</span>
       <ProfessionalCategoriaBlock
         v-for="categoria in categorias"
         :key="categoria.slug"
