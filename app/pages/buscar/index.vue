@@ -106,10 +106,13 @@ useSeoMeta({
              calcular cuántas columnas entran. Con 23.75rem el cálculo daba justo 2 en el ancho de
              max-w-6xl, sin importar cuánto más ancha fuera la pantalla; 21rem dejan entrar 3 con margen. -->
         <div class="grid gap-4 lg:[grid-template-columns:repeat(auto-fit,minmax(17.5rem,21rem))]">
+          <!-- categoriaSlug! : useSearchResults ya exige categoriaSlug con valor para resolver matchType
+               en 'exacta'/'vecina' (su propio ready), así que acá siempre está seteado. -->
           <SearchResultCard
             v-for="professional in results"
             :key="professional.id"
             :professional="professional"
+            :categoria-slug="categoriaSlug!"
             :vecina="matchType === 'vecina'"
           />
         </div>

@@ -36,6 +36,7 @@ export type PublicProfessionalProfile = {
   contact: string
   description: string | null
   priceFrom: number | null
+  categorias: PublicCategoria[]
   photoUrls: string[]
   avatarUrl: string | null
   createdAt: string

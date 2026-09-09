@@ -8,6 +8,7 @@ import { formatMemberSince } from '../../utils/professional-since'
 
 const props = defineProps<{
   professional: SearchResultProfessional
+  categoriaSlug: string
   vecina?: boolean
 }>()
 
@@ -16,7 +17,7 @@ const memberSince = computed(() => formatMemberSince(props.professional.createdA
 
 <template>
   <NuxtLink
-    :to="`/profesionales/${professional.id}`"
+    :to="`/profesionales/${professional.id}?categoria=${categoriaSlug}`"
     class="flex flex-col overflow-hidden rounded-2xl border border-datealo-surface bg-white transition-shadow duration-200 hover:shadow-[0_8px_24px_-12px_rgba(31,41,55,0.25)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
   >
     <img
