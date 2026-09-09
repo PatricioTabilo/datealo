@@ -24,16 +24,6 @@ export async function createProfessionalCategoria(
   await tx.insert(professionalCategorias).values({ professionalId, categoriaSlug })
 }
 
-// Hasta que exista más de una categoría por profesional, esta es siempre la única fila — no hace
-// falta el slug en la firma para saber cuál actualizar.
-export async function updateSoleProfessionalCategoria(
-  tx: DbOrTx,
-  professionalId: string,
-  patch: { categoriaSlug?: string, priceFrom?: number | null, description?: string | null },
-): Promise<void> {
-  await tx.update(professionalCategorias).set(patch).where(eq(professionalCategorias.professionalId, professionalId))
-}
-
 // Orden por createdAt ascendente: la primera categoría declarada queda primera, que es lo que usa el
 // resto del sistema como categoría de contexto por default sin un query param de búsqueda. Acepta un
 // tx opcional para poder leer el estado ya actualizado desde dentro de la misma transacción

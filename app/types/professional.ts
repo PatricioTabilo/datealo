@@ -10,11 +10,8 @@ export type PublicCategoria = {
 export type Professional = {
   id: string
   displayName: string
-  categoriaSlug: string
   comunaCodigo: string
   contact: string
-  description: string | null
-  priceFrom: number | null
   categorias: PublicCategoria[]
   photoUrls: string[]
   avatarUrl: string | null
@@ -31,11 +28,8 @@ export type ProfessionalField =
 export type PublicProfessionalProfile = {
   id: string
   displayName: string
-  categoriaNombre: string
   comunaNombre: string
   contact: string
-  description: string | null
-  priceFrom: number | null
   categorias: PublicCategoria[]
   photoUrls: string[]
   avatarUrl: string | null
