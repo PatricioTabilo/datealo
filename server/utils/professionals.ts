@@ -63,12 +63,16 @@ export type Professional = {
 
 // Forma que ve un buscador sin sesión (misión 05): categoría/comuna ya resueltas a su nombre (nunca el
 // slug/código, que no significa nada para quien mira el perfil) y createdAt, que Professional no expone.
+//
+// comunaNombre queda calculado desde professionals.comunaCodigo (la primera comuna declarada) mientras
+// conviva con comunas — [id].vue no migra a comunas hasta S-010; ese slice retira comunaNombre.
 export type PublicProfessionalProfile = {
   id: string
   displayName: string
   comunaNombre: string
   contact: string
   categorias: PublicCategoria[]
+  comunas: { codigo: string, nombre: string }[]
   photoUrls: string[]
   avatarUrl: string | null
   createdAt: string
@@ -174,12 +178,18 @@ export async function findPublicProfessionalProfile(id: string): Promise<PublicP
 
   if (!row) return null
 
+  const [categorias, comunasList] = await Promise.all([
+    findProfessionalCategorias(row.id),
+    findProfessionalComunas(row.id),
+  ])
+
   return {
     id: row.id,
     displayName: row.displayName,
     comunaNombre: row.comunaNombre ?? row.comunaCodigo,
     contact: row.contact,
-    categorias: await findProfessionalCategorias(row.id),
+    categorias,
+    comunas: comunasList,
     photoUrls: buildPhotoUrls(row.photoPaths),
     avatarUrl: buildAvatarUrl(row.avatarPath),
     createdAt: row.createdAt.toISOString(),
@@ -211,13 +221,20 @@ export async function findProfessionalComunas(professionalId: string): Promise<{
     .orderBy(asc(comunas.nombre))
 }
 
-export type ProfessionalProfile = Professional & { categorias: PublicCategoria[] }
+export type ProfessionalProfile = Professional & {
+  categorias: PublicCategoria[]
+  comunas: { codigo: string, nombre: string }[]
+}
 
 export async function findProfessionalProfileByUserId(userId: string): Promise<ProfessionalProfile | null> {
   const professional = await findProfessionalByUserId(userId)
   if (!professional) return null
 
-  return { ...professional, categorias: await findProfessionalCategorias(professional.id) }
+  const [categorias, comunas] = await Promise.all([
+    findProfessionalCategorias(professional.id),
+    findProfessionalComunas(professional.id),
+  ])
+  return { ...professional, categorias, comunas }
 }
 
 // Lo único que necesita el correo de aviso de reseña nueva (misión 07) — nunca active, que ya decidió
@@ -275,7 +292,7 @@ export async function createProfessional(
 export async function updateProfessional(
   userId: string,
   patch: ProfessionalPatch,
-): Promise<(ProfessionalProfile & { comunas: { codigo: string, nombre: string }[] }) | null> {
+): Promise<ProfessionalProfile | null> {
   const { comunaCodigos, ...professionalPatch } = patch
 
   const updated = await useDb().transaction(async (tx) => {
