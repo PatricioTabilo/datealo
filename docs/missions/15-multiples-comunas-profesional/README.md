@@ -4,24 +4,19 @@
 comuna por profesional) y cómo `/api/search` filtra por comuna. **Abierta el** 2026-09-06.
 **Nace de:** ninguna.
 
-**Estado de la misión:** definición
+**Estado de la misión:** en construcción
 
-**En foco:** ninguno — discovery completo, los tres documentos (`producto.md`, `experiencia.md`,
-`ingenieria.md`) están vigentes
+**En foco:** ninguno — discovery cerrado, los tres documentos (`producto.md`, `experiencia.md`,
+`ingenieria.md`) están `vigente`
 
-**Última actualización:** 2026-09-07
+**Última actualización:** 2026-09-09
 
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** abrir el PR de discovery con los tres documentos vigentes (paso 6 de la secuencia,
-`docs/missions/README.md`) — todavía no abierto. Recién después de mergeado, cerrar el worktree
-(`ExitWorktree action: "remove"`) y, ya en la raíz, cortar el Plan de construcción de `ingenieria.md`
-(S-001 a S-010) en issues. `ingenieria.md` diseña `professional_comunas` (tabla de relación que reemplaza a
-`professionals.comuna_codigo`), 4 contratos (TC-001 a TC-004), su RLS (auditada contra el checklist de
-`seguridad-datos`), y 5 decisiones técnicas (T-001 a T-005) — incluida una ventana de migración entre
-slices y un consumidor de `comunaCodigo` que la auditoría del Carril Full Spec encontró y ya quedó
-corregido en el propio documento.
+**Próximo hito:** issues creados desde el Plan de construcción (#244 a #253, S-001 a S-010). Trabajando
+S-001 (#244) primero — el resto sigue el orden de dependencias del Plan de construcción de
+`ingenieria.md`.
 
 ## Brief
 
