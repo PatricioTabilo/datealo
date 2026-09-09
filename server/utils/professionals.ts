@@ -20,13 +20,18 @@ export type ProfessionalCoreFields = {
   contact: string
 }
 
-// Lo que PATCH /me puede tocar de la fila de professionals — ya sin categoriaSlug/priceFrom/description,
-// que ahora se editan siempre por categoría vía /me/categorias/*.
-export type ProfessionalPatch = Partial<Pick<ProfessionalCoreFields, 'displayName' | 'comunaCodigo' | 'contact'>>
+// Lo que PATCH /me puede tocar — comunaCodigo (columna legacy de professionals) sigue vivo acá porque
+// perfil.vue todavía edita "Comuna" como un campo único; comunaCodigos (conjunto, vía
+// professional_comunas) es el reemplazo real y conviven los dos hasta que perfil.vue migre al selector
+// múltiple. Ya sin categoriaSlug/priceFrom/description, que se editan siempre por categoría vía
+// /me/categorias/*.
+export type ProfessionalPatch = Partial<Pick<ProfessionalCoreFields, 'displayName' | 'comunaCodigo' | 'contact'>> & {
+  comunaCodigos?: string[]
+}
 
 // Campos de creación de POST /api/professionals — comunaCodigos (conjunto) reemplaza a comunaCodigo
-// (ProfessionalCoreFields) en el body de este endpoint; comunaCodigo sigue vivo ahí solo para
-// ProfessionalPatch/PATCH /me, que todavía no migró (S-003).
+// (ProfessionalCoreFields) en el body de este endpoint; comunaCodigo sigue vivo en ProfessionalCoreFields
+// solo para ProfessionalPatch/PATCH /me.
 export type ProfessionalCreateFields = {
   displayName: string
   categoriaSlug: string
@@ -263,21 +268,45 @@ export async function createProfessional(
   return { professional: { ...existing!, comunas: await findProfessionalComunas(existing!.id) }, created: false }
 }
 
-// Devuelve el perfil con categorias (no solo Professional): el cliente guarda esta respuesta como su
-// único estado del perfil propio (useProfessionalProfile), y perfil.vue necesita categorias ahí aunque
-// esta escritura puntual no la haya tocado — perderla haría desaparecer los bloques de categoría hasta
-// el próximo reload.
-export async function updateProfessional(userId: string, patch: ProfessionalPatch): Promise<ProfessionalProfile | null> {
-  const [row] = await useDb()
-    .update(professionals)
-    .set({ ...patch, updatedAt: new Date() })
-    .where(eq(professionals.userId, userId))
-    .returning(publicColumns)
+// Devuelve el perfil con categorias y comunas (no solo Professional): el cliente guarda esta respuesta
+// como su único estado del perfil propio (useProfessionalProfile), y perfil.vue necesita las dos ahí
+// aunque esta escritura puntual no las haya tocado — perderlas haría desaparecer los bloques de categoría
+// o la comuna hasta el próximo reload.
+export async function updateProfessional(
+  userId: string,
+  patch: ProfessionalPatch,
+): Promise<(ProfessionalProfile & { comunas: { codigo: string, nombre: string }[] }) | null> {
+  const { comunaCodigos, ...professionalPatch } = patch
 
-  if (!row) return null
+  const updated = await useDb().transaction(async (tx) => {
+    const [row] = await tx
+      .update(professionals)
+      .set({ ...professionalPatch, updatedAt: new Date() })
+      .where(eq(professionals.userId, userId))
+      .returning(publicColumns)
 
-  const professional = toPublicProfessional(row)
-  return { ...professional, categorias: await findProfessionalCategorias(professional.id) }
+    if (!row) return null
+
+    // delete + insert, nunca un UPDATE en el lugar: reemplaza el conjunto completo dentro de la misma
+    // transacción, así ninguna request concurrente ve el conjunto momentáneamente vacío.
+    if (comunaCodigos !== undefined) {
+      await tx.delete(professionalComunas).where(eq(professionalComunas.professionalId, row.id))
+      await tx.insert(professionalComunas).values(
+        comunaCodigos.map(comunaCodigo => ({ professionalId: row.id, comunaCodigo })),
+      )
+    }
+
+    return row
+  })
+
+  if (!updated) return null
+
+  const professional = toPublicProfessional(updated)
+  const [categorias, comunas] = await Promise.all([
+    findProfessionalCategorias(professional.id),
+    findProfessionalComunas(professional.id),
+  ])
+  return { ...professional, categorias, comunas }
 }
 
 export async function addProfessionalPhoto(userId: string, path: string): Promise<Professional | null> {

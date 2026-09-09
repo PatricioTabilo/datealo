@@ -16,6 +16,20 @@ export default defineEventHandler(async (event) => {
     patch[field] = field === 'contact' ? normalizeContact(value.trim()) : value.trim()
   }
 
+  if ('comunaCodigos' in body) {
+    const value = body.comunaCodigos
+    if (
+      !Array.isArray(value)
+      || value.length === 0
+      || !value.every(codigo => typeof codigo === 'string' && codigo.trim())
+    ) {
+      setResponseStatus(event, 400)
+      return { error: 'missing_field', field: 'comunaCodigos' }
+    }
+    // El servidor deduplica antes de validar e insertar — nunca confía en que el cliente ya lo hizo.
+    patch.comunaCodigos = [...new Set(value.map(codigo => codigo.trim()))]
+  }
+
   const fieldError = await validateProfessionalFields(patch)
   if (fieldError) {
     setResponseStatus(event, 400)
