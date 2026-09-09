@@ -64,6 +64,7 @@ const completedCount = computed(() =>
         Tu categoría
       </label>
       <CategoriaSelect id="registro-categoria" v-model="categoriaSlug" />
+      <p class="mt-1.5 text-sm text-datealo-muted">Puedes agregar otras categorías más adelante, desde tu perfil.</p>
 
       <label for="registro-comuna" class="mb-2 mt-5 block text-sm font-semibold text-datealo-text">Tu comuna</label>
       <ComunaSelect id="registro-comuna" v-model="comunaCodigo" />

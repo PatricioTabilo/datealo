@@ -9,6 +9,7 @@ const {
   ui,
   itemIcon,
   panelClass,
+  exclude,
 } = defineProps<{
   placeholder?: string
   leadingIcon?: string
@@ -17,13 +18,19 @@ const {
   ui?: { base?: string, leading?: string, leadingIcon?: string, trailing?: string, trailingIcon?: string }
   itemIcon?: (value: string) => Component
   panelClass?: string
+  exclude?: string[]
 }>()
 const modelValue = defineModel<string | null>()
-const { items, pending, error, refresh } = useCategoriasCatalog()
+const { items: allItems, pending, error, refresh } = useCategoriasCatalog()
+const items = computed(() => allItems.value.filter(item => !exclude?.includes(item.value)))
+
+const catalogSelectRef = ref<{ focus: () => void } | null>(null)
+defineExpose({ focus: () => catalogSelectRef.value?.focus() })
 </script>
 
 <template>
   <CatalogSelect
+    ref="catalogSelectRef"
     v-model="modelValue"
     :items
     :pending
