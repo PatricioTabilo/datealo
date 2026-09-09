@@ -4,6 +4,7 @@ import { buildAvatarUrl, buildPhotoUrls } from './professionals'
 import { findRatingSummaries, type RatingSummary } from './reviews'
 import { comunas } from '../db/schema/comunas'
 import { professionalCategorias } from '../db/schema/professional-categorias'
+import { professionalComunas } from '../db/schema/professional-comunas'
 import { professionals } from '../db/schema/professionals'
 
 export type SearchMatchType = 'exacta' | 'vecina' | 'ninguna'
@@ -47,6 +48,11 @@ export type ProfessionalSearchRow = {
   description: string | null
 }
 
+// Fila cruda de la query de findActiveProfessionals, antes de agrupar por profesional — un profesional
+// con 2+ comunas puede aparecer más de una vez si matchea por más de una comuna del conjunto buscado a
+// la vez (ver groupByMatchedComuna).
+type ProfessionalSearchQueryRow = ProfessionalSearchRow & { comunaCodigo: string }
+
 function completenessScore(input: ProfessionalCompletenessInput): number {
   return Number(input.hasPhotos) + Number(input.hasDescription) + Number(input.hasPrice)
 }
@@ -87,6 +93,33 @@ export function toSearchResult(row: ProfessionalSearchRow, rating: RatingSummary
   }
 }
 
+// Función pura, sin Drizzle: decide cuál de las comunas coincidentes de un profesional se muestra cuando
+// matchea por más de una a la vez, sin enterrar esa regla de negocio en SQL (mismo criterio que
+// rankByCompleteness). Reusa el orden alfabético que ya fija toda esta misión — determinístico, nunca
+// varía entre requests para el mismo profesional y el mismo conjunto de comunas buscadas.
+export function pickMatchedComuna(
+  candidatas: { codigo: string, nombre: string }[],
+): { codigo: string, nombre: string } {
+  return [...candidatas].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'))[0]!
+}
+
+// Agrupa las filas crudas por profesional y resuelve, con pickMatchedComuna, cuál de sus comunas
+// coincidentes queda como comunaNombre — el resto de los campos son iguales entre las filas de un mismo
+// profesional (no dependen de la comuna), así que se toman de la primera del grupo.
+function groupByMatchedComuna(rows: ProfessionalSearchQueryRow[]): ProfessionalSearchRow[] {
+  const byId = new Map<string, ProfessionalSearchQueryRow[]>()
+  for (const row of rows) {
+    const group = byId.get(row.id)
+    if (group) group.push(row)
+    else byId.set(row.id, [row])
+  }
+
+  return [...byId.values()].map((group) => {
+    const matched = pickMatchedComuna(group.map(r => ({ codigo: r.comunaCodigo, nombre: r.comunaNombre })))
+    return { ...group[0]!, comunaNombre: matched.nombre }
+  })
+}
+
 async function orderResults(rows: ProfessionalSearchRow[]): Promise<SearchResultProfessional[]> {
   const ranked = rankByCompleteness(rows.map(toCompletenessInput))
   const rowById = new Map(rows.map(row => [row.id, row]))
@@ -98,10 +131,11 @@ async function findActiveProfessionals(
   categoriaSlug: string,
   comunaCodigos: string[],
 ): Promise<ProfessionalSearchRow[]> {
-  return useDb()
+  const rows = await useDb()
     .select({
       id: professionals.id,
       displayName: professionals.displayName,
+      comunaCodigo: professionalComunas.comunaCodigo,
       comunaNombre: comunas.nombre,
       priceFrom: professionalCategorias.priceFrom,
       avatarPath: professionals.avatarPath,
@@ -110,15 +144,18 @@ async function findActiveProfessionals(
       description: professionalCategorias.description,
     })
     .from(professionals)
-    .innerJoin(comunas, eq(professionals.comunaCodigo, comunas.codigo))
+    .innerJoin(professionalComunas, eq(professionalComunas.professionalId, professionals.id))
+    .innerJoin(comunas, eq(professionalComunas.comunaCodigo, comunas.codigo))
     .innerJoin(professionalCategorias, and(
       eq(professionalCategorias.professionalId, professionals.id),
       eq(professionalCategorias.categoriaSlug, categoriaSlug),
     ))
     .where(and(
-      inArray(professionals.comunaCodigo, comunaCodigos),
+      inArray(professionalComunas.comunaCodigo, comunaCodigos),
       eq(professionals.active, true),
     ))
+
+  return groupByMatchedComuna(rows)
 }
 
 // Se une a comunas para excluir zonas que se desactivaron — "existe en otra parte de Chile" solo cuenta
@@ -129,7 +166,8 @@ async function existsActiveProfessionalForCategoria(categoriaSlug: string): Prom
   const [row] = await useDb()
     .select({ id: professionals.id })
     .from(professionals)
-    .innerJoin(comunas, eq(professionals.comunaCodigo, comunas.codigo))
+    .innerJoin(professionalComunas, eq(professionalComunas.professionalId, professionals.id))
+    .innerJoin(comunas, eq(professionalComunas.comunaCodigo, comunas.codigo))
     .innerJoin(professionalCategorias, and(
       eq(professionalCategorias.professionalId, professionals.id),
       eq(professionalCategorias.categoriaSlug, categoriaSlug),
