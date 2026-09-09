@@ -11,6 +11,17 @@ const { professional, pending, notFound, slow, refresh, updateProfessional } = u
 
 const memberSince = computed(() => professional.value ? formatMemberSince(professional.value.createdAt) : '')
 
+// La categoría de la búsqueda que trajo al usuario llega por query (?categoria=slug); un link directo la
+// omite, y entonces resolveCategoriaContext cae a la primera categoría declarada.
+const contextSlug = computed(() => {
+  const raw = route.query.categoria
+  return typeof raw === 'string' ? raw : undefined
+})
+
+const categoriaContext = computed(() => professional.value
+  ? resolveCategoriaContext(professional.value.categorias, contextSlug.value)
+  : null)
+
 const contactBarRef = useTemplateRef('contactBar')
 useContactBarHeight(contactBarRef)
 
@@ -21,8 +32,8 @@ function onReviewPublished(review: PublicReview) {
 }
 
 useSeoMeta({
-  title: () => professional.value
-    ? `${professional.value.displayName} · ${professional.value.categoriaNombre} en ${professional.value.comunaNombre}`
+  title: () => professional.value && categoriaContext.value
+    ? `${professional.value.displayName} · ${categoriaContext.value.categoria.nombre} en ${professional.value.comunaNombre}`
     : 'Perfil de profesional',
 })
 </script>
@@ -71,15 +82,23 @@ useSeoMeta({
 
         <div class="px-5 pt-4 lg:px-0">
           <h1 class="text-xl font-extrabold text-datealo-text lg:text-2xl">{{ professional.displayName }}</h1>
-          <p class="mt-0.5 text-sm text-datealo-muted">{{ professional.categoriaNombre }} · {{ professional.comunaNombre }}</p>
+          <p class="mt-0.5 text-sm text-datealo-muted">{{ categoriaContext?.categoria.nombre }} · {{ professional.comunaNombre }}</p>
 
-          <p v-if="professional.priceFrom" class="mt-2 text-base font-bold text-datealo-text lg:text-lg">
-            Desde ${{ formatPriceFrom(professional.priceFrom) }}
+          <p v-if="categoriaContext?.categoria.priceFrom" class="mt-2 text-base font-bold text-datealo-text lg:text-lg">
+            Desde ${{ formatPriceFrom(categoriaContext.categoria.priceFrom) }}
           </p>
 
-          <p v-if="professional.description" class="mt-4 text-base leading-relaxed text-datealo-text">
-            {{ professional.description }}
+          <p v-if="categoriaContext?.categoria.description" class="mt-4 text-base leading-relaxed text-datealo-text">
+            {{ categoriaContext.categoria.description }}
           </p>
+
+          <!-- En mobile va debajo de la descripción, antes de las reseñas; el equivalente de desktop vive
+               en la barra lateral (más abajo), no acá. -->
+          <ProfessionalPublicOtherCategorias
+            v-if="categoriaContext && categoriaContext.secondary.length > 0"
+            :categorias="categoriaContext.secondary"
+            class="mt-5 lg:hidden"
+          />
         </div>
       </div>
 
@@ -121,9 +140,15 @@ useSeoMeta({
             :professional-id="professional.id"
             :contact="professional.contact"
             :display-name="professional.displayName"
-            :categoria-nombre="professional.categoriaNombre"
+            :categoria-nombre="categoriaContext?.categoria.nombre ?? ''"
           />
         </div>
+
+        <ProfessionalPublicOtherCategorias
+          v-if="categoriaContext && categoriaContext.secondary.length > 0"
+          :categorias="categoriaContext.secondary"
+          class="mt-5 hidden lg:block"
+        />
 
         <p class="mt-3.5 hidden text-xs text-datealo-muted lg:block">En Datealo desde {{ memberSince }}</p>
       </div>
@@ -133,7 +158,7 @@ useSeoMeta({
         class="mt-8 px-5 lg:col-span-2 lg:mt-10 lg:px-0"
         :professional-id="professional.id"
         :display-name="professional.displayName"
-        :categoria-nombre="professional.categoriaNombre"
+        :categoria-nombre="categoriaContext?.categoria.nombre ?? ''"
         :reviews="professional.reviews"
         @published="onReviewPublished"
       />
