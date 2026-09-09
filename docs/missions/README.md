@@ -22,7 +22,7 @@ abrieron y de dónde salió cada una.
 | 11  | [vista de detalle de perfil](./11-perfil-profesional/) | producto | 2026-09-01 | cerrada 2026-09-04 | — | — |
 | 12  | [hero y copy de la landing](./12-hero-y-copy-landing/) | producto | 2026-09-01 | cerrada 2026-09-06 | — | — |
 | 13  | [tamaño de fuente](./13-tamano-de-fuente/) | producto | 2026-09-06 | cerrada 2026-09-06 | — | — |
-| 14  | [múltiples categorías por profesional](./14-multiples-categorias-profesional/) | producto | 2026-09-06 | en construcción | — | — |
+| 14  | [múltiples categorías por profesional](./14-multiples-categorias-profesional/) | producto | 2026-09-06 | cerrada 2026-09-09 | — | — |
 | 15  | [múltiples comunas por profesional](./15-multiples-comunas-profesional/) | producto | 2026-09-06 | lista para construir | — | — |
 
 Misiones 02 a 07 son las seis que llevan al MVP (registrarse, mostrarse, buscar, reseñar), en el orden de
