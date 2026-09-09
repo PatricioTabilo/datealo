@@ -120,6 +120,37 @@ create policy professional_categorias_delete_own on professional_categorias
 -- Igual que professionals: cierra PostgREST por completo. Drizzle usa el rol dueño y no le afecta.
 revoke all on public.professional_categorias from anon, authenticated;
 
+-- professional_comunas (misión 15): mismo patrón asimétrico y misma pertenencia por exists que
+-- professional_categorias. Sin policy de update: el reemplazo del conjunto siempre es delete + insert
+-- (nunca un UPDATE en el lugar), así que una policy de update quedaría sin ningún caller real.
+
+alter table professional_comunas enable row level security;
+
+drop policy if exists professional_comunas_select_public on professional_comunas;
+create policy professional_comunas_select_public on professional_comunas
+  for select to authenticated, anon using (true);
+
+drop policy if exists professional_comunas_insert_own on professional_comunas;
+create policy professional_comunas_insert_own on professional_comunas
+  for insert to authenticated with check (
+    exists (
+      select 1 from professionals p
+      where p.id = professional_comunas.professional_id and p.user_id = (select auth.uid())
+    )
+  );
+
+drop policy if exists professional_comunas_delete_own on professional_comunas;
+create policy professional_comunas_delete_own on professional_comunas
+  for delete to authenticated using (
+    exists (
+      select 1 from professionals p
+      where p.id = professional_comunas.professional_id and p.user_id = (select auth.uid())
+    )
+  );
+
+-- Igual que professionals: cierra PostgREST por completo. Drizzle usa el rol dueño y no le afecta.
+revoke all on public.professional_comunas from anon, authenticated;
+
 -- professional-photos: acá la policy es la barrera real, no un respaldo — las fotos se suben con el
 -- cliente de sesión del propio usuario (mismo publishable key + JWT que arma requireUser()), que sí
 -- evalúa storage.objects. file_size_limit y allowed_mime_types quedan fijados en el propio bucket:
