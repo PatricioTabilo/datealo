@@ -4,19 +4,20 @@
 categoría por profesional) y cómo `/api/search` filtra por categoría. **Abierta el** 2026-09-06.
 **Nace de:** ninguna.
 
-**Estado de la misión:** en construcción
+**Estado de la misión:** cerrada 2026-09-09
 
 **En foco:** ninguno — discovery cerrado, los tres documentos (`producto.md`, `experiencia.md`,
 `ingenieria.md`) están `vigente`
 
-**Última actualización:** 2026-09-07
+**Última actualización:** 2026-09-09
 
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** issues creados desde el Plan de construcción (#225 a #233, S-001 a S-009). Trabajando
-S-001 (#225) primero — el resto sigue el orden de dependencias del Plan de construcción de
-`ingenieria.md`.
+**Plan de construcción:** los nueve slices (S-001 a S-009, #225 a #233) están mergeados — la migración
+expand/contract completa, de una sola categoría por profesional a `professional_categorias`, con
+`perfil.vue` y `[id].vue` ya leyendo y escribiendo la forma nueva y las columnas legacy retiradas de
+`professionals`.
 
 ## Brief
 
