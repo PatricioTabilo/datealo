@@ -1,6 +1,7 @@
 import { and, asc, count, desc, eq } from 'drizzle-orm'
 import { comunaVecinas } from '../db/schema/comuna-vecinas'
 import { comunas } from '../db/schema/comunas'
+import { professionalComunas } from '../db/schema/professional-comunas'
 import { professionals } from '../db/schema/professionals'
 
 export async function findActiveComunas() {
@@ -30,13 +31,16 @@ export async function findVecinasActivas(comunaCodigo: string): Promise<{ codigo
     .orderBy(asc(comunas.nombre))
 }
 
+// Un profesional con varias comunas cuenta una vez por cada una que declaró — no es un double-count
+// indebido, es la misma semántica de "atiende ahí" generalizada de 1 a N comunas por profesional.
 export async function findComunasFrecuentes(limit = 3): Promise<{ codigo: string, nombre: string }[]> {
   return useDb()
     .select({ codigo: comunas.codigo, nombre: comunas.nombre })
     .from(comunas)
+    .innerJoin(professionalComunas, eq(professionalComunas.comunaCodigo, comunas.codigo))
     .innerJoin(
       professionals,
-      and(eq(professionals.comunaCodigo, comunas.codigo), eq(professionals.active, true)),
+      and(eq(professionals.id, professionalComunas.professionalId), eq(professionals.active, true)),
     )
     .where(eq(comunas.activa, true))
     .groupBy(comunas.codigo, comunas.nombre)

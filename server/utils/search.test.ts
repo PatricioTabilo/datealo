@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest'
-import { rankByCompleteness, toSearchResult, type ProfessionalCompletenessInput, type ProfessionalSearchRow } from './search'
+import { pickMatchedComuna, rankByCompleteness, toSearchResult, type ProfessionalCompletenessInput, type ProfessionalSearchRow } from './search'
 
 // buildAvatarUrl/buildPhotoUrls llaman a useRuntimeConfig(), el auto-import de Nitro — no existe fuera de
 // una request real, así que se stubea con la misma forma que el runtime expone en server/utils/professionals.ts.
@@ -52,6 +52,25 @@ describe('rankByCompleteness', () => {
     const a = input({ id: 'a' })
 
     expect(rankByCompleteness([b, a]).map(r => r.id)).toEqual(['a', 'b'])
+  })
+})
+
+describe('pickMatchedComuna', () => {
+  it('con una sola candidata, la devuelve tal cual', () => {
+    const frutillar = { codigo: '10102', nombre: 'Frutillar' }
+    expect(pickMatchedComuna([frutillar])).toEqual(frutillar)
+  })
+
+  it('con varias candidatas, elige la alfabéticamente primera', () => {
+    const puertoVaras = { codigo: '10109', nombre: 'Puerto Varas' }
+    const frutillar = { codigo: '10102', nombre: 'Frutillar' }
+    expect(pickMatchedComuna([puertoVaras, frutillar])).toEqual(frutillar)
+  })
+
+  it('es determinístico: el orden de entrada no cambia el resultado', () => {
+    const puertoVaras = { codigo: '10109', nombre: 'Puerto Varas' }
+    const frutillar = { codigo: '10102', nombre: 'Frutillar' }
+    expect(pickMatchedComuna([frutillar, puertoVaras])).toEqual(pickMatchedComuna([puertoVaras, frutillar]))
   })
 })
 
