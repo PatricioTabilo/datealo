@@ -19,11 +19,6 @@ export async function existsActiveComuna(codigo: string): Promise<boolean> {
   return Boolean(row)
 }
 
-export async function findComunaNombre(codigo: string): Promise<string | null> {
-  const [row] = await useDb().select({ nombre: comunas.nombre }).from(comunas).where(eq(comunas.codigo, codigo))
-  return row?.nombre ?? null
-}
-
 // Nunca devuelve una comuna inactiva, aunque comparta límite real — activar una comuna nueva no exige
 // tocar esta query, el filtro ya vive acá.
 export async function findVecinasActivas(comunaCodigo: string): Promise<{ codigo: string, nombre: string }[]> {
