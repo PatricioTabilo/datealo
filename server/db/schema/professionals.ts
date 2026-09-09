@@ -1,5 +1,4 @@
-import { boolean, index, integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
-import { categorias } from './categorias'
+import { boolean, index, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { comunas } from './comunas'
 
 export const professionals = pgTable(
@@ -11,9 +10,6 @@ export const professionals = pgTable(
     // Sin foreign key formal a auth.users: esa tabla la gestiona Supabase, no Drizzle.
     userId: uuid('user_id').notNull().unique(),
     displayName: text('display_name').notNull(),
-    categoriaSlug: text('categoria_slug')
-      .notNull()
-      .references(() => categorias.slug, { onUpdate: 'cascade' }),
     comunaCodigo: text('comuna_codigo')
       .notNull()
       .references(() => comunas.codigo),
@@ -21,8 +17,6 @@ export const professionals = pgTable(
     // Copia de auth.users.email al momento del registro, nunca leída en vivo desde ahí — dato interno
     // para el correo de aviso de reseña nueva, jamás parte de la forma pública del profesional.
     email: text('email'),
-    description: text('description'),
-    priceFrom: integer('price_from'),
     // Paths dentro del bucket professional-photos, nunca URLs completas — la URL pública se
     // calcula al responder, no se guarda.
     photoPaths: text('photo_paths').array().notNull().default([]),
@@ -34,9 +28,7 @@ export const professionals = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [
-    // Postgres no indexa una FK automáticamente — son las dos columnas por las que la búsqueda
-    // va a filtrar y hacer join.
-    index('professionals_categoria_slug_idx').on(table.categoriaSlug),
+    // Postgres no indexa una FK automáticamente — es la columna por la que la búsqueda hace join.
     index('professionals_comuna_codigo_idx').on(table.comunaCodigo),
   ],
 )

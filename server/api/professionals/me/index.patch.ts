@@ -1,10 +1,10 @@
-const TEXT_FIELDS = ['displayName', 'categoriaSlug', 'comunaCodigo', 'contact'] as const
+const TEXT_FIELDS = ['displayName', 'comunaCodigo', 'contact'] as const
 
 export default defineEventHandler(async (event) => {
   const user = await requireUser(event)
   const body = await readBody<Record<string, unknown>>(event)
 
-  const patch: ProfessionalFieldsInput = {}
+  const patch: ProfessionalPatch = {}
 
   for (const field of TEXT_FIELDS) {
     if (!(field in body)) continue
@@ -14,24 +14,6 @@ export default defineEventHandler(async (event) => {
       return { error: 'missing_field', field }
     }
     patch[field] = field === 'contact' ? normalizeContact(value.trim()) : value.trim()
-  }
-
-  if ('description' in body) {
-    const value = body.description
-    if (value !== null && typeof value !== 'string') {
-      setResponseStatus(event, 400)
-      return { error: 'invalid_description' }
-    }
-    patch.description = typeof value === 'string' ? value.trim() || null : null
-  }
-
-  if ('priceFrom' in body) {
-    const value = body.priceFrom
-    if (value !== null && typeof value !== 'number') {
-      setResponseStatus(event, 400)
-      return { error: 'invalid_price' }
-    }
-    patch.priceFrom = value
   }
 
   const fieldError = await validateProfessionalFields(patch)

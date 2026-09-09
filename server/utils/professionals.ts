@@ -4,7 +4,6 @@ import { existsActiveComuna } from './comunas'
 import {
   createProfessionalCategoria,
   findProfessionalCategorias,
-  updateSoleProfessionalCategoria,
   type PublicCategoria,
 } from './professional-categorias'
 import { isUuid } from './validation'
@@ -20,6 +19,13 @@ export type ProfessionalCoreFields = {
   contact: string
 }
 
+// Lo que PATCH /me puede tocar de la fila de professionals — ya sin categoriaSlug/priceFrom/description,
+// que ahora se editan siempre por categoría vía /me/categorias/*.
+export type ProfessionalPatch = Partial<Pick<ProfessionalCoreFields, 'displayName' | 'comunaCodigo' | 'contact'>>
+
+// Usado tanto para el patch de professionals (displayName/comunaCodigo/contact) como para el de una
+// categoría puntual (categoriaSlug/priceFrom/description vía /me/categorias/*) — validateProfessionalFields
+// es genérica sobre las dos, cada endpoint le pasa solo los campos que le tocan.
 export type ProfessionalFieldsInput = Partial<ProfessionalCoreFields> & {
   description?: string | null
   priceFrom?: number | null
@@ -30,11 +36,8 @@ export type ProfessionalFieldError = { error: string }
 export type Professional = {
   id: string
   displayName: string
-  categoriaSlug: string
   comunaCodigo: string
   contact: string
-  description: string | null
-  priceFrom: number | null
   photoUrls: string[]
   avatarUrl: string | null
   active: boolean
@@ -42,18 +45,11 @@ export type Professional = {
 
 // Forma que ve un buscador sin sesión (misión 05): categoría/comuna ya resueltas a su nombre (nunca el
 // slug/código, que no significa nada para quien mira el perfil) y createdAt, que Professional no expone.
-//
-// categoriaNombre/priceFrom/description quedan calculados desde categorias[0] mientras conviva con el
-// array nuevo — categorias es la forma real; esos tres campos se retiran una vez que perfil.vue y
-// [id].vue dejen de leerlos directamente.
 export type PublicProfessionalProfile = {
   id: string
   displayName: string
-  categoriaNombre: string
   comunaNombre: string
   contact: string
-  description: string | null
-  priceFrom: number | null
   categorias: PublicCategoria[]
   photoUrls: string[]
   avatarUrl: string | null
@@ -63,11 +59,8 @@ export type PublicProfessionalProfile = {
 type ProfessionalRow = {
   id: string
   displayName: string
-  categoriaSlug: string
   comunaCodigo: string
   contact: string
-  description: string | null
-  priceFrom: number | null
   photoPaths: string[]
   avatarPath: string | null
   active: boolean
@@ -78,11 +71,8 @@ type ProfessionalRow = {
 const publicColumns = {
   id: professionals.id,
   displayName: professionals.displayName,
-  categoriaSlug: professionals.categoriaSlug,
   comunaCodigo: professionals.comunaCodigo,
   contact: professionals.contact,
-  description: professionals.description,
-  priceFrom: professionals.priceFrom,
   photoPaths: professionals.photoPaths,
   avatarPath: professionals.avatarPath,
   active: professionals.active,
@@ -128,11 +118,8 @@ function toPublicProfessional(row: ProfessionalRow): Professional {
   return {
     id: row.id,
     displayName: row.displayName,
-    categoriaSlug: row.categoriaSlug,
     comunaCodigo: row.comunaCodigo,
     contact: row.contact,
-    description: row.description,
-    priceFrom: row.priceFrom,
     photoUrls: buildPhotoUrls(row.photoPaths),
     avatarUrl: buildAvatarUrl(row.avatarPath),
     active: row.active,
@@ -164,21 +151,12 @@ export async function findPublicProfessionalProfile(id: string): Promise<PublicP
 
   if (!row) return null
 
-  const categoriasList = await findProfessionalCategorias(row.id)
-  // Un profesional activo nunca tiene 0 filas en professional_categorias — la única forma de llegar
-  // a cero se bloquea al quitar la última categoría, no acá, así que esta lectura confía en que
-  // categoriasList siempre trae al menos una fila.
-  const [primaryCategoria] = categoriasList
-
   return {
     id: row.id,
     displayName: row.displayName,
-    categoriaNombre: primaryCategoria!.nombre,
     comunaNombre: row.comunaNombre ?? row.comunaCodigo,
     contact: row.contact,
-    description: primaryCategoria!.description,
-    priceFrom: primaryCategoria!.priceFrom,
-    categorias: categoriasList,
+    categorias: await findProfessionalCategorias(row.id),
     photoUrls: buildPhotoUrls(row.photoPaths),
     avatarUrl: buildAvatarUrl(row.avatarPath),
     createdAt: row.createdAt.toISOString(),
@@ -199,28 +177,13 @@ export async function findProfessionalByUserId(userId: string): Promise<Professi
   return row ? toPublicProfessional(row) : null
 }
 
-// categoriaSlug/priceFrom/description quedan calculados desde categorias[0], igual que
-// findPublicProfessionalProfile — esto es solo para GET /me. Los endpoints de escritura (POST /me,
-// PATCH /me) todavía leen y escriben la fila de professionals tal cual, sin pasar por acá.
 export type ProfessionalProfile = Professional & { categorias: PublicCategoria[] }
 
 export async function findProfessionalProfileByUserId(userId: string): Promise<ProfessionalProfile | null> {
   const professional = await findProfessionalByUserId(userId)
   if (!professional) return null
 
-  const categoriasList = await findProfessionalCategorias(professional.id)
-  // Un profesional activo nunca tiene 0 filas en professional_categorias — la única forma de llegar
-  // a cero se bloquea al quitar la última categoría, no acá, así que esta lectura confía en que
-  // categoriasList siempre trae al menos una fila.
-  const [primaryCategoria] = categoriasList
-
-  return {
-    ...professional,
-    categoriaSlug: primaryCategoria!.slug,
-    priceFrom: primaryCategoria!.priceFrom,
-    description: primaryCategoria!.description,
-    categorias: categoriasList,
-  }
+  return { ...professional, categorias: await findProfessionalCategorias(professional.id) }
 }
 
 // Lo único que necesita el correo de aviso de reseña nueva (misión 07) — nunca active, que ya decidió
@@ -240,16 +203,18 @@ export async function createProfessional(
   fields: ProfessionalCoreFields,
   email: string | null,
 ): Promise<{ professional: Professional, created: boolean }> {
+  const { categoriaSlug, ...professionalFields } = fields
+
   const inserted = await useDb().transaction(async (tx) => {
     const [professional] = await tx
       .insert(professionals)
-      .values({ userId, ...fields, email })
+      .values({ userId, ...professionalFields, email })
       .onConflictDoNothing({ target: professionals.userId })
       .returning(publicColumns)
 
     if (!professional) return null
 
-    await createProfessionalCategoria(tx, professional.id, fields.categoriaSlug)
+    await createProfessionalCategoria(tx, professional.id, categoriaSlug)
     return professional
   })
 
@@ -263,32 +228,21 @@ export async function createProfessional(
   return { professional: existing!, created: false }
 }
 
-export async function updateProfessional(
-  userId: string,
-  patch: ProfessionalFieldsInput,
-): Promise<ProfessionalProfile | null> {
-  const { categoriaSlug, priceFrom, description, ...professionalPatch } = patch
+// Devuelve el perfil con categorias (no solo Professional): el cliente guarda esta respuesta como su
+// único estado del perfil propio (useProfessionalProfile), y perfil.vue necesita categorias ahí aunque
+// esta escritura puntual no la haya tocado — perderla haría desaparecer los bloques de categoría hasta
+// el próximo reload.
+export async function updateProfessional(userId: string, patch: ProfessionalPatch): Promise<ProfessionalProfile | null> {
+  const [row] = await useDb()
+    .update(professionals)
+    .set({ ...patch, updatedAt: new Date() })
+    .where(eq(professionals.userId, userId))
+    .returning(publicColumns)
 
-  const updated = await useDb().transaction(async (tx) => {
-    const [row] = await tx
-      .update(professionals)
-      .set({ ...professionalPatch, updatedAt: new Date() })
-      .where(eq(professionals.userId, userId))
-      .returning({ id: professionals.id })
+  if (!row) return null
 
-    if (!row) return null
-
-    if (categoriaSlug !== undefined || priceFrom !== undefined || description !== undefined) {
-      await updateSoleProfessionalCategoria(tx, row.id, { categoriaSlug, priceFrom, description })
-    }
-
-    return row
-  })
-
-  // Releer en vez de armar la respuesta a mano con lo que se acaba de escribir: priceFrom/description
-  // ahora viven en professional_categorias, no en la fila de professionals que devolvería el update de
-  // arriba, así que reconstruirla acá evitaría duplicar exactamente el cálculo que ya hace GET /me.
-  return updated ? findProfessionalProfileByUserId(userId) : null
+  const professional = toPublicProfessional(row)
+  return { ...professional, categorias: await findProfessionalCategorias(professional.id) }
 }
 
 export async function addProfessionalPhoto(userId: string, path: string): Promise<Professional | null> {

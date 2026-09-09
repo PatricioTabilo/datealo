@@ -71,6 +71,13 @@
       "when": 1788812415080,
       "tag": "0009_sturdy_puma",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1788963933629,
+      "tag": "0010_rapid_nuke",
+      "breakpoints": true
     }
   ]
 }
