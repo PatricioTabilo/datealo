@@ -7,12 +7,18 @@ export type PublicCategoria = {
   description: string | null
 }
 
+export type PublicComuna = {
+  codigo: string
+  nombre: string
+}
+
 export type Professional = {
   id: string
   displayName: string
   comunaCodigo: string
   contact: string
   categorias: PublicCategoria[]
+  comunas: PublicComuna[]
   photoUrls: string[]
   avatarUrl: string | null
   active: boolean
@@ -31,6 +37,7 @@ export type PublicProfessionalProfile = {
   comunaNombre: string
   contact: string
   categorias: PublicCategoria[]
+  comunas: PublicComuna[]
   photoUrls: string[]
   avatarUrl: string | null
   createdAt: string
