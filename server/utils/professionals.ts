@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm'
+import { and, asc, eq, sql } from 'drizzle-orm'
 import { existsActiveCategoria } from './categorias'
 import { existsActiveComuna } from './comunas'
 import {
@@ -8,6 +8,7 @@ import {
 } from './professional-categorias'
 import { isUuid } from './validation'
 import { comunas } from '../db/schema/comunas'
+import { professionalComunas } from '../db/schema/professional-comunas'
 import { professionals } from '../db/schema/professionals'
 
 const CONTACT_REGEX = /^\+56\d{9}$/
@@ -23,10 +24,22 @@ export type ProfessionalCoreFields = {
 // que ahora se editan siempre por categoría vía /me/categorias/*.
 export type ProfessionalPatch = Partial<Pick<ProfessionalCoreFields, 'displayName' | 'comunaCodigo' | 'contact'>>
 
-// Usado tanto para el patch de professionals (displayName/comunaCodigo/contact) como para el de una
-// categoría puntual (categoriaSlug/priceFrom/description vía /me/categorias/*) — validateProfessionalFields
-// es genérica sobre las dos, cada endpoint le pasa solo los campos que le tocan.
+// Campos de creación de POST /api/professionals — comunaCodigos (conjunto) reemplaza a comunaCodigo
+// (ProfessionalCoreFields) en el body de este endpoint; comunaCodigo sigue vivo ahí solo para
+// ProfessionalPatch/PATCH /me, que todavía no migró (S-003).
+export type ProfessionalCreateFields = {
+  displayName: string
+  categoriaSlug: string
+  comunaCodigos: string[]
+  contact: string
+}
+
+// Usado para el patch de professionals (displayName/comunaCodigo/contact), la creación
+// (displayName/categoriaSlug/comunaCodigos/contact) y el patch de una categoría puntual
+// (categoriaSlug/priceFrom/description vía /me/categorias/*) — validateProfessionalFields es genérica
+// sobre las tres, cada endpoint le pasa solo los campos que le tocan.
 export type ProfessionalFieldsInput = Partial<ProfessionalCoreFields> & {
+  comunaCodigos?: string[]
   description?: string | null
   priceFrom?: number | null
 }
@@ -90,6 +103,11 @@ export async function validateProfessionalFields(
   }
   if (fields.comunaCodigo !== undefined && !(await existsActiveComuna(fields.comunaCodigo))) {
     return { error: 'invalid_comuna' }
+  }
+  if (fields.comunaCodigos !== undefined) {
+    for (const codigo of fields.comunaCodigos) {
+      if (!(await existsActiveComuna(codigo))) return { error: 'invalid_comuna' }
+    }
   }
   if (fields.contact !== undefined && !CONTACT_REGEX.test(fields.contact)) {
     return { error: 'invalid_contact' }
@@ -177,6 +195,17 @@ export async function findProfessionalByUserId(userId: string): Promise<Professi
   return row ? toPublicProfessional(row) : null
 }
 
+// Alfabético por nombre — mismo orden que ya usa findActiveComunas, y el que toda esta misión asume
+// para no tener que reordenar en ningún consumidor.
+export async function findProfessionalComunas(professionalId: string): Promise<{ codigo: string, nombre: string }[]> {
+  return useDb()
+    .select({ codigo: professionalComunas.comunaCodigo, nombre: comunas.nombre })
+    .from(professionalComunas)
+    .innerJoin(comunas, eq(professionalComunas.comunaCodigo, comunas.codigo))
+    .where(eq(professionalComunas.professionalId, professionalId))
+    .orderBy(asc(comunas.nombre))
+}
+
 export type ProfessionalProfile = Professional & { categorias: PublicCategoria[] }
 
 export async function findProfessionalProfileByUserId(userId: string): Promise<ProfessionalProfile | null> {
@@ -200,32 +229,38 @@ export async function findProfessionalNotificationInfo(
 
 export async function createProfessional(
   userId: string,
-  fields: ProfessionalCoreFields,
+  fields: ProfessionalCreateFields,
   email: string | null,
-): Promise<{ professional: Professional, created: boolean }> {
-  const { categoriaSlug, ...professionalFields } = fields
+): Promise<{ professional: Professional & { comunas: { codigo: string, nombre: string }[] }, created: boolean }> {
+  const { categoriaSlug, comunaCodigos, displayName, contact } = fields
 
   const inserted = await useDb().transaction(async (tx) => {
     const [professional] = await tx
       .insert(professionals)
-      .values({ userId, ...professionalFields, email })
+      // comunaCodigo sigue siendo NOT NULL en professionals hasta S-006 — se le escribe la primera
+      // comuna del conjunto (comunaCodigos siempre trae al menos un elemento, ya validado antes de
+      // llegar acá) mientras conviven las dos fuentes de verdad.
+      .values({ userId, displayName, contact, comunaCodigo: comunaCodigos[0]!, email })
       .onConflictDoNothing({ target: professionals.userId })
       .returning(publicColumns)
 
     if (!professional) return null
 
     await createProfessionalCategoria(tx, professional.id, categoriaSlug)
+    await tx.insert(professionalComunas).values(
+      comunaCodigos.map(comunaCodigo => ({ professionalId: professional.id, comunaCodigo })),
+    )
     return professional
   })
 
   if (inserted) {
-    return { professional: toPublicProfessional(inserted), created: true }
+    return { professional: { ...toPublicProfessional(inserted), comunas: await findProfessionalComunas(inserted.id) }, created: true }
   }
 
   // userId es unique — si el insert no devolvió fila es porque ya existía una, nunca porque el insert
   // falló en silencio.
   const existing = await findProfessionalByUserId(userId)
-  return { professional: existing!, created: false }
+  return { professional: { ...existing!, comunas: await findProfessionalComunas(existing!.id) }, created: false }
 }
 
 // Devuelve el perfil con categorias (no solo Professional): el cliente guarda esta respuesta como su
