@@ -26,9 +26,9 @@ function professional(overrides: Partial<SearchResultProfessional> = {}): Search
   }
 }
 
-function mountCard(props: { professional: SearchResultProfessional, vecina?: boolean }) {
+function mountCard(props: { professional: SearchResultProfessional, categoriaSlug?: string, vecina?: boolean }) {
   return mount(SearchResultCard, {
-    props,
+    props: { categoriaSlug: 'gasfiteria', ...props },
     global: { stubs: { NuxtLink: NuxtLinkStub } },
   })
 }
@@ -82,8 +82,8 @@ describe('SearchResultCard', () => {
     expect(wrapper.text()).toContain('Desde $15.000')
   })
 
-  it('es un link al perfil del profesional', () => {
-    const wrapper = mountCard({ professional: professional({ id: 'xyz-789' }) })
-    expect(wrapper.find('a').attributes('href')).toBe('/profesionales/xyz-789')
+  it('es un link al perfil del profesional, con la categoría buscada como contexto', () => {
+    const wrapper = mountCard({ professional: professional({ id: 'xyz-789' }), categoriaSlug: 'electricidad' })
+    expect(wrapper.find('a').attributes('href')).toBe('/profesionales/xyz-789?categoria=electricidad')
   })
 })
