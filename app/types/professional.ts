@@ -32,7 +32,6 @@ export type ProfessionalField =
 export type PublicProfessionalProfile = {
   id: string
   displayName: string
-  comunaNombre: string
   contact: string
   categorias: PublicCategoria[]
   comunas: PublicComuna[]

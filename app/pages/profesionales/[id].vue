@@ -22,6 +22,11 @@ const categoriaContext = computed(() => professional.value
   ? resolveCategoriaContext(professional.value.categorias, contextSlug.value)
   : null)
 
+const comunasLabel = computed(() => {
+  const nombres = professional.value?.comunas.map(comuna => comuna.nombre) ?? []
+  return new Intl.ListFormat('es-CL', { type: 'conjunction' }).format(nombres)
+})
+
 const contactBarRef = useTemplateRef('contactBar')
 useContactBarHeight(contactBarRef)
 
@@ -33,7 +38,7 @@ function onReviewPublished(review: PublicReview) {
 
 useSeoMeta({
   title: () => professional.value && categoriaContext.value
-    ? `${professional.value.displayName} · ${categoriaContext.value.categoria.nombre} en ${professional.value.comunaNombre}`
+    ? `${professional.value.displayName} · ${categoriaContext.value.categoria.nombre} en ${comunasLabel.value}`
     : 'Perfil de profesional',
 })
 </script>
@@ -82,7 +87,7 @@ useSeoMeta({
 
         <div class="px-5 pt-4 lg:px-0">
           <h1 class="text-xl font-extrabold text-datealo-text lg:text-2xl">{{ professional.displayName }}</h1>
-          <p class="mt-0.5 text-sm text-datealo-muted">{{ categoriaContext?.categoria.nombre }} · {{ professional.comunaNombre }}</p>
+          <p class="mt-0.5 text-sm text-datealo-muted">{{ categoriaContext?.categoria.nombre }} · {{ comunasLabel }}</p>
 
           <p v-if="categoriaContext?.categoria.priceFrom" class="mt-2 text-base font-bold text-datealo-text lg:text-lg">
             Desde ${{ formatPriceFrom(categoriaContext.categoria.priceFrom) }}
