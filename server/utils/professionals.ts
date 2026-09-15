@@ -54,15 +54,11 @@ export type Professional = {
   active: boolean
 }
 
-// Forma que ve un buscador sin sesión (misión 05): categoría/comuna ya resueltas a su nombre (nunca el
-// slug/código, que no significa nada para quien mira el perfil) y createdAt, que Professional no expone.
-//
-// comunaNombre es la primera comuna de comunas (ya viene alfabético) mientras [id].vue no migre a
-// comunas — S-010 retira comunaNombre.
+// Forma que ve un buscador sin sesión (misión 05): categoría ya resuelta a su nombre (nunca el slug, que
+// no significa nada para quien mira el perfil) y createdAt, que Professional no expone.
 export type PublicProfessionalProfile = {
   id: string
   displayName: string
-  comunaNombre: string
   contact: string
   categorias: PublicCategoria[]
   comunas: { codigo: string, nombre: string }[]
@@ -140,11 +136,10 @@ function toPublicProfessional(row: ProfessionalRow): Professional {
   }
 }
 
-// Sin sesión, para cualquiera (misión 05). categoriaNombre/comunaNombre se resuelven en la misma consulta
-// (leftJoin) en vez de con findCategoriaNombre()/findComunaNombre() por separado — este endpoint es el
-// de más tráfico esperado del diseño (destino de las cards de la futura misión 06), a diferencia del
-// correo de bienvenida (buildProfessionalWelcomeEmail más abajo), que corre una vez por registro y sí
-// puede pagar dos queries encadenadas.
+// Sin sesión, para cualquiera (misión 05). categorias y comunas se piden en paralelo (Promise.all) en
+// vez de encadenadas — este endpoint es el de más tráfico esperado del diseño (destino de las cards de
+// la futura misión 06), a diferencia del correo de bienvenida (buildProfessionalWelcomeEmail más abajo),
+// que corre una vez por registro y sí puede pagar consultas secuenciales.
 export async function findPublicProfessionalProfile(id: string): Promise<PublicProfessionalProfile | null> {
   if (!isUuid(id)) return null
 
@@ -170,7 +165,6 @@ export async function findPublicProfessionalProfile(id: string): Promise<PublicP
   return {
     id: row.id,
     displayName: row.displayName,
-    comunaNombre: comunasList[0]?.nombre ?? '',
     contact: row.contact,
     categorias,
     comunas: comunasList,
