@@ -13,6 +13,12 @@ export function useProfessionalProfile() {
   const fieldError = useState<string | null>('professional-profile-field-error', () => null)
   const saveErrorField = useState<ProfessionalField | null>('professional-profile-save-error', () => null)
 
+  // Aparte de savingField/saveErrorField: comunas no es un ProfessionalField (no tiene draft de texto
+  // ni edición en línea, se confirma entera desde el sheet), así que necesita su propio estado de
+  // guardado en vez de compartir el de displayName/contact.
+  const savingComunas = useState('professional-profile-saving-comunas', () => false)
+  const comunasSaveError = useState('professional-profile-comunas-save-error', () => false)
+
   async function load() {
     await fetchProfessionalOnce(professional, pending, loadError)
   }
@@ -57,6 +63,25 @@ export function useProfessionalProfile() {
     }
   }
 
+  async function saveComunas(comunaCodigos: string[]) {
+    if (!professional.value) return
+
+    savingComunas.value = true
+    comunasSaveError.value = false
+
+    try {
+      const { professional: updated } = await $fetch<{ professional: Professional }>('/api/professionals/me', {
+        method: 'PATCH',
+        body: { comunaCodigos },
+      })
+      professional.value = updated
+    } catch {
+      comunasSaveError.value = true
+    } finally {
+      savingComunas.value = false
+    }
+  }
+
   return {
     professional,
     pending,
@@ -65,9 +90,12 @@ export function useProfessionalProfile() {
     savingField,
     fieldError,
     saveErrorField,
+    savingComunas,
+    comunasSaveError,
     load,
     startEdit,
     cancelEdit,
     save,
+    saveComunas,
   }
 }

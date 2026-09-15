@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { Loader2 } from '@lucide/vue'
+
 definePageMeta({ middleware: 'profesional', layout: 'general' })
 
 useSeoMeta({ title: 'Tu perfil', robots: 'noindex' })
 
-const { professional, pending, loadError, load } = useProfessionalProfile()
+const { professional, pending, loadError, load, savingComunas, comunasSaveError, saveComunas } = useProfessionalProfile()
 
 if (!professional.value) await load()
 
@@ -11,6 +13,8 @@ const comunasLabel = computed(() => {
   const nombres = professional.value?.comunas.map(comuna => comuna.nombre) ?? []
   return new Intl.ListFormat('es-CL', { type: 'conjunction' }).format(nombres)
 })
+
+const comunasSheetOpen = ref(false)
 
 const { categorias } = useProfessionalCategorias()
 const categoriaSlugs = computed(() => categorias.value.map(c => c.slug))
@@ -43,10 +47,27 @@ const categoriaSlugs = computed(() => categorias.value.map(c => c.slug))
         <p class="mb-1 text-base font-semibold text-datealo-text">Tus datos</p>
 
         <ProfessionalDataRow label="Nombre" field="displayName" :value="professional.displayName" />
-        <div class="flex items-center justify-between gap-3 border-b border-datealo-surface py-3 text-sm">
-          <span class="shrink-0 text-datealo-muted">Comunas</span>
-          <span class="text-right text-datealo-text">{{ comunasLabel }}</span>
+        <div class="border-b border-datealo-surface py-3 text-sm">
+          <div class="flex items-center justify-between gap-3">
+            <span class="shrink-0 text-datealo-muted">Comunas</span>
+            <button
+              type="button"
+              class="flex min-w-0 flex-1 items-center justify-end gap-1 text-right text-datealo-text"
+              @click="comunasSheetOpen = true"
+            >
+              <span class="min-w-0 truncate">{{ comunasLabel }}</span>
+              <Loader2 v-if="savingComunas" class="h-3 w-3 shrink-0 animate-spin" />
+            </button>
+          </div>
+          <p v-if="comunasSaveError" class="mt-1 text-right text-sm font-semibold text-error" aria-live="polite">
+            No se pudo guardar, toca para reintentar
+          </p>
         </div>
+        <ComunasMultiSelect
+          v-model:open="comunasSheetOpen"
+          :selected="professional.comunas.map(comuna => comuna.codigo)"
+          @confirm="saveComunas"
+        />
         <ProfessionalDataRow label="Contacto" field="contact" type="tel" :value="professional.contact" />
       </div>
     </template>
