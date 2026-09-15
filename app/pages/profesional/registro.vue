@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TriangleAlert } from '@lucide/vue'
+import { ChevronDown, TriangleAlert } from '@lucide/vue'
 
 definePageMeta({ middleware: 'profesional', layout: 'general' })
 
@@ -8,7 +8,7 @@ useSeoMeta({ title: 'Crea tu perfil', robots: 'noindex' })
 const {
   displayName,
   categoriaSlug,
-  comunaCodigo,
+  comunaCodigos,
   contact,
   contactError,
   loading,
@@ -22,10 +22,24 @@ const completedCount = computed(() =>
   [
     Boolean(displayName.value.trim()),
     Boolean(categoriaSlug.value),
-    Boolean(comunaCodigo.value),
+    comunaCodigos.value.length > 0,
     Boolean(contact.value.trim() && !contactError.value),
   ].filter(Boolean).length,
 )
+
+const { items: comunaItems } = useComunasCatalog()
+const comunasSheetOpen = ref(false)
+const comunasLabel = computed(() => {
+  const nombres = comunaItems.value.filter(item => comunaCodigos.value.includes(item.value)).map(item => item.label)
+  return new Intl.ListFormat('es-CL', { type: 'conjunction' }).format(nombres)
+})
+
+// ComunasMultiSelect no tiene un DialogTrigger propio (se controla 100% por :open) — sin este watch, el
+// foco quedaría huérfano al cerrar el sheet en vez de volver al campo que lo abrió.
+const comunasTrigger = useTemplateRef('comunasTrigger')
+watch(comunasSheetOpen, (isOpen, wasOpen) => {
+  if (!isOpen && wasOpen) comunasTrigger.value?.focus()
+})
 </script>
 
 <template>
@@ -66,8 +80,25 @@ const completedCount = computed(() =>
       <CategoriaSelect id="registro-categoria" v-model="categoriaSlug" />
       <p class="mt-1.5 text-sm text-datealo-muted">Puedes agregar otras categorías más adelante, desde tu perfil.</p>
 
-      <label for="registro-comuna" class="mb-2 mt-5 block text-sm font-semibold text-datealo-text">Tu comuna</label>
-      <ComunaSelect id="registro-comuna" v-model="comunaCodigo" />
+      <p class="mb-2 mt-5 text-sm font-semibold text-datealo-text">Tus comunas</p>
+      <button
+        ref="comunasTrigger"
+        type="button"
+        aria-label="Tus comunas"
+        class="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl border border-accented px-4 py-3"
+        :disabled="loading"
+        @click="comunasSheetOpen = true"
+      >
+        <span class="truncate text-sm" :class="comunaCodigos.length ? 'text-datealo-text' : 'text-datealo-muted'">
+          {{ comunaCodigos.length ? comunasLabel : '¿Dónde atiendes?' }}
+        </span>
+        <ChevronDown class="h-4 w-4 shrink-0 text-datealo-muted" />
+      </button>
+      <ComunasMultiSelect
+        v-model:open="comunasSheetOpen"
+        :selected="comunaCodigos"
+        @confirm="comunaCodigos = $event"
+      />
 
       <label for="registro-contacto" class="mb-2 mt-5 block text-sm font-semibold text-datealo-text">
         Tu contacto (WhatsApp o teléfono)

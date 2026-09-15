@@ -9,7 +9,7 @@ if (!professional.value) await load()
 
 const comunasLabel = computed(() => {
   const nombres = professional.value?.comunas.map(comuna => comuna.nombre) ?? []
-  return new Intl.ListFormat('es', { style: 'long', type: 'conjunction' }).format(nombres)
+  return new Intl.ListFormat('es-CL', { type: 'conjunction' }).format(nombres)
 })
 
 const { categorias } = useProfessionalCategorias()

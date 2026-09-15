@@ -1,7 +1,7 @@
 export function useProfessionalRegistration() {
   const displayName = useState('professional-registration-display-name', () => '')
   const categoriaSlug = useState<string | null>('professional-registration-categoria', () => null)
-  const comunaCodigo = useState<string | null>('professional-registration-comuna', () => null)
+  const comunaCodigos = useState<string[]>('professional-registration-comunas', () => [])
   const contact = useState('professional-registration-contact', () => '')
   const contactError = useState<string | null>('professional-registration-contact-error', () => null)
   const loading = useState('professional-registration-loading', () => false)
@@ -11,7 +11,7 @@ export function useProfessionalRegistration() {
     Boolean(
       displayName.value.trim()
       && categoriaSlug.value
-      && comunaCodigo.value
+      && comunaCodigos.value.length > 0
       && contact.value.trim()
       && !contactError.value,
     ),
@@ -35,7 +35,7 @@ export function useProfessionalRegistration() {
         body: {
           displayName: displayName.value.trim(),
           categoriaSlug: categoriaSlug.value,
-          comunaCodigo: comunaCodigo.value,
+          comunaCodigos: comunaCodigos.value,
           contact: normalizeChileanContact(contact.value),
         },
       })
@@ -50,7 +50,7 @@ export function useProfessionalRegistration() {
   return {
     displayName,
     categoriaSlug,
-    comunaCodigo,
+    comunaCodigos,
     contact,
     contactError,
     loading,
