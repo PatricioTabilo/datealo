@@ -3,6 +3,7 @@
 // primitivos de Reka UI que ya fallaron en pruebas reales de browser para CatalogSelect (ver su propio
 // comentario) — acá el filtro es manual, sin combobox, igual que ahí.
 import { Check, Search } from '@lucide/vue'
+import { UDrawer, UModal } from '#components'
 
 const props = defineProps<{
   open: boolean
@@ -16,6 +17,24 @@ const emit = defineEmits<{
 }>()
 
 const { items, pending, error, refresh } = useComunasCatalog()
+
+// Mismo patrón que ProfessionalCategoriaBlock: forzar el bottom sheet a quedar centrado en desktop con
+// clases pelea contra su propia animación de deslizar desde abajo. Elegir el componente según el ancho
+// evita esa pelea, cada uno anima de la forma que ya trae resuelta.
+const isDesktop = ref(false)
+let desktopQuery: MediaQueryList | undefined
+
+function syncIsDesktop(event: MediaQueryList | MediaQueryListEvent) {
+  isDesktop.value = event.matches
+}
+
+onMounted(() => {
+  desktopQuery = window.matchMedia('(min-width: 640px)')
+  syncIsDesktop(desktopQuery)
+  desktopQuery.addEventListener('change', syncIsDesktop)
+})
+
+onUnmounted(() => desktopQuery?.removeEventListener('change', syncIsDesktop))
 
 const draft = ref<string[]>([])
 const searchTerm = ref('')
@@ -67,7 +86,7 @@ function confirm() {
 </script>
 
 <template>
-  <UDrawer :open="open" title="Tus comunas" :close="true" @update:open="emit('update:open', $event)">
+  <component :is="isDesktop ? UModal : UDrawer" :open="open" title="Tus comunas" :close="true" @update:open="emit('update:open', $event)">
     <template #body>
       <div class="px-4 pt-1">
         <div class="flex items-center gap-2 rounded-xl bg-datealo-surface px-3 py-2.5">
@@ -129,5 +148,5 @@ function confirm() {
         <UButton :disabled="!canConfirm" size="lg" class="min-h-11" @click="confirm">Listo</UButton>
       </div>
     </template>
-  </UDrawer>
+  </component>
 </template>
