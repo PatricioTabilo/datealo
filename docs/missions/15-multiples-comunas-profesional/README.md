@@ -4,19 +4,20 @@
 comuna por profesional) y cómo `/api/search` filtra por comuna. **Abierta el** 2026-09-06.
 **Nace de:** ninguna.
 
-**Estado de la misión:** en construcción
+**Estado de la misión:** cerrada 2026-09-15
 
 **En foco:** ninguno — discovery cerrado, los tres documentos (`producto.md`, `experiencia.md`,
 `ingenieria.md`) están `vigente`
 
-**Última actualización:** 2026-09-09
+**Última actualización:** 2026-09-15
 
 **Documentos:** [Investigación](./investigacion.md) · [Producto](./producto.md) ·
 [Experiencia](./experiencia.md) · [Ingeniería](./ingenieria.md)
 
-**Próximo hito:** issues creados desde el Plan de construcción (#244 a #253, S-001 a S-010). Trabajando
-S-001 (#244) primero — el resto sigue el orden de dependencias del Plan de construcción de
-`ingenieria.md`.
+**Plan de construcción:** los diez slices (S-001 a S-010, #244 a #253) están mergeados — la migración
+expand/contract completa, de una sola comuna por profesional a `professional_comunas`, con
+`registro.vue`, `perfil.vue`, `[id].vue` y `/api/search` ya leyendo y escribiendo la forma nueva y la
+columna legacy (`professionals.comuna_codigo`) retirada.
 
 ## Brief
 
