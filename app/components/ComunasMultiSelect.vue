@@ -141,7 +141,7 @@ function confirm() {
     </template>
 
     <template v-if="!pending && !error" #footer>
-      <div class="flex items-center justify-between gap-3 border-t border-datealo-surface px-4 pt-3">
+      <div class="flex w-full items-center justify-between gap-3 border-t border-datealo-surface px-4 pt-3 sm:justify-end">
         <p aria-live="polite" class="text-sm" :class="canConfirm ? 'text-datealo-muted' : 'font-semibold text-error'">
           {{ canConfirm ? countLabel : 'Marca al menos una comuna' }}
         </p>
