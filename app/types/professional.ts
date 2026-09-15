@@ -15,7 +15,6 @@ export type PublicComuna = {
 export type Professional = {
   id: string
   displayName: string
-  comunaCodigo: string
   contact: string
   categorias: PublicCategoria[]
   comunas: PublicComuna[]
@@ -26,7 +25,6 @@ export type Professional = {
 
 export type ProfessionalField =
   | 'displayName'
-  | 'comunaCodigo'
   | 'contact'
 
 // Lo que ve un buscador sin sesión (misión 05): categoría/comuna ya resueltas a su nombre, y desde

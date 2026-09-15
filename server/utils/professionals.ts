@@ -16,22 +16,16 @@ const CONTACT_REGEX = /^\+56\d{9}$/
 export type ProfessionalCoreFields = {
   displayName: string
   categoriaSlug: string
-  comunaCodigo: string
   contact: string
 }
 
-// Lo que PATCH /me puede tocar — comunaCodigo (columna legacy de professionals) sigue vivo acá porque
-// perfil.vue todavía edita "Comuna" como un campo único; comunaCodigos (conjunto, vía
-// professional_comunas) es el reemplazo real y conviven los dos hasta que perfil.vue migre al selector
-// múltiple. Ya sin categoriaSlug/priceFrom/description, que se editan siempre por categoría vía
-// /me/categorias/*.
-export type ProfessionalPatch = Partial<Pick<ProfessionalCoreFields, 'displayName' | 'comunaCodigo' | 'contact'>> & {
+// Lo que PATCH /me puede tocar. Ya sin categoriaSlug/priceFrom/description, que se editan siempre por
+// categoría vía /me/categorias/*.
+export type ProfessionalPatch = Partial<Pick<ProfessionalCoreFields, 'displayName' | 'contact'>> & {
   comunaCodigos?: string[]
 }
 
-// Campos de creación de POST /api/professionals — comunaCodigos (conjunto) reemplaza a comunaCodigo
-// (ProfessionalCoreFields) en el body de este endpoint; comunaCodigo sigue vivo en ProfessionalCoreFields
-// solo para ProfessionalPatch/PATCH /me.
+// Campos de creación de POST /api/professionals.
 export type ProfessionalCreateFields = {
   displayName: string
   categoriaSlug: string
@@ -39,7 +33,7 @@ export type ProfessionalCreateFields = {
   contact: string
 }
 
-// Usado para el patch de professionals (displayName/comunaCodigo/contact), la creación
+// Usado para el patch de professionals (displayName/comunaCodigos/contact), la creación
 // (displayName/categoriaSlug/comunaCodigos/contact) y el patch de una categoría puntual
 // (categoriaSlug/priceFrom/description vía /me/categorias/*) — validateProfessionalFields es genérica
 // sobre las tres, cada endpoint le pasa solo los campos que le tocan.
@@ -54,7 +48,6 @@ export type ProfessionalFieldError = { error: string }
 export type Professional = {
   id: string
   displayName: string
-  comunaCodigo: string
   contact: string
   photoUrls: string[]
   avatarUrl: string | null
@@ -64,8 +57,8 @@ export type Professional = {
 // Forma que ve un buscador sin sesión (misión 05): categoría/comuna ya resueltas a su nombre (nunca el
 // slug/código, que no significa nada para quien mira el perfil) y createdAt, que Professional no expone.
 //
-// comunaNombre queda calculado desde professionals.comunaCodigo (la primera comuna declarada) mientras
-// conviva con comunas — [id].vue no migra a comunas hasta S-010; ese slice retira comunaNombre.
+// comunaNombre es la primera comuna de comunas (ya viene alfabético) mientras [id].vue no migre a
+// comunas — S-010 retira comunaNombre.
 export type PublicProfessionalProfile = {
   id: string
   displayName: string
@@ -81,7 +74,6 @@ export type PublicProfessionalProfile = {
 type ProfessionalRow = {
   id: string
   displayName: string
-  comunaCodigo: string
   contact: string
   photoPaths: string[]
   avatarPath: string | null
@@ -93,7 +85,6 @@ type ProfessionalRow = {
 const publicColumns = {
   id: professionals.id,
   displayName: professionals.displayName,
-  comunaCodigo: professionals.comunaCodigo,
   contact: professionals.contact,
   photoPaths: professionals.photoPaths,
   avatarPath: professionals.avatarPath,
@@ -109,9 +100,6 @@ export async function validateProfessionalFields(
 ): Promise<ProfessionalFieldError | null> {
   if (fields.categoriaSlug !== undefined && !(await existsActiveCategoria(fields.categoriaSlug))) {
     return { error: 'invalid_categoria' }
-  }
-  if (fields.comunaCodigo !== undefined && !(await existsActiveComuna(fields.comunaCodigo))) {
-    return { error: 'invalid_comuna' }
   }
   if (fields.comunaCodigos !== undefined) {
     for (const codigo of fields.comunaCodigos) {
@@ -145,7 +133,6 @@ function toPublicProfessional(row: ProfessionalRow): Professional {
   return {
     id: row.id,
     displayName: row.displayName,
-    comunaCodigo: row.comunaCodigo,
     contact: row.contact,
     photoUrls: buildPhotoUrls(row.photoPaths),
     avatarUrl: buildAvatarUrl(row.avatarPath),
@@ -165,15 +152,12 @@ export async function findPublicProfessionalProfile(id: string): Promise<PublicP
     .select({
       id: professionals.id,
       displayName: professionals.displayName,
-      comunaCodigo: professionals.comunaCodigo,
-      comunaNombre: comunas.nombre,
       contact: professionals.contact,
       photoPaths: professionals.photoPaths,
       avatarPath: professionals.avatarPath,
       createdAt: professionals.createdAt,
     })
     .from(professionals)
-    .leftJoin(comunas, eq(professionals.comunaCodigo, comunas.codigo))
     .where(and(eq(professionals.id, id), eq(professionals.active, true)))
 
   if (!row) return null
@@ -186,7 +170,7 @@ export async function findPublicProfessionalProfile(id: string): Promise<PublicP
   return {
     id: row.id,
     displayName: row.displayName,
-    comunaNombre: row.comunaNombre ?? row.comunaCodigo,
+    comunaNombre: comunasList[0]?.nombre ?? '',
     contact: row.contact,
     categorias,
     comunas: comunasList,
@@ -259,10 +243,7 @@ export async function createProfessional(
   const inserted = await useDb().transaction(async (tx) => {
     const [professional] = await tx
       .insert(professionals)
-      // comunaCodigo sigue siendo NOT NULL en professionals hasta S-006 — se le escribe la primera
-      // comuna del conjunto (comunaCodigos siempre trae al menos un elemento, ya validado antes de
-      // llegar acá) mientras conviven las dos fuentes de verdad.
-      .values({ userId, displayName, contact, comunaCodigo: comunaCodigos[0]!, email })
+      .values({ userId, displayName, contact, email })
       .onConflictDoNothing({ target: professionals.userId })
       .returning(publicColumns)
 

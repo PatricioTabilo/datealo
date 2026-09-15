@@ -1,4 +1,4 @@
-const TEXT_FIELDS = ['displayName', 'comunaCodigo', 'contact'] as const
+const TEXT_FIELDS = ['displayName', 'contact'] as const
 
 export default defineEventHandler(async (event) => {
   const user = await requireUser(event)
