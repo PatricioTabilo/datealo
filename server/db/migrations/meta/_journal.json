@@ -85,6 +85,13 @@
       "when": 1788966110025,
       "tag": "0011_married_wiccan",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1789439293845,
+      "tag": "0012_swift_lady_bullseye",
+      "breakpoints": true
     }
   ]
 }

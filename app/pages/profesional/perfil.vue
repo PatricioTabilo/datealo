@@ -7,12 +7,10 @@ const { professional, pending, loadError, load } = useProfessionalProfile()
 
 if (!professional.value) await load()
 
-const { items: comunaItems } = useComunasCatalog()
-
-const comunaNombre = computed(
-  () => comunaItems.value.find(item => item.value === professional.value?.comunaCodigo)?.label
-    ?? professional.value?.comunaCodigo ?? '',
-)
+const comunasLabel = computed(() => {
+  const nombres = professional.value?.comunas.map(comuna => comuna.nombre) ?? []
+  return new Intl.ListFormat('es', { style: 'long', type: 'conjunction' }).format(nombres)
+})
 
 const { categorias } = useProfessionalCategorias()
 const categoriaSlugs = computed(() => categorias.value.map(c => c.slug))
@@ -26,7 +24,7 @@ const categoriaSlugs = computed(() => categorias.value.map(c => c.slug))
 
     <template v-else-if="professional">
       <h1 class="text-xl font-extrabold text-datealo-text">{{ professional.displayName }}</h1>
-      <p class="mt-0.5 text-sm text-datealo-muted">{{ comunaNombre }}</p>
+      <p class="mt-0.5 text-sm text-datealo-muted">{{ comunasLabel }}</p>
 
       <ProfessionalAvatar class="mt-5" />
 
@@ -45,16 +43,10 @@ const categoriaSlugs = computed(() => categorias.value.map(c => c.slug))
         <p class="mb-1 text-base font-semibold text-datealo-text">Tus datos</p>
 
         <ProfessionalDataRow label="Nombre" field="displayName" :value="professional.displayName" />
-        <ProfessionalCatalogRow
-          label="Comuna"
-          field="comunaCodigo"
-          :value="professional.comunaCodigo"
-          :display-value="comunaNombre"
-        >
-          <template #select="{ modelValue, update }">
-            <ComunaSelect :model-value="modelValue" @update:model-value="update" />
-          </template>
-        </ProfessionalCatalogRow>
+        <div class="flex items-center justify-between gap-3 border-b border-datealo-surface py-3 text-sm">
+          <span class="shrink-0 text-datealo-muted">Comunas</span>
+          <span class="text-right text-datealo-text">{{ comunasLabel }}</span>
+        </div>
         <ProfessionalDataRow label="Contacto" field="contact" type="tel" :value="professional.contact" />
       </div>
     </template>
