@@ -8,8 +8,10 @@ const inflight = new WeakMap<object, Promise<void>>()
 // avisarle al segundo cuándo terminó el primero: Vue no corre el scheduler de reactividad durante
 // renderToString, así que el watcher nunca dispara y el segundo queda esperando para siempre. La promesa
 // compartida evita depender de reactividad — el segundo simplemente espera la misma promesa que ya está en
-// curso. Se cachea por instancia de NuxtApp (una por request en el servidor, una para toda la sesión en el
-// cliente) para no filtrar entre requests concurrentes.
+// curso. Se cachea por instancia de NuxtApp para no filtrar entre requests concurrentes, y el `finally`
+// saca la entrada de `inflight` al terminar: en el cliente esa instancia vive toda la sesión, y una
+// promesa ya resuelta quedaría para siempre — tras registrarse, /profesional/perfil reusaría el 404 de
+// antes del registro en vez de pedir el perfil recién creado.
 export function fetchProfessionalOnce(
   professional: Ref<Professional | null>,
   pending: Ref<boolean>,
@@ -33,6 +35,7 @@ export function fetchProfessionalOnce(
     })
     .finally(() => {
       pending.value = false
+      inflight.delete(nuxtApp)
     })
 
   inflight.set(nuxtApp, promise)
