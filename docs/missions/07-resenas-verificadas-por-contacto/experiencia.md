@@ -232,7 +232,8 @@ reseña, sin que tenga que abrir Datealo para leerlo.
 | Cuerpo   | "Carmen R. te dejó una reseña en Datealo:" seguido de las estrellas y el comentario completo, tal cual se publicó — sin recortar ni resumir |
 | Si no dejó nombre | "Te llegó una reseña de un cliente de Datealo:" — mismo reemplazo que ve cualquier buscador en el perfil |
 | Si no dejó comentario | El correo muestra solo las estrellas, sin una línea vacía donde iría el comentario |
-| Cierre   | Link directo al perfil público del profesional, para que pueda ver la reseña en contexto si quiere |
+| Cierre   | Botón "Ver mi perfil" al perfil público del profesional, para que pueda ver la reseña en contexto si quiere, y la nota "Solo pueden dejarte reseñas personas que te contactaron por Datealo." |
+| Diseño   | Título "Tienes una reseña nueva"; estrellas y comentario en un recuadro destacado. Usa el layout compartido de `server/utils/email-layout.ts` (issue #270) |
 
 ### Decisiones que no deben quedar implícitas
 

@@ -1,4 +1,5 @@
 import { desc, eq, inArray, sql } from 'drizzle-orm'
+import { emailCallout, emailNote, emailParagraph, emailStars, renderEmailLayout } from './email-layout'
 import { escapeHtml } from './professionals'
 import { isUuid } from './validation'
 import { reviews } from '../db/schema/reviews'
@@ -179,19 +180,26 @@ export function buildReviewNotificationEmail({
 }): { subject: string, html: string } {
   const firstName = escapeHtml(displayName.trim().split(/\s+/)[0] ?? displayName)
   const name = normalizeReviewerName(reviewerName)
-  const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating)
+  const subject = `${firstName}, te llegó una reseña nueva`
 
   const intro = name
-    ? `${escapeHtml(name)} te dejó una reseña en Datealo:`
-    : `Te llegó una reseña de ${GENERIC_REVIEWER_NAME}:`
+    ? `${escapeHtml(name)} te dejó una reseña en Datealo`
+    : `Te llegó una reseña de ${GENERIC_REVIEWER_NAME}`
+
+  const quote = comment
+    ? `<p style="margin:12px 0 0;font-size:16px;line-height:1.6;">“${escapeHtml(comment)}”</p>`
+    : ''
 
   return {
-    subject: `${firstName}, te llegó una reseña nueva`,
-    html: `
-      <p>${intro}</p>
-      <p style="font-size: 20px; letter-spacing: 2px;">${stars}</p>
-      ${comment ? `<p>${escapeHtml(comment)}</p>` : ''}
-      <p><a href="${profileUrl}">Ver mi perfil</a></p>
-    `.trim(),
+    subject,
+    html: renderEmailLayout({
+      title: subject,
+      preheader: `${intro}.`,
+      heading: 'Tienes una reseña nueva',
+      bodyHtml: emailParagraph(`${intro}:`) + emailCallout(emailStars(rating) + quote),
+      cta: { label: 'Ver mi perfil', url: profileUrl },
+      afterCtaHtml: emailNote('Solo pueden dejarte reseñas personas que te contactaron por Datealo.'),
+      footerNote: 'Recibes este correo porque tienes un perfil en Datealo.',
+    }),
   }
 }

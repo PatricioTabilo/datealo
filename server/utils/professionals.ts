@@ -1,6 +1,7 @@
 import { and, asc, eq, sql } from 'drizzle-orm'
 import { existsActiveCategoria } from './categorias'
 import { existsActiveComuna } from './comunas'
+import { emailCallout, emailCheckItem, emailParagraph, renderEmailLayout } from './email-layout'
 import {
   createProfessionalCategoria,
   findProfessionalCategorias,
@@ -371,15 +372,23 @@ export function buildProfessionalWelcomeEmail({
   profileUrl: string
 }): { subject: string, html: string } {
   const firstName = escapeHtml(displayName.trim().split(/\s+/)[0] ?? displayName)
+  const categoria = escapeHtml(categoriaNombre)
+  const comuna = escapeHtml(comunaNombre)
+  const subject = 'Tu perfil ya está publicado en Datealo'
 
   return {
-    subject: 'Tu perfil ya está publicado en Datealo',
-    html: `
-      <p>Hola ${firstName}, tu perfil de ${escapeHtml(categoriaNombre)} en ${escapeHtml(comunaNombre)} ya es
-      visible en Datealo. Cualquiera que te busque ya puede encontrarte y contactarte.</p>
-      <p>Todavía te faltan fotos de tus trabajos y tu precio: agrégalos para que la gente confíe más en
-      ti.</p>
-      <p><a href="${profileUrl}">Completar mi perfil</a></p>
-    `.trim(),
+    subject,
+    html: renderEmailLayout({
+      title: subject,
+      preheader: `Ya pueden encontrarte en ${comuna}. Suma fotos y un precio para que te elijan más.`,
+      heading: `${firstName}, tu perfil ya está publicado`,
+      bodyHtml: emailParagraph(
+        `Quien busque <strong>${categoria}</strong> en <strong>${comuna}</strong> ya puede encontrarte en Datealo y contactarte directo.`,
+      ) + emailCallout(
+        `<strong style="display:block;margin-bottom:6px;">Para que te elijan más, agrega:</strong>${emailCheckItem('Fotos de tus trabajos')}<br>${emailCheckItem('Un precio de referencia')}`,
+      ),
+      cta: { label: 'Completar mi perfil', url: profileUrl },
+      footerNote: 'Recibes este correo porque creaste tu perfil en Datealo.',
+    }),
   }
 }
