@@ -120,7 +120,8 @@ describe('buildReviewNotificationEmail', () => {
 
   it('las estrellas reflejan el rating exacto, llenas primero', () => {
     const { html } = buildReviewNotificationEmail({ ...base, reviewerName: 'Carmen', rating: 2, comment: null })
-    expect(html).toContain('★★☆☆☆')
+    expect(html).toContain('aria-label="2 de 5 estrellas"')
+    expect(html).toMatch(/>★★<\/span><span[^>]*>★★★</)
   })
 
   it('escapa HTML en el nombre y el comentario', () => {

@@ -174,7 +174,7 @@ fotos y precio" no puede ocurrir con este disparo y no se documenta como si fuer
 
 | Asunto                             | Cuerpo |
 | ------------------------------------ | ------ |
-| "Tu perfil ya está publicado en Datealo" | "Hola Héctor, tu perfil de Electricidad en Ñuñoa ya es visible en Datealo. Cualquiera que te busque ya puede encontrarte y contactarte. Todavía te faltan fotos de tus trabajos y tu precio: agrégalos para que la gente confíe más en ti." + botón "Completar mi perfil" (enlace directo a V-003) |
+| "Tu perfil ya está publicado en Datealo" | Título "Héctor, tu perfil ya está publicado" + "Quien busque Electricidad en Ñuñoa ya puede encontrarte en Datealo y contactarte directo." + recuadro "Para que te elijan más, agrega: Fotos de tus trabajos, Un precio de referencia" + botón "Completar mi perfil" (enlace directo a V-003). Usa el layout compartido de `server/utils/email-layout.ts` (issue #270) |
 
 ### Variantes y recuperación
 
