@@ -100,7 +100,7 @@ export const LANDING_FOR_PROFESSIONALS = {
 export const LANDING_FINAL_CTA = {
   headline: 'No te lo cuenten —',
   headlineAccent: 'datealo',
-  subheadline: 'Ya podés buscar profesionales de tu zona, con reseñas reales. Sin registro, sin esperar.',
+  subheadline: 'Ya puedes buscar profesionales de tu zona, con reseñas reales. Sin registro, sin esperar.',
   cta: 'Buscar profesionales',
   trust: ['Gratis', 'Sin registro', 'Contacto directo'],
 } as const
