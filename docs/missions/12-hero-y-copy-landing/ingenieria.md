@@ -142,7 +142,7 @@ texto. Ningún dato de usuario ni de negocio se lee o escribe como parte de esta
   "Busca por categoría", description: "Gasfitería, electricidad, peluquería y más. Encuentra justo lo que
   necesitas, no un hilo de mensajes mezclado." `features[1..3]` (reseñas, cercanía, contacto directo): sin
   cambios.
-- `LANDING_FINAL_CTA.subheadline`: "Ya podés buscar profesionales de tu zona, con reseñas reales. Sin
+- `LANDING_FINAL_CTA.subheadline`: "Ya puedes buscar profesionales de tu zona, con reseñas reales. Sin
   registro, sin esperar." `headline`, `trust`, `cta`: sin cambios.
 
 ### Invariantes de datos
