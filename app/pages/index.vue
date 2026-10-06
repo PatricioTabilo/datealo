@@ -1,12 +1,10 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'datealo — Encuentra al profesional que necesitas, cerca de ti',
-  description: 'Conectamos personas con profesionales de su zona, con reseñas reales. Gasfitería, electricidad, peluquería, limpieza y más. Regístrate para acceso anticipado.',
-  ogTitle: 'datealo — Profesionales cerca de ti, con reseñas reales',
-  ogDescription: 'Busca, compara y contacta profesionales de confianza en tu zona. Estamos por lanzar — únete a la lista de espera.',
+  title: 'datealo · Encuentra al profesional que necesitas, cerca de ti',
+  description: 'Gasfitería, electricidad, peluquería, limpieza y más. Busca por categoría y comuna, mira reseñas reales y contacta directo por WhatsApp o teléfono. Gratis y sin registro.',
+  ogTitle: 'datealo · Profesionales cerca de ti, con reseñas reales',
+  ogDescription: 'Busca por categoría y comuna, mira reseñas reales y contacta directo por WhatsApp o teléfono. Gratis y sin registro.',
   ogType: 'website',
-  ogLocale: 'es_CL',
-  ogSiteName: 'datealo',
 })
 
 useHead({

@@ -6,6 +6,10 @@ export function upsertLocalReview(reviews: PublicReview[], published: PublicRevi
   return [published, ...reviews.filter(review => review.id !== published.id)]
 }
 
+export function formatRating(value: number): string {
+  return value.toFixed(1).replace('.', ',')
+}
+
 export function averageRating(reviews: PublicReview[]): number | null {
   if (reviews.length === 0) return null
 
