@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import type { SearchResultProfessional } from '~/types/search'
 import { initials } from '../../utils/professional-initials'
 import { formatPriceFrom } from '../../utils/professional-price'
+import { formatRating } from '../../utils/professional-reviews'
 import { formatMemberSince } from '../../utils/professional-since'
 
 const props = defineProps<{
@@ -49,7 +50,7 @@ const memberSince = computed(() => formatMemberSince(props.professional.createdA
       </p>
       <div v-if="professional.ratingAverage !== null" class="mt-1 flex items-center gap-1 text-sm">
         <Star class="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-        <span class="font-bold text-datealo-text">{{ professional.ratingAverage.toFixed(1).replace('.', ',') }}</span>
+        <span class="font-bold text-datealo-text">{{ formatRating(professional.ratingAverage) }}</span>
         <span class="text-datealo-muted">· {{ professional.reviewCount }} reseñas</span>
       </div>
       <p v-if="professional.priceFrom" class="mt-1 text-sm font-bold text-datealo-text">

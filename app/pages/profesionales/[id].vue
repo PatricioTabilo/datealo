@@ -36,10 +36,29 @@ function onReviewPublished(review: PublicReview) {
   updateProfessional({ reviews, ratingAverage: averageRating(reviews), reviewCount: reviews.length })
 }
 
+const shareTitle = computed(() => professional.value && categoriaContext.value
+  ? buildProfessionalShareTitle(
+      professional.value.displayName,
+      categoriaContext.value.categoria.nombre,
+      professional.value.comunas.map(comuna => comuna.nombre),
+    )
+  : 'Perfil de profesional')
+
+const shareDescription = computed(() => professional.value
+  ? buildProfessionalShareDescription(professional.value, categoriaContext.value?.categoria.priceFrom ?? null)
+  : undefined)
+
+const shareImage = computed(() => professional.value ? pickProfessionalShareImage(professional.value) : null)
+
 useSeoMeta({
-  title: () => professional.value && categoriaContext.value
-    ? `${professional.value.displayName} · ${categoriaContext.value.categoria.nombre} en ${comunasLabel.value}`
-    : 'Perfil de profesional',
+  title: shareTitle,
+  ogTitle: shareTitle,
+  description: shareDescription,
+  ogDescription: shareDescription,
+  ogImage: () => shareImage.value ?? undefined,
+  // Con 'summary', las apps que leen twitter:card muestran la foto de perfil (cuadrada y chica) como
+  // miniatura al costado; 'summary_large_image' la estiraría a un banner ancho.
+  twitterCard: () => shareImage.value && !professional.value?.photoUrls.length ? 'summary' : 'summary_large_image',
 })
 </script>
 
@@ -129,7 +148,7 @@ useSeoMeta({
             <p class="font-extrabold text-datealo-text">{{ professional.displayName }}</p>
             <div v-if="professional.ratingAverage !== null" class="mt-0.5 flex items-center gap-1 text-sm">
               <Star class="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-              <span class="font-bold text-datealo-text">{{ professional.ratingAverage.toFixed(1).replace('.', ',') }}</span>
+              <span class="font-bold text-datealo-text">{{ formatRating(professional.ratingAverage) }}</span>
               <span class="text-datealo-muted">· {{ professional.reviewCount }} reseñas</span>
             </div>
           </div>
