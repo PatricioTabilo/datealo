@@ -32,6 +32,10 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { lang: 'es-CL' },
       link: [
+        // sizes en el .ico hace que Chrome prefiera el SVG; el .ico queda para navegadores sin soporte de SVG.
+        { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
+        { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {
